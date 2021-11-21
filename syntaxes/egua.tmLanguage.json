@@ -1,0 +1,104 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Egua",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#functions"
+		},
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#constants"
+		},
+		{
+			"include": "#logical"
+		},
+		{
+			"include": "#types"
+		},
+		{
+			"include": "#arithmetic"
+		},
+		{
+			"include": "#assignments"
+		},
+		{
+			"include": "#comparison"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.egua",            
+				"match": "\\b(se|senao|senão|fim|entao|então|senaose|senãose|enquanto|faca|faça|para|de|ate|até|gere|tipo}abstrato|retorne|escolha|caso|var|escreva|imprima|passo)\\b"
+			}]
+		},
+		"functions": {
+			"patterns": [{
+				"name": "keyword.function.egua",            
+				"match": "\\b(leia_texto|leia_numero|leia_inteiro|leia_inteiros|inteiro|arredonde|texto|formato|real|tamanho|posição|posicao|posiçao|posicão|contém|contem|maiúsculo|maiusculo|minúsculo|minusculo|inverta|divida|cabeça|cabeca|primeiro|cauda|último|ultimo|pegue|descarte|selecione|descarte_enquanto|pegue_enquanto|ordene|junte|remova|insira|imutável|imutavel|mutável|mutavel|mapeie|injete|PI|sen|cos|tg|arcsen|arccos|arctg|abs|raiz|log|log10|segundo|terceiro|quarto|quinto|sexto)\\b"
+			}]
+		},
+		"constants": {
+			"patterns": [{
+				"name": "constant.language.egua",            
+				"match": "\\b(falso|verdadeiro|isto|eof|nulo)\\b"
+			}]
+		},
+		"logical": {
+			"patterns": [{
+				"name": "keyword.operator.logical.egua",            
+				"match": "\\b(e|ou|nao|não)\\b"
+			}]
+		},
+		"types": {
+			"patterns": [{
+				"name": "storage.type.primitive.scala",            
+				"match": "\\b(Inteiro|Real|Texto|Logico|Lógico|Lista|Tupla|Matriz|Cubo)\\b"
+			}]
+		},
+		"comments": {
+			"name": "comment.line.double-dash.egua",
+			"begin": "#",
+			"end": "\\n" 
+		},
+		"arithmetic": {
+			"patterns": [{
+				"name": "keyword.operator.arithmetic.egua",            
+				"match": "\\b(\\+|\\-|\\*|/|mod|div|\\:\\:)\\b"
+			}]
+		},
+		"assignments": {
+			"patterns": [{
+				"name": "keyword.operator.assignment.egua",            
+				"match": "\\b(\\=|\\:=)\\b"
+			}]
+		},
+		"comparison": {
+			"patterns": [{
+				"name": "keyword.operator.comparison.egua",            
+				"match": "\\b(<\\=|>\\=|\\=\\=|<|>|\\<\\>)\\b"
+			}]
+		},
+
+		"strings": {
+			"name": "string.quoted.double.egua",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.egua",
+					"match": "\\\\."
+				}
+			]
+		}
+	},
+	"scopeName": "source.egua"
+}

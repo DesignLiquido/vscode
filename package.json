@@ -1,0 +1,25 @@
+{
+    "name": "linguagem-egua-vscode",
+    "displayName": "Linguagem Egua",
+    "description": "Extensão de sintaxe para o Visual Studio Code na linguagem Egua",
+    "version": "0.0.2",
+    "engines": {
+        "vscode": "^1.55.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "egua",
+            "aliases": ["Egua", "egua"],
+            "extensions": [".egua"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "egua",
+            "scopeName": "source.egua",
+            "path": "./syntaxes/egua.tmLanguage.json"
+        }]
+    }
+}
