@@ -1,1 +1,0 @@
-# egua-extensao-vscode
