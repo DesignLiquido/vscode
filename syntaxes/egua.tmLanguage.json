@@ -49,7 +49,7 @@
 		"constants": {
 			"patterns": [{
 				"name": "constant.language.egua",            
-				"match": "\\b(falso|verdadeiro|isto|eof|nulo)\\b"
+				"match": "\\b(falso|verdadeiro|isto|nulo)\\b"
 			}]
 		},
 		"logical": {
