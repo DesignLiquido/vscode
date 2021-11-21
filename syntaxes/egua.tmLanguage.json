@@ -30,10 +30,10 @@
 			"include": "#comparison"
 		},
 		{
-			"include": "#strings-quoted-single"
+			"include": "#string-quoted-single"
 		},
 		{
-			"include": "#strings-quoted-double"
+			"include": "#string-quoted-double"
 		}
 	],
 	"repository": {
@@ -90,8 +90,8 @@
 				"match": "\\b(<\\=|>\\=|\\=\\=|<|>|\\<\\>)\\b"
 			}]
 		},
-		"strings-quoted-single": {
-			"name": "string.quoted.double.egua",
+		"string-quoted-single": {
+			"name": "string.quoted.single.egua",
 			"begin": "\\'",
 			"end": "\\'",
 			"patterns": [
@@ -101,7 +101,7 @@
 				}
 			]
 		},
-		"strings-quoted-double": {
+		"string-quoted-double": {
 			"name": "string.quoted.double.egua",
 			"begin": "\"",
 			"end": "\"",
