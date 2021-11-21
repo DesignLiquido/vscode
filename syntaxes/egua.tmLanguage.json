@@ -39,31 +39,31 @@
 	"repository": {
 		"keywords": {
 			"patterns": [{
-				"name": "keyword.control.egua",            
+				"name": "keyword.control.egua",
 				"match": "\\b(se|senao|senão|fim|entao|então|senaose|senãose|enquanto|faca|faça|para|de|ate|até|gere|tipo}abstrato|retorne|escolha|caso|var|escreva|imprima|passo)\\b"
 			}]
 		},
 		"functions": {
 			"patterns": [{
-				"name": "keyword.function.egua",            
-				"match": "\\b(inteiro|texto|real|tamanho|posição|posicao|posiçao|posicão|contém|contem|maiúsculo|maiusculo|minúsculo|minusculo|inverta|divida|cabeça|cabeca|primeiro|cauda|último|ultimo|pegue|descarte|selecione|descarte_enquanto|pegue_enquanto|ordenar|junte|remova|insira|imutável|imutavel|mutável|mutavel|mapear|injete|PI|sen|cos|tan|arsen|arcos|artan|abs|raizq|log|segundo|terceiro|quarto|quinto|sexto|max|min|intervalo|mediana|smtr|media|ve|sqr|variancia|devpad|covar|coefvar|coefcorr|coluna|linha|transposta|matriz|matrizmult|matrizinv|matrizid|deter|csl|exp|pot|aleat|vmed|deltas|deltat|acel|mrufh|mrufhp|mruvel|mruvfh|mruvfhp|mruvvel|mruvvelp|inercia|vmmv|van|periodo|pid)\\b"
+				"name": "keyword.function.egua",
+				"match": "\\b(inteiro|texto|real|tamanho|posição|posicao|posiçao|posicão|contém|contem|maiúsculo|maiusculo|minúsculo|minusculo|inverta|divida|cabeça|cabeca|primeiro|cauda|último|ultimo|pegue|descarte|selecione|descarte_enquanto|pegue_enquanto|ordenar|junte|remova|insira|imutável|imutavel|mutável|mutavel|mapear|injete|PI|ajuda|exemplo|limpar|salvar|carregar|sen|cos|tan|arsen|arcos|artan|abs|raizq|log|max|min|intervalo|mediana|smtr|media|ve|sqr|variancia|devpad|covar|coefvar|coefcorr|coluna|linha|transposta|matriz|matrizmult|matrizinv|matrizid|deter|csl|exp|pot|aleat|vmed|deltas|deltat|acel|mrufh|mrufhp|mruvel|mruvfh|mruvfhp|mruvvel|mruvvelp|inercia|vmmv|van|periodo|pid)\\b"
 			}]
 		},
 		"constants": {
 			"patterns": [{
-				"name": "constant.language.egua",            
+				"name": "constant.language.egua",
 				"match": "\\b(falso|verdadeiro|isto|nulo)\\b"
 			}]
 		},
 		"logical": {
 			"patterns": [{
-				"name": "keyword.operator.logical.egua",            
+				"name": "keyword.operator.logical.egua",
 				"match": "\\b(e|ou|nao|não)\\b"
 			}]
 		},
 		"types": {
 			"patterns": [{
-				"name": "storage.type.primitive.scala",            
+				"name": "storage.type.primitive.scala",
 				"match": "\\b(Inteiro|Real|Texto|Logico|Lógico|Lista|Tupla|Matriz|Cubo)\\b"
 			}]
 		},
@@ -74,19 +74,19 @@
 		},
 		"arithmetic": {
 			"patterns": [{
-				"name": "keyword.operator.arithmetic.egua",            
+				"name": "keyword.operator.arithmetic.egua",
 				"match": "\\b(\\+|\\-|\\*|/|mod|div|\\:\\:)\\b"
 			}]
 		},
 		"assignments": {
 			"patterns": [{
-				"name": "keyword.operator.assignment.egua",            
+				"name": "keyword.operator.assignment.egua",
 				"match": "\\b(\\=|\\:=)\\b"
 			}]
 		},
 		"comparison": {
 			"patterns": [{
-				"name": "keyword.operator.comparison.egua",            
+				"name": "keyword.operator.comparison.egua",
 				"match": "\\b(<\\=|>\\=|\\=\\=|<|>|\\<\\>)\\b"
 			}]
 		},
