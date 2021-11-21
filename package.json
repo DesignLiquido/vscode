@@ -2,6 +2,10 @@
     "name": "linguagem-egua-vscode",
     "displayName": "Linguagem Egua",
     "description": "Extensão de sintaxe para o Visual Studio Code na linguagem Egua",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/eguatech/egua-extensao-vscode"
+    },
     "version": "0.0.2",
     "engines": {
         "vscode": "^1.55.0"
