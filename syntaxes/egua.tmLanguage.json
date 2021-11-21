@@ -6,9 +6,6 @@
 			"include": "#keywords"
 		},
 		{
-			"include": "#strings"
-		},
-		{
 			"include": "#functions"
 		},
 		{
@@ -31,6 +28,12 @@
 		},
 		{
 			"include": "#comparison"
+		},
+		{
+			"include": "#strings-quoted-single"
+		},
+		{
+			"include": "#strings-quoted-double"
 		}
 	],
 	"repository": {
@@ -87,8 +90,18 @@
 				"match": "\\b(<\\=|>\\=|\\=\\=|<|>|\\<\\>)\\b"
 			}]
 		},
-
-		"strings": {
+		"strings-quoted-single": {
+			"name": "string.quoted.double.egua",
+			"begin": "\\'",
+			"end": "\\'",
+			"patterns": [
+				{
+					"name": "constant.character.escape.egua",
+					"match": "\\\\."
+				}
+			]
+		},
+		"strings-quoted-double": {
 			"name": "string.quoted.double.egua",
 			"begin": "\"",
 			"end": "\"",
