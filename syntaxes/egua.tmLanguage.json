@@ -46,7 +46,7 @@
 		"functions": {
 			"patterns": [{
 				"name": "keyword.function.egua",            
-				"match": "\\b(inteiro|texto|real|tamanho|posição|posicao|posiçao|posicão|contém|contem|maiúsculo|maiusculo|minúsculo|minusculo|inverta|divida|cabeça|cabeca|primeiro|cauda|último|ultimo|pegue|descarte|selecione|descarte_enquanto|pegue_enquanto|ordenar|junte|remova|insira|imutável|imutavel|mutável|mutavel|mapear|injete|PI|sen|cos|tan|arsen|arcos|artan|abs|raizq|log|segundo|terceiro|quarto|quinto|sexto|coluna|linha|transposta|matriz|matrizmult|matrizinv|matrizid|deter|csl|exp|pot|aleat|vmed|deltas|deltat|acel|mrufh|mrufhp|mruvel|mruvfh|mruvfhp|mruvvel|mruvvelp|inercia|vmmv|van|periodo|pid)\\b"
+				"match": "\\b(inteiro|texto|real|tamanho|posição|posicao|posiçao|posicão|contém|contem|maiúsculo|maiusculo|minúsculo|minusculo|inverta|divida|cabeça|cabeca|primeiro|cauda|último|ultimo|pegue|descarte|selecione|descarte_enquanto|pegue_enquanto|ordenar|junte|remova|insira|imutável|imutavel|mutável|mutavel|mapear|injete|PI|sen|cos|tan|arsen|arcos|artan|abs|raizq|log|segundo|terceiro|quarto|quinto|sexto|max|min|intervalo|mediana|smtr|media|ve|sqr|variancia|devpad|covar|coefvar|coefcorr|coluna|linha|transposta|matriz|matrizmult|matrizinv|matrizid|deter|csl|exp|pot|aleat|vmed|deltas|deltat|acel|mrufh|mrufhp|mruvel|mruvfh|mruvfhp|mruvvel|mruvvelp|inercia|vmmv|van|periodo|pid)\\b"
 			}]
 		},
 		"constants": {
