@@ -88,8 +88,6 @@ classe Animal {
     escreva("correndo");
   }
 }
-
 classe Cachorro herda Animal {}
-
 var thor = Cachorro();
 thor.corre();

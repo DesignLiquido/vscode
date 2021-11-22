@@ -37,6 +37,9 @@
 		},
 		{ 	
 			"include": "#storages" 
+		},
+		{ 
+			"include": "#identifiers" 
 		}
 	],
 	"repository": {
@@ -122,7 +125,39 @@
 			"patterns": [
 				{
 					"name": "storage.type.swift",
-					"match": "\\b(classe|herda|super|construtor)\\b"
+					"match": "\\b(classe|construtor)\\b"
+				}
+			]
+		},
+		"identifiers": {
+			"patterns": [
+				{
+					"name": "entity.other.attribute-name",
+					"match": "(\\b(super)\\b)|#[_a-zA-Z0-9]+"
+				},
+				{
+					"name": "entity.name.function",
+					"match": "((?<=classe\\s)|(?<=herda\\s))([_a-zA-Z0-9]+)"
+				},
+				{
+					"name":  "entity.name.function",
+					"match": "([_a-zA-Z0-9]+)(?=[ ]*[=][ ]*(\\(|funcao))"
+				},
+				{
+					"name":  "variable.parameter",
+					"match": "([_a-zA-Z0-9]+)(?=[ ]*[=])"
+				},
+				{
+					"name":  "entity.other.attribute-name",
+					"match": "([_a-zA-Z0-9]+)(?=[ ]*[:])"
+				},
+				{
+					"name": "entity.name.function",
+					"match": "([_a-zA-Z0-9]+)(?=([\\s]*\\())"
+				},
+				{
+					"name": "variable.language",
+					"match": "[_a-zA-Z0-9]+"
 				}
 			]
 		}
