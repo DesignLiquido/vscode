@@ -5,6 +5,8 @@ escreva('ab' + 'cd');
 escreva('testando aspas duplas');
 escreva("ab" + "cd");
 
+// Comentários
+
 escreva(1 + 2);
 var x = 1;
 escreva(x);
@@ -55,12 +57,7 @@ tente {
 var funcaoParaMapear = funcao(a) { 
   retorna a * 2; 
 };
-
 escreva(mapear([5, 3], funcaoParaMapear));
-
-classe Teste {}
-var teste = Teste();
-escreva(teste);
 
 var numeroAleatorio = aleatorio();
 escreva(numeroAleatorio);
@@ -75,5 +72,24 @@ var array = [1, 2, 3];
 var fn = funcao(valor){
   retorna valor * 2;
 };
-
 escreva(mapear(array, fn));
+
+// Usando classe, construtor e isto
+classe Teste {
+  construtor() {
+    escreva(isto);
+  }
+}
+var teste = Teste();
+
+// Usando herança
+classe Animal {
+  corre() {
+    escreva("correndo");
+  }
+}
+
+classe Cachorro herda Animal {}
+
+var thor = Cachorro();
+thor.corre();
