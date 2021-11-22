@@ -68,9 +68,12 @@
 			}]
 		},
 		"comments": {
-			"name": "comment.line.double-dash.egua",
-			"begin": "#",
-			"end": "\\n" 
+			"patterns": [
+				{ 
+					"match": "(//).*",
+					"name": "comment.line.double-slash"
+				}
+			]
 		},
 		"arithmetic": {
 			"patterns": [{
