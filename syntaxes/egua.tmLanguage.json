@@ -40,7 +40,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.egua",
-				"match": "\\b(se|senao|senão|fim|entao|então|senaose|senãose|enquanto|faca|faça|para|de|ate|até|gere|tipo}abstrato|retorne|escolha|caso|var|escreva|imprima|passo)\\b"
+				"match": "\\b(var|se|senao|senaose|para|fazer|enquanto|escolha|caso|padrao|tente|pegue|finalmente|retorna|classe|construtor|herda|super|funcao|escreva)\\b"
 			}]
 		},
 		"functions": {
@@ -58,13 +58,13 @@
 		"logical": {
 			"patterns": [{
 				"name": "keyword.operator.logical.egua",
-				"match": "\\b(e|ou|nao|não)\\b"
+				"match": "\\b(e|ou)\\b"
 			}]
 		},
 		"types": {
 			"patterns": [{
 				"name": "storage.type.primitive.scala",
-				"match": "\\b(Inteiro|Real|Texto|Logico|Lógico|Lista|Tupla|Matriz|Cubo)\\b"
+				"match": ""
 			}]
 		},
 		"comments": {
