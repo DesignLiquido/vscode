@@ -46,7 +46,7 @@
 		"functions": {
 			"patterns": [{
 				"name": "keyword.function.egua",
-				"match": "\\b(inteiro|texto|real|tamanho|posição|posicao|posiçao|posicão|contém|contem|maiúsculo|maiusculo|minúsculo|minusculo|inverta|divida|cabeça|cabeca|primeiro|cauda|último|ultimo|pegue|descarte|selecione|descarte_enquanto|pegue_enquanto|ordenar|junte|remova|insira|imutável|imutavel|mutável|mutavel|mapear|injete|PI|ajuda|exemplo|limpar|salvar|carregar|sen|cos|tan|arsen|arcos|artan|abs|raizq|log|max|min|intervalo|mediana|smtr|media|ve|sqr|variancia|devpad|covar|coefvar|coefcorr|coluna|linha|transposta|matriz|matrizmult|matrizinv|matrizid|deter|csl|exp|pot|aleat|vmed|deltas|deltat|acel|mrufh|mrufhp|mruvel|mruvfh|mruvfhp|mruvvel|mruvvelp|inercia|vmmv|van|periodo|pid)\\b"
+				"match": "\\b(aleatorio|aleatorioEntre|inteiro|mapear|ordenar|real|tamanho|texto|importar|ajuda|exemplo|limpar|salvar|carregar|fun1|fun1R|ajuda|exemplo|limpar|salvar|carregar|fun1|fun1R|linspace|fun2|fun2R|rand|aprox|pale|vet|qtd|plot|max|min|intervalo|mediana|smtr|media|ve|sqr|variancia|devpad|covar|coefvar|coefcorr|coluna|linha|transposta|matriz|matrizmult|matrizinv|matrizid|deter|csl|sen|cos|tan|arcos|arsen|artan|exp|log|pot|aleat|raizq|vmed|deltas|deltat|acel|mrufh|mrufhp|mruvel|mruvfh|mruvfhp|mruvvel|mruvvelp|inercia|vmmv|van|periodo|pid)\\b"
 			}]
 		},
 		"constants": {
