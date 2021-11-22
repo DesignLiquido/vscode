@@ -26,6 +26,13 @@
             "language": "egua",
             "scopeName": "source.egua",
             "path": "./syntaxes/egua.tmLanguage.json"
-        }]
+        }],
+        "iconThemes": [
+            {
+              "id": "egua",
+              "label": "Egua",
+              "path": "./recursos/egua-icon-theme.json"
+            }
+          ]
     }
 }

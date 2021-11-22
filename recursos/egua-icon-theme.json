@@ -1,0 +1,47 @@
+{
+	// "fonts": [
+	// 	{
+	// 		"id": "seti",
+	// 		"src": [
+	// 			{
+	// 				"path": "./seti.woff",
+	// 				"format": "woff"
+	// 			}
+	// 		],
+	// 		"weight": "normal",
+	// 		"style": "normal",
+	// 		"size": "150%"
+	// 	}
+	// ],
+	"iconDefinitions": {
+		"_file": {
+			"iconPath": "./logo.svg"
+		},
+	},
+
+	"fileExtensions": {
+		"egua": "_file"
+		// icons by file extension
+	},
+	"fileNames": {
+		// icons by file name
+	},
+	"languageIds": {
+		// icons by language id
+	},
+	"light": {
+		"fileExtensions": {
+			"egua": "_file"
+			// icons by file extension
+		},
+		"fileNames": {
+			// icons by file name
+		},
+		"languageIds": {
+			// icons by language id
+		}
+	},
+	"highContrast": {
+		// overrides for high contrast
+	}
+}
