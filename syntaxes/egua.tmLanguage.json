@@ -34,13 +34,16 @@
 		},
 		{
 			"include": "#string-quoted-double"
+		},
+		{ 	
+			"include": "#storages" 
 		}
 	],
 	"repository": {
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.egua",
-				"match": "\\b(var|se|senao|senaose|para|fazer|enquanto|escolha|caso|padrao|tente|pegue|finalmente|retorna|classe|construtor|herda|super|funcao|escreva)\\b"
+				"match": "\\b(var|se|senao|senaose|para|fazer|enquanto|escolha|caso|padrao|tente|pegue|finalmente|retorna|funcao|escreva)\\b"
 			}]
 		},
 		"functions": {
@@ -112,6 +115,14 @@
 				{
 					"name": "constant.character.escape.egua",
 					"match": "\\\\."
+				}
+			]
+		},
+		"storages": {
+			"patterns": [
+				{
+					"name": "storage.type.swift",
+					"match": "\\b(classe|herda|super|construtor)\\b"
 				}
 			]
 		}
