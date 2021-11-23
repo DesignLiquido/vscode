@@ -1,9 +1,9 @@
-# README (ou LEIAME)
+# Extensão da linguagem Egua para Visual Studio Code
 
-Este arquivo contém instruções sobre como melhorar essa extensão para o Visual Studio Code.
+Essa extensão visa melhorar a produtividade de projetos escritos usando a linguagem Egua: https://egua.tech. 
 
 ## Funcionalidades até então
 
 - Sintaxe colorida
 - Reconhecimento de expressões comuns da linguagem Egua
-- Icone para arquivos .egua
+- Ícone para arquivos `.egua`
