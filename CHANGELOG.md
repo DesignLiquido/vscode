@@ -2,7 +2,7 @@
 
 ## 0.4.0
 
-- Corrige problema de todos os arquivos com icone da extensão .egua
+- Corrige problema de não mostrar icone de outros arquivos
 
 ## 0.3.0
 
