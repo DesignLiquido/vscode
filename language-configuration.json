@@ -1,7 +1,6 @@
 {
     "comments": {
-        // symbol used for single line comment. Remove this entry if your language does not support line comments
-        "lineComment": "#"
+        "lineComment": "//"
     },
     // symbols used as brackets
     "brackets": [
@@ -65,7 +64,7 @@
         ]
     ],
     "indentationRules": {
-        "increaseIndentPattern": "^.*(faca|faça|entao|então|senão|senao|senãose|senaose|escolha|gere|tipo).*$|^.*\\([^)]*$|^.*\\=\\s*$",
-        "decreaseIndentPattern": "^\\s*(fim|senão|senao|senaose|senãose|\\)).*$"
+        "increaseIndentPattern": "^.*(faca|entao|senao|senaose|escolha).*$|^.*\\([^)]*$|^.*\\=\\s*$",
+        "decreaseIndentPattern": "^\\s*(fim|senao|senaose|\\)).*$"
     }
 }
