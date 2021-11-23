@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.4.0
+
+- Corrige problema de todos os arquivos com icone da extensão .egua
+
 ## 0.3.0
 
 - Reconhecendo duas barras "//" como comentário
