@@ -1,7 +1,7 @@
 {
 	"Repetição Para": {
 		"prefix": "para",
-        "body": [
+		"body": [
 			"para (var ${1:i} = 0; ${1:i} < 5; ${1:i} = ${1:i} + 1) {",
 			"\tescreva(${1:i});",
 			"}"
@@ -17,6 +17,6 @@
 			"\ti = i + 1;",
 			"} enquanto(i < 5)"
 		],
-		"description": "Laço de repetição fazer enquanto"
+		"description": "Laço de repetição \"fazer enquanto\""
 	},
 }
