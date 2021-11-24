@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.5.0
+
+- Adicionando Snippets ou "trechos" de códigos para facilitar desenvolvimento
+
 ## 0.4.0
 
 - Corrige problema de não mostrar icone de outros arquivos
