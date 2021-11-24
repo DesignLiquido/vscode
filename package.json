@@ -42,6 +42,12 @@
                 "label": "Egua",
                 "path": "./recursos/egua-icon-theme.json"
             }
+        ],
+        "snippets": [
+            {
+              "language": "egua",
+              "path": "./snippets/egua.code-snippets"
+            }
         ]
     }
 }
