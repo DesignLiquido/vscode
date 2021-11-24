@@ -7,3 +7,4 @@ Essa extensão visa melhorar a produtividade de projetos escritos usando a lingu
 - Sintaxe colorida
 - Reconhecimento de expressões comuns da linguagem Egua
 - Ícone para arquivos `.egua`
+- Trechos de códigos para facilitar desenvolvimento
