@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/eguatech/egua-extensao-vscode"
     },
-    "version": "0.5.0",
+    "version": "0.6.0",
     "engines": {
         "vscode": "^1.55.0"
     },
