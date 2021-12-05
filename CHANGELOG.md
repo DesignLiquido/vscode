@@ -1,8 +1,13 @@
 # Histórico de Modificações
 
+## 0.6.0
+
+- Ajustes de reconhecimento de sintaxes
+- Adicionando mais trechos de códigos
+
 ## 0.5.0
 
-- Adicionando Snippets ou "trechos" de códigos para facilitar desenvolvimento
+- Adicionando trechos de códigos para facilitar desenvolvimento
 
 ## 0.4.0
 
