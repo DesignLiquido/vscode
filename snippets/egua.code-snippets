@@ -17,6 +17,93 @@
 			"\ti = i + 1;",
 			"} enquanto(i < 5)"
 		],
-		"description": "Laço de repetição \"fazer enquanto\""
+		"description": "Laço de repetição \"fazer-enquanto\""
+	},
+	"Declaração de Funcao Padrão": {
+		"prefix": "funcao padrao",
+		"body": [
+			"funcao ${1:nome}() {",
+			"\tescreva(\"sim!\");",
+			"}"
+		],
+		"description": "Declaração de \"funcao-padrao\""
+	},
+	"Declaração de Funcao Anônima": {
+		"prefix": "funcao anonima",
+		"body": [
+			"var ${1:nome} = funcao(${2:variavel}) {",
+			"\tretorna ${2:variavel};",
+			"}"
+		],
+		"description": "Declaração de \"funcao-padrao\""
+	},
+	"Declaração de Se": {
+		"prefix": "se",
+		"body": [
+			"se (${1:condicao}) {",
+			"\tescreva('sim');",
+			"}"
+		],
+		"description": "Declaração de \"se\""
+	},
+	"Declaração Se-Senao": {
+		"prefix": "se senao",
+		"body": [
+			"se (${1:condicao}) {",
+			"\tescreva('correspondente 1');",
+			"} senao {",
+			"\tescreva('correspondente 2');",
+			"}"
+		],
+		"description": "Declaração \"se-senao\""
+	},
+	"Declaração Se-Senaose-Senao": {
+		"prefix": "se senaose senao",
+		"body": [
+			"se (${1:condicao1}) {",
+			"\t$escreva('correspondente 1');",
+			"} senao se (${2:condicao2}) {",
+			"\tescreva('correspondente 2');",
+			"} senao {",
+			"\tescreva('sem valor correspondente');",
+			"}"
+		],
+		"description": "Declaração \"se-senaose-senao\""
+	},
+	"Declaração Escolha": {
+		"prefix": "escolha",
+		"body": [
+			"escolha (${1:chave}) {",
+			"\tcaso ${2:valor}:",
+			"\t\tescreva(\"Olá Mundo!\");",
+			"\tpadrao:",
+			"\t\tescreva(\"Valor padrão!\");",
+			"}"
+		],
+		"description": "Declaração \"escolha\""
+	},
+	"Declaração Tente-Pegue": {
+		"prefix": "tente pegue",
+		"body": [
+			"tente {",
+			"\tescreva(\"sucesso\");",
+			"} pegue {",
+			"\tescreva(\"pegue\");",
+			"}"
+		],
+		"description": "Declaração \"tente-pegue\""
+	},
+	"Declaração Tente-Pegue-Finalmente": {
+		"prefix": "tente pegue finalmente",
+		"body": [
+			"tente {",
+			"\tescreva(\"sucesso\");",
+			"} pegue {",
+			"\tescreva(\"pegue\");",
+			"} finalmente {",
+			"\tescreva(\"pronto\");",
+			"}"
+		],
+		"description": "Declaração \"tente-pegue-finalmente\""
 	},
 }
