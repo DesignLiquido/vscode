@@ -19,19 +19,19 @@
 	"repository": {
 		"keywords": {
 			"patterns": [{
-				"name": "keyword.control.egua",
+				"name": "keyword.control.delegua",
 				"match": "\\b(var|se|senao|senaose|para|fazer|enquanto|escolha|caso|padrao|tente|pegue|finalmente|retorna|funcao|escreva)\\b"
 			}]
 		},
 		"functions": {
 			"patterns": [{
-				"name": "keyword.function.egua",
+				"name": "keyword.function.delegua",
 				"match": "\\b(aleatorio|aleatorioEntre|inteiro|mapear|ordenar|real|tamanho|texto|importar|ajuda|exemplo|limpar|salvar|carregar|fun1|fun1R|ajuda|exemplo|limpar|salvar|carregar|fun1|fun1R|linspace|fun2|fun2R|rand|aprox|pale|vet|qtd|plot|max|min|intervalo|mediana|smtr|media|ve|sqr|variancia|devpad|covar|coefvar|coefcorr|coluna|linha|transposta|matriz|matrizmult|matrizinv|matrizid|deter|csl|sen|cos|tan|arcos|arsen|artan|exp|log|pot|aleat|raizq|vmed|deltas|deltat|acel|mrufh|mrufhp|mruvel|mruvfh|mruvfhp|mruvvel|mruvvelp|inercia|vmmv|van|periodo|pid)\\b"
 			}]
 		},
 		"constants": {
 			"patterns": [{
-				"name": "constant.language.egua",
+				"name": "constant.language.delegua",
 				"match": "\\b(falso|verdadeiro|isto|nulo)\\b"
 			}]
 		},
@@ -41,7 +41,7 @@
 		},
 		"logical": {
 			"patterns": [{
-				"name": "keyword.operator.logical.egua",
+				"name": "keyword.operator.logical.delegua",
 				"match": "\\b(e|ou)\\b"
 			}]
 		},
@@ -61,42 +61,42 @@
 		},
 		"arithmetic": {
 			"patterns": [{
-				"name": "keyword.operator.arithmetic.egua",
+				"name": "keyword.operator.arithmetic.delegua",
 				"match": "\\b(\\+|\\-|\\*|/|mod|div|\\:\\:)\\b"
 			}]
 		},
 		"assignments": {
 			"patterns": [{
-				"name": "keyword.operator.assignment.egua",
+				"name": "keyword.operator.assignment.delegua",
 				"match": "\\b(\\=|\\:=)\\b"
 			}]
 		},
 		"comparison": {
 			"patterns": [{
-				"name": "keyword.operator.comparison.egua",
+				"name": "keyword.operator.comparison.delegua",
 				"match": "\\b(<\\=|>\\=|\\=\\=|<|>|\\<\\>)\\b"
 			}]
 		},
 		"strings": {
 			"patterns": [
 				{
-					"name": "string.quoted.single.egua",
+					"name": "string.quoted.single.delegua",
 					"begin": "\\'",
 					"end": "\\'",
 					"patterns": [
 						{
-							"name": "constant.character.escape.egua",
+							"name": "constant.character.escape.delegua",
 							"match": "\\\\."
 						}
 					]
 				},
 				{
-					"name": "string.quoted.double.egua",
+					"name": "string.quoted.double.delegua",
 					"begin": "\"",
 					"end": "\"",
 					"patterns": [
 						{
-							"name": "constant.character.escape.egua",
+							"name": "constant.character.escape.delegua",
 							"match": "\\\\."
 						}
 					]
@@ -143,5 +143,5 @@
 			]
 		}
 	},
-	"scopeName": "source.egua"
+	"scopeName": "source.delegua"
 }

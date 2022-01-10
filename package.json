@@ -1,29 +1,46 @@
 {
-    "name": "linguagem-egua-vscode",
-    "displayName": "Linguagem Egua",
-    "description": "Extensão de sintaxe para o Visual Studio Code na linguagem Egua",
+    "name": "delegua-vscode",
+    "displayName": "Linguagem Delégua",
+    "description": "Extensão de sintaxe para o Visual Studio Code na linguagem Delégua",
     "icon": "recursos/icon.png",
-    "publisher": "LinguagemEgua",
+    "publisher": "LinguagemDelegua",
     "repository": {
         "type": "git",
-        "url": "https://github.com/eguatech/egua-extensao-vscode"
+        "url": "https://github.com/DesignLiquido/delegua-vscode"
     },
-    "version": "0.6.0",
+    "version": "0.0.1",
     "engines": {
         "vscode": "^1.55.0"
     },
     "categories": [
         "Programming Languages"
     ],
+    "author": "Leonel Sanches da Silva",
+    "contributors": [
+      {
+        "name": "Leonel Sanches da Silva",
+        "url": "https://www.linkedin.com/in/leonelsanchesdasilva/"
+      },
+      {
+        "name": "Samuel Renan Gonçalves Vaz",
+        "url": "https://www.linkedin.com/in/samuel-renan-gon%C3%A7alves-vaz-b6b83a103/"
+      }
+    ],
+    "bugs": {
+        "url": "https://github.com/DesignLiquido/delegua-vscode/issues"
+    },
     "contributes": {
         "languages": [
             {
-                "id": "egua",
+                "id": "delegua",
                 "aliases": [
+                    "Delegua",
+                    "delegua",
                     "Egua",
                     "egua"
                 ],
                 "extensions": [
+                    ".delegua",
                     ".egua"
                 ],
                 "configuration": "./language-configuration.json"
@@ -31,22 +48,22 @@
         ],
         "grammars": [
             {
-                "language": "egua",
-                "scopeName": "source.egua",
-                "path": "./syntaxes/egua.tmLanguage.json"
+                "language": "delegua",
+                "scopeName": "source.delegua",
+                "path": "./syntaxes/delegua.tmLanguage.json"
             }
         ],
         "iconThemes": [
             {
-                "id": "egua",
-                "label": "Egua",
-                "path": "./recursos/egua-icon-theme.json"
+                "id": "delegua",
+                "label": "Delegua",
+                "path": "./recursos/delegua-icon-theme.json"
             }
         ],
         "snippets": [
             {
-                "language": "egua",
-                "path": "./snippets/egua.code-snippets"
+                "language": "delegua",
+                "path": "./snippets/delegua.code-snippets"
             }
         ]
     }

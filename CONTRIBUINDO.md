@@ -3,7 +3,7 @@
 ## Os fontes
 
 * `package.json` - Arquivo inicial de manifesto, apontando todos os arquivos da extensão.
-* `syntaxes/egua.tmLanguage.json` - Arquivo de gramática do Text Mate: https://macromates.com/manual/en/language_grammars (inglês)
+* `syntaxes/delegua.tmLanguage.json` - Arquivo de gramática do Text Mate: https://macromates.com/manual/en/language_grammars (inglês)
 * `language-configuration.json` - Arquivo de configuração da linguagem, onde se definem tokens e palavras reservadas.
 
 ## Como testar
@@ -11,7 +11,7 @@
 * Recomendamos um Visual Studio Code em separado, como o Insiders: https://code.visualstudio.com/insiders/
 * Com o projeto aberto no Visual Studio Code Insiders, verifique se todas as configurações em `language-configuration.json` estão corretas.
 * Pressione `F5` para abrir uma nova janela com a extensão carregada.
-* Crie um novo arquivo com a extensão `.egua`.
+* Crie um novo arquivo com a extensão `.delegua` ou `.egua`.
 * Verifique se a sintaxe está colorida corretamente.
 
 ## Modificando
