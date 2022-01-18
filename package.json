@@ -35,12 +35,20 @@
                 "id": "delegua",
                 "aliases": [
                     "Delegua",
-                    "delegua",
+                    "delegua"
+                ],
+                "extensions": [
+                    ".delegua"
+                ],
+                "configuration": "./language-configuration.json"
+            },
+            {
+                "id": "egua",
+                "aliases": [
                     "Egua",
                     "egua"
                 ],
                 "extensions": [
-                    ".delegua",
                     ".egua"
                 ],
                 "configuration": "./language-configuration.json"
