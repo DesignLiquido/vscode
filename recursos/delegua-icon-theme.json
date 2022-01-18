@@ -25,6 +25,9 @@
 		"_egua": {
 			"iconPath": "./logo.svg",
 		},
+		"_delegua": {
+			"iconPath": "./logo.svg",
+		},
 		"_R_light": {
 			"fontCharacter": "\\E001",
 			"fontColor": "#498ba7"
@@ -1544,6 +1547,7 @@
 	"file": "_default",
 	"fileExtensions": {
 		"egua": "_egua",
+		"delegua": "_delegua",
 		"bsl": "_bsl",
 		"mdo": "_mdo",
 		"cls": "_salesforce",
@@ -1924,6 +1928,7 @@
 		"file": "_default_light",
 		"fileExtensions": {
 			"egua": "_egua",
+			"delegua": "_delegua",
 			"bsl": "_bsl_light",
 			"mdo": "_mdo_light",
 			"cls": "_salesforce_light",

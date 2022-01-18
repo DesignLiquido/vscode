@@ -1,6 +1,6 @@
 {
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-	"name": "Egua",
+	"name": "Delegua",
 	"patterns": [
 		{ "include": "#keywords" },
 		{ "include": "#functions" },
