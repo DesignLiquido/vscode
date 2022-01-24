@@ -20,7 +20,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.delegua",
-				"match": "\\b(var|se|senao|senaose|para|fazer|enquanto|escolha|caso|padrao|tente|pegue|finalmente|retorna|funcao|escreva)\\b"
+				"match": "\\b(var|se|senao|senão|senaose|senãose|para|fazer|enquanto|escolha|caso|padrao|tente|pegue|finalmente|retorna|funcao|função|escreva)\\b"
 			}]
 		},
 		"functions": {
