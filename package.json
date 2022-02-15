@@ -17,14 +17,14 @@
     ],
     "author": "Leonel Sanches da Silva",
     "contributors": [
-      {
-        "name": "Leonel Sanches da Silva",
-        "url": "https://www.linkedin.com/in/leonelsanchesdasilva/"
-      },
-      {
-        "name": "Samuel Renan Gonçalves Vaz",
-        "url": "https://www.linkedin.com/in/samuel-renan-gon%C3%A7alves-vaz-b6b83a103/"
-      }
+        {
+            "name": "Leonel Sanches da Silva",
+            "url": "https://www.linkedin.com/in/leonelsanchesdasilva/"
+        },
+        {
+            "name": "Samuel Renan Gonçalves Vaz",
+            "url": "https://www.linkedin.com/in/samuel-renan-gon%C3%A7alves-vaz-b6b83a103/"
+        }
     ],
     "bugs": {
         "url": "https://github.com/DesignLiquido/delegua-vscode/issues"
@@ -74,5 +74,10 @@
                 "path": "./snippets/delegua.code-snippets"
             }
         ]
+    },
+    "devDependencies": {
+        "@types/node": "^17.0.18",
+        "@vscode/debugadapter": "^1.53.0",
+        "@vscode/debugprotocol": "^1.53.0"
     }
 }
