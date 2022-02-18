@@ -80,38 +80,14 @@ export class DeleguaTempoExecucao extends EventEmitter {
         super();
         this._replInstance = isRepl;
         this._instanceId = Data.getNextId();
-        let ifelse = "if(condition) { ... } elif (condition) {} else {}: if-elif-else control flow. Curly braces {} are mandatory!";
-        this._mapaDeFuncoes.set("if", ifelse);
-        this._mapaDeFuncoes.set("elif", ifelse);
-        this._mapaDeFuncoes.set("else", ifelse);
-        this._mapaDeFuncoes.set("while", "while(condition) { ... }: While control flow. Curly braces {} are mandatory!");
-        this._mapaDeFuncoes.set("for", "for(i : array) OR for(i=0; i<n; i++) { ... }: For control flow statements. Curly braces {} are mandatory!");
+        let ifelse = "se (condicao) { ... } senao se (condicao) {} senao {}: Fluxo se-senaose-senao. Chaves {} são obrigatórias!";
+        this._mapaDeFuncoes.set("se", ifelse);
+        this._mapaDeFuncoes.set("senao se", ifelse);
+        this._mapaDeFuncoes.set("senao", ifelse);
+        this._mapaDeFuncoes.set("enquanto", "enquanto (condicao) { ... }: Fluxo enquanto. Chaves {} são obrigatórias!");
+        this._mapaDeFuncoes.set("para", "pata (i = 0; i < n; i++) { ... }: Fluxo para. Chaves {} são obrigatórias!");
 
-        this._mapaDeFuncoes.set("function", "function f(arg1, arg2, ...) { ... } : CSCS custom interpreted function (use cfunction for pre-compiled functions)");
-        this._mapaDeFuncoes.set("cfunction", "cfunction <retType> f(<type1> arg1, <type2> arg2, ...) { ... } : CSCS function to be precompiled");
-        this._mapaDeFuncoes.set("print", "Print(arg1, arg2, ...): Prints passed arguments to console");
-        this._mapaDeFuncoes.set("write", "Write(arg1, arg2, ...): Prints passed arguments to console on the same line");
-        this._mapaDeFuncoes.set("test", "Test(arg1, arg2): Tests if arg1 is equal to arg2");
-        this._mapaDeFuncoes.set("isInteger", "IsInteger(arg): Tests if arg is an integer");
-        this._mapaDeFuncoes.set("include", "include(filename): includes CSCS code from the filename");
-        this._mapaDeFuncoes.set("substring", "Substring(arg, from, length): Returns a substring of arg");
-        this._mapaDeFuncoes.set("pstime", "Returns process CPU time in milliseconds");
-        this._mapaDeFuncoes.set("now", "Now(format='HH:mm:ss.fff'): Returns current date-time according to the format");
-
-        this._mapaDeFuncoes.set("pow", "Pow(base, n): Returns base raised to the power of n");
-        this._mapaDeFuncoes.set("exp", "Exp(x): Returns e (2.718281828...) raised to the power of x");
-        this._mapaDeFuncoes.set("pi", "Pi: Pi constant (3.141592653589793...) ");
-        this._mapaDeFuncoes.set("sin", "Sin(x): Returns sine of x");
-        this._mapaDeFuncoes.set("cos", "Cos(x): Returns cosine of x");
-
-        this._mapaDeFuncoes.set("size", "Returns number of elements in a list or number of characters in a string");
-        this._mapaDeFuncoes.set("type", "Returns variable type");
-        this._mapaDeFuncoes.set("upper", "Converts to upper case");
-        this._mapaDeFuncoes.set("lower", "Converts to lower case");
-        this._mapaDeFuncoes.set("first", "Returns first element of a list or a first character of a string");
-        this._mapaDeFuncoes.set("last", "Returns last element of a list or a last character of a string");
-        this._mapaDeFuncoes.set("tokenize", "Returns list of tokens after separating the string according to a separator");
-        this._mapaDeFuncoes.set("properties", "{Properties, Type, Size, String, First, Last, Upper, Lower}");
+        this._mapaDeFuncoes.set("funcao", "funcao f(arg1, arg2, ...) { ... } : Declaração de função");
     }
 
     cacheFilename(filename: string) {
@@ -128,7 +104,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
             return;
         }
         this._continue = true;
-        this.sendToServer('continue');
+        this.sendToServer('continuar');
     }
 
     disconnectFromDebugger() {
@@ -136,12 +112,12 @@ export class DeleguaTempoExecucao extends EventEmitter {
             return;
         }
 
-        this.printCSCSOutput('Finished debugging.');
-        this.sendToServer('bye');
+        this.printCSCSOutput('Fim da depuração.');
+        this.sendToServer('tchau');
         this._connected = false;
         this._sourceFile = '';
         this._debugger.end();
-        this.sendEvent('end');
+        this.sendEvent('fim');
         this._isValid = false;
         Data.getNextId();
         DeleguaTempoExecucao._instance = DeleguaTempoExecucao.getInstance(true);
