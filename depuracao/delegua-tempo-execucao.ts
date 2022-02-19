@@ -147,27 +147,33 @@ export class DeleguaTempoExecucao extends EventEmitter {
 			counter++;
 			let line = lines[i];
 			let tokens  = line.split(':');
+
 			if (tokens.length < 4) {
 				continue;
 			}
+
 			let name    = tokens[0];
 			let globLoc = tokens[1];
 			let type    = tokens[2];
 			let value   = tokens.slice(3).join(':').trimRight();
+
 			if (type === 'string') {
 				value = '"' + value + '"';
 			}
+
 			let item = {
 				name: name,
 				type: type,
 				value: value,
 				variablesReference: 0
 			}
+
 			if (globLoc === '1') {
 				this._globalVariables.push(item);
 			} else {
 				this._localVariables.push(item);
 			}
+            
 			let lower = name.toLowerCase();
 			this._mapaDeHovers.set(lower, value);
 			this._mapaDeVariaveis.set(lower, value);
@@ -289,7 +295,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
             return val;
         }
 
-        return "--- unknown ---";
+        return "--- desconhecido ---";
     }
 
     private loadSource(filename: string) {
@@ -462,7 +468,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
                     if (bp) {
                         this.runOnce('stopOnStep');
                     } else {
-                        this.sendToServer('continue');
+                        this.sendToServer('continuar');
                     }
                 } else {
                     this.runOnce('stopOnStep');
@@ -542,7 +548,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         if (this._init) {
             this.runOnce(event);
         } else {
-            this.sendToServer('next');
+            this.sendToServer('proximo');
         }
     }
 
@@ -551,7 +557,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
             return;
         }
         this._continue = false;
-        this.sendToServer('stepin');
+        this.sendToServer('adentrar-escopo');
     }
 
     public stepOut(event = 'stopOnStep') {
@@ -559,7 +565,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
             return;
         }
         this._continue = false;
-        this.sendToServer('stepout');
+        this.sendToServer('sair-escopo');
     }
 
     public verificarDepuracao(arquivo: string): boolean {
