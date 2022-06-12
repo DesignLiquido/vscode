@@ -1,5 +1,5 @@
 export interface DeleguaPontoParada {
 	id: number;
-	line: number;
-	verified: boolean;
+	linha: number;
+	verificado: boolean;
 }
