@@ -1,4 +1,4 @@
-export interface StackEntry {
+export interface ElementoPilha {
 	id: number;
 	line: number;
 	name: string;

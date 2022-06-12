@@ -1,30 +1,31 @@
-import { DebugProtocol } from '@vscode/debugprotocol';
-import { EventEmitter } from 'events';
 import * as fs from 'fs';
 import * as Net from 'net';
 import * as Path from 'path';
 
-import { Data } from './dados-depuracao';
-import { StackEntry } from './elemento-pilha';
-import { CscsBreakpoint } from './ponto-parada';
+import { DebugProtocol } from '@vscode/debugprotocol';
+import { EventEmitter } from 'events';
+
+import { DadosDepuracao } from './dados-depuracao';
+import { ElementoPilha } from './elemento-pilha';
+import { DeleguaPontoParada } from './delegua-ponto-parada';
 
 /**
- * Classe responsável por se comunicar com o motor da linguagem Delégua.
+ * Classe responsável por se comunicar com o depurador da linguagem Delégua.
  */
 export class DeleguaTempoExecucao extends EventEmitter {
-    private static _instance: DeleguaTempoExecucao;
-    private _instanceId = 0;
+    private static _instancia: DeleguaTempoExecucao;
+    private _idInstancia = 0;
 
-    private static _firstRun = true;
+    private static _primeiraExecucao = true;
 
-    private _debugger = new Net.Socket();
+    private _conexaoDepurador = new Net.Socket();
 
-    private _connected = false;
-    private _init = true;
-    private _continue = false;
-    private _isException = false;
-    private _replInstance = false;
-    private _isValid = true;
+    private _conectado = false;
+    private _inicializar = true;
+    private _continuar = false;
+    private _ehExcecao = false;
+    private _instanciaRepl = false;
+    private _ehValido = true;
 
     private _gettingFile = false;
     private _fileTotal = 0;
@@ -44,18 +45,18 @@ export class DeleguaTempoExecucao extends EventEmitter {
     private _mapaDeVariaveis = new Map<string, string>();
     private _mapaDeHovers = new Map<string, string>();
     private _mapaDeFuncoes = new Map<string, string>();
-    private _filenamesMap = new Map<string, string>();
+    private _mapaNomesArquivos = new Map<string, string>();
 
     // Estruturas de dados que guardam os pontos de parada definidos no VSCode.
-    private _breakPoints = new Map<string, CscsBreakpoint[]>();
-    private _breakPointMap = new Map<string, Map<number, CscsBreakpoint>>();
+    private _pontosParada = new Map<string, DeleguaPontoParada[]>();
+    private _mapaPontosParada = new Map<string, Map<number, DeleguaPontoParada>>();
 
     private _serverBase = '';
     private _localBase = '';
 
-    private _sourceFile = '';
+    private _arquivoFonte = '';
     public get sourceFile() {
-        return this._sourceFile;
+        return this._arquivoFonte;
     }
 
     // As linhas do arquivo sendo interpretado.
@@ -65,191 +66,213 @@ export class DeleguaTempoExecucao extends EventEmitter {
     private _originalLine = 0;
 
     private _localVariables = new Array<DebugProtocol.Variable>();
-	public get localVariables() {
-		return this._localVariables;
-	}
+    public get localVariables() {
+        return this._localVariables;
+    }
 
-	private _globalVariables = new Array<DebugProtocol.Variable>();
-	public get globalVariables() {
-		return this._globalVariables;
-	}
+    private _globalVariables = new Array<DebugProtocol.Variable>();
+    public get globalVariables() {
+        return this._globalVariables;
+    }
 
-    private _stackTrace = new Array<StackEntry>();
+    private _stackTrace = new Array<ElementoPilha>();
 
     public constructor(isRepl = false) {
         super();
-        this._replInstance = isRepl;
-        this._instanceId = Data.getNextId();
-        let ifelse = "se (condicao) { ... } senao se (condicao) {} senao {}: Fluxo se-senaose-senao. Chaves {} são obrigatórias!";
-        this._mapaDeFuncoes.set("se", ifelse);
-        this._mapaDeFuncoes.set("senao se", ifelse);
-        this._mapaDeFuncoes.set("senao", ifelse);
-        this._mapaDeFuncoes.set("enquanto", "enquanto (condicao) { ... }: Fluxo enquanto. Chaves {} são obrigatórias!");
-        this._mapaDeFuncoes.set("para", "pata (i = 0; i < n; i++) { ... }: Fluxo para. Chaves {} são obrigatórias!");
+        this._instanciaRepl = isRepl;
+        this._idInstancia = DadosDepuracao.obterProximoId();
+        let seSenao =
+            'se (condicao) { ... } senao se (condicao) {} senao {}: Fluxo se-senaose-senao. Chaves {} são obrigatórias!';
+        this._mapaDeFuncoes.set('se', seSenao);
+        this._mapaDeFuncoes.set('senaose', seSenao);
+        this._mapaDeFuncoes.set('senao', seSenao);
+        this._mapaDeFuncoes.set(
+            'enquanto',
+            'enquanto (condicao) { ... }: Fluxo enquanto. Chaves {} são obrigatórias!'
+        );
+        this._mapaDeFuncoes.set(
+            'para',
+            'pata (i = 0; i < n; i++) { ... }: Fluxo para. Chaves {} são obrigatórias!'
+        );
 
-        this._mapaDeFuncoes.set("funcao", "funcao f(arg1, arg2, ...) { ... } : Declaração de função");
+        this._mapaDeFuncoes.set(
+            'funcao',
+            'funcao f(arg1, arg2, ...) { ... } : Declaração de função'
+        );
     }
 
-    cacheFilename(filename: string) {
-		filename = Path.resolve(filename);
-		let lower = filename.toLowerCase();
-		if (lower === filename) {
-			return;
-		}
-		this._filenamesMap.set(lower, filename);
-	}
-
-    public continue() {
-        if (!this.verificarDepuracao(this._sourceFile)) {
+    cachearNomeArquivo(nomeArquivo: string) {
+        nomeArquivo = Path.resolve(nomeArquivo);
+        let lower = nomeArquivo.toLowerCase();
+        if (lower === nomeArquivo) {
             return;
         }
-        this._continue = true;
-        this.sendToServer('continuar');
+        this._mapaNomesArquivos.set(lower, nomeArquivo);
     }
 
-    disconnectFromDebugger() {
-        if (!this._isValid) {
+    public continuar() {
+        if (!this.verificarDepuracao(this._arquivoFonte)) {
+            return;
+        }
+        this._continuar = true;
+        this.enviarParaServidorDepuracao('continuar');
+    }
+
+    desconectarDoDepurador() {
+        if (!this._ehValido) {
             return;
         }
 
-        this.printCSCSOutput('Fim da depuração.');
-        this.sendToServer('tchau');
-        this._connected = false;
-        this._sourceFile = '';
-        this._debugger.end();
-        this.sendEvent('fim');
-        this._isValid = false;
-        Data.getNextId();
-        DeleguaTempoExecucao._instance = DeleguaTempoExecucao.getInstance(true);
+        this.imprimirSaida('Fim da depuração.');
+        this.enviarParaServidorDepuracao('tchau');
+        this._conectado = false;
+        this._arquivoFonte = '';
+        this._conexaoDepurador.end();
+        this.enviarEvento('fim');
+        this._ehValido = false;
+        DadosDepuracao.obterProximoId();
+        DeleguaTempoExecucao._instancia = DeleguaTempoExecucao.obterInstancia(true);
     }
 
-    fillStackTrace(lines : string[], start = 0) : void {
-		let id = 0;
-		this._stackTrace.length = 0;
-		for (let i = start; i < lines.length; i += 3) {
-			if (i >= lines.length - 2) {
-				break;
-			}
-			let ln    = Number(lines[i]);
-			let file  = this.getLocalPath(lines[i + 1].trim());
-			let line  = lines[i + 2].trim();
+    popularPilhaExecucao(lines: string[], start = 0): void {
+        let id = 0;
+        this._stackTrace.length = 0;
+        for (let i = start; i < lines.length; i += 3) {
+            if (i >= lines.length - 2) {
+                break;
+            }
+            let ln = Number(lines[i]);
+            let file = this.getLocalPath(lines[i + 1].trim());
+            let line = lines[i + 2].trim();
 
-			const entry = <StackEntry> { id: ++id, line : ln, name : line, file: file };
-			this._stackTrace.push(entry);
+            const entry = <ElementoPilha>{
+                id: ++id,
+                line: ln,
+                name: line,
+                file: file,
+            };
+            this._stackTrace.push(entry);
 
-			//this.printDebugMsg(file + ', line ' + ln + ':\t' + line);
-		}
-	}
+            //this.printDebugMsg(file + ', line ' + ln + ':\t' + line);
+        }
+    }
 
-    fillVars(lines : string[], startVarsData : number, nbVarsLines : number)  {
-		let counter = 0;
-		for (let i = startVarsData + 1; i < lines.length && counter < nbVarsLines; i++) {
-			counter++;
-			let line = lines[i];
-			let tokens  = line.split(':');
+    popularVariaveis(lines: string[], startVarsData: number, nbVarsLines: number) {
+        let counter = 0;
+        for (
+            let i = startVarsData + 1;
+            i < lines.length && counter < nbVarsLines;
+            i++
+        ) {
+            counter++;
+            let line = lines[i];
+            let tokens = line.split(':');
 
-			if (tokens.length < 4) {
-				continue;
-			}
+            if (tokens.length < 4) {
+                continue;
+            }
 
-			let name    = tokens[0];
-			let globLoc = tokens[1];
-			let type    = tokens[2];
-			let value   = tokens.slice(3).join(':').trimRight();
+            let name = tokens[0];
+            let globLoc = tokens[1];
+            let type = tokens[2];
+            let value = tokens.slice(3).join(':').trimRight();
 
-			if (type === 'string') {
-				value = '"' + value + '"';
-			}
+            if (type === 'string') {
+                value = '"' + value + '"';
+            }
 
-			let item = {
-				name: name,
-				type: type,
-				value: value,
-				variablesReference: 0
-			}
+            let item = {
+                name: name,
+                type: type,
+                value: value,
+                variablesReference: 0,
+            };
 
-			if (globLoc === '1') {
-				this._globalVariables.push(item);
-			} else {
-				this._localVariables.push(item);
-			}
-            
-			let lower = name.toLowerCase();
-			this._mapaDeHovers.set(lower, value);
-			this._mapaDeVariaveis.set(lower, value);
-		}
-	}
+            if (globLoc === '1') {
+                this._globalVariables.push(item);
+            } else {
+                this._localVariables.push(item);
+            }
 
-    private fireEventsForLine(ln: number, stepEvent?: string): boolean {
-        if (ln >= this._sourceLines.length) {
+            let lower = name.toLowerCase();
+            this._mapaDeHovers.set(lower, value);
+            this._mapaDeVariaveis.set(lower, value);
+        }
+    }
+
+    private emitirEventosParaLinha(linha: number, stepEvent?: string): boolean {
+        if (linha >= this._sourceLines.length) {
             return false;
         }
 
-        const line = this._sourceLines[ln].trim();
+        const line = this._sourceLines[linha].trim();
 
         // Se a linha é um comentário, pula para a próxima linha.
         if (line.startsWith('//')) {
             this._originalLine++;
-            return this.fireEventsForLine(this._originalLine, stepEvent);
+            return this.emitirEventosParaLinha(this._originalLine, stepEvent);
         }
 
         // É um ponto de parada?
-        let bp = this.getBreakPoint(ln);
-        if (bp) {
-            this.sendEvent('stopOnBreakpoint');
-            if (!bp.verified) {
-                bp.verified = true;
-                this.sendEvent('breakpointValidated', bp);
+        let pontoParada = this.obterPontoParada(linha);
+        if (pontoParada) {
+            this.enviarEvento('stopOnBreakpoint');
+            if (!pontoParada.verified) {
+                pontoParada.verified = true;
+                this.enviarEvento('breakpointValidated', pontoParada);
             }
             return true;
         }
 
         if (stepEvent && line.length > 0) {
-            this.sendEvent(stepEvent);
-            this.printDebugMsg('sent event ' + stepEvent + ', ln:' + ln);
+            this.enviarEvento(stepEvent);
+            this.printDebugMsg('sent event ' + stepEvent + ', ln:' + linha);
             return true;
         }
 
         return false;
     }
 
-    private getBreakPoint(line: number): CscsBreakpoint | undefined {
-        let pathname = Path.resolve(this._sourceFile);
+    private obterPontoParada(linha: number): DeleguaPontoParada | undefined {
+        let pathname = Path.resolve(this._arquivoFonte);
         let lower = pathname.toLowerCase();
-        let bpMap = this._breakPointMap.get(lower);
-        if (!bpMap) {
+        let mapaPontosParada = this._mapaPontosParada.get(lower);
+        if (!mapaPontosParada) {
             return undefined;
         }
-        let bp = bpMap.get(line);
-        return bp;
+        let pontoParada = mapaPontosParada.get(linha);
+        return pontoParada;
     }
 
-    public static getInstance(reload = false): DeleguaTempoExecucao {
-        let cscs = DeleguaTempoExecucao._instance;
+    public static obterInstancia(recarregar = false): DeleguaTempoExecucao {
+        let delegua = DeleguaTempoExecucao._instancia;
 
-        if (cscs === null || reload ||
-            (!cscs._connected && !cscs._init) ||
-            !Data.sameInstance(cscs._instanceId)) {
-            DeleguaTempoExecucao._instance = new DeleguaTempoExecucao(false);
+        if (
+            delegua === null ||
+            recarregar ||
+            (!delegua._conectado && !delegua._inicializar) ||
+            !DadosDepuracao.mesmaInstancia(delegua._idInstancia)
+        ) {
+            DeleguaTempoExecucao._instancia = new DeleguaTempoExecucao(false);
         }
 
-        return DeleguaTempoExecucao._instance;
+        return DeleguaTempoExecucao._instancia;
     }
 
-    public static getNewInstance(isRepl = false): DeleguaTempoExecucao {
+    public static obterNovaInstancia(isRepl = false): DeleguaTempoExecucao {
         return new DeleguaTempoExecucao(isRepl);
     }
 
     getLocalPath(pathname: string) {
-        if (pathname === undefined || pathname === null || pathname === "") {
+        if (pathname === undefined || pathname === null || pathname === '') {
             return '';
         }
-        if (this._serverBase === "") {
+        if (this._serverBase === '') {
             return pathname;
         }
 
         pathname = pathname.normalize();
-        pathname = pathname.split("\\").join("/");
+        pathname = pathname.split('\\').join('/');
         let filename = Path.basename(pathname);
         this.setLocalBasePath(pathname);
 
@@ -262,12 +285,12 @@ export class DeleguaTempoExecucao extends EventEmitter {
         return str;
     }
 
-    public getHoverValue(key: string): string {
-        let lower = key.toLowerCase();
+    public obterValorPonteiroMouse(nome: string): string {
+        let lower = nome.toLowerCase();
         let hover = this._mapaDeHovers.get(lower);
 
         if (hover) {
-            return key + "=" + hover;
+            return nome + '=' + hover;
         }
 
         hover = this._mapaDeFuncoes.get(lower);
@@ -284,52 +307,63 @@ export class DeleguaTempoExecucao extends EventEmitter {
             }
         }
 
-        return key;
+        return nome;
     }
 
-    public getVariableValue(key: string): string {
-        let lower = key.toLowerCase();
+    public obterValorVariavel(nome: string): string {
+        let lower = nome.toLowerCase();
         let val = this._mapaDeVariaveis.get(lower);
 
         if (val) {
             return val;
         }
 
-        return "--- desconhecido ---";
+        return '--- desconhecido ---';
     }
 
     private loadSource(filename: string) {
-		if (filename === null || filename === undefined) {
-			return;
-		}
-		filename = Path.resolve(filename);
-		if (this._sourceFile !== null && this._sourceFile !== undefined &&
-			  this._sourceFile.toLowerCase() === filename.toLowerCase()) {
-			return;
-		}
-		if (this.verificarDepuracao(filename)) {
-			this.cacheFilename(filename);
-			this._sourceFile =  filename;
-			this._sourceLines = fs.readFileSync(this._sourceFile).toString().split('\n');
-		}
-	}
+        if (filename === null || filename === undefined) {
+            return;
+        }
+        filename = Path.resolve(filename);
+        if (
+            this._arquivoFonte !== null &&
+            this._arquivoFonte !== undefined &&
+            this._arquivoFonte.toLowerCase() === filename.toLowerCase()
+        ) {
+            return;
+        }
+        if (this.verificarDepuracao(filename)) {
+            this.cachearNomeArquivo(filename);
+            this._arquivoFonte = filename;
+            this._sourceLines = fs
+                .readFileSync(this._arquivoFonte)
+                .toString()
+                .split('\n');
+        }
+    }
 
-    public printCSCSOutput(msg: string, file = "", line = -1, newLine = '\n') {
+    public imprimirSaida(mensagem: string, arquivo = '', linha = -1, novaLinha = '\n') {
         //console.error('CSCS> ' + msg + ' \r\n');
         //console.error();
-        file = file === "" ? this._sourceFile : file;
-        file = this.getLocalPath(file);
-        line = line >= 0 ? line : this._originalLine >= 0 ? this._originalLine : this._sourceFile.length - 1;
+        arquivo = arquivo === '' ? this._arquivoFonte : arquivo;
+        arquivo = this.getLocalPath(arquivo);
+        linha =
+            linha >= 0
+                ? linha
+                : this._originalLine >= 0
+                ? this._originalLine
+                : this._arquivoFonte.length - 1;
         //this.printDebugMsg("PRINT " + msg + " " + file + " " + line);
-        this.sendEvent('output', msg, file, line, 0, newLine);
+        this.enviarEvento('output', mensagem, arquivo, linha, 0, novaLinha);
     }
 
     public printDebugMsg(msg: string) {
         //console.info('    _' + msg);
     }
 
-    protected processFromDebugger(data: any) {
-        if (!this._isValid) {
+    protected processarDoDepurador(data: any) {
+        if (!this._ehValido) {
             return;
         }
 
@@ -344,14 +378,14 @@ export class DeleguaTempoExecucao extends EventEmitter {
                 for (let i = 1; i < lines.length - 1; i++) {
                     let line = lines[i].trim();
                     if (line !== '') {
-                        this.printCSCSOutput(lines[i]);
+                        this.imprimirSaida(lines[i]);
                     }
                 }
             }
 
-            if (response === 'repl' && this._replInstance) {
-                this.sendEvent('onReplMessage', data.toString());
-                this.disconnectFromDebugger();
+            if (response === 'repl' && this._instanciaRepl) {
+                this.enviarEvento('onReplMessage', data.toString());
+                this.desconectarDoDepurador();
             }
 
             return;
@@ -381,7 +415,10 @@ export class DeleguaTempoExecucao extends EventEmitter {
                 this._fileReceived = this._fileBytes.length;
             } else if (response !== 'send_file') {
                 const totalLength = this._fileBytes.length + data.length;
-                this._fileBytes = Buffer.concat([this._fileBytes, data], totalLength);
+                this._fileBytes = Buffer.concat(
+                    [this._fileBytes, data],
+                    totalLength
+                );
                 this._fileReceived = totalLength;
             }
 
@@ -391,17 +428,20 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
                 this._fileTotal = this._fileReceived = 0;
                 this._gettingFile = false;
-                this.printCSCSOutput('Saved remote file to: ' + this._dataFile);
-                
-                if (this._replInstance) {
-                    this.sendEvent('onReplMessage', 'Saved remote file to: ' + this._dataFile);
+                this.imprimirSaida('Saved remote file to: ' + this._dataFile);
+
+                if (this._instanciaRepl) {
+                    this.enviarEvento(
+                        'onReplMessage',
+                        'Saved remote file to: ' + this._dataFile
+                    );
                 }
             }
             return;
         }
 
         if (response === 'end') {
-            this.disconnectFromDebugger();
+            this.desconectarDoDepurador();
             return;
         }
 
@@ -411,23 +451,23 @@ export class DeleguaTempoExecucao extends EventEmitter {
         }
 
         if (response === 'exc') {
-            this.sendEvent('stopOnException');
-            this._isException = true;
+            this.enviarEvento('stopOnException');
+            this._ehExcecao = true;
             startVarsData = 2;
             let nbVarsLines = Number(lines[startVarsData]);
-            this.fillVars(lines, startVarsData, nbVarsLines);
+            this.popularVariaveis(lines, startVarsData, nbVarsLines);
 
             startStackData = startVarsData + nbVarsLines + 1;
-            this.fillStackTrace(lines, startStackData);
+            this.popularPilhaExecucao(lines, startStackData);
 
             let msg = lines.length < 2 ? '' : lines[1];
             let headerMsg = 'Exception thrown. ' + msg + ' ';
 
             if (this._stackTrace.length < 1) {
-                this.printCSCSOutput(headerMsg);
+                this.imprimirSaida(headerMsg);
             } else {
                 let entry = this._stackTrace[0];
-                this.printCSCSOutput(headerMsg, entry.file, entry.line);
+                this.imprimirSaida(headerMsg, entry.file, entry.line);
             }
 
             return;
@@ -438,20 +478,24 @@ export class DeleguaTempoExecucao extends EventEmitter {
             this._originalLine = Number(lines[currLine++]);
             let nbOutputLines = Number(lines[currLine++]);
 
-            for (let i = 0; i < nbOutputLines && currLine < lines.length - 1; i += 2) {
+            for (
+                let i = 0;
+                i < nbOutputLines && currLine < lines.length - 1;
+                i += 2
+            ) {
                 let line = lines[currLine++].trim();
                 if (i === nbOutputLines - 1) {
                     break;
                 }
                 let parts = line.split('\t');
                 let linenr = Number(parts[0]);
-                let filename = parts.length < 2 ? this._sourceFile : parts[1];
+                let filename = parts.length < 2 ? this._arquivoFonte : parts[1];
                 line = lines[currLine++].trim();
 
                 if (i >= nbOutputLines - 2 && line === '') {
                     break;
                 }
-                this.printCSCSOutput(line, filename, linenr);
+                this.imprimirSaida(line, filename, linenr);
             }
 
             startVarsData = currLine;
@@ -459,73 +503,95 @@ export class DeleguaTempoExecucao extends EventEmitter {
                 name: '__line',
                 type: 'number',
                 value: String(this._originalLine + 1).trimRight(),
-                variablesReference: 0
+                variablesReference: 0,
             });
             if (this._originalLine >= 0) {
-                if (this._continue) {
-                    let bp = this.getBreakPoint(this._originalLine);
-                    this.printDebugMsg('breakpoint on ' + this._originalLine + ': ' + (bp !== undefined));
-                    if (bp) {
-                        this.runOnce('stopOnStep');
+                if (this._continuar) {
+                    let pontoParada = this.obterPontoParada(this._originalLine);
+                    this.printDebugMsg(
+                        'breakpoint on ' +
+                            this._originalLine +
+                            ': ' +
+                            (pontoParada !== undefined)
+                    );
+                    if (pontoParada) {
+                        this.executarUmaVez('stopOnStep');
                     } else {
-                        this.sendToServer('continuar');
+                        this.enviarParaServidorDepuracao('continuar');
                     }
                 } else {
-                    this.runOnce('stopOnStep');
+                    this.executarUmaVez('stopOnStep');
                 }
             }
         }
         if (response === 'vars' || response === 'next') {
             let nbVarsLines = Number(lines[startVarsData]);
-            this.fillVars(lines, startVarsData, nbVarsLines);
+            this.popularVariaveis(lines, startVarsData, nbVarsLines);
             startStackData = startVarsData + nbVarsLines + 1;
         }
         if (response === 'stack' || response === 'next') {
-            this.fillStackTrace(lines, startStackData);
+            this.popularPilhaExecucao(lines, startStackData);
         }
         if (this._originalLine === -3) {
-            this.disconnectFromDebugger();
+            this.desconectarDoDepurador();
             return;
         }
-        if (response !== 'stack' && response !== 'next' && response !== 'file') {
-            this.printCSCSOutput('GOT ' + response + ": " + lines.length + " lines." +
-                ' LAST: ' + lines[lines.length - 2] + " : " + lines[lines.length - 1]);
+        if (
+            response !== 'stack' &&
+            response !== 'next' &&
+            response !== 'file'
+        ) {
+            this.imprimirSaida(
+                'GOT ' +
+                    response +
+                    ': ' +
+                    lines.length +
+                    ' lines.' +
+                    ' LAST: ' +
+                    lines[lines.length - 2] +
+                    ' : ' +
+                    lines[lines.length - 1]
+            );
         }
     }
 
-    private runOnce(stepEvent?: string) {
-        this.fireEventsForLine(this._originalLine, stepEvent);
+    private executarUmaVez(stepEvent?: string) {
+        this.emitirEventosParaLinha(this._originalLine, stepEvent);
     }
 
-    private sendEvent(event: string, ...args: any[]) {
-        setImmediate(_ => {
+    private enviarEvento(event: string, ...args: any[]) {
+        setImmediate((_) => {
             this.emit(event, ...args);
         });
     }
 
-    public sendToServer(cmd: string, data = "") {
+    public enviarParaServidorDepuracao(comando: string, dados = '') {
         /*if (isRepl && this._sourceFile != '') {
             let msg = 'Cannot execute REPL while debugging.';
             this.printWarningMsg(msg);
             return;
         }*/
 
-        let toSend = cmd;
-        if (data !== '' || cmd.indexOf('|') < 0) {
-            toSend += '|' + data;
+        let toSend = comando;
+        if (dados !== '' || comando.indexOf('|') < 0) {
+            toSend += '|' + dados;
         }
-        if (!this._connected) {
+        if (!this._conectado) {
             //console.log('Connection not valid. Queueing [' + toSend + '] when connected.');
             this._queuedCommands.push(toSend);
             return;
         }
 
         //this._replSent = isRepl;
-        this._debugger.write(toSend + "\n");
+        this._conexaoDepurador.write(toSend + '\n');
     }
 
     setLocalBasePath(pathname: string) {
-        if (this._localBase !== undefined && this._localBase !== null && this._localBase !== '') {
+        if (
+            this._localBase !== undefined &&
+            this._localBase !== null &&
+            this._localBase !== ''
+        ) {
             return;
         }
 
@@ -538,46 +604,48 @@ export class DeleguaTempoExecucao extends EventEmitter {
         this._localBase = Path.dirname(pathname);
     }
 
-    public step(event = 'stopOnStep') {
-        if (!this.verificarDepuracao(this._sourceFile)) {
+    public step(evento = 'stopOnStep') {
+        if (!this.verificarDepuracao(this._arquivoFonte)) {
             return;
         }
 
-        this._continue = false;
+        this._continuar = false;
 
-        if (this._init) {
-            this.runOnce(event);
+        if (this._inicializar) {
+            this.executarUmaVez(evento);
         } else {
-            this.sendToServer('proximo');
+            this.enviarParaServidorDepuracao('proximo');
         }
     }
 
-    public stepIn(event = 'stopOnStep') {
-        if (!this.verificarDepuracao(this._sourceFile)) {
+    public adentrarEscopo(event = 'stopOnStep') {
+        if (!this.verificarDepuracao(this._arquivoFonte)) {
             return;
         }
-        this._continue = false;
-        this.sendToServer('adentrar-escopo');
+        this._continuar = false;
+        this.enviarParaServidorDepuracao('adentrar-escopo');
     }
 
-    public stepOut(event = 'stopOnStep') {
-        if (!this.verificarDepuracao(this._sourceFile)) {
+    public sairEscopo(event = 'stopOnStep') {
+        if (!this.verificarDepuracao(this._arquivoFonte)) {
             return;
         }
-        this._continue = false;
-        this.sendToServer('sair-escopo');
+        this._continuar = false;
+        this.enviarParaServidorDepuracao('sair-escopo');
     }
 
     public verificarDepuracao(arquivo: string): boolean {
-        return this.verificarExcecao() && arquivo !== null &&
+        return (
+            this.verificarExcecao() &&
+            arquivo !== null &&
             typeof arquivo !== 'undefined' &&
-            (arquivo.endsWith('cs') ||
-                arquivo.endsWith('mqs'));
+            (arquivo.endsWith('cs') || arquivo.endsWith('mqs'))
+        );
     }
 
     private verificarExcecao(): boolean {
-        if (this._isException) {
-            this.disconnectFromDebugger();
+        if (this._ehExcecao) {
+            this.desconectarDoDepurador();
             return false;
         }
         return true;

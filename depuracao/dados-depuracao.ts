@@ -1,15 +1,15 @@
-export abstract class Data {
+export abstract class DadosDepuracao {
     static id = 0;
 
-    public static sameInstance(instanceId: number): boolean {
-        return Data.id === instanceId;
+    public static mesmaInstancia(idInstancia: number): boolean {
+        return DadosDepuracao.id === idInstancia;
     }
 
-    public static getId(): number {
-        return Data.id;
+    public static obterId(): number {
+        return DadosDepuracao.id;
     }
 
-    public static getNextId(): number {
-        return ++Data.id;
+    public static obterProximoId(): number {
+        return ++DadosDepuracao.id;
     }
 }
