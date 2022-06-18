@@ -212,6 +212,31 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
 		this.sendResponse(response);
 	}
 
+    protected stackTraceRequest(response: DebugProtocol.StackTraceResponse, args: DebugProtocol.StackTraceArguments): void {
+
+		const startFrame = typeof args.startFrame === 'number' ? args.startFrame : 0;
+		const maxLevels = typeof args.levels === 'number' ? args.levels : 1000;
+		const endFrame = startFrame + maxLevels;
+
+		const stk = this._tempoExecucao.stack(startFrame, endFrame);
+
+		response.body = {
+			stackFrames: stk.frames.map(f => new StackFrame(f.index, f.name, this.createSource(f.file), this.convertDebuggerLineToClient(f.line))),
+			totalFrames: stk.count
+		};
+		this.sendResponse(response);
+	}
+
+    protected threadsRequest(response: DebugProtocol.ThreadsResponse): void {
+
+		response.body = {
+			threads: [
+				new Thread(DeleguaSessaoDepuracao.THREAD_ID, "thread 1")
+			]
+		};
+		this.sendResponse(response);
+	}
+
     private createSource(filePath: string): Source {
         return new Source(
             basename(filePath),
