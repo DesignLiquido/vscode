@@ -3,7 +3,7 @@
     "displayName": "Linguagem Delégua",
     "description": "Extensão de sintaxe para o Visual Studio Code na linguagem Delégua",
     "icon": "recursos/icon.png",
-    "publisher": "LinguagemDelegua",
+    "publisher": "Design Líquido",
     "repository": {
         "type": "git",
         "url": "https://github.com/DesignLiquido/delegua-vscode"
@@ -29,7 +29,96 @@
     "bugs": {
         "url": "https://github.com/DesignLiquido/delegua-vscode/issues"
     },
+    "scripts": {
+        "compile": "tsc -p ./",
+        "lint": "eslint depuracao --ext ts",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "esbuild-base": "esbuild ./depuracao/extensao.ts --bundle --tsconfig=./tsconfig.json --external:vscode --format=cjs --platform=node --outfile=dist/extensao.js",
+        "watch": "npm run -S esbuild-base -- --sourcemap --sources-content=false --watch",
+        "esbuild-web": "esbuild ./depuracao/extensao-web.ts --bundle --tsconfig=./tsconfig.json --external:vscode --format=cjs --platform=browser --outfile=dist/extensao-web.js",
+        "watch-web": "npm run -S esbuild-web -- --sourcemap --sources-content=false --watch",
+        "build": "npm run -S esbuild-base -- --sourcemap --sources-content=false && npm run -S esbuild-web -- --sourcemap --sources-content=false",
+        "package": "vsce package",
+        "publish": "vsce publish",
+        "publish-pre-release": "vsce publish --pre-release",
+        "vscode:prepublish": "rimraf dist && npm run -S esbuild-base -- --minify && npm run -S esbuild-web -- --minify",
+        "test": "npm run typecheck"
+    },
     "contributes": {
+        "debuggers": [
+            {
+                "type": "delegua",
+                "languages": [
+                    "delegua"
+                ],
+                "label": "Delégua",
+                "program": "./out/adaptador-depuracao.js",
+                "runtime": "node",
+                "configurationAttributes": {
+                    "launch": {
+                        "required": [
+                            "program"
+                        ],
+                        "properties": {
+                            "program": {
+                                "type": "string",
+                                "description": "Caminho absoluto para arquivo fonte Delégua.",
+                                "default": "${workspaceFolder}/${command:AskForProgramName}"
+                            },
+                            "stopOnEntry": {
+                                "type": "boolean",
+                                "description": "Parar automaticamente após iniciar execução.",
+                                "default": true
+                            },
+                            "trace": {
+                                "type": "boolean",
+                                "description": "Habilitar log do Protocolo do Adaptador de Depuração.",
+                                "default": true
+                            },
+                            "compileError": {
+                                "type": "string",
+                                "description": "Simular um erro de interpretação na requisição de início ('launch').",
+                                "enum": [
+                                    "default",
+                                    "mostrar",
+                                    "esconder"
+                                ],
+                                "enumDescriptions": [
+                                    "default: mostrar erro de interpretação de mentirinha para o usuário",
+                                    "mostrar erro de interpretação de mentirinha para o usuário",
+                                    "não mostrar erro de interpretação de mentirinha para o usuário"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "initialConfigurations": [
+                    {
+                        "type": "delegua",
+                        "request": "launch",
+                        "name": "Pedir por nome de arquivo",
+                        "program": "${workspaceFolder}/${command:AskForProgramName}",
+                        "stopOnEntry": true
+                    }
+                ],
+                "configurationSnippets": [
+                    {
+                        "label": "Depuração em Delégua: Iniciar",
+                        "description": "Uma nova configuração para depuração para arquivo fonte Delégua.",
+                        "body": {
+                            "type": "delegua",
+                            "request": "launch",
+                            "name": "Pedir por nome de arquivo",
+                            "program": "^\"\\${workspaceFolder}/\\${command:AskForProgramName}\"",
+                            "stopOnEntry": true
+                        }
+                    }
+                ],
+                "variables": {
+                    "AskForProgramName": "extension.delegua.getProgramName"
+                }
+            }
+        ],
         "languages": [
             {
                 "id": "delegua",
@@ -77,9 +166,16 @@
     },
     "devDependencies": {
         "@types/node": "^17.0.18",
+        "@types/vscode": "^1.68.0",
+        "@typescript-eslint/eslint-plugin": "^5.28.0",
+        "@typescript-eslint/parser": "^5.28.0",
         "@vscode/debugadapter": "^1.53.0",
+        "@vscode/debugadapter-testsupport": "^1.55.1",
         "@vscode/debugprotocol": "^1.53.0",
         "await-notify": "^1.0.1",
-        "base64-js": "^1.5.1"
+        "base64-js": "^1.5.1",
+        "esbuild": "^0.14.45",
+        "eslint": "^8.18.0",
+        "typescript": "^4.7.4"
     }
 }
