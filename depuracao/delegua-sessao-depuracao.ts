@@ -116,6 +116,17 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         this.sendEvent(new InitializedEvent());
     }
 
+    /**
+	 * Called at the end of the configuration sequence.
+	 * Indicates that all breakpoints etc. have been sent to the DA and that the 'launch' can start.
+	 */
+	protected configurationDoneRequest(response: DebugProtocol.ConfigurationDoneResponse, args: DebugProtocol.ConfigurationDoneArguments): void {
+		super.configurationDoneRequest(response, args);
+
+		// notify the launchRequest that configuration has finished
+		this._configurationDone.notify();
+	}
+
     protected async launchRequest(response: DebugProtocol.LaunchResponse, args: LaunchRequestArguments) {
 
 		// make sure to 'Stop' the buffered logging if 'trace' is not set
@@ -171,6 +182,35 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         response.body = { result: reply ? reply : '', variablesReference: 0 };
         this.sendResponse(response);
     }
+
+    protected setBreakPointsRequest(response: DebugProtocol.SetBreakpointsResponse, args: DebugProtocol.SetBreakpointsArguments): void {
+
+		const path = <string>args.source.path;
+		if (!this._tempoExecucao.verificarDepuracao(path)) {
+			this.sendResponse(response);
+			return;
+		}
+		const clientLines = args.lines || [];
+
+		// clear all breakpoints for this file
+		this._tempoExecucao.clearBreakpoints(path);
+
+		// set and verify breakpoint locations
+		const actualBreakpoints = clientLines.map(l => {
+			let { verificado, linha, id } = this._tempoExecucao.setBreakPoint(path, this.convertClientLineToDebugger(l));
+			const bp = <DebugProtocol.Breakpoint> new Breakpoint(verificado, this.convertDebuggerLineToClient(linha));
+			bp.id= id;
+			return bp;
+		});
+
+		// send back the actual breakpoint positions
+		response.body = {
+			breakpoints: actualBreakpoints
+		};
+
+		this._tempoExecucao.sendBreakpontsToServer(path);
+		this.sendResponse(response);
+	}
 
     private createSource(filePath: string): Source {
         return new Source(

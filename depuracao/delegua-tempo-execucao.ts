@@ -56,6 +56,10 @@ export class DeleguaTempoExecucao extends EventEmitter {
     private _pontosParada = new Map<string, DeleguaPontoParada[]>();
     private _mapaPontosParada = new Map<string, Map<number, DeleguaPontoParada>>();
 
+    // since we want to send breakpoint events, we will assign an id to every event
+	// so that the frontend can match events with breakpoints.
+	private _breakpointId    = 1;
+
     private _arquivoFonte = '';
     public get sourceFile() {
         return this._arquivoFonte;
@@ -368,6 +372,43 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
         return false;
     }
+
+    public clearBreakpoints(path: string): void {
+		let pathname = Path.resolve(path);
+		let lower = pathname.toLowerCase();
+		this._pontosParada.delete(lower);
+		this._mapaPontosParada.delete(lower);
+	}
+
+    public setBreakPoint(path: string, line: number) : DeleguaPontoParada {
+		//path = Path.normalize(path);
+		path = Path.resolve(path);
+		this.cachearNomeArquivo(path);
+
+		let lower = path.toLowerCase();
+
+		const bp = <DeleguaPontoParada> { verificado: false, linha: line, id: this._breakpointId++ };
+		let bps = this._pontosParada.get(lower);
+		if (!bps) {
+			bps = new Array<DeleguaPontoParada>();
+			this._pontosParada.set(lower, bps);
+		}
+		bps.push(bp);
+
+		let bpMap = this._mapaPontosParada.get(lower);
+		if (!bpMap) {
+			bpMap = new Map<number, DeleguaPontoParada>();
+		}
+		bpMap.set(line, bp);
+		this._mapaPontosParada.set(lower, bpMap);
+		if (lower.includes('functions.cscs')) {
+			this.printDebugMsg("Verifying " + path);
+		}
+
+		this.verifyBreakpoints(path);
+
+		return bp;
+	}
 
     private obterPontoParada(linha: number): DeleguaPontoParada | undefined {
         let pathname = Path.resolve(this._arquivoFonte);
