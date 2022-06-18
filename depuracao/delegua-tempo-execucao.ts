@@ -19,9 +19,14 @@ export class DeleguaTempoExecucao extends EventEmitter {
     private static _primeiraExecucao = true;
 
     private _conexaoDepurador = new Net.Socket();
+    private _connectType = 'sockets';
+	private _host        = '127.0.0.1';
+	private _port        = 13337;
+	private _serverBase  = '';
+	private _localBase   = '';
 
     private _conectado = false;
-    private _inicializar = true;
+    private _inicializado = true;
     private _continuar = false;
     private _ehExcecao = false;
     private _instanciaRepl = false;
@@ -50,9 +55,6 @@ export class DeleguaTempoExecucao extends EventEmitter {
     // Estruturas de dados que guardam os pontos de parada definidos no VSCode.
     private _pontosParada = new Map<string, DeleguaPontoParada[]>();
     private _mapaPontosParada = new Map<string, Map<number, DeleguaPontoParada>>();
-
-    private _serverBase = '';
-    private _localBase = '';
 
     private _arquivoFonte = '';
     public get sourceFile() {
@@ -101,6 +103,35 @@ export class DeleguaTempoExecucao extends EventEmitter {
         );
     }
 
+    public start(program: string, stopOnEntry: boolean, connectType: string,
+        host: string, port: number, serverBase = "") {
+
+        this._connectType = connectType;
+        this._host = host;
+        this._port = port;
+        this._serverBase = serverBase;
+
+        if (host === "127.0.0.1") {
+        this._serverBase = "";
+        }
+
+        this.carregarFonte(program);
+        this._originalLine = this.getFirstLine();
+
+        this.verifyBreakpoints(this._arquivoFonte);
+
+        this.connectToDebugger();
+
+        if (stopOnEntry) {
+            // we step once
+            this.step('stopOnEntry');
+        } else {
+            // we just start to run until we hit a breakpoint or an exception
+            this.continuar();
+        }
+        //this.printCSCSOutput('StartDebug ' + host + ":" + port + "(" + this._instanceId + ")");
+    }
+
     cachearNomeArquivo(nomeArquivo: string) {
         nomeArquivo = Path.resolve(nomeArquivo);
         let lower = nomeArquivo.toLowerCase();
@@ -117,6 +148,111 @@ export class DeleguaTempoExecucao extends EventEmitter {
         this._continuar = true;
         this.enviarParaServidorDepuracao('continuar');
     }
+
+    public connectToDebugger() : void {
+		if (this._conectado) {
+			return;
+		}
+
+		if (this._connectType === "sockets") {
+			this.imprimirSaida('Connecting to ' + this._host + ":" + this._port + '...', '', -1, ''); // no new line
+			//console.log('Connecting to ' + this._host + ":" + this._port + '...');
+
+			let timeout  = this._host === '127.0.0.1' || this._host === 'localhost' || this._host === '' ? 3.5 : 10;
+			this._conexaoDepurador.setTimeout(timeout * 1000);
+
+			this._conexaoDepurador.connect(this._port, this._host, () => {
+				this._conectado = true;
+				this.imprimirSaida('Connected to the Debugger Server.');
+				//console.log('Connected to ' + this._host + ":" + this._port + '...');
+
+				if (DeleguaTempoExecucao._primeiraExecucao) {
+				  this.printInfoMsg('CSCS: Connected to ' + this._host + ":" + this._port +
+					'. Check Output CSCS Window for REPL and Debug Console for Debugger Messages');
+				}
+				this.enviarEvento('onStatusChange', 'CSCS: Connected to ' + this._host + ":" + this._port);
+				DeleguaTempoExecucao._primeiraExecucao = false;
+				this._inicializado = false;
+
+				if (!this._instanciaRepl && this._arquivoFonte !== '') {
+					let serverFilename = this.getServerPath(this._arquivoFonte);
+					if (serverFilename !== undefined && serverFilename !== '') {
+						//console.log('Sending serverFilename: [' + serverFilename + ']');
+						this.enviarParaServidorDepuracao("file", serverFilename);
+					}
+					this.sendAllBreakpontsToServer();
+				}
+
+				for (let i = 0; i < this._queuedCommands.length; i++) {
+					//console.log('Sending queued: ' + this._queuedCommands[i]);
+					this.enviarParaServidorDepuracao(this._queuedCommands[i]);
+				}
+				this._queuedCommands.length = 0;
+			});
+
+			this._conexaoDepurador.on('data', (data: any) => {
+				if (!this._gettingData) {
+					let ind = data.toString().indexOf('\n');
+					this._dataTotal = this._dataReceived = 0;
+					if (ind > 0) {
+						this._dataTotal = Number(data.slice(0, ind));
+						//this.printCSCSOutput('  Received data size: ' + this._dataTotal);
+						if (isNaN(this._dataTotal)) {
+							this._dataTotal = 0;
+						}
+					}
+					if (this._dataTotal === 0) {
+						this.processarDoDepurador(data);
+						return;
+					}
+					if (data.length > ind + 1) {
+						data = data.slice(ind + 1);
+					} else {
+						data = '';
+					}
+					this._gettingData = true;
+					//this.printCSCSOutput('  Started collecting data: ' + data.toString().substring(0,4));
+				}
+				if (this._gettingData) {
+					if (this._dataReceived === 0) {
+						this._dataBytes = data;
+						this._dataReceived = data.length;
+					} else {
+					  //this.printCSCSOutput('  EXTRA. Currently: ' + this._dataReceived +
+					  // ', total: ' + this._dataTotal + ', new: ' + data.length);
+						const totalLength = this._dataBytes.length + data.length;
+						this._dataBytes = Buffer.concat([this._dataBytes, data], totalLength);
+						this._dataReceived = totalLength;
+					}
+					if (this._dataReceived >= this._dataTotal) {
+						this._dataTotal = this._dataReceived = 0;
+						this._gettingData = false;
+						//this.printCSCSOutput('  COLLECTED: ' + this._dataBytes.toString().substring(0, 4) + "...");
+						this.processarDoDepurador(this._dataBytes);
+					}
+				}
+			});
+
+			this._conexaoDepurador.on('timeout', () => {
+				if (!this._conectado) {
+					this.imprimirSaida("Timeout connecting to " + this._host + ":" + this._port);
+					//this.printErrorMsg('Timeout connecting to ' + this._host + ":" + this._port);
+					//console.log('Timeout connecting to ' + this._host + ":" + this._port + '...');
+					this._conexaoDepurador.destroy();
+				}
+  		    });
+
+			this._conexaoDepurador.on('close', () => {
+				if (this._inicializado) {
+					this.imprimirSaida('Could not connect to ' + this._host + ":" + this._port);
+					this.printErrorMsg('Could not connect to ' + this._host + ":" + this._port);
+					this.enviarEvento('onStatusChange', "CSCS: Couldn't connect to " + this._host + ":" + this._port);
+				}
+				//console.log('Closed connection to ' + this._host + ":" + this._port + '...');
+				this._conectado = false;
+			});
+		}
+	}
 
     desconectarDoDepurador() {
         if (!this._ehValido) {
@@ -250,7 +386,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         if (
             delegua === null ||
             recarregar ||
-            (!delegua._conectado && !delegua._inicializar) ||
+            (!delegua._conectado && !delegua._inicializado) ||
             !DadosDepuracao.mesmaInstancia(delegua._idInstancia)
         ) {
             DeleguaTempoExecucao._instancia = new DeleguaTempoExecucao(false);
@@ -280,10 +416,63 @@ export class DeleguaTempoExecucao extends EventEmitter {
         return localPath;
     }
 
+    getServerPath(pathname: string)
+	{
+		if (this._serverBase === "") {
+			return pathname;
+		}
+
+		pathname = pathname.normalize();
+		this.setLocalBasePath(pathname);
+
+		let filename = Path.basename(pathname);
+		let serverPath = Path.join(this._serverBase, filename);
+		serverPath = this.substituir(serverPath, "\\", "/");
+		return serverPath;
+	}
+
+    sendAllBreakpontsToServer() {
+		let keys = Array.from(this._pontosParada.keys() );
+		for (let i = 0; i < keys.length; i ++) {
+			let path = keys[i];
+			this.sendBreakpontsToServer(path);
+		}
+	}
+
+    public sendBreakpontsToServer(path: string) {
+		if (!this._conectado) {
+			return;
+		}
+
+		let filename = this.getActualFilename(path);
+		path = Path.resolve(path);
+		let lower = path.toLowerCase();
+
+		let data = filename;
+		let bps = this._pontosParada.get(lower) || [];
+
+		for (let i = 0; i < bps.length; i ++) {
+			let entry = bps[i].linha;
+			data += "|" + entry;
+		}
+		this.enviarParaServidorDepuracao('setbp', data);
+	}
+
     substituir(texto: string, separador: string, textoSubstituicao: string): string {
         texto = texto.split(separador).join(textoSubstituicao);
         return texto;
     }
+
+    getActualFilename(filename: string): string {
+		//filename = Path.normalize(filename);
+		let pathname = Path.resolve(filename);
+		let lower = pathname.toLowerCase();
+		let result = this._mapaNomesArquivos.get(lower);
+		if (result === undefined || result === null) {
+			return filename;
+		}
+		return result;
+	}
 
     public obterValorPonteiroMouse(nome: string): string {
         let lower = nome.toLowerCase();
@@ -342,6 +531,42 @@ export class DeleguaTempoExecucao extends EventEmitter {
                 .split('\n');
         }
     }
+
+    private getFirstLine() : number {
+		let firstLine = 0;
+		if (this._conteudoFonte === null || this._conteudoFonte.length <= 1) {
+			return 0;
+		}
+		let inComments = false;
+		for (let i = 0; i < this._conteudoFonte.length; i++) {
+			let line = this._conteudoFonte[i].trim();
+			if (line === '') {
+				continue;
+			}
+			firstLine = i;
+
+			if (inComments) {
+				let index = line.indexOf('*/');
+				if (index >= 0) {
+					if (index < line.length - 2) {
+						break;
+					}
+					inComments = false;					 
+				}
+				continue;
+			}
+
+			if (line.startsWith('/*')) {
+				inComments = true;
+				i--;
+				continue;
+			}
+			if (!line.startsWith('//')) {
+				break;
+			}
+		}
+		return firstLine;
+	}
 
     public imprimirSaida(mensagem: string, arquivo = '', linha = -1, novaLinha = '\n') {
         //console.error('CSCS> ' + msg + ' \r\n');
@@ -605,21 +830,21 @@ export class DeleguaTempoExecucao extends EventEmitter {
         this._localBase = Path.dirname(pathname);
     }
 
-    public step(evento = 'pararEmPasso') {
+    public step(evento: string = 'pararEmPasso') {
         if (!this.verificarDepuracao(this._arquivoFonte)) {
             return;
         }
 
         this._continuar = false;
 
-        if (this._inicializar) {
+        if (this._inicializado) {
             this.executarUmaVez(evento);
         } else {
             this.enviarParaServidorDepuracao('proximo');
         }
     }
 
-    public adentrarEscopo(event = 'pararEmPasso') {
+    public adentrarEscopo(evento: string = 'pararEmPasso') {
         if (!this.verificarDepuracao(this._arquivoFonte)) {
             return;
         }
@@ -627,7 +852,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         this.enviarParaServidorDepuracao('adentrar-escopo');
     }
 
-    public sairEscopo(event = 'pararEmPasso') {
+    public sairEscopo(evento: string = 'pararEmPasso') {
         if (!this.verificarDepuracao(this._arquivoFonte)) {
             return;
         }
@@ -644,6 +869,14 @@ export class DeleguaTempoExecucao extends EventEmitter {
         );
     }
 
+    public printErrorMsg(mensagem: string) {
+		this.enviarEvento('onErrorMessage', mensagem);
+	}
+
+    public printInfoMsg(mensagem: string) {
+		this.enviarEvento('onInfoMessage', mensagem);
+	}
+
     private verificarExcecao(): boolean {
         if (this._ehExcecao) {
             this.desconectarDoDepurador();
@@ -651,4 +884,37 @@ export class DeleguaTempoExecucao extends EventEmitter {
         }
         return true;
     }
+
+    private verifyBreakpoints(path: string) : void {
+		if (!this.verificarDepuracao(path)) {
+			return;
+		}
+
+		path = Path.resolve(path);
+		let lower = path.toLowerCase();
+
+		let mapaPontosParada = this._mapaPontosParada.get(lower);
+		//this.printDebugMsg("Verifying " + path);
+		let sourceLines = this._conteudoFonte;
+		if (sourceLines === null) {
+			this.carregarFonte(path);
+			//sourceLines = readFileSync(path).toString().split('\n');
+			sourceLines = this._conteudoFonte;
+		}
+		if (mapaPontosParada && mapaPontosParada.size > 0 && sourceLines) {
+			mapaPontosParada.forEach(pontoParada => {
+				if (!pontoParada.verificado && pontoParada.linha < sourceLines.length) {
+					const srcLine = sourceLines[pontoParada.linha].trim();
+
+					// if a line is empty or starts with '//' we don't allow to set a breakpoint but move the breakpoint down
+					if (srcLine.length === 0 || srcLine.startsWith('//')) {
+						pontoParada.linha++;
+					}
+					pontoParada.verificado = true;
+					this.printDebugMsg("validated bp " + pontoParada.linha + ': ' + sourceLines[pontoParada.linha].trim());
+					this.enviarEvento('breakpointValidated', pontoParada);
+				}
+			});
+		}
+	}
 }

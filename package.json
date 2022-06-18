@@ -78,6 +78,7 @@
     "devDependencies": {
         "@types/node": "^17.0.18",
         "@vscode/debugadapter": "^1.53.0",
-        "@vscode/debugprotocol": "^1.53.0"
+        "@vscode/debugprotocol": "^1.53.0",
+        "await-notify": "^1.0.1"
     }
 }

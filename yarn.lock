@@ -20,6 +20,11 @@
   resolved "https://registry.yarnpkg.com/@vscode/debugprotocol/-/debugprotocol-1.53.0.tgz#4e838fc9f67331ce46a8c9665aa211e4523ccae4"
   integrity sha512-aqzg52Y3n+cjkNJ2QP4g5aMlbiqBpSUgRfV32sF0IQXhGWmnRKkR7vHpzpynzWdU1id7UdOy6zDyTFksYFdwNw==
 
+await-notify@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/await-notify/-/await-notify-1.0.1.tgz#0b48133b22e524181e11557665185f2a2f3ce47c"
+  integrity sha512-eT6XN2ycPKvuiffzUNmU0dnGmmLw+TexMW7UKOyf5utdVrWx14PR2acRIfy6ZfFWRAv8twt1X74VUgd9RnDmfQ==
+
 mkdirp@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"

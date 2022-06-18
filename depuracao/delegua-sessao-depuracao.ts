@@ -21,9 +21,11 @@ import {
     MemoryEvent,
 } from '@vscode/debugadapter';
 import { DebugProtocol } from '@vscode/debugprotocol';
+import { Subject } from 'await-notify';
 
 import { DeleguaTempoExecucao } from './delegua-tempo-execucao';
 import { DeleguaPontoParada } from './delegua-ponto-parada';
+import { LaunchRequestArguments } from './argumentos-inicio-depuracao';
 
 /**
  * Classe responsável por traduzir para o VSCode eventos enviados pelo 
@@ -35,6 +37,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
     // valor único de _thread_.
     private static THREAD_ID = 1;
     private _tempoExecucao: DeleguaTempoExecucao;
+    private _configurationDone = new Subject();
 
     public constructor() {
         super('delegua-debug.txt');
@@ -112,6 +115,28 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         this.sendResponse(response);
         this.sendEvent(new InitializedEvent());
     }
+
+    protected async launchRequest(response: DebugProtocol.LaunchResponse, args: LaunchRequestArguments) {
+
+		// make sure to 'Stop' the buffered logging if 'trace' is not set
+		logger.setup(args.trace ? Logger.LogLevel.Verbose : Logger.LogLevel.Stop, false);
+
+		// wait until configuration has finished (and configurationDoneRequest has been called)
+		await this._configurationDone.wait(1000);
+
+		let connectType = args.connectType ? args.connectType : "sockets";
+		let host = args.serverHost ? args.serverHost : "127.0.0.1";
+		let port = args.serverPort ? args.serverPort : 13337;
+		let base = args.serverBase ? args.serverBase : "";
+		// start the program in the runtime
+
+		//let config = vscode.workspace.getConfiguration('mock-debug');
+		//let hostConfig = config.get("serverHost");
+		//host =  hostConfig ? hostConfig : "127.0.0.1";
+		this._tempoExecucao.start(args.program, !!args.stopOnEntry, connectType, host, port, base);
+
+		this.sendResponse(response);
+	}
 
     protected continueRequest(
         response: DebugProtocol.ContinueResponse,
