@@ -258,6 +258,31 @@ export class DeleguaTempoExecucao extends EventEmitter {
 		}
 	}
 
+    /**
+	 * Return words of the given address range as "instructions"
+	 */
+	public disassemble(address: number, instructionCount: number): any[] {
+
+		const instructions: any[] = [];
+
+		/* for (let a = address; a < address + instructionCount; a++) {
+			if (a >= 0 && a < this.instructions.length) {
+				instructions.push({
+					address: a,
+					instruction: this.instructions[a].name,
+					line: this.instructions[a].line
+				});
+			} else {
+				instructions.push({
+					address: a,
+					instruction: 'nop'
+				});
+			}
+		} */
+
+		return instructions;
+	}
+
     desconectarDoDepurador() {
         if (!this._ehValido) {
             return;
@@ -373,11 +398,35 @@ export class DeleguaTempoExecucao extends EventEmitter {
         return false;
     }
 
+    public getLocalVariable(name: string): any {
+		return null;
+	}
+
+    public clearAllDataBreakpoints(): void {
+		// this.breakAddresses.clear();
+	}
+
+    public clearInstructionBreakpoints(): void {
+		// this.instructionBreakpoints.clear();
+	}
+
     public clearBreakpoints(path: string): void {
 		let pathname = Path.resolve(path);
 		let lower = pathname.toLowerCase();
 		this._pontosParada.delete(lower);
 		this._mapaPontosParada.delete(lower);
+	}
+
+    /*
+	 * Determine possible column breakpoint positions for the given line.
+	 */
+	public getBreakpoints(path: string, line: number): number[] {
+        return [];
+	}
+
+    public setInstructionBreakpoint(address: number): boolean {
+		// this.instructionBreakpoints.add(address);
+		return true;
 	}
 
     public setBreakPoint(path: string, line: number) : DeleguaPontoParada {
@@ -410,6 +459,21 @@ export class DeleguaTempoExecucao extends EventEmitter {
 		return bp;
 	}
 
+    public setDataBreakpoint(address: string, accessType: 'read' | 'write' | 'readWrite'): boolean {
+
+		/* const x = accessType === 'readWrite' ? 'read write' : accessType;
+
+		const t = this.breakAddresses.get(address);
+		if (t) {
+			if (t !== x) {
+				this.breakAddresses.set(address, 'read write');
+			}
+		} else {
+			this.breakAddresses.set(address, x);
+		} */
+		return true;
+	}
+
     private obterPontoParada(linha: number): DeleguaPontoParada | undefined {
         let pathname = Path.resolve(this._arquivoFonte);
         let lower = pathname.toLowerCase();
@@ -439,6 +503,11 @@ export class DeleguaTempoExecucao extends EventEmitter {
     public static obterNovaInstancia(isRepl = false): DeleguaTempoExecucao {
         return new DeleguaTempoExecucao(isRepl);
     }
+
+    public setExceptionsFilters(namedException: string | undefined, otherExceptions: boolean): void {
+		// this.namedException = namedException;
+		// this.otherExceptions = otherExceptions;
+	}
 
     public stack(startFrame: number, endFrame: number): any {
 		//this.printDebugMsg('stackTraceRequest ' + startFrame + ' ' + endFrame);
