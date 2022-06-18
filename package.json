@@ -44,6 +44,18 @@
         "vscode:prepublish": "rimraf dist && npm run -S esbuild-base -- --minify && npm run -S esbuild-web -- --minify",
         "test": "npm run typecheck"
     },
+    "main": "./dist/extensao.js",
+    "browser": "./dist/extensao-web.js",
+    "activationEvents": [
+        "onDebugResolve:delegua",
+        "onDebugDynamicConfigurations:delegua",
+        "onCommand:extension.delegua.getProgramName",
+        "onCommand:extension.delegua.runEditorContents",
+        "onCommand:extension.delegua.debugEditorContents"
+    ],
+    "workspaceTrust": {
+        "request": "never"
+    },
     "contributes": {
         "debuggers": [
             {
