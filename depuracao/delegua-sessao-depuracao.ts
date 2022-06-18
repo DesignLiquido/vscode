@@ -364,7 +364,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         let base = args.serverBase ? args.serverBase : '';
         // start the program in the runtime
 
-        //let config = vscode.workspace.getConfiguration('mock-debug');
+        //let config = vscode.workspace.getConfiguration('delegua');
         //let hostConfig = config.get("serverHost");
         //host =  hostConfig ? hostConfig : "127.0.0.1";
         this._tempoExecucao.start(

@@ -7,8 +7,9 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 import { platform } from 'process';
 import { ProviderResult } from 'vscode';
+
 import { DeleguaSessaoDepuracao } from './delegua-sessao-depuracao';
-import { activateMockDebug, workspaceFileAccessor } from './ativacao-depuracao';
+import { ativarDepuracao } from './ativacao-depuracao';
 
 /*
  * The compile time flag 'runMode' controls how the debug adapter is run.
@@ -22,22 +23,22 @@ export function activate(context: vscode.ExtensionContext) {
 	switch (runMode) {
 		case 'server':
 			// run the debug adapter as a server inside the extension and communicate via a socket
-			activateMockDebug(context, new MockDebugAdapterServerDescriptorFactory());
+			ativarDepuracao(context, new DeleguaAdapterServerDescriptorFactory());
 			break;
 
 		case 'namedPipeServer':
 			// run the debug adapter as a server inside the extension and communicate via a named pipe (Windows) or UNIX domain socket (non-Windows)
-			activateMockDebug(context, new MockDebugAdapterNamedPipeServerDescriptorFactory());
+			ativarDepuracao(context, new DeleguaAdapterNamedPipeServerDescriptorFactory());
 			break;
 
 		case 'external': default:
 			// run the debug adapter as a separate process
-			activateMockDebug(context, new DebugAdapterExecutableFactory());
+			ativarDepuracao(context, new DebugAdapterExecutableFactory());
 			break;
 
 		case 'inline':
 			// run the debug adapter inside the extension and directly talk to it
-			activateMockDebug(context);
+			ativarDepuracao(context);
 			break;
 	}
 }
@@ -73,7 +74,7 @@ class DebugAdapterExecutableFactory implements vscode.DebugAdapterDescriptorFact
 	}
 }
 
-class MockDebugAdapterServerDescriptorFactory implements vscode.DebugAdapterDescriptorFactory {
+class DeleguaAdapterServerDescriptorFactory implements vscode.DebugAdapterDescriptorFactory {
 
 	private server?: Net.Server;
 
@@ -100,7 +101,7 @@ class MockDebugAdapterServerDescriptorFactory implements vscode.DebugAdapterDesc
 	}
 }
 
-class MockDebugAdapterNamedPipeServerDescriptorFactory implements vscode.DebugAdapterDescriptorFactory {
+class DeleguaAdapterNamedPipeServerDescriptorFactory implements vscode.DebugAdapterDescriptorFactory {
 
 	private server?: Net.Server;
 
