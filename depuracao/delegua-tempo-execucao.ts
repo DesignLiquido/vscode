@@ -440,6 +440,37 @@ export class DeleguaTempoExecucao extends EventEmitter {
         return new DeleguaTempoExecucao(isRepl);
     }
 
+    public stack(startFrame: number, endFrame: number): any {
+		//this.printDebugMsg('stackTraceRequest ' + startFrame + ' ' + endFrame);
+		const frames = new Array<any>();
+		for (let i = 0; i < this._stackTrace.length; i ++) {
+			let entry = this._stackTrace[i];
+			frames.push({
+				index: entry.id,
+				name:  entry.name,
+				file:  entry.file,
+				line:  entry.line
+			});
+		}
+		if (frames.length === 0) {
+			let name = "";
+			if (this._conteudoFonte.length > this._originalLine &&
+				this._conteudoFonte[this._originalLine]) {
+					name = this._conteudoFonte[this._originalLine].trim()
+				}
+			frames.push({
+				index: 1,
+				name:  name,
+				file:  this._conteudoFonte,
+				line:  this._originalLine
+			});
+		}
+		return {
+			frames: frames,
+			count: this._stackTrace.length
+		};
+	}
+
     getLocalPath(pathname: string) {
         if (pathname === undefined || pathname === null || pathname === '') {
             return '';
