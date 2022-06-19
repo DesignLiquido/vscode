@@ -10,7 +10,8 @@ import { ElementoPilha } from './elemento-pilha';
 import { DeleguaPontoParada } from './delegua-ponto-parada';
 
 /**
- * Classe responsável por se comunicar com o depurador da linguagem Delégua.
+ * Classe responsável por se comunicar com o depurador da linguagem Delégua, traduzindo as requisições do
+ * Visual Studio Code.
  */
 export class DeleguaTempoExecucao extends EventEmitter {
     private static _instancia: DeleguaTempoExecucao;
@@ -21,7 +22,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
     private _conexaoDepurador = new Net.Socket();
     private _connectType = 'sockets';
 	private _host        = '127.0.0.1';
-	private _port        = 13337;
+	private _port        = 7777;
 	private _serverBase  = '';
 	private _localBase   = '';
 
@@ -45,7 +46,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
     private _lastReplSource = '';
 
-    private _queuedCommands = new Array<string>();
+    private _comandosEnfileirados = new Array<string>();
 
     private _mapaDeVariaveis = new Map<string, string>();
     private _mapaDeHovers = new Map<string, string>();
@@ -120,7 +121,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         }
 
         this.carregarFonte(program);
-        this._originalLine = this.getFirstLine();
+        this._originalLine = this.obterPrimeiraLinha();
 
         this.verificarPontosParada(this._arquivoFonte);
 
@@ -133,7 +134,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
             // we just start to run until we hit a breakpoint or an exception
             this.continuar();
         }
-        //this.printCSCSOutput('StartDebug ' + host + ":" + port + "(" + this._instanceId + ")");
+        //this.printDeléguaOutput('StartDebug ' + host + ":" + port + "(" + this._instanceId + ")");
     }
 
     cachearNomeArquivo(nomeArquivo: string) {
@@ -159,7 +160,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 		}
 
 		if (this._connectType === "sockets") {
-			this.imprimirSaida('Connecting to ' + this._host + ":" + this._port + '...', '', -1, ''); // no new line
+			this.imprimirSaida('Conectando a ' + this._host + ":" + this._port + '...', '', -1, ''); // no new line
 			//console.log('Connecting to ' + this._host + ":" + this._port + '...');
 
 			let timeout  = this._host === '127.0.0.1' || this._host === 'localhost' || this._host === '' ? 3.5 : 10;
@@ -167,14 +168,15 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
 			this._conexaoDepurador.connect(this._port, this._host, () => {
 				this._conectado = true;
-				this.imprimirSaida('Connected to the Debugger Server.');
+				this.imprimirSaida('Conectado ao servidor de depuração Delégua.');
 				//console.log('Connected to ' + this._host + ":" + this._port + '...');
 
 				if (DeleguaTempoExecucao._primeiraExecucao) {
-				  this.printInfoMsg('CSCS: Connected to ' + this._host + ":" + this._port +
-					'. Check Output CSCS Window for REPL and Debug Console for Debugger Messages');
+				  this.printInfoMsg('Delégua: Conectado a ' + this._host + ":" + this._port +
+					'. Verifique o Debug Console para mensagens relacionadas da comunicação entre essa extensão e Delégua.');
 				}
-				this.enviarEvento('onStatusChange', 'CSCS: Connected to ' + this._host + ":" + this._port);
+
+				this.enviarEvento('onStatusChange', 'Delégua: Conectado a ' + this._host + ":" + this._port);
 				DeleguaTempoExecucao._primeiraExecucao = false;
 				this._inicializado = false;
 
@@ -184,14 +186,14 @@ export class DeleguaTempoExecucao extends EventEmitter {
 						//console.log('Sending serverFilename: [' + serverFilename + ']');
 						this.enviarParaServidorDepuracao("file", serverFilename);
 					}
-					this.sendAllBreakpontsToServer();
+					this.enviarTodosPontosParadaParaServidorDepuracao();
 				}
 
-				for (let i = 0; i < this._queuedCommands.length; i++) {
+				for (let i = 0; i < this._comandosEnfileirados.length; i++) {
 					//console.log('Sending queued: ' + this._queuedCommands[i]);
-					this.enviarParaServidorDepuracao(this._queuedCommands[i]);
+					this.enviarParaServidorDepuracao(this._comandosEnfileirados[i]);
 				}
-				this._queuedCommands.length = 0;
+				this._comandosEnfileirados.length = 0;
 			});
 
 			this._conexaoDepurador.on('data', (data: any) => {
@@ -200,7 +202,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 					this._dataTotal = this._dataReceived = 0;
 					if (ind > 0) {
 						this._dataTotal = Number(data.slice(0, ind));
-						//this.printCSCSOutput('  Received data size: ' + this._dataTotal);
+						//this.printDeléguaOutput('  Received data size: ' + this._dataTotal);
 						if (isNaN(this._dataTotal)) {
 							this._dataTotal = 0;
 						}
@@ -215,14 +217,14 @@ export class DeleguaTempoExecucao extends EventEmitter {
 						data = '';
 					}
 					this._gettingData = true;
-					//this.printCSCSOutput('  Started collecting data: ' + data.toString().substring(0,4));
+					//this.printDeléguaOutput('  Started collecting data: ' + data.toString().substring(0,4));
 				}
 				if (this._gettingData) {
 					if (this._dataReceived === 0) {
 						this._dataBytes = data;
 						this._dataReceived = data.length;
 					} else {
-					  //this.printCSCSOutput('  EXTRA. Currently: ' + this._dataReceived +
+					  //this.printDeléguaOutput('  EXTRA. Currently: ' + this._dataReceived +
 					  // ', total: ' + this._dataTotal + ', new: ' + data.length);
 						const totalLength = this._dataBytes.length + data.length;
 						this._dataBytes = Buffer.concat([this._dataBytes, data], totalLength);
@@ -231,7 +233,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 					if (this._dataReceived >= this._dataTotal) {
 						this._dataTotal = this._dataReceived = 0;
 						this._gettingData = false;
-						//this.printCSCSOutput('  COLLECTED: ' + this._dataBytes.toString().substring(0, 4) + "...");
+						//this.printDeléguaOutput('  COLLECTED: ' + this._dataBytes.toString().substring(0, 4) + "...");
 						this.processarDoDepurador(this._dataBytes);
 					}
 				}
@@ -250,7 +252,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 				if (this._inicializado) {
 					this.imprimirSaida('Could not connect to ' + this._host + ":" + this._port);
 					this.printErrorMsg('Could not connect to ' + this._host + ":" + this._port);
-					this.enviarEvento('onStatusChange', "CSCS: Couldn't connect to " + this._host + ":" + this._port);
+					this.enviarEvento('onStatusChange', "Delégua: Couldn't connect to " + this._host + ":" + this._port);
 				}
 				//console.log('Closed connection to ' + this._host + ":" + this._port + '...');
 				this._conectado = false;
@@ -450,7 +452,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 		}
 		bpMap.set(line, bp);
 		this._mapaPontosParada.set(lower, bpMap);
-		if (lower.includes('functions.cscs')) {
+		if (lower.includes('functions.Delégua')) {
 			this.printDebugMsg("Verifying " + path);
 		}
 
@@ -572,15 +574,15 @@ export class DeleguaTempoExecucao extends EventEmitter {
 		return serverPath;
 	}
 
-    sendAllBreakpontsToServer() {
+    enviarTodosPontosParadaParaServidorDepuracao() {
 		let keys = Array.from(this._pontosParada.keys() );
 		for (let i = 0; i < keys.length; i ++) {
 			let path = keys[i];
-			this.sendBreakpontsToServer(path);
+			this.enviarPontosParadaParaServidorDepuracao(path);
 		}
 	}
 
-    public sendBreakpontsToServer(path: string) {
+    public enviarPontosParadaParaServidorDepuracao(path: string) {
 		if (!this._conectado) {
 			return;
 		}
@@ -673,10 +675,10 @@ export class DeleguaTempoExecucao extends EventEmitter {
         }
     }
 
-    private getFirstLine() : number {
-		let firstLine = 0;
-		if (this._conteudoFonte === null || this._conteudoFonte.length <= 1) {
-			return 0;
+    private obterPrimeiraLinha() : number {
+		let firstLine = 1;
+		if (this._conteudoFonte === null || this._conteudoFonte === undefined || this._conteudoFonte.length <= 1) {
+			return 1;
 		}
 		let inComments = false;
 		for (let i = 0; i < this._conteudoFonte.length; i++) {
@@ -710,7 +712,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 	}
 
     public imprimirSaida(mensagem: string, arquivo = '', linha = -1, novaLinha = '\n') {
-        //console.error('CSCS> ' + msg + ' \r\n');
+        //console.error('Delégua> ' + msg + ' \r\n');
         //console.error();
         arquivo = arquivo === '' ? this._arquivoFonte : arquivo;
         arquivo = this.getLocalPath(arquivo);
@@ -945,7 +947,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         }
         if (!this._conectado) {
             //console.log('Connection not valid. Queueing [' + toSend + '] when connected.');
-            this._queuedCommands.push(toSend);
+            this._comandosEnfileirados.push(toSend);
             return;
         }
 
@@ -1011,11 +1013,11 @@ export class DeleguaTempoExecucao extends EventEmitter {
     }
 
     public printErrorMsg(mensagem: string) {
-		this.enviarEvento('onErrorMessage', mensagem);
+		this.enviarEvento('mensagemErro', mensagem);
 	}
 
     public printInfoMsg(mensagem: string) {
-		this.enviarEvento('onInfoMessage', mensagem);
+		this.enviarEvento('mensagemInformacao', mensagem);
 	}
 
     private verificarExcecao(): boolean {

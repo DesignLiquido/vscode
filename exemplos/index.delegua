@@ -1,4 +1,3 @@
-
 escreva('testando aspas simples');
 escreva('ab' + 'cd');
 

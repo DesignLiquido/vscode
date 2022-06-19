@@ -57,6 +57,11 @@
         "request": "never"
     },
     "contributes": {
+        "breakpoints": [
+            {
+                "language": "delegua"
+            }
+        ],
         "debuggers": [
             {
                 "type": "delegua",

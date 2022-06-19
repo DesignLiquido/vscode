@@ -1,4 +1,5 @@
 import { basename } from 'path';
+import * as vscode from 'vscode';
 import {
     Logger,
     logger,
@@ -52,6 +53,26 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         this.setDebuggerColumnsStartAt1(true);
 
         this._tempoExecucao = new DeleguaTempoExecucao();
+        this._tempoExecucao.on('mensagemInformacao', (mensagem: string) => {
+			vscode.window.showInformationMessage(mensagem);
+		});
+
+		this._tempoExecucao.on('onStatusChange', (mensagem: string) => {
+			vscode.window.setStatusBarMessage(mensagem);
+		});
+
+		this._tempoExecucao.on('onWarningMessage', (mensagem: string) => {
+			vscode.window.showWarningMessage('REPL: ' + mensagem);
+		});
+
+		this._tempoExecucao.on('mensagemErro', (mensagem: string) => {
+			vscode.window.showErrorMessage('REPL: ' + mensagem);
+		});
+        
+        this._tempoExecucao.on('finalizar', () => {
+            this.sendEvent(new TerminatedEvent());
+        });
+
         this._tempoExecucao.on('pararEmEntrada', () => {
             this.sendEvent(
                 new StoppedEvent('entry', DeleguaSessaoDepuracao.THREAD_ID)
@@ -123,10 +144,6 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
             e.body.source = this.createSource(filePath);
             e.body.line = this.convertDebuggerLineToClient(line);
             this.sendEvent(e);
-        });
-
-        this._tempoExecucao.on('finalizar', () => {
-            this.sendEvent(new TerminatedEvent());
         });
     }
 
@@ -469,7 +486,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
             breakpoints: actualBreakpoints,
         };
 
-        this._tempoExecucao.sendBreakpontsToServer(path);
+        this._tempoExecucao.enviarPontosParadaParaServidorDepuracao(path);
         this.sendResponse(response);
     }
 
