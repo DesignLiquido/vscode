@@ -360,14 +360,14 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
 
         let connectType = args.connectType ? args.connectType : 'sockets';
         let host = args.serverHost ? args.serverHost : '127.0.0.1';
-        let port = args.serverPort ? args.serverPort : 13337;
+        let port = args.serverPort ? args.serverPort : 7777;
         let base = args.serverBase ? args.serverBase : '';
         // start the program in the runtime
 
         //let config = vscode.workspace.getConfiguration('delegua');
         //let hostConfig = config.get("serverHost");
         //host =  hostConfig ? hostConfig : "127.0.0.1";
-        this._tempoExecucao.start(
+        this._tempoExecucao.iniciar(
             args.program,
             !!args.stopOnEntry,
             connectType,
@@ -383,7 +383,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         response: DebugProtocol.NextResponse,
         args: DebugProtocol.NextArguments
     ): void {
-        this._tempoExecucao.step();
+        this._tempoExecucao.passo();
         this.sendResponse(response);
     }
 

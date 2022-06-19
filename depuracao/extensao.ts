@@ -33,12 +33,12 @@ export function activate(context: vscode.ExtensionContext) {
 
 		case 'external': default:
 			// run the debug adapter as a separate process
-			ativarDepuracao(context, new DebugAdapterExecutableFactory());
+			ativarDepuracao(context, new DeleguaDebugAdapterExecutableFactory());
 			break;
 
 		case 'inline':
 			// run the debug adapter inside the extension and directly talk to it
-			ativarDepuracao(context);
+			ativarDepuracao(context, new DeleguaDebugAdapterExecutableFactory());
 			break;
 	}
 }
@@ -47,27 +47,27 @@ export function deactivate() {
 	// nothing to do
 }
 
-class DebugAdapterExecutableFactory implements vscode.DebugAdapterDescriptorFactory {
+class DeleguaDebugAdapterExecutableFactory implements vscode.DebugAdapterDescriptorFactory {
 
 	// The following use of a DebugAdapter factory shows how to control what debug adapter executable is used.
-	// Since the code implements the default behavior, it is absolutely not neccessary and we show it here only for educational purpose.
+	// Since the code implements the default behavior, it is absolutely not necessary and we show it here only for educational purposes.
 
 	createDebugAdapterDescriptor(_session: vscode.DebugSession, executable: vscode.DebugAdapterExecutable | undefined): ProviderResult<vscode.DebugAdapterDescriptor> {
 		// param "executable" contains the executable optionally specified in the package.json (if any)
 
 		// use the executable specified in the package.json if it exists or determine it based on some other information (e.g. the session)
-		if (!executable) {
-			const command = "absolute path to my DA executable";
+		// if (!executable) {
+			const command = "C:\\Users\\leone\\AppData\\Roaming\\npm\\delegua.cmd";
 			const args = [
-				"some args",
-				"another arg"
+				"--depurador",
+				"D:\\GitHub\\delegua-vscode\\exemplos\\index.delegua"
 			];
 			const options = {
-				cwd: "working directory for executable",
-				env: { "envVariable": "some value" }
+				// cwd: "working directory for executable",
+				// env: { "envVariable": "some value" }
 			};
 			executable = new vscode.DebugAdapterExecutable(command, args, options);
-		}
+		// }
 
 		// make VS Code launch the DA executable
 		return executable;

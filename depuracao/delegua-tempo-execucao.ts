@@ -107,7 +107,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         );
     }
 
-    public start(program: string, stopOnEntry: boolean, connectType: string,
+    public iniciar(program: string, stopOnEntry: boolean, connectType: string,
         host: string, port: number, serverBase = "") {
 
         this._connectType = connectType;
@@ -116,19 +116,19 @@ export class DeleguaTempoExecucao extends EventEmitter {
         this._serverBase = serverBase;
 
         if (host === "127.0.0.1") {
-        this._serverBase = "";
+            this._serverBase = "";
         }
 
         this.carregarFonte(program);
         this._originalLine = this.getFirstLine();
 
-        this.verifyBreakpoints(this._arquivoFonte);
+        this.verificarPontosParada(this._arquivoFonte);
 
-        this.connectToDebugger();
+        this.conectarAoDepurador();
 
         if (stopOnEntry) {
             // we step once
-            this.step('stopOnEntry');
+            this.passo('stopOnEntry');
         } else {
             // we just start to run until we hit a breakpoint or an exception
             this.continuar();
@@ -153,7 +153,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         this.enviarParaServidorDepuracao('continuar');
     }
 
-    public connectToDebugger() : void {
+    public conectarAoDepurador() : void {
 		if (this._conectado) {
 			return;
 		}
@@ -454,7 +454,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 			this.printDebugMsg("Verifying " + path);
 		}
 
-		this.verifyBreakpoints(path);
+		this.verificarPontosParada(path);
 
 		return bp;
 	}
@@ -971,7 +971,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         this._localBase = Path.dirname(pathname);
     }
 
-    public step(evento: string = 'pararEmPasso') {
+    public passo(evento: string = 'pararEmPasso') {
         if (!this.verificarDepuracao(this._arquivoFonte)) {
             return;
         }
@@ -1026,7 +1026,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         return true;
     }
 
-    private verifyBreakpoints(path: string) : void {
+    private verificarPontosParada(path: string) : void {
 		if (!this.verificarDepuracao(path)) {
 			return;
 		}

@@ -54,7 +54,7 @@ tente {
     escreva("pronto");
 }
 
-var funcaoParaMapear = funcao(a) { 
+var funcaoParaMapear = função(a) { 
   retorna a * 2; 
 };
 escreva(mapear([5, 3], funcaoParaMapear));
@@ -69,7 +69,7 @@ var testeTexto = "111";
 escreva(111 + inteiro(testeTexto));
 
 var array = [1, 2, 3];
-var fn = funcao(valor){
+var fn = funcao(valor) {
   retorna valor * 2;
 };
 escreva(mapear(array, fn));
