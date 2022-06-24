@@ -593,10 +593,10 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         const maxLevels = typeof args.levels === 'number' ? args.levels : 1000;
         const endFrame = startFrame + maxLevels;
 
-        const stk = this._tempoExecucao.stack(startFrame, endFrame);
+        const pilha = this._tempoExecucao.pilhaExecucao(startFrame, endFrame);
 
         response.body = {
-            stackFrames: stk.frames.map(
+            stackFrames: pilha.frames.map(
                 (f) =>
                     new StackFrame(
                         f.index,
@@ -605,7 +605,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
                         this.convertDebuggerLineToClient(f.line)
                     )
             ),
-            totalFrames: stk.count,
+            totalFrames: pilha.count,
         };
         this.sendResponse(response);
     }

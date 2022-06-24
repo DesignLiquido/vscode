@@ -6,7 +6,7 @@ import { DebugProtocol } from '@vscode/debugprotocol';
 import { EventEmitter } from 'events';
 
 import { DadosDepuracao } from './dados-depuracao';
-import { ElementoPilha } from './elemento-pilha';
+import { ElementoPilhaVsCode } from './elemento-pilha';
 import { DeleguaPontoParada } from './delegua-ponto-parada';
 
 /**
@@ -39,7 +39,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
     private _dataFile = '';
     private _fileBytes: Buffer;
 
-    private _gettingData = false;
+    private _obtendoDados = false;
     private _dataTotal = 0;
     private _dataReceived = 0;
     private _dataBytes: Buffer;
@@ -82,7 +82,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         return this._variaveisGlobais;
     }
 
-    private _stackTrace = new Array<ElementoPilha>();
+    private _pilhaExecucao = new Array<ElementoPilhaVsCode>();
 
     public constructor(isRepl = false) {
         super();
@@ -106,6 +106,8 @@ export class DeleguaTempoExecucao extends EventEmitter {
             'funcao',
             'funcao f(arg1, arg2, ...) { ... } : Declaração de função'
         );
+
+        this._pilhaExecucao = [];
     }
 
     public iniciar(program: string, stopOnEntry: boolean, connectType: string,
@@ -163,7 +165,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 			this.imprimirSaida('Conectando a ' + this._host + ":" + this._port + '...', '', -1, ''); // no new line
 			//console.log('Connecting to ' + this._host + ":" + this._port + '...');
 
-			let timeout  = this._host === '127.0.0.1' || this._host === 'localhost' || this._host === '' ? 3.5 : 10;
+			let timeout  = this._host === '127.0.0.1' || this._host === 'localhost' || this._host === '' ? 10 : 30;
 			this._conexaoDepurador.setTimeout(timeout * 1000);
 
 			this._conexaoDepurador.connect(this._port, this._host, () => {
@@ -172,8 +174,8 @@ export class DeleguaTempoExecucao extends EventEmitter {
 				//console.log('Connected to ' + this._host + ":" + this._port + '...');
 
 				if (DeleguaTempoExecucao._primeiraExecucao) {
-				  this.printInfoMsg('Delégua: Conectado a ' + this._host + ":" + this._port +
-					'. Verifique o Debug Console para mensagens relacionadas da comunicação entre essa extensão e Delégua.');
+				    this.exibirMensagemInformacao('Delégua: Conectado a ' + this._host + ":" + this._port +
+					    '. Verifique o Debug Console para mensagens relacionadas da comunicação entre essa extensão e Delégua.');
 				}
 
 				this.enviarEvento('onStatusChange', 'Delégua: Conectado a ' + this._host + ":" + this._port);
@@ -181,10 +183,10 @@ export class DeleguaTempoExecucao extends EventEmitter {
 				this._inicializado = false;
 
 				if (!this._instanciaRepl && this._arquivoFonte !== '') {
-					let serverFilename = this.getServerPath(this._arquivoFonte);
-					if (serverFilename !== undefined && serverFilename !== '') {
+					let arquivoServidor = this.getServerPath(this._arquivoFonte);
+					if (arquivoServidor !== undefined && arquivoServidor !== '') {
 						//console.log('Sending serverFilename: [' + serverFilename + ']');
-						this.enviarParaServidorDepuracao("file", serverFilename);
+						this.enviarParaServidorDepuracao("arquivo-atual", arquivoServidor);
 					}
 					this.enviarTodosPontosParadaParaServidorDepuracao();
 				}
@@ -194,10 +196,11 @@ export class DeleguaTempoExecucao extends EventEmitter {
 					this.enviarParaServidorDepuracao(this._comandosEnfileirados[i]);
 				}
 				this._comandosEnfileirados.length = 0;
+                this.enviarEvento('pararEmEntrada');
 			});
 
 			this._conexaoDepurador.on('data', (data: any) => {
-				if (!this._gettingData) {
+				if (!this._obtendoDados) {
 					let ind = data.toString().indexOf('\n');
 					this._dataTotal = this._dataReceived = 0;
 					if (ind > 0) {
@@ -216,10 +219,10 @@ export class DeleguaTempoExecucao extends EventEmitter {
 					} else {
 						data = '';
 					}
-					this._gettingData = true;
+					this._obtendoDados = true;
 					//this.printDeléguaOutput('  Started collecting data: ' + data.toString().substring(0,4));
 				}
-				if (this._gettingData) {
+				if (this._obtendoDados) {
 					if (this._dataReceived === 0) {
 						this._dataBytes = data;
 						this._dataReceived = data.length;
@@ -232,7 +235,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 					}
 					if (this._dataReceived >= this._dataTotal) {
 						this._dataTotal = this._dataReceived = 0;
-						this._gettingData = false;
+						this._obtendoDados = false;
 						//this.printDeléguaOutput('  COLLECTED: ' + this._dataBytes.toString().substring(0, 4) + "...");
 						this.processarDoDepurador(this._dataBytes);
 					}
@@ -241,7 +244,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
 			this._conexaoDepurador.on('timeout', () => {
 				if (!this._conectado) {
-					this.imprimirSaida("Timeout connecting to " + this._host + ":" + this._port);
+					this.imprimirSaida("Tempo esgotado conectando a " + this._host + ":" + this._port);
 					//this.printErrorMsg('Timeout connecting to ' + this._host + ":" + this._port);
 					//console.log('Timeout connecting to ' + this._host + ":" + this._port + '...');
 					this._conexaoDepurador.destroy();
@@ -250,9 +253,9 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
 			this._conexaoDepurador.on('close', () => {
 				if (this._inicializado) {
-					this.imprimirSaida('Could not connect to ' + this._host + ":" + this._port);
-					this.printErrorMsg('Could not connect to ' + this._host + ":" + this._port);
-					this.enviarEvento('onStatusChange', "Delégua: Couldn't connect to " + this._host + ":" + this._port);
+					this.imprimirSaida('Não foi possível conectar a ' + this._host + ":" + this._port);
+					this.printErrorMsg('Não foi possível conectar a ' + this._host + ":" + this._port);
+					this.enviarEvento('onStatusChange', "Delégua: Não foi possível conectar a " + this._host + ":" + this._port);
 				}
 				//console.log('Closed connection to ' + this._host + ":" + this._port + '...');
 				this._conectado = false;
@@ -301,26 +304,29 @@ export class DeleguaTempoExecucao extends EventEmitter {
         DeleguaTempoExecucao._instancia = DeleguaTempoExecucao.obterInstancia(true);
     }
 
-    popularPilhaExecucao(lines: string[], start = 0): void {
+    /**
+     * Popula a pilha de execução vinda como resposta do depurador.
+     * @param linhas As linhas devolvidas.
+     */
+    popularPilhaExecucao(linhas: string[]): void {
         let id = 0;
-        this._stackTrace.length = 0;
-        for (let i = start; i < lines.length; i += 3) {
-            if (i >= lines.length - 2) {
-                break;
-            }
-            let ln = Number(lines[i]);
-            let file = this.getLocalPath(lines[i + 1].trim());
-            let line = lines[i + 2].trim();
+        this._pilhaExecucao = [];
+        for (let i = 2; i < linhas.length - 1; i++) {
+            let linha: string[] = linhas[i].split('---');
+            let detalhesArquivo = linha[1].split('::');
+            let numeroLinha = Number(detalhesArquivo[1].trim());
+            // let arquivo = this.getLocalPath(linhas[i + 1].trim());
+            let arquivo = detalhesArquivo[0];
+            // let linha = linhas[i + 2].trim();
 
-            const entry = <ElementoPilha>{
+            this._pilhaExecucao.push(<ElementoPilhaVsCode>{
                 id: ++id,
-                line: ln,
-                name: line,
-                file: file,
-            };
-            this._stackTrace.push(entry);
+                line: numeroLinha,
+                name: linha[0].trim(),
+                file: arquivo,
+            });
 
-            //this.printDebugMsg(file + ', line ' + ln + ':\t' + line);
+            console.log(this._pilhaExecucao);
         }
     }
 
@@ -438,19 +444,19 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
 		let lower = path.toLowerCase();
 
-		const bp = <DeleguaPontoParada> { verificado: false, linha: line, id: this._breakpointId++ };
+		const pontoParada = <DeleguaPontoParada> { verificado: false, linha: line, id: this._breakpointId++ };
 		let bps = this._pontosParada.get(lower);
 		if (!bps) {
 			bps = new Array<DeleguaPontoParada>();
 			this._pontosParada.set(lower, bps);
 		}
-		bps.push(bp);
+		bps.push(pontoParada);
 
 		let bpMap = this._mapaPontosParada.get(lower);
 		if (!bpMap) {
 			bpMap = new Map<number, DeleguaPontoParada>();
 		}
-		bpMap.set(line, bp);
+		bpMap.set(line, pontoParada);
 		this._mapaPontosParada.set(lower, bpMap);
 		if (lower.includes('functions.Delégua')) {
 			this.printDebugMsg("Verifying " + path);
@@ -458,7 +464,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
 		this.verificarPontosParada(path);
 
-		return bp;
+		return pontoParada;
 	}
 
     public setDataBreakpoint(address: string, accessType: 'read' | 'write' | 'readWrite'): boolean {
@@ -511,19 +517,26 @@ export class DeleguaTempoExecucao extends EventEmitter {
 		// this.otherExceptions = otherExceptions;
 	}
 
-    public stack(startFrame: number, endFrame: number): any {
+    /**
+     * Exibe a pilha de execução vinda do depurador no VSCode.
+     * @param startFrame 
+     * @param endFrame 
+     * @returns 
+     */
+    public pilhaExecucao(startFrame: number, endFrame: number): any {
 		//this.printDebugMsg('stackTraceRequest ' + startFrame + ' ' + endFrame);
+        this.enviarParaServidorDepuracao('pilha-execucao');
 		const frames = new Array<any>();
-		for (let i = 0; i < this._stackTrace.length; i ++) {
-			let entry = this._stackTrace[i];
+		for (let i = 0; i < this._pilhaExecucao.length; i ++) {
+			let entrada = this._pilhaExecucao[i];
 			frames.push({
-				index: entry.id,
-				name:  entry.name,
-				file:  entry.file,
-				line:  entry.line
+				index: entrada.id,
+				name:  entrada.name,
+				file:  entrada.file,
+				line:  entrada.line
 			});
 		}
-		if (frames.length === 0) {
+		/* if (frames.length === 0) {
 			let name = "";
 			if (this._conteudoFonte.length > this._originalLine &&
 				this._conteudoFonte[this._originalLine]) {
@@ -535,10 +548,10 @@ export class DeleguaTempoExecucao extends EventEmitter {
 				file:  this._conteudoFonte,
 				line:  this._originalLine
 			});
-		}
+		} */
 		return {
 			frames: frames,
-			count: this._stackTrace.length
+			count: this._pilhaExecucao.length
 		};
 	}
 
@@ -598,7 +611,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 			let entry = bps[i].linha;
 			data += "|" + entry;
 		}
-		this.enviarParaServidorDepuracao('setbp', data);
+		this.enviarParaServidorDepuracao('adicionar-ponto-parada', data);
 	}
 
     substituir(texto: string, separador: string, textoSubstituicao: string): string {
@@ -726,23 +739,39 @@ export class DeleguaTempoExecucao extends EventEmitter {
         //console.info('    _' + msg);
     }
 
+    /**
+     * Processa dados enviados pelo depurador para a extensão.
+     * @param dados 
+     * @returns 
+     */
     protected processarDoDepurador(dados: any) {
         if (!this._ehValido) {
             return;
         }
 
-        let lines = dados.toString().split('\n');
-        let currLine = 0;
-        let response = lines[currLine++].trim();
-        let startVarsData = 1;
-        let startStackData = 1;
+        const linhas = dados.toString().split('\n');
+        // A linha 0 normalmente é descartada por ser a confirmação do comando recebido e/ou outras informações de uso futuro.
+        // O cabeçalho da resposta normalmente começa na linha 1.
+        let linhaAtual = 1;
+        const primeiraLinha = linhas[linhaAtual++].trim();
+        // let startVarsData = 1;
+        // let startStackData = 1;
 
-        if (response === 'repl' || response === '_repl') {
+        switch (primeiraLinha) {
+            case '--- pilha-execucao-resposta ---':
+                console.log('Resposta de Pilha de Execução');
+                this.popularPilhaExecucao(linhas);
+                break;
+            default:
+                break;
+        }
+
+        /* if (response === 'repl' || response === '_repl') {
             if (response === '_repl') {
-                for (let i = 1; i < lines.length - 1; i++) {
-                    let line = lines[i].trim();
+                for (let i = 1; i < linhas.length - 1; i++) {
+                    let line = linhas[i].trim();
                     if (line !== '') {
-                        this.imprimirSaida(lines[i]);
+                        this.imprimirSaida(linhas[i]);
                     }
                 }
             }
@@ -755,13 +784,13 @@ export class DeleguaTempoExecucao extends EventEmitter {
             return;
         }
 
-        if (response === 'send_file' && lines.length > 2) {
+        if (response === 'send_file' && linhas.length > 2) {
             this._gettingFile = true;
-            this._fileTotal = Number(lines[currLine++]);
-            this._dataFile = lines[currLine++];
+            this._fileTotal = Number(linhas[currLine++]);
+            this._dataFile = linhas[currLine++];
             this._fileReceived = 0;
 
-            if (lines.length <= currLine + 1) {
+            if (linhas.length <= currLine + 1) {
                 return;
             }
 
@@ -818,43 +847,43 @@ export class DeleguaTempoExecucao extends EventEmitter {
             this.enviarEvento('pararEmExcecao');
             this._ehExcecao = true;
             startVarsData = 2;
-            let nbVarsLines = Number(lines[startVarsData]);
-            this.popularVariaveis(lines, startVarsData, nbVarsLines);
+            let nbVarsLines = Number(linhas[startVarsData]);
+            this.popularVariaveis(linhas, startVarsData, nbVarsLines);
 
             startStackData = startVarsData + nbVarsLines + 1;
-            this.popularPilhaExecucao(lines, startStackData);
+            this.popularPilhaExecucao(linhas, startStackData);
 
-            let msg = lines.length < 2 ? '' : lines[1];
+            let msg = linhas.length < 2 ? '' : linhas[1];
             let headerMsg = 'Exception thrown. ' + msg + ' ';
 
-            if (this._stackTrace.length < 1) {
+            if (this._pilhaExecucao.length < 1) {
                 this.imprimirSaida(headerMsg);
             } else {
-                let entry = this._stackTrace[0];
+                let entry = this._pilhaExecucao[0];
                 this.imprimirSaida(headerMsg, entry.file, entry.line);
             }
 
             return;
         }
-        if (response === 'next' && lines.length > 3) {
-            let filename = this.getLocalPath(lines[currLine++]);
+        if (response === 'next' && linhas.length > 3) {
+            let filename = this.getLocalPath(linhas[currLine++]);
             this.carregarFonte(filename);
-            this._originalLine = Number(lines[currLine++]);
-            let nbOutputLines = Number(lines[currLine++]);
+            this._originalLine = Number(linhas[currLine++]);
+            let nbOutputLines = Number(linhas[currLine++]);
 
             for (
                 let i = 0;
-                i < nbOutputLines && currLine < lines.length - 1;
+                i < nbOutputLines && currLine < linhas.length - 1;
                 i += 2
             ) {
-                let line = lines[currLine++].trim();
+                let line = linhas[currLine++].trim();
                 if (i === nbOutputLines - 1) {
                     break;
                 }
                 let parts = line.split('\t');
                 let linenr = Number(parts[0]);
                 let filename = parts.length < 2 ? this._arquivoFonte : parts[1];
-                line = lines[currLine++].trim();
+                line = linhas[currLine++].trim();
 
                 if (i >= nbOutputLines - 2 && line === '') {
                     break;
@@ -889,12 +918,12 @@ export class DeleguaTempoExecucao extends EventEmitter {
             }
         }
         if (response === 'vars' || response === 'next') {
-            let nbVarsLines = Number(lines[startVarsData]);
-            this.popularVariaveis(lines, startVarsData, nbVarsLines);
+            let nbVarsLines = Number(linhas[startVarsData]);
+            this.popularVariaveis(linhas, startVarsData, nbVarsLines);
             startStackData = startVarsData + nbVarsLines + 1;
         }
         if (response === 'stack' || response === 'next') {
-            this.popularPilhaExecucao(lines, startStackData);
+            this.popularPilhaExecucao(linhas, startStackData);
         }
         if (this._originalLine === -3) {
             this.desconectarDoDepurador();
@@ -909,14 +938,14 @@ export class DeleguaTempoExecucao extends EventEmitter {
                 'GOT ' +
                     response +
                     ': ' +
-                    lines.length +
+                    linhas.length +
                     ' lines.' +
                     ' LAST: ' +
-                    lines[lines.length - 2] +
+                    linhas[linhas.length - 2] +
                     ' : ' +
-                    lines[lines.length - 1]
+                    linhas[linhas.length - 1]
             );
-        }
+        } */
     }
 
     private executarUmaVez(stepEvent?: string) {
@@ -934,6 +963,12 @@ export class DeleguaTempoExecucao extends EventEmitter {
         });
     }
 
+    /**
+     * Envia para servidor de depuração um comando.
+     * @param comando O nome do comando.
+     * @param dados Dados adicionais, caso necessário.
+     * @returns 
+     */
     public enviarParaServidorDepuracao(comando: string, dados = '') {
         /*if (isRepl && this._sourceFile != '') {
             let msg = 'Cannot execute REPL while debugging.';
@@ -941,7 +976,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
             return;
         }*/
 
-        let toSend = comando;
+        /* let toSend = comando;
         if (dados !== '' || comando.indexOf('|') < 0) {
             toSend += '|' + dados;
         }
@@ -949,10 +984,10 @@ export class DeleguaTempoExecucao extends EventEmitter {
             //console.log('Connection not valid. Queueing [' + toSend + '] when connected.');
             this._comandosEnfileirados.push(toSend);
             return;
-        }
+        } */
 
         //this._replSent = isRepl;
-        this._conexaoDepurador.write(toSend + '\n');
+        this._conexaoDepurador.write(comando + '\n');
     }
 
     setLocalBasePath(pathname: string) {
@@ -1016,7 +1051,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 		this.enviarEvento('mensagemErro', mensagem);
 	}
 
-    public printInfoMsg(mensagem: string) {
+    public exibirMensagemInformacao(mensagem: string) {
 		this.enviarEvento('mensagemInformacao', mensagem);
 	}
 
