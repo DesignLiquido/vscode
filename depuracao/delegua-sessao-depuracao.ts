@@ -170,7 +170,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
     protected breakpointLocationsRequest(response: DebugProtocol.BreakpointLocationsResponse, args: DebugProtocol.BreakpointLocationsArguments, request?: DebugProtocol.Request): void {
 
 		if (args.source.path) {
-			const bps = this._tempoExecucao.getBreakpoints(args.source.path, this.convertClientLineToDebugger(args.line));
+			const bps = this._tempoExecucao.obterPontosParada(args.source.path, this.convertClientLineToDebugger(args.line));
 			response.body = {
 				breakpoints: bps.map(col => {
 					return {
@@ -464,7 +464,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         const clientLines = args.lines || [];
 
         // clear all breakpoints for this file
-        this._tempoExecucao.clearBreakpoints(path);
+        this._tempoExecucao.limparTodosPontosParada(path);
 
         // set and verify breakpoint locations
         const actualBreakpoints = clientLines.map((l) => {
@@ -645,6 +645,8 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         response: DebugProtocol.VariablesResponse,
         args: DebugProtocol.VariablesArguments
     ): void {
+        this._tempoExecucao.variaveis();
+
         let variables =
             args.variablesReference === this._escopoLocal
                 ? this._tempoExecucao.localVariables

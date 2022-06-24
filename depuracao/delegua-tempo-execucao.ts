@@ -11,7 +11,7 @@ import { DeleguaPontoParada } from './delegua-ponto-parada';
 
 /**
  * Classe responsável por se comunicar com o depurador da linguagem Delégua, traduzindo as requisições do
- * Visual Studio Code.
+ * Visual Studio Code para o depurador, e também recebendo instruções do depurador.
  */
 export class DeleguaTempoExecucao extends EventEmitter {
     private static _instancia: DeleguaTempoExecucao;
@@ -126,7 +126,6 @@ export class DeleguaTempoExecucao extends EventEmitter {
         this._originalLine = this.obterPrimeiraLinha();
 
         this.verificarPontosParada(this._arquivoFonte);
-
         this.conectarAoDepurador();
 
         if (stopOnEntry) {
@@ -148,10 +147,13 @@ export class DeleguaTempoExecucao extends EventEmitter {
         this._mapaNomesArquivos.set(lower, nomeArquivo);
     }
 
+    /**
+     * Comanda o depurador para continuar a execução.
+     */
     public continuar() {
-        if (!this.verificarDepuracao(this._arquivoFonte)) {
+        /* if (!this.verificarDepuracao(this._arquivoFonte)) {
             return;
-        }
+        } */
         this._continuar = true;
         this.enviarParaServidorDepuracao('continuar');
     }
@@ -183,7 +185,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 				this._inicializado = false;
 
 				if (!this._instanciaRepl && this._arquivoFonte !== '') {
-					let arquivoServidor = this.getServerPath(this._arquivoFonte);
+					let arquivoServidor = this.obterCaminhoServidor(this._arquivoFonte);
 					if (arquivoServidor !== undefined && arquivoServidor !== '') {
 						//console.log('Sending serverFilename: [' + serverFilename + ']');
 						this.enviarParaServidorDepuracao("arquivo-atual", arquivoServidor);
@@ -311,6 +313,8 @@ export class DeleguaTempoExecucao extends EventEmitter {
     popularPilhaExecucao(linhas: string[]): void {
         let id = 0;
         this._pilhaExecucao = [];
+        // As duas primeiras linhas são estruturas do cabeçalho da resposta. 
+        // A última linha é o final da resposta. 
         for (let i = 2; i < linhas.length - 1; i++) {
             let linha: string[] = linhas[i].split('---');
             let detalhesArquivo = linha[1].split('::');
@@ -328,15 +332,27 @@ export class DeleguaTempoExecucao extends EventEmitter {
         }
     }
 
-    popularVariaveis(lines: string[], startVarsData: number, nbVarsLines: number) {
-        let counter = 0;
-        for (
-            let i = startVarsData + 1;
-            i < lines.length && counter < nbVarsLines;
-            i++
-        ) {
-            counter++;
-            let line = lines[i];
+    /**
+     * Popula variáveis de acordo com retorno do depurador.
+     * @param linhas 
+     */
+    popularVariaveis(linhas: string[]) {
+        this._variaveisGlobais = [];
+        this._variaveisLocais = [];
+
+        // As duas primeiras linhas são estruturas do cabeçalho da resposta. 
+        // A última linha é o final da resposta. 
+        for (let i = 2; i < linhas.length - 1; i++) {
+            const informacoes: string[] = linhas[i].split('::');
+            let item = {
+                name: informacoes[0].trim(),
+                type: informacoes[1].trim(),
+                value: informacoes[2].trim(),
+                variablesReference: 0,
+            };
+            this._variaveisLocais.push(item);
+            /* counter++;
+            let line = linhas[i];
             let tokens = line.split(':');
 
             if (tokens.length < 4) {
@@ -352,13 +368,6 @@ export class DeleguaTempoExecucao extends EventEmitter {
                 value = '"' + value + '"';
             }
 
-            let item = {
-                name: name,
-                type: type,
-                value: value,
-                variablesReference: 0,
-            };
-
             if (globLoc === '1') {
                 this._variaveisGlobais.push(item);
             } else {
@@ -367,7 +376,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
             let lower = name.toLowerCase();
             this._mapaDeHovers.set(lower, value);
-            this._mapaDeVariaveis.set(lower, value);
+            this._mapaDeVariaveis.set(lower, value); */
         }
     }
 
@@ -416,7 +425,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 		// this.instructionBreakpoints.clear();
 	}
 
-    public clearBreakpoints(path: string): void {
+    public limparTodosPontosParada(path: string): void {
 		let pathname = Path.resolve(path);
 		let lower = pathname.toLowerCase();
 		this._pontosParada.delete(lower);
@@ -424,9 +433,9 @@ export class DeleguaTempoExecucao extends EventEmitter {
 	}
 
     /*
-	 * Determine possible column breakpoint positions for the given line.
+	 * 
 	 */
-	public getBreakpoints(path: string, line: number): number[] {
+	public obterPontosParada(path: string, line: number): number[] {
         return [];
 	}
 
@@ -522,36 +531,27 @@ export class DeleguaTempoExecucao extends EventEmitter {
      * @returns 
      */
     public pilhaExecucao(startFrame: number, endFrame: number): any {
-		//this.printDebugMsg('stackTraceRequest ' + startFrame + ' ' + endFrame);
         this.enviarParaServidorDepuracao('pilha-execucao');
-		const frames = new Array<any>();
+		const elementos = new Array<any>();
 		for (let i = 0; i < this._pilhaExecucao.length; i ++) {
 			let entrada = this._pilhaExecucao[i];
-			frames.push({
+			elementos.push({
 				index: entrada.id,
 				name:  entrada.name,
 				file:  entrada.file,
 				line:  entrada.line
 			});
 		}
-		/* if (frames.length === 0) {
-			let name = "";
-			if (this._conteudoFonte.length > this._originalLine &&
-				this._conteudoFonte[this._originalLine]) {
-					name = this._conteudoFonte[this._originalLine].trim()
-				}
-			frames.push({
-				index: 1,
-				name:  name,
-				file:  this._conteudoFonte,
-				line:  this._originalLine
-			});
-		} */
+
 		return {
-			frames: frames,
+			frames: elementos,
 			count: this._pilhaExecucao.length
 		};
 	}
+
+    public variaveis() {
+        this.enviarParaServidorDepuracao('variaveis');
+    }
 
     obterCaminhoArquivoLocal(pathname: string) {
         if (pathname === undefined || pathname === null || pathname === '') {
@@ -570,7 +570,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         return localPath;
     }
 
-    getServerPath(pathname: string)
+    obterCaminhoServidor(pathname: string)
 	{
 		if (this._serverBase === "") {
 			return pathname;
@@ -739,7 +739,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
     /**
      * Processa dados enviados pelo depurador para a extensão.
-     * @param dados 
+     * @param dados Dados enviados pelo depurador.
      * @returns 
      */
     protected processarDoDepurador(dados: any) {
@@ -760,6 +760,13 @@ export class DeleguaTempoExecucao extends EventEmitter {
                 console.log('Resposta de Pilha de Execução');
                 this.popularPilhaExecucao(linhas);
                 break;
+            case '--- variaveis-resposta ---':
+                console.log('Resposta de Variáveis');
+                this.popularVariaveis(linhas);
+                break;
+            case '--- mensagem-saida ---':
+                console.log('Mensagem de saída');
+                this.imprimirSaida(linhas[2]);
             default:
                 break;
         }
