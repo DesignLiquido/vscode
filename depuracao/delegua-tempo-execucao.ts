@@ -315,9 +315,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
             let linha: string[] = linhas[i].split('---');
             let detalhesArquivo = linha[1].split('::');
             let numeroLinha = Number(detalhesArquivo[1].trim());
-            // let arquivo = this.getLocalPath(linhas[i + 1].trim());
-            let arquivo = detalhesArquivo[0];
-            // let linha = linhas[i + 2].trim();
+            let arquivo = this.obterCaminhoArquivoLocal(detalhesArquivo[0].trim());
 
             this._pilhaExecucao.push(<ElementoPilhaVsCode>{
                 id: ++id,
@@ -555,7 +553,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 		};
 	}
 
-    getLocalPath(pathname: string) {
+    obterCaminhoArquivoLocal(pathname: string) {
         if (pathname === undefined || pathname === null || pathname === '') {
             return '';
         }
@@ -728,7 +726,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         //console.error('Delégua> ' + msg + ' \r\n');
         //console.error();
         arquivo = arquivo === '' ? this._arquivoFonte : arquivo;
-        arquivo = this.getLocalPath(arquivo);
+        arquivo = this.obterCaminhoArquivoLocal(arquivo);
         linha = linha >= 0 ? linha : 
             this._originalLine >= 0 ? this._originalLine : this._arquivoFonte.length - 1;
         //this.printDebugMsg("PRINT " + msg + " " + file + " " + line);

@@ -43,7 +43,8 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
     private _cancelledProgressId: string | undefined = undefined;
     private _configurationDone = new Subject();
     private _variableHandles = new Handles<string>();
-    private _localScope = 0;
+    private _escopoLocal = 0;
+    private _escopoGlobal = 0;
 
     public constructor() {
         super('delegua-debug.txt');
@@ -440,8 +441,8 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
             )
         );
 
-        this._localScope = scopes[0].variablesReference;
-        //this._globalScope = scopes[1].variablesReference;
+        this._escopoLocal = scopes[0].variablesReference;
+        this._escopoGlobal = scopes[1].variablesReference;
 
         //console.log('Local: ' + this._localScope + '. Global: ' + this._globalScope);
 
@@ -645,7 +646,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         args: DebugProtocol.VariablesArguments
     ): void {
         let variables =
-            args.variablesReference === this._localScope
+            args.variablesReference === this._escopoLocal
                 ? this._tempoExecucao.localVariables
                 : this._tempoExecucao.globalVariables;
 
