@@ -767,6 +767,11 @@ export class DeleguaTempoExecucao extends EventEmitter {
             case '--- mensagem-saida ---':
                 console.log('Mensagem de saída');
                 this.imprimirSaida(linhas[2]);
+            case '--- proximo-resposta ---':
+                console.log('Execução do próximo comando');
+                this.enviarParaServidorDepuracao('pilha-execucao');
+                this.enviarParaServidorDepuracao('variaveis');
+                this.enviarEvento('pararEmEntrada');
             default:
                 break;
         }
@@ -975,23 +980,6 @@ export class DeleguaTempoExecucao extends EventEmitter {
      * @returns 
      */
     public enviarParaServidorDepuracao(comando: string, dados = '') {
-        /*if (isRepl && this._sourceFile != '') {
-            let msg = 'Cannot execute REPL while debugging.';
-            this.printWarningMsg(msg);
-            return;
-        }*/
-
-        /* let toSend = comando;
-        if (dados !== '' || comando.indexOf('|') < 0) {
-            toSend += '|' + dados;
-        }
-        if (!this._conectado) {
-            //console.log('Connection not valid. Queueing [' + toSend + '] when connected.');
-            this._comandosEnfileirados.push(toSend);
-            return;
-        } */
-
-        //this._replSent = isRepl;
         this._conexaoDepurador.write(comando + '\n');
     }
 
@@ -1014,17 +1002,13 @@ export class DeleguaTempoExecucao extends EventEmitter {
     }
 
     public passo(evento: string = 'pararEmPasso') {
-        if (!this.verificarDepuracao(this._arquivoFonte)) {
-            return;
-        }
-
         this._continuar = false;
 
-        if (this._inicializado) {
+        /* if (this._inicializado) {
             this.executarUmaVez(evento);
-        } else {
+        } else { */
             this.enviarParaServidorDepuracao('proximo');
-        }
+        // }
     }
 
     public adentrarEscopo(evento: string = 'pararEmPasso') {

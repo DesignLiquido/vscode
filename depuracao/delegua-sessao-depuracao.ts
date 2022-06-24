@@ -46,6 +46,10 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
     private _escopoLocal = 0;
     private _escopoGlobal = 0;
 
+    /**
+     * No construtor são feitos os registros de quais eventos a classe de tempo de
+     * execução irá emitir, e que são observados por essa sessão de depuração.
+     */
     public constructor() {
         super('delegua-debug.txt');
 
@@ -151,6 +155,8 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
     /**
      * 'initializeRequest' é a primeira requisição feita pelo VSCode para
      * descobrir quais funcionalidades o recurso de depuração tem.
+     * @param response A resposta enviada para a interface do VSCode.
+     * @param args Argumentos adicionais.
      */
     protected initializeRequest(
         response: DebugProtocol.InitializeResponse,
@@ -167,8 +173,11 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         this.sendEvent(new InitializedEvent());
     }
 
-    protected breakpointLocationsRequest(response: DebugProtocol.BreakpointLocationsResponse, args: DebugProtocol.BreakpointLocationsArguments, request?: DebugProtocol.Request): void {
-
+    protected breakpointLocationsRequest(
+        response: DebugProtocol.BreakpointLocationsResponse, 
+        args: DebugProtocol.BreakpointLocationsArguments, 
+        request?: DebugProtocol.Request): void 
+    {
 		if (args.source.path) {
 			const bps = this._tempoExecucao.obterPontosParada(args.source.path, this.convertClientLineToDebugger(args.line));
 			response.body = {
@@ -229,8 +238,8 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
 	}
 
     /**
-     * Called at the end of the configuration sequence.
-     * Indicates that all breakpoints etc. have been sent to the DA and that the 'launch' can start.
+     * Chamado após a sequência de configuração. 
+     * Indica que todos os pontos de parada, variáveis, etc, foram devidamente enviados e a depuração ('launch') pode iniciar.
      */
     protected configurationDoneRequest(
         response: DebugProtocol.ConfigurationDoneResponse,
@@ -242,6 +251,12 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         this._configurationDone.notify();
     }
 
+    /**
+     * Evento acionado quando o usuário clica no botão ou usa o atalho de teclado para continuar.
+     * No Windows, o atalho é o F5, por padrão.
+     * @param response A resposta a ser enviada para a interface do VSCode.
+     * @param args Argumentos adicionais.
+     */
     protected continueRequest(
         response: DebugProtocol.ContinueResponse,
         args: DebugProtocol.ContinueArguments
@@ -397,6 +412,12 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         this.sendResponse(response);
     }
 
+    /**
+     * Evento acionado quando o usuário clica no botão ou usa o atalho de teclado para a próxima instrução (passo).
+     * No Windows, o atalho é o F10, por padrão.
+     * @param response A resposta a ser enviada para a interface do VSCode.
+     * @param args Argumentos adicionais.
+     */
     protected nextRequest(
         response: DebugProtocol.NextResponse,
         args: DebugProtocol.NextArguments
