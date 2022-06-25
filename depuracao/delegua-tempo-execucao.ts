@@ -168,8 +168,9 @@ export class DeleguaTempoExecucao extends EventEmitter {
 			this.imprimirSaida('Conectando a ' + this._endereco + ":" + this._porta + '...', '', -1, ''); // no new line
 			//console.log('Connecting to ' + this._host + ":" + this._port + '...');
 
-			let timeout  = this._endereco === '127.0.0.1' || this._endereco === 'localhost' || this._endereco === '' ? 10 : 30;
-			this._conexaoDepurador.setTimeout(timeout * 1000);
+            // TODO: Por enquanto não precisa ter timeout. Avaliar a possibilidade de remover esse código completamente.
+			// let timeout  = this._endereco === '127.0.0.1' || this._endereco === 'localhost' || this._endereco === '' ? 10 : 30;
+			// this._conexaoDepurador.setTimeout(timeout * 1000);
 
 			this._conexaoDepurador.connect(this._porta, this._endereco, () => {
 				this._conectado = true;
@@ -178,7 +179,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
 				if (DeleguaTempoExecucao._primeiraExecucao) {
 				    this.exibirMensagemInformacao('Delégua: Conectado a ' + this._endereco + ":" + this._porta +
-					    '. Verifique o Debug Console para mensagens relacionadas da comunicação entre essa extensão e Delégua.');
+					    '. Verifique o Debug Console do VSCode para mensagens relacionadas da comunicação entre essa extensão e Delégua.');
 				}
 
 				this.enviarEvento('onStatusChange', 'Delégua: Conectado a ' + this._endereco + ":" + this._porta);
@@ -203,7 +204,12 @@ export class DeleguaTempoExecucao extends EventEmitter {
 			});
 
 			this._conexaoDepurador.on('data', (data: any) => {
-				if (!this._obtendoDados) {
+                if (data.includes('proximo')) {
+                    console.log('Evento de dados: ' + data);
+                }
+                
+                this.processarDoDepurador(data);
+				/* if (!this._obtendoDados) {
 					let ind = data.toString().indexOf('\n');
 					this._dataTotal = this._dataReceived = 0;
 					if (ind > 0) {
@@ -214,7 +220,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 						}
 					}
 					if (this._dataTotal === 0) {
-						this.processarDoDepurador(data);
+						
 						return;
 					}
 					if (data.length > ind + 1) {
@@ -242,7 +248,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 						//this.printDeléguaOutput('  COLLECTED: ' + this._dataBytes.toString().substring(0, 4) + "...");
 						this.processarDoDepurador(this._dataBytes);
 					}
-				}
+				} */
 			});
 
 			this._conexaoDepurador.on('timeout', () => {
@@ -743,6 +749,9 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
     /**
      * Processa dados enviados pelo depurador para a extensão.
+     * Pela natureza de socket.write(), o que pode acontecer aqui é receber mais de um comando por vez do depurador.
+     * Quando isso ocorre, para cada comando enviado, é preciso achar o final da resposta, 
+     * processar a resposta e excluir as linhas já processadas para o próximo comando. 
      * @param dados Dados enviados pelo depurador.
      * @returns 
      */
@@ -752,38 +761,43 @@ export class DeleguaTempoExecucao extends EventEmitter {
         }
 
         const linhas = dados.toString().split('\n');
-        // A linha 0 normalmente é descartada por ser a confirmação do comando recebido e/ou outras informações de uso futuro.
-        // O cabeçalho da resposta normalmente começa na linha 1.
-        let linhaAtual = 1;
-        const primeiraLinha = linhas[linhaAtual++].trim();
-        // let startVarsData = 1;
-        // let startStackData = 1;
+        let linhaAtual = 0;
+        while (linhaAtual < linhas.length) {
+            // A primeira linha de cada comando normalmente é descartada por ser a confirmação do comando recebido 
+            // e/ou outras informações de uso futuro.
+            linhaAtual++;
+            // O cabeçalho da resposta normalmente começa na segunda linha de cada comando.
+            const primeiraLinhaComando = linhas[linhaAtual].trim();
+            linhaAtual++;
 
-        switch (primeiraLinha) {
-            case '--- avaliar-resposta ---':
-                console.log('Resultado da avaliação');
-                this._resultadoAvaliacao = linhas[2];
-                break;
-            case '--- mensagem-saida ---':
-                console.log('Mensagem de saída');
-                this.imprimirSaida(linhas[2]);
-                break;
-            case '--- proximo-resposta ---':
-                console.log('Execução do próximo comando');
-                this.enviarParaServidorDepuracao('pilha-execucao');
-                this.enviarParaServidorDepuracao('variaveis');
-                this.enviarEvento('pararEmEntrada');
-                break;
-            case '--- pilha-execucao-resposta ---':
-                console.log('Resposta de Pilha de Execução');
-                this.popularPilhaExecucao(linhas);
-                break;
-            case '--- variaveis-resposta ---':
-                console.log('Resposta de Variáveis');
-                this.popularVariaveis(linhas);
-                break;
-            default:
-                break;
+            switch (primeiraLinhaComando) {
+                case '--- avaliar-resposta ---':
+                    // console.log('Resultado da avaliação');
+                    this._resultadoAvaliacao = linhas[linhaAtual];
+                    break;
+                case '--- mensagem-saida ---':
+                    // console.log('Mensagem de saída');
+                    this.imprimirSaida(linhas[linhaAtual]);
+                    break;
+                case '--- proximo-resposta ---':
+                    console.log('Execução do próximo comando');
+                    this.enviarParaServidorDepuracao('pilha-execucao');
+                    this.enviarParaServidorDepuracao('variaveis');
+                    this.enviarEvento('pararEmEntrada');
+                    break;
+                case '--- pilha-execucao-resposta ---':
+                    // console.log('Resposta de Pilha de Execução');
+                    this.popularPilhaExecucao(linhas);
+                    break;
+                case '--- variaveis-resposta ---':
+                    // console.log('Resposta de Variáveis');
+                    this.popularVariaveis(linhas);
+                    break;
+                default:
+                    break;
+            }
+
+            linhaAtual++;
         }
 
         /* if (response === 'repl' || response === '_repl') {

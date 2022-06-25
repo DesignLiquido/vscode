@@ -165,7 +165,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         response.body = response.body || {};
         response.body.supportsEvaluateForHovers = true;
         response.body.supportsStepBack = false;
-        response.body.supportsSetVariable = false;
+        response.body.supportsSetVariable = true;
         response.body.supportsRestartRequest = false;
         response.body.supportsModulesRequest = false;
 
@@ -355,12 +355,16 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         response: DebugProtocol.EvaluateResponse,
         args: DebugProtocol.EvaluateArguments
     ): void {
-        let reply: string | undefined = undefined;
+        // let reply: string | undefined = undefined;
 
         if (args.context === 'hover') {
-            reply = this._tempoExecucao.obterValorPonteiroMouse(
+            this._tempoExecucao.obterValorVariavel(args.expression).then(resposta => {
+                response.body = { result: resposta || '', variablesReference: 0 };
+                this.sendResponse(response);
+            });
+            /* reply = this._tempoExecucao.obterValorPonteiroMouse(
                 args.expression
-            );
+            ); */
         } else if (args.context === 'watch') {
             this._tempoExecucao.obterValorVariavel(args.expression).then(resposta => {
                 response.body = { result: resposta || '', variablesReference: 0 };
