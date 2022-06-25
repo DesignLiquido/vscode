@@ -330,9 +330,9 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
             this._pilhaExecucao.push(<ElementoPilhaVsCode>{
                 id: ++id,
-                line: numeroLinha,
-                name: linha[0].trim(),
-                file: arquivo,
+                linha: numeroLinha,
+                nome: linha[0].trim(),
+                arquivo: arquivo,
             });
 
             console.log(this._pilhaExecucao);
@@ -542,9 +542,9 @@ export class DeleguaTempoExecucao extends EventEmitter {
 			let entrada = this._pilhaExecucao[i];
 			elementos.push({
 				index: entrada.id,
-				name:  entrada.name,
-				file:  entrada.file,
-				line:  entrada.line
+				name:  entrada.nome,
+				file:  entrada.arquivo,
+				line:  entrada.linha
 			});
 		}
 

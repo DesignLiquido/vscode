@@ -3,7 +3,7 @@
  */
 export interface ElementoPilhaVsCode {
 	id: number;
-	line: number;
-	name: string;
-	file: string;
+	linha: number;
+	nome: string;
+	arquivo: string;
 }

@@ -19,5 +19,6 @@ Delégua possui um protocolo próprio de comunicação entre depurador e cliente
 
 O Visual Studio Code também possui [um protocolo de comunicação detalhado aqui](https://microsoft.github.io/debug-adapter-protocol/overview). Para que Delégia e Visual Studio Code se entendam, é preciso um intermediador entre eles, implementado pela classe `DeleguaTempoExecucao`. 
 
-Segundo a documentação do Visual Studio Code, linguagens podem usar ou um executável que faça a tradução das mensagens entre linguagem e Visual Studio Code, ou um servidor Socket implementado dentro da extensão. Aqui optamos pela opção do servidor Socket, que abre em uma porta aleatória disponível. 
+Segundo a documentação do Visual Studio Code, linguagens podem usar ou um executável que faça a tradução das mensagens entre linguagem e Visual Studio Code, ou um servidor _Socket_ implementado dentro da extensão. Aqui optamos pela opção do servidor _Socket_, que abre em uma porta aleatória disponível. 
 
+A extensão também comanda a execução de Delégua com a opção `--depurador` definida, que abre o servidor de depuração na porta 7777 e espera uma instrução de pronto para liberar os comandos de depuração para a interface do VSCode.
