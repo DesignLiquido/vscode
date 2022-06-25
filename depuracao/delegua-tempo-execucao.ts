@@ -533,11 +533,9 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
     /**
      * Exibe a pilha de execução vinda do depurador no VSCode.
-     * @param startFrame 
-     * @param endFrame 
-     * @returns 
+     * @returns Objeto com os elementos da pilha e a contagem de elementos.
      */
-    public pilhaExecucao(startFrame: number, endFrame: number): any {
+    public pilhaExecucao(): any {
         this.enviarParaServidorDepuracao('pilha-execucao');
 		const elementos = new Array<any>();
 		for (let i = 0; i < this._pilhaExecucao.length; i ++) {

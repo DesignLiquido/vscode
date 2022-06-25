@@ -24,6 +24,7 @@ import {
 import { DebugProtocol } from '@vscode/debugprotocol';
 import { Subject } from 'await-notify';
 import * as base64 from 'base64-js';
+import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 
 import { DeleguaTempoExecucao } from './delegua-tempo-execucao';
 import { DeleguaPontoParada } from './delegua-ponto-parada';
@@ -39,9 +40,12 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
     // valor único de _thread_.
     private static THREAD_ID = 1;
     private _tempoExecucao: DeleguaTempoExecucao;
+    private _processoExecucaoDelegua: ChildProcessWithoutNullStreams;
+    private _deleguaEstaPronto: Promise<any>;
+
     private _cancellationTokens = new Map<number, boolean>();
     private _cancelledProgressId: string | undefined = undefined;
-    private _configurationDone = new Subject();
+    private _configuracaoFinalizada = new Subject();
     private _variableHandles = new Handles<string>();
     private _escopoLocal = 0;
     private _escopoGlobal = 0;
@@ -150,6 +154,35 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
             e.body.line = this.convertDebuggerLineToClient(line);
             this.sendEvent(e);
         });
+
+        this._deleguaEstaPronto = new Promise<any>((resolve, reject) => {
+            this._processoExecucaoDelegua = spawn('C:\\Users\\leone\\AppData\\Roaming\\npm\\ts-node.cmd', ["D:\\GitHub\\delegua\\index.ts", "-D", "D:\\GitHub\\delegua\\testes\\exemplos\\index.delegua"]);
+            console.log('spawn');
+    
+            this._processoExecucaoDelegua.on('spawn', () => {
+                console.log('Inicializando Delégua...');
+            });
+    
+            this._processoExecucaoDelegua.stdout.on('data', (data) => {
+                console.log(`spawn stdout: ${data}`);
+                // TODO: Pensar numa forma melhor de capturar esse evento aqui.
+                if (data.includes('7777')) {
+                    resolve(true);
+                }
+            });
+    
+            this._processoExecucaoDelegua.stderr.on('data', (data) => {
+                console.log(`spawn on error ${data}`);
+            });
+    
+            this._processoExecucaoDelegua.on('exit', (code, signal) => {
+                console.log(`spawn on exit code: ${code} signal: ${signal}`);
+            });
+    
+            this._processoExecucaoDelegua.on('close', (code: number, args: any[])=> {
+                console.log(`spawn on close code: ${code} args: ${args}`);
+            });
+        });
     }
 
     /**
@@ -248,7 +281,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         super.configurationDoneRequest(response, args);
 
         // notify the launchRequest that configuration has finished
-        this._configurationDone.notify();
+        this._configuracaoFinalizada.notify();
     }
 
     /**
@@ -371,9 +404,6 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
                 this.sendResponse(response);
             });
         }
-
-        // response.body = { result: reply ? reply : '', variablesReference: 0 };
-        // this.sendResponse(response);
     }
 
     protected exceptionInfoRequest(response: DebugProtocol.ExceptionInfoResponse, args: DebugProtocol.ExceptionInfoArguments) {
@@ -390,6 +420,15 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
 		this.sendResponse(response);
 	}
 
+    /**
+     * Inicia o tradutor (Tempo de Execução) que harmoniza a comunicação entre 
+     * servidor de depuração e extensão do VSCode.
+     * Como a inicialização de Delégua (e do servidor de depuração) é lenta, 
+     * precisamos esperar a inicialização (por Promise) e só tentar conectar a
+     * hora em que o child_process avisa que o servidor de depuração está pronto.
+     * @param response A resposta a ser enviada para a interface do VSCode.
+     * @param args Argumentos adicionais.
+     */
     protected async launchRequest(
         response: DebugProtocol.LaunchResponse,
         args: LaunchRequestArguments
@@ -400,28 +439,26 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
             false
         );
 
-        // wait until configuration has finished (and configurationDoneRequest has been called)
-        await this._configurationDone.wait(1000);
+        // Aguarda a finalização da configuração (configurationDoneRequest)
+        await this._configuracaoFinalizada.wait(1000);
 
         let connectType = args.connectType ? args.connectType : 'sockets';
         let host = args.serverHost ? args.serverHost : '127.0.0.1';
         let port = args.serverPort ? args.serverPort : 7777;
         let base = args.serverBase ? args.serverBase : '';
-        // start the program in the runtime
 
-        //let config = vscode.workspace.getConfiguration('delegua');
-        //let hostConfig = config.get("serverHost");
-        //host =  hostConfig ? hostConfig : "127.0.0.1";
-        this._tempoExecucao.iniciar(
-            args.program,
-            !!args.stopOnEntry,
-            connectType,
-            host,
-            port,
-            base
-        );
-
-        this.sendResponse(response);
+        this._deleguaEstaPronto.then(() => {
+            this._tempoExecucao.iniciar(
+                args.program,
+                !!args.stopOnEntry,
+                connectType,
+                host,
+                port,
+                base
+            );
+    
+            this.sendResponse(response);
+        });
     }
 
     /**
@@ -618,20 +655,20 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
 		this.sendResponse(response);
 	}
 
+    /**
+     * Requisição para buscar no servidor de depuração a pilha atual de execução.
+     * @param response A resposta a ser enviada para a interface do VSCode.
+     * @param args Argumentos adicionais.
+     */
     protected stackTraceRequest(
         response: DebugProtocol.StackTraceResponse,
         args: DebugProtocol.StackTraceArguments
     ): void {
-        const startFrame =
-            typeof args.startFrame === 'number' ? args.startFrame : 0;
-        const maxLevels = typeof args.levels === 'number' ? args.levels : 1000;
-        const endFrame = startFrame + maxLevels;
-
-        const pilha = this._tempoExecucao.pilhaExecucao(startFrame, endFrame);
+        const pilha = this._tempoExecucao.pilhaExecucao();
 
         response.body = {
             stackFrames: pilha.frames.map(
-                (f) =>
+                (f: any) =>
                     new StackFrame(
                         f.index,
                         f.name,
