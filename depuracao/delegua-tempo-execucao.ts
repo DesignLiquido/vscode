@@ -20,9 +20,9 @@ export class DeleguaTempoExecucao extends EventEmitter {
     private static _primeiraExecucao = true;
 
     private _conexaoDepurador = new Net.Socket();
-    private _connectType = 'sockets';
-	private _host        = '127.0.0.1';
-	private _port        = 7777;
+    private _tipoConexao      = 'sockets';
+	private _endereco         = '127.0.0.1';
+	private _porta            = 7777;
 	private _serverBase  = '';
 	private _localBase   = '';
 
@@ -43,6 +43,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
     private _dataTotal = 0;
     private _dataReceived = 0;
     private _dataBytes: Buffer;
+    private _resultadoAvaliacao: string;
 
     private _lastReplSource = '';
 
@@ -113,9 +114,9 @@ export class DeleguaTempoExecucao extends EventEmitter {
     public iniciar(program: string, stopOnEntry: boolean, connectType: string,
         host: string, port: number, serverBase = "") {
 
-        this._connectType = connectType;
-        this._host = host;
-        this._port = port;
+        this._tipoConexao = connectType;
+        this._endereco = host;
+        this._porta = port;
         this._serverBase = serverBase;
 
         if (host === "127.0.0.1") {
@@ -163,24 +164,24 @@ export class DeleguaTempoExecucao extends EventEmitter {
 			return;
 		}
 
-		if (this._connectType === "sockets") {
-			this.imprimirSaida('Conectando a ' + this._host + ":" + this._port + '...', '', -1, ''); // no new line
+		if (this._tipoConexao === "sockets") {
+			this.imprimirSaida('Conectando a ' + this._endereco + ":" + this._porta + '...', '', -1, ''); // no new line
 			//console.log('Connecting to ' + this._host + ":" + this._port + '...');
 
-			let timeout  = this._host === '127.0.0.1' || this._host === 'localhost' || this._host === '' ? 10 : 30;
+			let timeout  = this._endereco === '127.0.0.1' || this._endereco === 'localhost' || this._endereco === '' ? 10 : 30;
 			this._conexaoDepurador.setTimeout(timeout * 1000);
 
-			this._conexaoDepurador.connect(this._port, this._host, () => {
+			this._conexaoDepurador.connect(this._porta, this._endereco, () => {
 				this._conectado = true;
 				this.imprimirSaida('Conectado ao servidor de depuração Delégua.');
 				//console.log('Connected to ' + this._host + ":" + this._port + '...');
 
 				if (DeleguaTempoExecucao._primeiraExecucao) {
-				    this.exibirMensagemInformacao('Delégua: Conectado a ' + this._host + ":" + this._port +
+				    this.exibirMensagemInformacao('Delégua: Conectado a ' + this._endereco + ":" + this._porta +
 					    '. Verifique o Debug Console para mensagens relacionadas da comunicação entre essa extensão e Delégua.');
 				}
 
-				this.enviarEvento('onStatusChange', 'Delégua: Conectado a ' + this._host + ":" + this._port);
+				this.enviarEvento('onStatusChange', 'Delégua: Conectado a ' + this._endereco + ":" + this._porta);
 				DeleguaTempoExecucao._primeiraExecucao = false;
 				this._inicializado = false;
 
@@ -246,7 +247,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
 			this._conexaoDepurador.on('timeout', () => {
 				if (!this._conectado) {
-					this.imprimirSaida("Tempo esgotado conectando a " + this._host + ":" + this._port);
+					this.imprimirSaida("Tempo esgotado conectando a " + this._endereco + ":" + this._porta);
 					//this.printErrorMsg('Timeout connecting to ' + this._host + ":" + this._port);
 					//console.log('Timeout connecting to ' + this._host + ":" + this._port + '...');
 					this._conexaoDepurador.destroy();
@@ -255,9 +256,9 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
 			this._conexaoDepurador.on('close', () => {
 				if (this._inicializado) {
-					this.imprimirSaida('Não foi possível conectar a ' + this._host + ":" + this._port);
-					this.printErrorMsg('Não foi possível conectar a ' + this._host + ":" + this._port);
-					this.enviarEvento('onStatusChange', "Delégua: Não foi possível conectar a " + this._host + ":" + this._port);
+					this.imprimirSaida('Não foi possível conectar a ' + this._endereco + ":" + this._porta);
+					this.printErrorMsg('Não foi possível conectar a ' + this._endereco + ":" + this._porta);
+					this.enviarEvento('onStatusChange', "Delégua: Não foi possível conectar a " + this._endereco + ":" + this._porta);
 				}
 				//console.log('Closed connection to ' + this._host + ":" + this._port + '...');
 				this._conectado = false;
@@ -628,12 +629,12 @@ export class DeleguaTempoExecucao extends EventEmitter {
 		return result;
 	}
 
-    public obterValorPonteiroMouse(nome: string): string {
-        let lower = nome.toLowerCase();
+    public obterValorPonteiroMouse(expressao: string): string {
+        let lower = expressao.toLowerCase();
         let hover = this._mapaDeHovers.get(lower);
 
         if (hover) {
-            return nome + '=' + hover;
+            return expressao + '=' + hover;
         }
 
         hover = this._mapaDeFuncoes.get(lower);
@@ -650,18 +651,21 @@ export class DeleguaTempoExecucao extends EventEmitter {
             }
         }
 
-        return nome;
+        return expressao;
     }
 
-    public obterValorVariavel(nome: string): string {
-        let lower = nome.toLowerCase();
-        let val = this._mapaDeVariaveis.get(lower);
-
-        if (val) {
-            return val;
-        }
-
-        return '--- desconhecido ---';
+    /**
+     * Pede uma avaliação para o servidor de depuração de uma variável. 
+     * Espera até 200ms para a avaliação e devolve `this._resultadoAvaliacao`.
+     * @param nome O nome da variável
+     * @returns Promise que devolve o resultado da avaliação depois de 200ms.
+     */
+    public obterValorVariavel(nome: string): Promise<string> {
+        this._resultadoAvaliacao = '';
+        this.enviarParaServidorDepuracao('avaliar ' + nome + '\n');
+        return new Promise((resolve) => {
+            setTimeout(() => resolve(this._resultadoAvaliacao), 200);
+        });
     }
 
     private carregarFonte(nomeArquivo: string) {
@@ -756,6 +760,20 @@ export class DeleguaTempoExecucao extends EventEmitter {
         // let startStackData = 1;
 
         switch (primeiraLinha) {
+            case '--- avaliar-resposta ---':
+                console.log('Resultado da avaliação');
+                this._resultadoAvaliacao = linhas[2];
+                break;
+            case '--- mensagem-saida ---':
+                console.log('Mensagem de saída');
+                this.imprimirSaida(linhas[2]);
+                break;
+            case '--- proximo-resposta ---':
+                console.log('Execução do próximo comando');
+                this.enviarParaServidorDepuracao('pilha-execucao');
+                this.enviarParaServidorDepuracao('variaveis');
+                this.enviarEvento('pararEmEntrada');
+                break;
             case '--- pilha-execucao-resposta ---':
                 console.log('Resposta de Pilha de Execução');
                 this.popularPilhaExecucao(linhas);
@@ -764,14 +782,6 @@ export class DeleguaTempoExecucao extends EventEmitter {
                 console.log('Resposta de Variáveis');
                 this.popularVariaveis(linhas);
                 break;
-            case '--- mensagem-saida ---':
-                console.log('Mensagem de saída');
-                this.imprimirSaida(linhas[2]);
-            case '--- proximo-resposta ---':
-                console.log('Execução do próximo comando');
-                this.enviarParaServidorDepuracao('pilha-execucao');
-                this.enviarParaServidorDepuracao('variaveis');
-                this.enviarEvento('pararEmEntrada');
             default:
                 break;
         }

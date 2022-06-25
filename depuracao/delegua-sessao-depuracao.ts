@@ -346,6 +346,11 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         this.sendResponse(response);
     }
 
+    /**
+     * Avalia a expressão passada como argumento, ou pelo painel de 'watch', ou colocando o ponteiro do mouse em cima.
+     * @param response A resposta a ser enviada para a interface do VSCode.
+     * @param args Argumentos adicionais.
+     */
     protected evaluateRequest(
         response: DebugProtocol.EvaluateResponse,
         args: DebugProtocol.EvaluateArguments
@@ -357,11 +362,14 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
                 args.expression
             );
         } else if (args.context === 'watch') {
-            reply = this._tempoExecucao.obterValorVariavel(args.expression);
+            this._tempoExecucao.obterValorVariavel(args.expression).then(resposta => {
+                response.body = { result: resposta || '', variablesReference: 0 };
+                this.sendResponse(response);
+            });
         }
 
-        response.body = { result: reply ? reply : '', variablesReference: 0 };
-        this.sendResponse(response);
+        // response.body = { result: reply ? reply : '', variablesReference: 0 };
+        // this.sendResponse(response);
     }
 
     protected exceptionInfoRequest(response: DebugProtocol.ExceptionInfoResponse, args: DebugProtocol.ExceptionInfoArguments) {
