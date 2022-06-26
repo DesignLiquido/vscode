@@ -307,7 +307,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         this._conectado = false;
         this._arquivoFonte = '';
         this._conexaoDepurador.end();
-        this.enviarEvento('fim');
+        this.enviarEvento('finalizar');
         this._ehValido = false;
         DadosDepuracao.obterProximoId();
         DeleguaTempoExecucao._instancia = DeleguaTempoExecucao.obterInstancia(true);
@@ -772,6 +772,9 @@ export class DeleguaTempoExecucao extends EventEmitter {
                 case '--- avaliar-resposta ---':
                     // console.log('Resultado da avaliação');
                     this._resultadoAvaliacao = linhas[linhaAtual];
+                    break;
+                case '--- finalizando ---':
+                    this.enviarEvento('finalizar');
                     break;
                 case '--- mensagem-saida ---':
                     // console.log('Mensagem de saída');

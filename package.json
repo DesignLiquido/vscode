@@ -192,5 +192,8 @@
         "esbuild": "^0.14.45",
         "eslint": "^8.18.0",
         "typescript": "^4.7.4"
+    },
+    "dependencies": {
+        "real-executable-path": "^3.0.0"
     }
 }

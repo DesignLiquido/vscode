@@ -29,6 +29,7 @@ import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import { DeleguaTempoExecucao } from './delegua-tempo-execucao';
 import { DeleguaPontoParada } from './delegua-ponto-parada';
 import { LaunchRequestArguments } from './argumentos-inicio-depuracao';
+import { InvocacaoDelegua } from './invocacao-delegua';
 
 /**
  * Classe responsável por traduzir para o VSCode eventos enviados pelo
@@ -156,32 +157,10 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         });
 
         this._deleguaEstaPronto = new Promise<any>((resolve, reject) => {
-            this._processoExecucaoDelegua = spawn('C:\\Users\\leone\\AppData\\Roaming\\npm\\ts-node.cmd', ["D:\\GitHub\\delegua\\index.ts", "-D", "D:\\GitHub\\delegua\\testes\\exemplos\\index.delegua"]);
-            console.log('spawn');
-    
-            this._processoExecucaoDelegua.on('spawn', () => {
-                console.log('Inicializando Delégua...');
-            });
-    
-            this._processoExecucaoDelegua.stdout.on('data', (data) => {
-                console.log(`spawn stdout: ${data}`);
-                // TODO: Pensar numa forma melhor de capturar esse evento aqui.
-                if (data.includes('7777')) {
-                    resolve(true);
-                }
-            });
-    
-            this._processoExecucaoDelegua.stderr.on('data', (data) => {
-                console.log(`spawn on error ${data}`);
-            });
-    
-            this._processoExecucaoDelegua.on('exit', (code, signal) => {
-                console.log(`spawn on exit code: ${code} signal: ${signal}`);
-            });
-    
-            this._processoExecucaoDelegua.on('close', (code: number, args: any[])=> {
-                console.log(`spawn on close code: ${code} args: ${args}`);
-            });
+            InvocacaoDelegua.localizarExecutavel()
+                .then((caminhoExecutavel: string) => { 
+                    this._processoExecucaoDelegua = InvocacaoDelegua.invocarDelegua(caminhoExecutavel, resolve, this._tempoExecucao);
+                });
         });
     }
 
