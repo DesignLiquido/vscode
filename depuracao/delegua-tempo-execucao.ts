@@ -28,28 +28,13 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
     private _conectado = false;
     private _inicializado = true;
-    private _continuar = false;
     private _ehExcecao = false;
-    private _instanciaRepl = false;
     private _ehValido = true;
 
-    private _gettingFile = false;
-    private _fileTotal = 0;
-    private _fileReceived = 0;
-    private _dataFile = '';
-    private _fileBytes: Buffer;
-
-    private _obtendoDados = false;
-    private _dataTotal = 0;
-    private _dataReceived = 0;
-    private _dataBytes: Buffer;
     private _resultadoAvaliacao: string;
-
-    private _lastReplSource = '';
 
     private _comandosEnfileirados = new Array<string>();
 
-    private _mapaDeVariaveis = new Map<string, string>();
     private _mapaDeHovers = new Map<string, string>();
     private _mapaDeFuncoes = new Map<string, string>();
     private _mapaNomesArquivos = new Map<string, string>();
@@ -85,9 +70,9 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
     private _pilhaExecucao = new Array<ElementoPilhaVsCode>();
 
-    public constructor(isRepl = false) {
+    public constructor() {
         super();
-        this._instanciaRepl = isRepl;
+
         this._idInstancia = DadosDepuracao.obterProximoId();
         let seSenao =
             'se (condicao) { ... } senao se (condicao) {} senao {}: Fluxo se-senaose-senao. Chaves {} são obrigatórias!';
@@ -123,10 +108,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
             this._serverBase = "";
         }
 
-        this.carregarFonte(program);
-        this._originalLine = this.obterPrimeiraLinha();
-
-        this.verificarPontosParada(this._arquivoFonte);
+        // this.verificarPontosParada(this._arquivoFonte);
         this.conectarAoDepurador();
 
         if (stopOnEntry) {
@@ -155,7 +137,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         /* if (!this.verificarDepuracao(this._arquivoFonte)) {
             return;
         } */
-        this._continuar = true;
+
         this.enviarParaServidorDepuracao('continuar');
     }
 
@@ -186,14 +168,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 				DeleguaTempoExecucao._primeiraExecucao = false;
 				this._inicializado = false;
 
-				if (!this._instanciaRepl && this._arquivoFonte !== '') {
-					let arquivoServidor = this.obterCaminhoServidor(this._arquivoFonte);
-					if (arquivoServidor !== undefined && arquivoServidor !== '') {
-						//console.log('Sending serverFilename: [' + serverFilename + ']');
-						this.enviarParaServidorDepuracao("arquivo-atual", arquivoServidor);
-					}
-					this.enviarTodosPontosParadaParaServidorDepuracao();
-				}
+                this.enviarTodosPontosParadaParaServidorDepuracao();
 
 				for (let i = 0; i < this._comandosEnfileirados.length; i++) {
 					//console.log('Sending queued: ' + this._queuedCommands[i]);
@@ -203,52 +178,8 @@ export class DeleguaTempoExecucao extends EventEmitter {
                 this.enviarEvento('pararEmEntrada');
 			});
 
-			this._conexaoDepurador.on('data', (data: any) => {
-                if (data.includes('proximo')) {
-                    console.log('Evento de dados: ' + data);
-                }
-                
+			this._conexaoDepurador.on('data', (data: any) => {                
                 this.processarDoDepurador(data);
-				/* if (!this._obtendoDados) {
-					let ind = data.toString().indexOf('\n');
-					this._dataTotal = this._dataReceived = 0;
-					if (ind > 0) {
-						this._dataTotal = Number(data.slice(0, ind));
-						//this.printDeléguaOutput('  Received data size: ' + this._dataTotal);
-						if (isNaN(this._dataTotal)) {
-							this._dataTotal = 0;
-						}
-					}
-					if (this._dataTotal === 0) {
-						
-						return;
-					}
-					if (data.length > ind + 1) {
-						data = data.slice(ind + 1);
-					} else {
-						data = '';
-					}
-					this._obtendoDados = true;
-					//this.printDeléguaOutput('  Started collecting data: ' + data.toString().substring(0,4));
-				}
-				if (this._obtendoDados) {
-					if (this._dataReceived === 0) {
-						this._dataBytes = data;
-						this._dataReceived = data.length;
-					} else {
-					  //this.printDeléguaOutput('  EXTRA. Currently: ' + this._dataReceived +
-					  // ', total: ' + this._dataTotal + ', new: ' + data.length);
-						const totalLength = this._dataBytes.length + data.length;
-						this._dataBytes = Buffer.concat([this._dataBytes, data], totalLength);
-						this._dataReceived = totalLength;
-					}
-					if (this._dataReceived >= this._dataTotal) {
-						this._dataTotal = this._dataReceived = 0;
-						this._obtendoDados = false;
-						//this.printDeléguaOutput('  COLLECTED: ' + this._dataBytes.toString().substring(0, 4) + "...");
-						this.processarDoDepurador(this._dataBytes);
-					}
-				} */
 			});
 
 			this._conexaoDepurador.on('timeout', () => {
@@ -451,32 +382,33 @@ export class DeleguaTempoExecucao extends EventEmitter {
 		return true;
 	}
 
-    public setBreakPoint(path: string, line: number) : DeleguaPontoParada {
+    public definirPontoParada(path: string, line: number) : DeleguaPontoParada {
 		//path = Path.normalize(path);
 		path = Path.resolve(path);
 		this.cachearNomeArquivo(path);
 
 		let lower = path.toLowerCase();
 
-		const pontoParada = <DeleguaPontoParada> { verificado: false, linha: line, id: this._breakpointId++ };
-		let bps = this._pontosParada.get(lower);
-		if (!bps) {
-			bps = new Array<DeleguaPontoParada>();
-			this._pontosParada.set(lower, bps);
+        // Por enquanto não precisa verificar o ponto de parada.
+		const pontoParada = <DeleguaPontoParada> { verificado: true, linha: line, id: this._breakpointId++ };
+		let pontosParada = this._pontosParada.get(lower);
+		if (!pontosParada) {
+			pontosParada = new Array<DeleguaPontoParada>();
+			this._pontosParada.set(lower, pontosParada);
 		}
-		bps.push(pontoParada);
+		pontosParada.push(pontoParada);
 
-		let bpMap = this._mapaPontosParada.get(lower);
-		if (!bpMap) {
-			bpMap = new Map<number, DeleguaPontoParada>();
+		let mapaPontosParada = this._mapaPontosParada.get(lower);
+		if (!mapaPontosParada) {
+			mapaPontosParada = new Map<number, DeleguaPontoParada>();
 		}
-		bpMap.set(line, pontoParada);
-		this._mapaPontosParada.set(lower, bpMap);
-		if (lower.includes('functions.Delégua')) {
+		mapaPontosParada.set(line, pontoParada);
+		this._mapaPontosParada.set(lower, mapaPontosParada);
+		/* if (lower.includes('functions.Delégua')) {
 			this.printDebugMsg("Verifying " + path);
-		}
+		} */
 
-		this.verificarPontosParada(path);
+		// this.verificarPontosParada(path);
 
 		return pontoParada;
 	}
@@ -516,14 +448,14 @@ export class DeleguaTempoExecucao extends EventEmitter {
             (!delegua._conectado && !delegua._inicializado) ||
             !DadosDepuracao.mesmaInstancia(delegua._idInstancia)
         ) {
-            DeleguaTempoExecucao._instancia = new DeleguaTempoExecucao(false);
+            DeleguaTempoExecucao._instancia = new DeleguaTempoExecucao();
         }
 
         return DeleguaTempoExecucao._instancia;
     }
 
-    public static obterNovaInstancia(isRepl = false): DeleguaTempoExecucao {
-        return new DeleguaTempoExecucao(isRepl);
+    public static obterNovaInstancia(): DeleguaTempoExecucao {
+        return new DeleguaTempoExecucao();
     }
 
     public setExceptionsFilters(namedException: string | undefined, otherExceptions: boolean): void {
@@ -598,23 +530,15 @@ export class DeleguaTempoExecucao extends EventEmitter {
 		}
 	}
 
-    public enviarPontosParadaParaServidorDepuracao(path: string) {
-		if (!this._conectado) {
-			return;
+    public enviarPontosParadaParaServidorDepuracao(caminho: string) {
+		const caminhoMinusculo = Path.resolve(caminho).toLowerCase();
+
+		let pontosParada = this._pontosParada.get(caminhoMinusculo) || [];
+
+		for (let i = 0; i < pontosParada.length; i ++) {
+            this.enviarParaServidorDepuracao('adicionar-ponto-parada', 
+                caminhoMinusculo + ' ' + pontosParada[i].linha);
 		}
-
-		let filename = this.getActualFilename(path);
-		path = Path.resolve(path);
-		let lower = path.toLowerCase();
-
-		let data = filename;
-		let bps = this._pontosParada.get(lower) || [];
-
-		for (let i = 0; i < bps.length; i ++) {
-			let entry = bps[i].linha;
-			data += "|" + entry;
-		}
-		this.enviarParaServidorDepuracao('adicionar-ponto-parada', data);
 	}
 
     substituir(texto: string, separador: string, textoSubstituicao: string): string {
@@ -672,64 +596,6 @@ export class DeleguaTempoExecucao extends EventEmitter {
         });
     }
 
-    private carregarFonte(nomeArquivo: string) {
-        if (nomeArquivo === null || nomeArquivo === undefined) {
-            return;
-        }
-        nomeArquivo = Path.resolve(nomeArquivo);
-        if (
-            this._arquivoFonte !== null &&
-            this._arquivoFonte !== undefined &&
-            this._arquivoFonte.toLowerCase() === nomeArquivo.toLowerCase()
-        ) {
-            return;
-        }
-        if (this.verificarDepuracao(nomeArquivo)) {
-            this.cachearNomeArquivo(nomeArquivo);
-            this._arquivoFonte = nomeArquivo;
-            this._conteudoFonte = fs
-                .readFileSync(this._arquivoFonte)
-                .toString()
-                .split('\n');
-        }
-    }
-
-    private obterPrimeiraLinha() : number {
-		let firstLine = 1;
-		if (this._conteudoFonte === null || this._conteudoFonte === undefined || this._conteudoFonte.length <= 1) {
-			return 1;
-		}
-		let inComments = false;
-		for (let i = 0; i < this._conteudoFonte.length; i++) {
-			let line = this._conteudoFonte[i].trim();
-			if (line === '') {
-				continue;
-			}
-			firstLine = i;
-
-			if (inComments) {
-				let index = line.indexOf('*/');
-				if (index >= 0) {
-					if (index < line.length - 2) {
-						break;
-					}
-					inComments = false;					 
-				}
-				continue;
-			}
-
-			if (line.startsWith('/*')) {
-				inComments = true;
-				i--;
-				continue;
-			}
-			if (!line.startsWith('//')) {
-				break;
-			}
-		}
-		return firstLine;
-	}
-
     public imprimirSaida(mensagem: string, arquivo = '', linha = -1, novaLinha = '\n') {
         //console.error('Delégua> ' + msg + ' \r\n');
         //console.error();
@@ -747,7 +613,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
     /**
      * Processa dados enviados pelo depurador para a extensão.
-     * Pela natureza de socket.write(), o que pode acontecer aqui é receber mais de um comando por vez do depurador.
+     * Pela natureza de `socket.write()`, o que pode acontecer aqui é receber mais de um comando por vez do depurador.
      * Quando isso ocorre, para cada comando enviado, é preciso achar o final da resposta, 
      * processar a resposta e excluir as linhas já processadas para o próximo comando. 
      * @param dados Dados enviados pelo depurador.
@@ -772,6 +638,12 @@ export class DeleguaTempoExecucao extends EventEmitter {
                 case '--- avaliar-resposta ---':
                     // console.log('Resultado da avaliação');
                     this._resultadoAvaliacao = linhas[linhaAtual];
+                    break;
+                case '--- continuar-resposta ---':
+                    console.log('Execução continou e parou em um ponto de parada');
+                    this.enviarParaServidorDepuracao('pilha-execucao');
+                    this.enviarParaServidorDepuracao('variaveis');
+                    this.enviarEvento('pararEmEntrada');
                     break;
                 case '--- finalizando ---':
                     this.enviarEvento('finalizar');
@@ -800,187 +672,6 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
             linhaAtual++;
         }
-
-        /* if (response === 'repl' || response === '_repl') {
-            if (response === '_repl') {
-                for (let i = 1; i < linhas.length - 1; i++) {
-                    let line = linhas[i].trim();
-                    if (line !== '') {
-                        this.imprimirSaida(linhas[i]);
-                    }
-                }
-            }
-
-            if (response === 'repl' && this._instanciaRepl) {
-                this.enviarEvento('onReplMessage', dados.toString());
-                this.desconectarDoDepurador();
-            }
-
-            return;
-        }
-
-        if (response === 'send_file' && linhas.length > 2) {
-            this._gettingFile = true;
-            this._fileTotal = Number(linhas[currLine++]);
-            this._dataFile = linhas[currLine++];
-            this._fileReceived = 0;
-
-            if (linhas.length <= currLine + 1) {
-                return;
-            }
-
-            let ind = dados.toString().indexOf(this._dataFile);
-            if (ind > 0 && dados.length > ind + this._dataFile.length + 1) {
-                dados = dados.slice(ind + this._dataFile.length + 1);
-                //this._fileBytes = data;
-                //this._fileReceived = this._fileBytes.length;
-            }
-        }
-
-        if (this._gettingFile) {
-            if (this._fileReceived === 0) {
-                this._fileBytes = dados;
-                this._fileReceived = this._fileBytes.length;
-            } else if (response !== 'send_file') {
-                const totalLength = this._fileBytes.length + dados.length;
-                this._fileBytes = Buffer.concat(
-                    [this._fileBytes, dados],
-                    totalLength
-                );
-                this._fileReceived = totalLength;
-            }
-
-            if (this._fileReceived >= this._fileTotal) {
-                let buffer = Buffer.from(this._fileBytes);
-                fs.writeFileSync(this._dataFile, buffer);
-
-                this._fileTotal = this._fileReceived = 0;
-                this._gettingFile = false;
-                this.imprimirSaida('Saved remote file to: ' + this._dataFile);
-
-                if (this._instanciaRepl) {
-                    this.enviarEvento(
-                        'onReplMessage',
-                        'Saved remote file to: ' + this._dataFile
-                    );
-                }
-            }
-            return;
-        }
-
-        if (response === 'tchau') {
-            this.desconectarDoDepurador();
-            return;
-        }
-
-        if (response === 'vars' || response === 'next' || response === 'excecao') {
-            this._variaveisLocais.length = 0;
-            this._variaveisGlobais.length = 0;
-        }
-
-        if (response === 'excecao') {
-            this.enviarEvento('pararEmExcecao');
-            this._ehExcecao = true;
-            startVarsData = 2;
-            let nbVarsLines = Number(linhas[startVarsData]);
-            this.popularVariaveis(linhas, startVarsData, nbVarsLines);
-
-            startStackData = startVarsData + nbVarsLines + 1;
-            this.popularPilhaExecucao(linhas, startStackData);
-
-            let msg = linhas.length < 2 ? '' : linhas[1];
-            let headerMsg = 'Exception thrown. ' + msg + ' ';
-
-            if (this._pilhaExecucao.length < 1) {
-                this.imprimirSaida(headerMsg);
-            } else {
-                let entry = this._pilhaExecucao[0];
-                this.imprimirSaida(headerMsg, entry.file, entry.line);
-            }
-
-            return;
-        }
-        if (response === 'next' && linhas.length > 3) {
-            let filename = this.getLocalPath(linhas[currLine++]);
-            this.carregarFonte(filename);
-            this._originalLine = Number(linhas[currLine++]);
-            let nbOutputLines = Number(linhas[currLine++]);
-
-            for (
-                let i = 0;
-                i < nbOutputLines && currLine < linhas.length - 1;
-                i += 2
-            ) {
-                let line = linhas[currLine++].trim();
-                if (i === nbOutputLines - 1) {
-                    break;
-                }
-                let parts = line.split('\t');
-                let linenr = Number(parts[0]);
-                let filename = parts.length < 2 ? this._arquivoFonte : parts[1];
-                line = linhas[currLine++].trim();
-
-                if (i >= nbOutputLines - 2 && line === '') {
-                    break;
-                }
-                this.imprimirSaida(line, filename, linenr);
-            }
-
-            startVarsData = currLine;
-            this._variaveisGlobais.push({
-                name: '__line',
-                type: 'number',
-                value: String(this._originalLine + 1).trimRight(),
-                variablesReference: 0,
-            });
-            if (this._originalLine >= 0) {
-                if (this._continuar) {
-                    let pontoParada = this.obterPontoParada(this._originalLine);
-                    this.printDebugMsg(
-                        'breakpoint on ' +
-                            this._originalLine +
-                            ': ' +
-                            (pontoParada !== undefined)
-                    );
-                    if (pontoParada) {
-                        this.executarUmaVez('pararEmPasso');
-                    } else {
-                        this.enviarParaServidorDepuracao('continuar');
-                    }
-                } else {
-                    this.executarUmaVez('pararEmPasso');
-                }
-            }
-        }
-        if (response === 'vars' || response === 'next') {
-            let nbVarsLines = Number(linhas[startVarsData]);
-            this.popularVariaveis(linhas, startVarsData, nbVarsLines);
-            startStackData = startVarsData + nbVarsLines + 1;
-        }
-        if (response === 'stack' || response === 'next') {
-            this.popularPilhaExecucao(linhas, startStackData);
-        }
-        if (this._originalLine === -3) {
-            this.desconectarDoDepurador();
-            return;
-        }
-        if (
-            response !== 'stack' &&
-            response !== 'next' &&
-            response !== 'file'
-        ) {
-            this.imprimirSaida(
-                'GOT ' +
-                    response +
-                    ': ' +
-                    linhas.length +
-                    ' lines.' +
-                    ' LAST: ' +
-                    linhas[linhas.length - 2] +
-                    ' : ' +
-                    linhas[linhas.length - 1]
-            );
-        } */
     }
 
     private executarUmaVez(stepEvent?: string) {
@@ -1005,6 +696,9 @@ export class DeleguaTempoExecucao extends EventEmitter {
      * @returns 
      */
     public enviarParaServidorDepuracao(comando: string, dados = '') {
+        if (dados !== '') {
+            comando += ' ' + dados;
+        }
         this._conexaoDepurador.write(comando + '\n');
     }
 
@@ -1027,28 +721,14 @@ export class DeleguaTempoExecucao extends EventEmitter {
     }
 
     public passo(evento: string = 'pararEmPasso') {
-        this._continuar = false;
-
-        /* if (this._inicializado) {
-            this.executarUmaVez(evento);
-        } else { */
-            this.enviarParaServidorDepuracao('proximo');
-        // }
+        this.enviarParaServidorDepuracao('proximo');
     }
 
     public adentrarEscopo(evento: string = 'pararEmPasso') {
-        if (!this.verificarDepuracao(this._arquivoFonte)) {
-            return;
-        }
-        this._continuar = false;
         this.enviarParaServidorDepuracao('adentrar-escopo');
     }
 
     public sairEscopo(evento: string = 'pararEmPasso') {
-        if (!this.verificarDepuracao(this._arquivoFonte)) {
-            return;
-        }
-        this._continuar = false;
         this.enviarParaServidorDepuracao('sair-escopo');
     }
 
@@ -1077,11 +757,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         return true;
     }
 
-    private verificarPontosParada(path: string) : void {
-		if (!this.verificarDepuracao(path)) {
-			return;
-		}
-
+    /* private verificarPontosParada(path: string) : void {
 		path = Path.resolve(path);
 		let lower = path.toLowerCase();
 
@@ -1108,5 +784,5 @@ export class DeleguaTempoExecucao extends EventEmitter {
 				}
 			});
 		}
-	}
+	} */
 }
