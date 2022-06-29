@@ -60,13 +60,17 @@
         "breakpoints": [
             {
                 "language": "delegua"
+            },
+            {
+                "language": "eguap"
             }
         ],
         "debuggers": [
             {
                 "type": "delegua",
                 "languages": [
-                    "delegua"
+                    "delegua",
+                    "eguap"
                 ],
                 "label": "Delégua",
                 "configurationAttributes": {
