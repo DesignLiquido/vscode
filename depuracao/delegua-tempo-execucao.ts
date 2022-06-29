@@ -197,8 +197,9 @@ export class DeleguaTempoExecucao extends EventEmitter {
 					this.printErrorMsg('Não foi possível conectar a ' + this._endereco + ":" + this._porta);
 					this.enviarEvento('onStatusChange', "Delégua: Não foi possível conectar a " + this._endereco + ":" + this._porta);
 				}
-				//console.log('Closed connection to ' + this._host + ":" + this._port + '...');
+
 				this._conectado = false;
+                this.enviarEvento('finalizar');
 			});
 		}
 	}
