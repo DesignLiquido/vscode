@@ -257,18 +257,20 @@ export class DeleguaTempoExecucao extends EventEmitter {
         for (let i = 2; i < linhas.length - 1; i++) {
             let linha: string[] = linhas[i].split('---');
             let detalhesArquivo = linha[1].split('::');
-            let numeroLinha = Number(detalhesArquivo[1].trim());
+            let numeroLinha = Number(detalhesArquivo[2].trim());
             let arquivo = this.obterCaminhoArquivoLocal(detalhesArquivo[0].trim());
+            const metodo = detalhesArquivo[1].trim();
 
             this._pilhaExecucao.push(<ElementoPilhaVsCode>{
                 id: ++id,
                 linha: numeroLinha,
                 nome: linha[0].trim(),
                 arquivo: arquivo,
+                metodo: metodo
             });
-
-            console.log(this._pilhaExecucao);
         }
+
+        console.log(this._pilhaExecucao);
     }
 
     /**
@@ -481,10 +483,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
 			});
 		}
 
-		return {
-			frames: elementos,
-			count: this._pilhaExecucao.length
-		};
+		return elementos;
 	}
 
     public variaveis() {
