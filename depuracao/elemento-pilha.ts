@@ -6,4 +6,5 @@ export interface ElementoPilhaVsCode {
 	linha: number;
 	nome: string;
 	arquivo: string;
+	metodo?: string;
 }

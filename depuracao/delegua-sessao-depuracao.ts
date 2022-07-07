@@ -151,7 +151,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
 
         this._tempoExecucao.on('saida', (text, filePath, line, column) => {
             const e: DebugProtocol.OutputEvent = new OutputEvent(`${text}\n`);
-            e.body.source = this.createSource(filePath);
+            e.body.source = this.criarReferenciaSource(filePath);
             e.body.line = this.convertDebuggerLineToClient(line);
             this.sendEvent(e);
         });
@@ -325,7 +325,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
 		const isHex = args.memoryReference.startsWith('0x');
 		const pad = isHex ? args.memoryReference.length-2 : args.memoryReference.length;
 
-		const loc = this.createSource(this._tempoExecucao.sourceFile);
+		const loc = this.criarReferenciaSource(this._tempoExecucao.sourceFile);
 
 		let lastLine = -1;
 
@@ -506,10 +506,10 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         args: DebugProtocol.SetBreakpointsArguments
     ): void {
         const path = <string>args.source.path;
-        if (!this._tempoExecucao.verificarDepuracao(path)) {
+        /* if (!this._tempoExecucao.verificarDepuracao(path)) {
             this.sendResponse(response);
             return;
-        }
+        } */
         const clientLines = args.lines || [];
 
         // clear all breakpoints for this file
@@ -517,7 +517,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
 
         // set and verify breakpoint locations
         const actualBreakpoints = clientLines.map((l) => {
-            let { verificado, linha, id } = this._tempoExecucao.setBreakPoint(
+            let { verificado, linha, id } = this._tempoExecucao.definirPontoParada(
                 path,
                 this.convertClientLineToDebugger(l)
             );
@@ -646,16 +646,16 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         const pilha = this._tempoExecucao.pilhaExecucao();
 
         response.body = {
-            stackFrames: pilha.frames.map(
+            stackFrames: pilha.map(
                 (f: any) =>
                     new StackFrame(
                         f.index,
                         f.name,
-                        this.createSource(f.file),
+                        this.criarReferenciaSource(f.file),
                         this.convertDebuggerLineToClient(f.line)
                     )
             ),
-            totalFrames: pilha.count,
+            totalFrames: pilha.length,
         };
         this.sendResponse(response);
     }
@@ -721,12 +721,14 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
 		this.sendEvent(new InvalidatedEvent(['variables']));
 	}
 
-    private createSource(filePath: string): Source {
+    private criarReferenciaSource(caminho: string): Source {
         return new Source(
-            basename(filePath),
-            this.convertDebuggerPathToClient(filePath),
+            basename(caminho),
+            this.convertDebuggerPathToClient(caminho),
+            undefined, 
             undefined,
-            undefined,
+            // 123,
+            // '456',
             'delegua-adapter-data'
         );
     }
