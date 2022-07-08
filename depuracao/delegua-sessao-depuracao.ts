@@ -50,6 +50,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
     private _variableHandles = new Handles<string>();
     private _escopoLocal = 0;
     private _escopoGlobal = 0;
+    private _arquivoInicial = '';
 
     /**
      * No construtor são feitos os registros de quais eventos a classe de tempo de
@@ -159,7 +160,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         this._deleguaEstaPronto = new Promise<any>((resolve, reject) => {
             InvocacaoDelegua.localizarExecutavel()
                 .then((caminhoExecutavel: string) => { 
-                    this._processoExecucaoDelegua = InvocacaoDelegua.invocarDelegua(caminhoExecutavel, resolve, this._tempoExecucao);
+                    this._processoExecucaoDelegua = InvocacaoDelegua.invocarDelegua(caminhoExecutavel, this._arquivoInicial, resolve, this._tempoExecucao);
                 });
         });
     }
@@ -418,6 +419,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
             false
         );
 
+        this._arquivoInicial = args.program;
         // Aguarda a finalização da configuração (configurationDoneRequest)
         await this._configuracaoFinalizada.wait(1000);
 

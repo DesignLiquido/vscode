@@ -23,10 +23,14 @@ export class InvocacaoDelegua {
      * @param tempoExecucao Instância do tempo de execução. Quando a execução do processo finaliza, a extensão precisa ser informada que a depuração acabou.
      * @returns Objeto contendo dados do processo do executável Delégua. É usado pela sessão de depuração para algumas notificações da extensão.
      */
-    public static invocarDelegua(caminhoExecutavel: string, callbackResolucao: (value: any) => void, tempoExecucao: DeleguaTempoExecucao): ChildProcessWithoutNullStreams {
+    public static invocarDelegua(caminhoExecutavel: string, 
+            arquivoInicial: string, 
+            callbackResolucao: (value: any) => void, 
+            tempoExecucao: DeleguaTempoExecucao): ChildProcessWithoutNullStreams 
+    {
         const processoDelegua: ChildProcessWithoutNullStreams = spawn(caminhoExecutavel, [
             "--depurador", 
-            "D:\\GitHub\\delegua\\testes\\exemplos\\index.delegua"
+            arquivoInicial
         ]);
 
         processoDelegua.on('spawn', () => {
