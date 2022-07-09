@@ -59,24 +59,12 @@ export function ativarDepuracao(context: vscode.ExtensionContext, factory?: vsco
 	const provider = new DeleguaConfigurationProvider();
 	context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('delegua', provider));
 
-	// register a dynamic configuration provider for 'delegua' debug type
+	// Configurações dinâmicas de inicialização da depuração.
 	context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('delegua', {
 		provideDebugConfigurations(folder: WorkspaceFolder | undefined): ProviderResult<DebugConfiguration[]> {
 			return [
 				{
-					name: "Execução Dinâmica",
-					request: "launch",
-					type: "delegua",
-					program: "${file}"
-				},
-				{
-					name: "Outra Execução Dinâmica",
-					request: "launch",
-					type: "delegua",
-					program: "${file}"
-				},
-				{
-					name: "Execução",
+					name: "Execução do arquivo atual",
 					request: "launch",
 					type: "delegua",
 					program: "${file}"
@@ -92,58 +80,6 @@ export function ativarDepuracao(context: vscode.ExtensionContext, factory?: vsco
 	if ('dispose' in factory) {
 		context.subscriptions.push(factory);
 	}
-
-	// override VS Code's default implementation of the debug hover
-	// here we match only Mock "variables", that are words starting with an '$'
-	context.subscriptions.push(vscode.languages.registerEvaluatableExpressionProvider('delegua', {
-		provideEvaluatableExpression(document: vscode.TextDocument, position: vscode.Position): vscode.ProviderResult<vscode.EvaluatableExpression> {
-
-			const VARIABLE_REGEXP = /\$[a-z][a-z0-9]*/ig;
-			const line = document.lineAt(position.line).text;
-
-			let m: RegExpExecArray | null;
-			while (m = VARIABLE_REGEXP.exec(line)) {
-				const varRange = new vscode.Range(position.line, m.index, position.line, m.index + m[0].length);
-
-				if (varRange.contains(position)) {
-					return new vscode.EvaluatableExpression(varRange);
-				}
-			}
-			return undefined;
-		}
-	}));
-
-	// override VS Code's default implementation of the "inline values" feature"
-	context.subscriptions.push(vscode.languages.registerInlineValuesProvider('delegua', {
-
-		provideInlineValues(document: vscode.TextDocument, viewport: vscode.Range, context: vscode.InlineValueContext) : vscode.ProviderResult<vscode.InlineValue[]> {
-
-			const allValues: vscode.InlineValue[] = [];
-
-			for (let l = viewport.start.line; l <= context.stoppedLocation.end.line; l++) {
-				const line = document.lineAt(l);
-				var regExp = /\$([a-z][a-z0-9]*)/ig;	// variables are words starting with '$'
-				do {
-					var m = regExp.exec(line.text);
-					if (m) {
-						const varName = m[1];
-						const varRange = new vscode.Range(l, m.index, l, m.index + varName.length);
-
-						// some literal text
-						//allValues.push(new vscode.InlineValueText(varRange, `${varName}: ${viewport.start.line}`));
-
-						// value found via variable lookup
-						allValues.push(new vscode.InlineValueVariableLookup(varRange, varName, false));
-
-						// value determined via expression evaluation
-						//allValues.push(new vscode.InlineValueEvaluatableExpression(varRange, varName));
-					}
-				} while (m);
-			}
-
-			return allValues;
-		}
-	}));
 }
 
 export const workspaceFileAccessor: FileAccessor = {

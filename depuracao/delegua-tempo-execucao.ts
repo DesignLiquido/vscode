@@ -1,9 +1,9 @@
-import * as fs from 'fs';
 import * as Net from 'net';
 import * as Path from 'path';
 
 import { DebugProtocol } from '@vscode/debugprotocol';
 import { EventEmitter } from 'events';
+import { Subject } from 'await-notify';
 
 import { DadosDepuracao } from './dados-depuracao';
 import { ElementoPilhaVsCode } from './elemento-pilha';
@@ -32,6 +32,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
     private _ehValido = true;
 
     private _resultadoAvaliacao: string;
+    private _avaliacaoFinalizada = new Subject();
 
     private _comandosEnfileirados = new Array<string>();
 
@@ -584,15 +585,18 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
     /**
      * Pede uma avaliação para o servidor de depuração de uma variável. 
-     * Espera até 200ms para a avaliação e devolve `this._resultadoAvaliacao`.
+     * Espera a finalizaão da avaliação e devolve `this._resultadoAvaliacao`.
      * @param nome O nome da variável
-     * @returns Promise que devolve o resultado da avaliação depois de 200ms.
+     * @returns Promise que devolve o resultado da avaliação.
      */
     public obterValorVariavel(nome: string): Promise<string> {
         this._resultadoAvaliacao = '';
+        this._avaliacaoFinalizada = new Subject();
         this.enviarParaServidorDepuracao('avaliar ' + nome + '\n');
-        return new Promise((resolve) => {
-            setTimeout(() => resolve(this._resultadoAvaliacao), 200);
+        return new Promise<string>((resolve, reject) => {
+            this._avaliacaoFinalizada.wait(1000).then(() => {
+                resolve(this._resultadoAvaliacao);
+            });
         });
     }
 
@@ -636,8 +640,8 @@ export class DeleguaTempoExecucao extends EventEmitter {
 
             switch (primeiraLinhaComando) {
                 case '--- avaliar-resposta ---':
-                    // console.log('Resultado da avaliação');
                     this._resultadoAvaliacao = linhas[linhaAtual];
+                    this._avaliacaoFinalizada.notify();
                     break;
                 case '--- continuar-resposta ---':
                     console.log('Execução continou e parou em um ponto de parada');
