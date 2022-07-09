@@ -21,9 +21,8 @@
 
 ## Adicionar mais funcionalidades na linguagem
 
-* Para adicionar funcionalidades tipo intellisense, hovers e validadores, veja a documentação do VS Code em https://code.visualstudio.com/docs (inglês)
+* Para adicionar funcionalidades tipo IntelliSense, hovers e validadores, veja a documentação do VS Code em https://code.visualstudio.com/docs (inglês)
 
 ## Instalar sua extensão
 
 * Para usar sua extensão, com o Visual Studio Code, copie todos os arquivos para `<seu diretório home>/.vscode/extensions` e reinicie o VSCode.
-* Para compartilhar sua extensão com o universo, leia https://code.visualstudio.com/docs que explica como publicar a extensão.
