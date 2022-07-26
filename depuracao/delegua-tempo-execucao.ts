@@ -148,17 +148,11 @@ export class DeleguaTempoExecucao extends EventEmitter {
 		}
 
 		if (this._tipoConexao === "sockets") {
-			this.imprimirSaida('Conectando a ' + this._endereco + ":" + this._porta + '...', '', -1, ''); // no new line
-			//console.log('Connecting to ' + this._host + ":" + this._port + '...');
-
-            // TODO: Por enquanto não precisa ter timeout. Avaliar a possibilidade de remover esse código completamente.
-			// let timeout  = this._endereco === '127.0.0.1' || this._endereco === 'localhost' || this._endereco === '' ? 10 : 30;
-			// this._conexaoDepurador.setTimeout(timeout * 1000);
+			this.imprimirSaida('Conectando a ' + this._endereco + ":" + this._porta + '...', '', -1, '');
 
 			this._conexaoDepurador.connect(this._porta, this._endereco, () => {
 				this._conectado = true;
 				this.imprimirSaida('Conectado ao servidor de depuração Delégua.');
-				//console.log('Connected to ' + this._host + ":" + this._port + '...');
 
 				if (DeleguaTempoExecucao._primeiraExecucao) {
 				    this.exibirMensagemInformacao('Delégua: Conectado a ' + this._endereco + ":" + this._porta +
@@ -186,8 +180,6 @@ export class DeleguaTempoExecucao extends EventEmitter {
 			this._conexaoDepurador.on('timeout', () => {
 				if (!this._conectado) {
 					this.imprimirSaida("Tempo esgotado conectando a " + this._endereco + ":" + this._porta);
-					//this.printErrorMsg('Timeout connecting to ' + this._host + ":" + this._port);
-					//console.log('Timeout connecting to ' + this._host + ":" + this._port + '...');
 					this._conexaoDepurador.destroy();
 				}
   		    });
@@ -408,11 +400,6 @@ export class DeleguaTempoExecucao extends EventEmitter {
 		}
 		mapaPontosParada.set(line, pontoParada);
 		this._mapaPontosParada.set(lower, mapaPontosParada);
-		/* if (lower.includes('functions.Delégua')) {
-			this.printDebugMsg("Verifying " + path);
-		} */
-
-		// this.verificarPontosParada(path);
 
 		return pontoParada;
 	}
@@ -548,7 +535,6 @@ export class DeleguaTempoExecucao extends EventEmitter {
     }
 
     getActualFilename(filename: string): string {
-		//filename = Path.normalize(filename);
 		let pathname = Path.resolve(filename);
 		let lower = pathname.toLowerCase();
 		let result = this._mapaNomesArquivos.get(lower);
@@ -601,13 +587,11 @@ export class DeleguaTempoExecucao extends EventEmitter {
     }
 
     public imprimirSaida(mensagem: string, arquivo = '', linha = -1, novaLinha = '\n') {
-        //console.error('Delégua> ' + msg + ' \r\n');
-        //console.error();
         arquivo = arquivo === '' ? this._arquivoFonte : arquivo;
         arquivo = this.obterCaminhoArquivoLocal(arquivo);
         linha = linha >= 0 ? linha : 
             this._originalLine >= 0 ? this._originalLine : this._arquivoFonte.length - 1;
-        //this.printDebugMsg("PRINT " + msg + " " + file + " " + line);
+
         this.enviarEvento('saida', mensagem, arquivo, linha, 0, novaLinha);
     }
 
@@ -760,33 +744,4 @@ export class DeleguaTempoExecucao extends EventEmitter {
         }
         return true;
     }
-
-    /* private verificarPontosParada(path: string) : void {
-		path = Path.resolve(path);
-		let lower = path.toLowerCase();
-
-		let mapaPontosParada = this._mapaPontosParada.get(lower);
-		//this.printDebugMsg("Verifying " + path);
-		let sourceLines = this._conteudoFonte;
-		if (sourceLines === null) {
-			this.carregarFonte(path);
-			//sourceLines = readFileSync(path).toString().split('\n');
-			sourceLines = this._conteudoFonte;
-		}
-		if (mapaPontosParada && mapaPontosParada.size > 0 && sourceLines) {
-			mapaPontosParada.forEach(pontoParada => {
-				if (!pontoParada.verificado && pontoParada.linha < sourceLines.length) {
-					const srcLine = sourceLines[pontoParada.linha].trim();
-
-					// if a line is empty or starts with '//' we don't allow to set a breakpoint but move the breakpoint down
-					if (srcLine.length === 0 || srcLine.startsWith('//')) {
-						pontoParada.linha++;
-					}
-					pontoParada.verificado = true;
-					this.printDebugMsg("validated bp " + pontoParada.linha + ': ' + sourceLines[pontoParada.linha].trim());
-					this.enviarEvento('breakpointValidated', pontoParada);
-				}
-			});
-		}
-	} */
 }
