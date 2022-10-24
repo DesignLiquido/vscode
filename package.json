@@ -148,7 +148,7 @@
                 "extensions": [
                     ".delegua"
                 ],
-                "configuration": "./language-configuration.json"
+                "configuration": "./configuracoes/configuracao-delegua.json"
             },
             {
                 "id": "egua",
@@ -159,7 +159,18 @@
                 "extensions": [
                     ".egua"
                 ],
-                "configuration": "./language-configuration.json"
+                "configuration": "./configuracoes/configuracao-delegua.json"
+            },
+            {
+                "id": "lmht",
+                "aliases": [
+                    "LMHT",
+                    "lmht"
+                ],
+                "extensions": [
+                    ".lmht"
+                ],
+                "configuration": "./configuracoes/configuracao-lmht.json"
             }
         ],
         "grammars": [
@@ -167,6 +178,11 @@
                 "language": "delegua",
                 "scopeName": "source.delegua",
                 "path": "./syntaxes/delegua.tmLanguage.json"
+            },
+            {
+                "language": "lmht",
+                "scopeName": "source.lmht",
+                "path": "./syntaxes/lmht.tmLanguage.json"
             }
         ],
         "iconThemes": [
