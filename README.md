@@ -2,6 +2,10 @@
 
 Essa extensão visa melhorar a produtividade de projetos escritos usando as linguagem [Delégua](https://github.com/DesignLiquido/delegua) e [Egua](https://egua.tech). 
 
+## Instalação
+
+Você pode instalar pesquisando nas extensões do Visual Studio Code [ou por este link](https://marketplace.visualstudio.com/items?itemName=LinguagemDelegua.delegua-vscode).
+
 ## Funcionalidades até então
 
 - Sintaxe colorida
