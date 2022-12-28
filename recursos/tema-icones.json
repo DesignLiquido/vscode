@@ -1551,7 +1551,7 @@
 	"fileExtensions": {
 		"egua": "_egua",
 		"delegua": "_delegua",
-		"visualg": "_visualg",
+		"alg": "_visualg",
 		"bsl": "_bsl",
 		"mdo": "_mdo",
 		"cls": "_salesforce",

@@ -1,28 +1,110 @@
 {
     "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-	"name": "VisuAlg",
+    "name": "VisuAlg",
     "scopeName": "source.visualg",
     "patterns": [
         { "include": "#keywords" },
-		{ "include": "#functions" },
-		{ "include": "#constants" },
-		{ "include": "#numbers" },
-		{ "include": "#logical" },
-		{ "include": "#types" },
-		{ "include": "#comments" },
-		{ "include": "#arithmetic" },
-		{ "include": "#assignments" },
-		{ "include": "#comparison" },
-		{ "include": "#strings" },
-		{ "include": "#storages" },
-		{ "include": "#identifiers" }
+        { "include": "#functions" },
+        { "include": "#constants" },
+        { "include": "#numbers" },
+        { "include": "#logical" },
+        { "include": "#types" },
+        { "include": "#comments" },
+        { "include": "#arithmetic" },
+        { "include": "#assignments" },
+        { "include": "#comparison" },
+        { "include": "#strings" },
+        { "include": "#storages" },
+        { "include": "#identifiers" }
     ],
     "repository": {
-		"keywords": {
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "keyword.control.visualg",
+                    "match": "(?i)\\b(algoritmo|var|inicio|fimalgoritmo|se|senão|fimse|para|fazer|enquanto|escolha|caso|padrao|tente|pegue|finalmente|retorna|funcao|função|escreva)\\b"
+                }
+            ]
+        },
+        "comments": {
+            "patterns": [
+                {
+                    "match": "(//).*",
+                    "name": "comment.line.double-slash"
+                }
+            ]
+        },
+        "constants": {
+            "patterns": [
+                {
+                    "name": "constant.language.visualg",
+                    "match": "(?i)\\b(falso|verdadeiro)\\b"
+                }
+            ]
+        },
+		"functions": {
 			"patterns": [{
-				"name": "keyword.control.delegua",
-				"match": "\\b(var|se|senao|senão|senaose|senãose|para|fazer|enquanto|escolha|caso|padrao|tente|pegue|finalmente|retorna|funcao|função|escreva)\\b"
+				"name": "keyword.function.delegua",
+				"match": "\\b(escreva|escreval)\\b"
 			}]
-		}
+		},
+        "identifiers": {
+            "patterns": [
+                {
+                    "name": "entity.other.attribute-name",
+                    "match": "(\\b(super)\\b)|#[_a-zA-Z0-9]+"
+                },
+                {
+                    "name": "entity.name.function",
+                    "match": "((?<=classe\\s)|(?<=herda\\s))([_a-zA-Z0-9]+)"
+                },
+                {
+                    "name": "entity.name.function",
+                    "match": "([_a-zA-Z0-9]+)(?=[ ]*[=][ ]*(\\(|funcao))"
+                },
+                {
+                    "name": "variable.parameter",
+                    "match": "([_a-zA-Z0-9]+)(?=[ ]*[=])"
+                },
+                {
+                    "name": "entity.other.attribute-name",
+                    "match": "([_a-zA-Z0-9]+)(?=[ ]*[:])"
+                },
+                {
+                    "name": "entity.name.function",
+                    "match": "([_a-zA-Z0-9]+)(?=([\\s]*\\())"
+                },
+                {
+                    "name": "variable.language",
+                    "match": "[_a-zA-Z0-9]+"
+                }
+            ]
+        },
+        "strings": {
+            "patterns": [
+                {
+                    "name": "string.quoted.single.visualg",
+                    "begin": "\\'",
+                    "end": "\\'",
+                    "patterns": [
+                        {
+                            "name": "constant.character.escape.visualg",
+                            "match": "\\\\."
+                        }
+                    ]
+                },
+                {
+                    "name": "string.quoted.double.visualg",
+                    "begin": "\"",
+                    "end": "\"",
+                    "patterns": [
+                        {
+                            "name": "constant.character.escape.visualg",
+                            "match": "\\\\."
+                        }
+                    ]
+                }
+            ]
+        }
     }
 }
