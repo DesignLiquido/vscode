@@ -1,6 +1,16 @@
-# Extensão da linguagem Delégua para Visual Studio Code
+# Extensão das linguagens da Design Líquido para Visual Studio Code
 
-Essa extensão visa melhorar a produtividade de projetos escritos usando as linguagem [Delégua](https://github.com/DesignLiquido/delegua) e [Egua](https://egua.tech). 
+Essa extensão visa melhorar a produtividade de projetos escritos usando as linguagens: 
+
+- [Delégua](https://github.com/DesignLiquido/delegua);
+- [LMHT](https://github.com/DesignLiquido/LMHT);
+- [FolEs](https://github.com/DesignLiquido/FolEs);
+- [LinConEs](https://github.com/DesignLiquido/LinConEs);
+
+Essa extensão também oferece suporte parcial a outras linguagens que são dialetos de Delégua:
+
+- [Egua](https://egua.tech);
+- [VisuAlg](https://visualg3.com.br/). 
 
 ## Instalação
 
@@ -10,12 +20,9 @@ Você pode instalar pesquisando nas extensões do Visual Studio Code [ou por est
 
 - Sintaxe colorida
 - Reconhecimento de expressões comuns das linguagens Delégua e Egua
-- Ícone para arquivos `.delegua` e `.egua`
+- Ícones para arquivos `.delegua`, `.egua`, `.lmht`, `.foles` e `.lincones`
 - Trechos de códigos para facilitar desenvolvimento
-
-## Funcionalidades em desenvolvimento
-
-- Suporte a depuração
+- Suporte a depuração para Delégua
 
 ## Depuração
 

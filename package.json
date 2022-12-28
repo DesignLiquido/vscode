@@ -1,14 +1,14 @@
 {
-    "name": "delegua-vscode",
-    "displayName": "Linguagem Delégua",
-    "description": "Extensão de sintaxe para o Visual Studio Code na linguagem Delégua",
+    "name": "@designliquido/vscode",
+    "displayName": "Design Líquido - Linguagens em Português",
+    "description": "Extensão de sintaxe para o Visual Studio Code nas linguagens da Design Líquido: Delégua, LMHT, FolEs, LinConEs.",
     "icon": "recursos/icon.png",
     "publisher": "designliquido",
     "repository": {
         "type": "git",
-        "url": "https://github.com/DesignLiquido/delegua-vscode"
+        "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.3.2",
+    "version": "0.0.0",
     "engines": {
         "vscode": "^1.68.0"
     },
