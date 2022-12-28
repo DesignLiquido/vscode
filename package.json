@@ -1,5 +1,5 @@
 {
-    "name": "@designliquido/vscode",
+    "name": "designliquido-vscode",
     "displayName": "Design Líquido - Linguagens em Português",
     "description": "Extensão de sintaxe para o Visual Studio Code nas linguagens da Design Líquido: Delégua, LMHT, FolEs, LinConEs.",
     "icon": "recursos/icon.png",
@@ -30,19 +30,19 @@
         "url": "https://github.com/DesignLiquido/vscode/issues"
     },
     "scripts": {
-        "compile": "tsc -p ./",
+        "compilar": "tsc -p ./",
         "lint": "eslint depuracao --ext ts",
         "typecheck": "tsc -p tsconfig.json --noEmit",
         "esbuild-base": "esbuild ./depuracao/extensao.ts --bundle --tsconfig=./tsconfig.json --external:vscode --format=cjs --platform=node --outfile=dist/extensao.js",
         "watch": "npm run -S esbuild-base -- --sourcemap --sources-content=false --watch",
         "esbuild-web": "esbuild ./depuracao/extensao-web.ts --bundle --tsconfig=./tsconfig.json --external:vscode --format=cjs --platform=browser --outfile=dist/extensao-web.js",
         "watch-web": "npm run -S esbuild-web -- --sourcemap --sources-content=false --watch",
-        "build": "npm run -S esbuild-base -- --sourcemap --sources-content=false && npm run -S esbuild-web -- --sourcemap --sources-content=false",
-        "package": "vsce package",
-        "publish": "vsce publish",
-        "publish-pre-release": "vsce publish --pre-release",
-        "vscode:prepublish": "rimraf dist && npm run -S esbuild-base -- --minify && npm run -S esbuild-web -- --minify",
-        "test": "npm run typecheck"
+        "montar": "npm run -S esbuild-base -- --sourcemap --sources-content=false && npm run -S esbuild-web -- --sourcemap --sources-content=false",
+        "empacotar": "vsce package",
+        "publicar": "vsce publish",
+        "publicar-pre-lancamento": "vsce publish --pre-release",
+        "vscode:pre-publicar": "rimraf dist && npm run -S esbuild-base -- --minify && npm run -S esbuild-web -- --minify",
+        "testar": "npm run typecheck"
     },
     "main": "./dist/extensao.js",
     "browser": "./dist/extensao-web.js",
