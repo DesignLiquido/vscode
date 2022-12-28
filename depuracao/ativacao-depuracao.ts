@@ -78,7 +78,7 @@ export function ativarDepuracao(context: vscode.ExtensionContext, factory?: vsco
 	}
 	context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('delegua', factory));
 	if ('dispose' in factory) {
-		context.subscriptions.push(factory);
+		context.subscriptions.push(factory as any);
 	}
 }
 

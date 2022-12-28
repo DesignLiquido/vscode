@@ -1,0 +1,28 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "VisuAlg",
+    "scopeName": "source.visualg",
+    "patterns": [
+        { "include": "#keywords" },
+		{ "include": "#functions" },
+		{ "include": "#constants" },
+		{ "include": "#numbers" },
+		{ "include": "#logical" },
+		{ "include": "#types" },
+		{ "include": "#comments" },
+		{ "include": "#arithmetic" },
+		{ "include": "#assignments" },
+		{ "include": "#comparison" },
+		{ "include": "#strings" },
+		{ "include": "#storages" },
+		{ "include": "#identifiers" }
+    ],
+    "repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.delegua",
+				"match": "\\b(var|se|senao|senão|senaose|senãose|para|fazer|enquanto|escolha|caso|padrao|tente|pegue|finalmente|retorna|funcao|função|escreva)\\b"
+			}]
+		}
+    }
+}

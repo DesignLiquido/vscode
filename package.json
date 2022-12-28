@@ -27,7 +27,7 @@
         }
     ],
     "bugs": {
-        "url": "https://github.com/DesignLiquido/delegua-vscode/issues"
+        "url": "https://github.com/DesignLiquido/vscode/issues"
     },
     "scripts": {
         "compile": "tsc -p ./",
@@ -63,6 +63,9 @@
             },
             {
                 "language": "eguap"
+            },
+            {
+                "language": "visualg"
             }
         ],
         "debuggers": [
@@ -70,7 +73,8 @@
                 "type": "delegua",
                 "languages": [
                     "delegua",
-                    "eguap"
+                    "eguap",
+                    "visualg"
                 ],
                 "label": "Delégua",
                 "configurationAttributes": {
@@ -171,6 +175,17 @@
                     ".lmht"
                 ],
                 "configuration": "./configuracoes/configuracao-lmht.json"
+            },
+            {
+                "id": "visualg",
+                "aliases": [
+                    "VisuAlg",
+                    "visualg"
+                ],
+                "extensions": [
+                    ".alg"
+                ],
+                "configuration": "./configuracoes/configuracao-visualg.json"
             }
         ],
         "grammars": [
@@ -183,13 +198,18 @@
                 "language": "lmht",
                 "scopeName": "source.lmht",
                 "path": "./gramaticas/lmht.tmLanguage.json"
+            },
+            {
+                "language": "visualg",
+                "scopeName": "source.visualg",
+                "path": "./gramaticas/visualg.tmLanguage.json"
             }
         ],
         "iconThemes": [
             {
-                "id": "delegua",
-                "label": "Delegua",
-                "path": "./recursos/delegua-icon-theme.json"
+                "id": "designliquido",
+                "label": "Design Líquido",
+                "path": "./recursos/tema-icones.json"
             }
         ],
         "snippets": [

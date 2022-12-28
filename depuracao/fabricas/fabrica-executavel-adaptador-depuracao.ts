@@ -17,7 +17,7 @@ export class DeleguaDebugAdapterExecutableFactory implements vscode.DebugAdapter
 			const command = "C:\\Users\\leone\\AppData\\Roaming\\npm\\delegua.cmd";
 			const args = [
 				"--depurador",
-				"D:\\GitHub\\delegua-vscode\\exemplos\\index.delegua"
+				"D:\\GitHub\\vscode\\exemplos\\index.delegua"
 			];
 			const options = {
 				// cwd: "working directory for executable",

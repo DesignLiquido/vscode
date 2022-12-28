@@ -23,10 +23,13 @@
 	],
 	"iconDefinitions": {
 		"_egua": {
-			"iconPath": "./egua-logo.svg",
+			"iconPath": "./egua-logo.svg"
 		},
 		"_delegua": {
-			"iconPath": "./delegua-logo.svg",
+			"iconPath": "./delegua-logo.svg"
+		},
+		"_visualg": {
+			"iconPath": "./visualg-logo.svg"
 		},
 		"_R_light": {
 			"fontCharacter": "\\E001",
@@ -1548,6 +1551,7 @@
 	"fileExtensions": {
 		"egua": "_egua",
 		"delegua": "_delegua",
+		"visualg": "_visualg",
 		"bsl": "_bsl",
 		"mdo": "_mdo",
 		"cls": "_salesforce",
@@ -1929,6 +1933,7 @@
 		"fileExtensions": {
 			"egua": "_egua",
 			"delegua": "_delegua",
+			"visualg": "_visualg",
 			"bsl": "_bsl_light",
 			"mdo": "_mdo_light",
 			"cls": "_salesforce_light",
