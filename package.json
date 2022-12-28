@@ -177,12 +177,12 @@
             {
                 "language": "delegua",
                 "scopeName": "source.delegua",
-                "path": "./syntaxes/delegua.tmLanguage.json"
+                "path": "./gramaticas/delegua.tmLanguage.json"
             },
             {
                 "language": "lmht",
                 "scopeName": "source.lmht",
-                "path": "./syntaxes/lmht.tmLanguage.json"
+                "path": "./gramaticas/lmht.tmLanguage.json"
             }
         ],
         "iconThemes": [
