@@ -10,6 +10,7 @@ Essa extensão visa melhorar a produtividade de projetos escritos usando as ling
 Essa extensão também oferece suporte parcial a outras linguagens que são dialetos de Delégua:
 
 - [Egua](https://egua.tech);
+- [EguaP](https://github.com/DesignLiquido/delegua/wiki/Dialetos#eguap);
 - [VisuAlg](https://visualg3.com.br/). 
 
 ## Instalação
@@ -19,8 +20,8 @@ Você pode instalar pesquisando nas extensões do Visual Studio Code [ou por est
 ## Funcionalidades até então
 
 - Sintaxe colorida
-- Reconhecimento de expressões comuns das linguagens Delégua e Egua
-- Ícones para arquivos `.delegua`, `.egua`, `.lmht`, `.foles` e `.lincones`
+- Reconhecimento de expressões comuns das linguagens Delégua, Egua, EguaP e Portugol VisuAlg
+- Ícones para arquivos `.delegua`, `.egua`, `.eguap`, `.foles`, `.lincones` e `.lmht`
 - Trechos de códigos para facilitar desenvolvimento
 - Suporte a depuração para Delégua
 
