@@ -144,6 +144,17 @@
         ],
         "languages": [
             {
+                "id": "birl",
+                "aliases": [
+                    "BIRL",
+                    "birl"
+                ],
+                "extensions": [
+                    ".birl"
+                ],
+                "configuration": "./configuracoes/configuracao-birl.json"
+            },
+            {
                 "id": "delegua",
                 "aliases": [
                     "Delegua",
@@ -200,6 +211,11 @@
             }
         ],
         "grammars": [
+            {
+                "language": "birl",
+                "scopeName": "source.birl",
+                "path": "./gramaticas/birl.tmLanguage.json"
+            },
             {
                 "language": "delegua",
                 "scopeName": "source.delegua",

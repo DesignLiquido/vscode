@@ -1,0 +1,60 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "BIRL",
+    "scopeName": "source.birl",
+	"patterns": [
+		{ "include": "#keywords" },
+		{ "include": "#functions" },
+		{ "include": "#constants" },
+		{ "include": "#numbers" },
+		{ "include": "#logical" },
+		{ "include": "#types" },
+		{ "include": "#comments" },
+		{ "include": "#arithmetic" },
+		{ "include": "#assignments" },
+		{ "include": "#comparison" },
+		{ "include": "#strings" },
+		{ "include": "#storages" },
+		{ "include": "#identifiers" }
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.birl",
+				"match": "\\b(HORA DO SHOW|ELE QUE A GENTE QUER?|NAO VAI DAR NAO|QUE NAO VAI DAR O QUE?|VAMO MONSTRO|SAI FILHO DA PUTA|MAIS QUERO MAIS|AJUDA O MALUCO TA DOENTE|NEGATIVA BAMBAM|BORA CUMPADE|BIRL|OH O HOME AI PO|CE QUER VER ESSA PORRA?|FRANGO|MONSTRINHO|MONSTRO|MONSTRAO|TRAPEZIO|TRAPEZIO DESCENDENTE|BICEPS)\\b"
+			}]
+		}
+    },
+    "identifiers": {
+        "patterns": [
+            {
+                "name": "entity.other.attribute-name",
+                "match": "(\\b(super)\\b)|#[_a-zA-Z0-9]+"
+            },
+            {
+                "name": "entity.name.function",
+                "match": "((?<=classe\\s)|(?<=herda\\s))([_a-zA-Z0-9]+)"
+            },
+            {
+                "name":  "entity.name.function",
+                "match": "([_a-zA-Z0-9]+)(?=[ ]*[=][ ]*(\\(|funcao))"
+            },
+            {
+                "name":  "variable.parameter",
+                "match": "([_a-zA-Z0-9]+)(?=[ ]*[=])"
+            },
+            {
+                "name":  "entity.other.attribute-name",
+                "match": "([_a-zA-Z0-9]+)(?=[ ]*[:])"
+            },
+            {
+                "name": "entity.name.function",
+                "match": "([_a-zA-Z0-9]+)(?=([\\s]*\\())"
+            },
+            {
+                "name": "variable.language",
+                "match": "[_a-zA-Z0-9]+"
+            }
+        ]
+    }
+}
