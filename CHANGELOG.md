@@ -7,3 +7,7 @@
 ## 0.0.1
 
 - Adicionado ícone e sintaxe colorida para EguaP.
+
+## 0.0.2
+
+- Sintaxe colorida, extensão de arquivo e reconhecimento de extensão para a linguagem BIRL.
