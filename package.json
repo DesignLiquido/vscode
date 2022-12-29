@@ -166,6 +166,17 @@
                 "configuration": "./configuracoes/configuracao-delegua.json"
             },
             {
+                "id": "eguap",
+                "aliases": [
+                    "EguaP",
+                    "eguap"
+                ],
+                "extensions": [
+                    ".eguap"
+                ],
+                "configuration": "./configuracoes/configuracao-eguap.json"
+            },
+            {
                 "id": "lmht",
                 "aliases": [
                     "LMHT",
@@ -193,6 +204,11 @@
                 "language": "delegua",
                 "scopeName": "source.delegua",
                 "path": "./gramaticas/delegua.tmLanguage.json"
+            },
+            {
+                "language": "eguap",
+                "scopeName": "source.eguap",
+                "path": "./gramaticas/eguap.tmLanguage.json"
             },
             {
                 "language": "lmht",

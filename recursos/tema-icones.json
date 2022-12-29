@@ -1,11 +1,9 @@
 {
 	"information_for_contributors": [
-		"This file has been generated from data in https://github.com/jesseweed/seti-ui",
-		"- icon definitions: https://github.com/jesseweed/seti-ui/blob/master/styles/_fonts/seti.less",
-		"- icon colors: https://github.com/jesseweed/seti-ui/blob/master/styles/ui-variables.less",
-		"- file associations: https://github.com/jesseweed/seti-ui/blob/master/styles/components/icons/mapping.less",
-		"If you want to provide a fix or improvement, please create a pull request against the jesseweed/seti-ui repository.",
-		"Once accepted there, we are happy to receive an update request."
+		"Este arquivo é derivado do tema Seti, em https://github.com/jesseweed/seti-ui",
+		"- definições de ícones: https://github.com/jesseweed/seti-ui/blob/master/styles/_fonts/seti.less",
+		"- cores de ícones: https://github.com/jesseweed/seti-ui/blob/master/styles/ui-variables.less",
+		"- associações de arquivos: https://github.com/jesseweed/seti-ui/blob/master/styles/components/icons/mapping.less"
 	],
 	"fonts": [
 		{
@@ -22,11 +20,14 @@
 		}
 	],
 	"iconDefinitions": {
+		"_delegua": {
+			"iconPath": "./delegua-logo.svg"
+		},
 		"_egua": {
 			"iconPath": "./egua-logo.svg"
 		},
-		"_delegua": {
-			"iconPath": "./delegua-logo.svg"
+		"_eguap": {
+			"iconPath": "./eguap-logo.svg"
 		},
 		"_visualg": {
 			"iconPath": "./visualg-logo.svg"
@@ -1549,9 +1550,10 @@
 	},
 	"file": "_default",
 	"fileExtensions": {
-		"egua": "_egua",
-		"delegua": "_delegua",
 		"alg": "_visualg",
+		"delegua": "_delegua",
+		"egua": "_egua",
+		"eguap": "_eguap",
 		"bsl": "_bsl",
 		"mdo": "_mdo",
 		"cls": "_salesforce",
@@ -1931,8 +1933,9 @@
 	"light": {
 		"file": "_default_light",
 		"fileExtensions": {
-			"egua": "_egua",
 			"delegua": "_delegua",
+			"egua": "_egua",
+			"eguap": "_eguap",
 			"visualg": "_visualg",
 			"bsl": "_bsl_light",
 			"mdo": "_mdo_light",
