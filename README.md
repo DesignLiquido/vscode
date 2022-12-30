@@ -15,7 +15,7 @@ Essa extensão também oferece suporte parcial a outras linguagens que são dial
 
 ## Instalação
 
-Você pode instalar pesquisando nas extensões do Visual Studio Code [ou por este link](https://marketplace.visualstudio.com/items?itemName=LinguagemDelegua.delegua-vscode).
+Você pode instalar pesquisando nas extensões do Visual Studio Code [ou por este link](https://marketplace.visualstudio.com/items?itemName=designliquido.designliquido-vscode).
 
 ## Funcionalidades até então
 
