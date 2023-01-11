@@ -26,7 +26,7 @@ import { Subject } from 'await-notify';
 import * as base64 from 'base64-js';
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 
-import { DeleguaTempoExecucao } from './delegua-tempo-execucao';
+import { DeleguaTempoExecucaoRemoto } from './delegua-tempo-execucao-remoto';
 import { DeleguaPontoParada } from './delegua-ponto-parada';
 import { LaunchRequestArguments } from './argumentos-inicio-depuracao';
 import { InvocacaoDelegua } from './invocacao-delegua';
@@ -40,7 +40,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
     // Node.js não suporta várias _threads_, então podemos definir um
     // valor único de _thread_.
     private static THREAD_ID = 1;
-    private _tempoExecucao: DeleguaTempoExecucao;
+    private _tempoExecucao: DeleguaTempoExecucaoRemoto;
     private _processoExecucaoDelegua: ChildProcessWithoutNullStreams;
     private _deleguaEstaPronto: Promise<any>;
 
@@ -63,7 +63,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
         this.setDebuggerLinesStartAt1(true);
         this.setDebuggerColumnsStartAt1(true);
 
-        this._tempoExecucao = new DeleguaTempoExecucao();
+        this._tempoExecucao = new DeleguaTempoExecucaoRemoto();
         this._tempoExecucao.on('mensagemInformacao', (mensagem: string) => {
 			vscode.window.showInformationMessage(mensagem);
 		});

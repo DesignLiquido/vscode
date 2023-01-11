@@ -1,6 +1,6 @@
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import realExecutablePath from 'real-executable-path';
-import { DeleguaTempoExecucao } from "./delegua-tempo-execucao";
+import { DeleguaTempoExecucaoRemoto } from "./delegua-tempo-execucao-remoto";
 
 export class InvocacaoDelegua {
     /**
@@ -26,7 +26,7 @@ export class InvocacaoDelegua {
     public static invocarDelegua(caminhoExecutavel: string, 
             arquivoInicial: string, 
             callbackResolucao: (value: any) => void, 
-            tempoExecucao: DeleguaTempoExecucao): ChildProcessWithoutNullStreams 
+            tempoExecucao: DeleguaTempoExecucaoRemoto): ChildProcessWithoutNullStreams 
     {
         const processoDelegua: ChildProcessWithoutNullStreams = spawn(caminhoExecutavel, [
             "--depurador", 

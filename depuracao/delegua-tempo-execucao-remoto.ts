@@ -10,11 +10,12 @@ import { ElementoPilhaVsCode } from './elemento-pilha';
 import { DeleguaPontoParada } from './delegua-ponto-parada';
 
 /**
- * Classe responsável por se comunicar com o depurador da linguagem Delégua, traduzindo as requisições do
- * Visual Studio Code para o depurador, e também recebendo instruções do depurador.
+ * Classe responsável por se comunicar com o depurador da linguagem Delégua por _sockets_,
+ * traduzindo as requisições do Visual Studio Code para o depurador, e também recebendo 
+ * instruções do depurador.
  */
-export class DeleguaTempoExecucao extends EventEmitter {
-    private static _instancia: DeleguaTempoExecucao;
+export class DeleguaTempoExecucaoRemoto extends EventEmitter {
+    private static _instancia: DeleguaTempoExecucaoRemoto;
     private _idInstancia = 0;
 
     private static _primeiraExecucao = true;
@@ -154,13 +155,13 @@ export class DeleguaTempoExecucao extends EventEmitter {
 				this._conectado = true;
 				this.imprimirSaida('Conectado ao servidor de depuração Delégua.');
 
-				if (DeleguaTempoExecucao._primeiraExecucao) {
+				if (DeleguaTempoExecucaoRemoto._primeiraExecucao) {
 				    this.exibirMensagemInformacao('Delégua: Conectado a ' + this._endereco + ":" + this._porta +
 					    '. Verifique o Debug Console do VSCode para mensagens relacionadas da comunicação entre essa extensão e Delégua.');
 				}
 
 				this.enviarEvento('onStatusChange', 'Delégua: Conectado a ' + this._endereco + ":" + this._porta);
-				DeleguaTempoExecucao._primeiraExecucao = false;
+				DeleguaTempoExecucaoRemoto._primeiraExecucao = false;
 				this._inicializado = false;
 
                 this.enviarTodosPontosParadaParaServidorDepuracao();
@@ -235,7 +236,7 @@ export class DeleguaTempoExecucao extends EventEmitter {
         this.enviarEvento('finalizar');
         this._ehValido = false;
         DadosDepuracao.obterProximoId();
-        DeleguaTempoExecucao._instancia = DeleguaTempoExecucao.obterInstancia(true);
+        DeleguaTempoExecucaoRemoto._instancia = DeleguaTempoExecucaoRemoto.obterInstancia(true);
     }
 
     /**
@@ -430,8 +431,8 @@ export class DeleguaTempoExecucao extends EventEmitter {
         return pontoParada;
     }
 
-    public static obterInstancia(recarregar = false): DeleguaTempoExecucao {
-        let delegua = DeleguaTempoExecucao._instancia;
+    public static obterInstancia(recarregar = false): DeleguaTempoExecucaoRemoto {
+        let delegua = DeleguaTempoExecucaoRemoto._instancia;
 
         if (
             delegua === null ||
@@ -439,14 +440,14 @@ export class DeleguaTempoExecucao extends EventEmitter {
             (!delegua._conectado && !delegua._inicializado) ||
             !DadosDepuracao.mesmaInstancia(delegua._idInstancia)
         ) {
-            DeleguaTempoExecucao._instancia = new DeleguaTempoExecucao();
+            DeleguaTempoExecucaoRemoto._instancia = new DeleguaTempoExecucaoRemoto();
         }
 
-        return DeleguaTempoExecucao._instancia;
+        return DeleguaTempoExecucaoRemoto._instancia;
     }
 
-    public static obterNovaInstancia(): DeleguaTempoExecucao {
-        return new DeleguaTempoExecucao();
+    public static obterNovaInstancia(): DeleguaTempoExecucaoRemoto {
+        return new DeleguaTempoExecucaoRemoto();
     }
 
     public setExceptionsFilters(namedException: string | undefined, otherExceptions: boolean): void {
