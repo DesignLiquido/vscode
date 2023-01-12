@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as Net from 'net';
 
-import { DeleguaSessaoDepuracao } from '../delegua-sessao-depuracao';
+import { DeleguaSessaoDepuracaoRemota } from '../delegua-sessao-depuracao-remota';
 
 /**
  * Classe que descreve como chamar um tradutor de comandos entre Delégua e Visual Studio Code por servidor Socket. 
@@ -18,7 +18,7 @@ export class DeleguaAdapterServerDescriptorFactory implements vscode.DebugAdapte
 			// `.listen(0)` == porta aleatória.
 			this.server = Net.createServer(socket => {
 				// const session = new DeleguaSessaoDepuracao(workspaceFileAccessor);
-                const session = new DeleguaSessaoDepuracao();
+                const session = new DeleguaSessaoDepuracaoRemota();
 				session.setRunAsServer(true);
 				session.start(socket as NodeJS.ReadableStream, socket);
 			}).listen(0);

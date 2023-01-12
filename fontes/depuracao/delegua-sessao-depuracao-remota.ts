@@ -36,7 +36,7 @@ import { InvocacaoDelegua } from './invocacao-delegua';
  * servidor de depuração da linguagem Delégua, bem como enviar
  * instruções para o servidor de depuração.
  */
-export class DeleguaSessaoDepuracao extends LoggingDebugSession {
+export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
     // Node.js não suporta várias _threads_, então podemos definir um
     // valor único de _thread_.
     private static THREAD_ID = 1;
@@ -86,7 +86,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
 
         this._tempoExecucao.on('pararEmEntrada', () => {
             this.sendEvent(
-                new StoppedEvent('entry', DeleguaSessaoDepuracao.THREAD_ID)
+                new StoppedEvent('entry', DeleguaSessaoDepuracaoRemota.THREAD_ID)
             );
         });
 
@@ -95,14 +95,14 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
                 this.sendEvent(
                     new StoppedEvent(
                         `exception(${exception})`,
-                        DeleguaSessaoDepuracao.THREAD_ID
+                        DeleguaSessaoDepuracaoRemota.THREAD_ID
                     )
                 );
             } else {
                 this.sendEvent(
                     new StoppedEvent(
                         'exception',
-                        DeleguaSessaoDepuracao.THREAD_ID
+                        DeleguaSessaoDepuracaoRemota.THREAD_ID
                     )
                 );
             }
@@ -110,13 +110,13 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
 
         this._tempoExecucao.on('pararEmPasso', () => {
             this.sendEvent(
-                new StoppedEvent('step', DeleguaSessaoDepuracao.THREAD_ID)
+                new StoppedEvent('step', DeleguaSessaoDepuracaoRemota.THREAD_ID)
             );
         });
 
         this._tempoExecucao.on('pararEmPontoParada', () => {
             this.sendEvent(
-                new StoppedEvent('breakpoint', DeleguaSessaoDepuracao.THREAD_ID)
+                new StoppedEvent('breakpoint', DeleguaSessaoDepuracaoRemota.THREAD_ID)
             );
         });
 
@@ -124,7 +124,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
             this.sendEvent(
                 new StoppedEvent(
                     'data breakpoint',
-                    DeleguaSessaoDepuracao.THREAD_ID
+                    DeleguaSessaoDepuracaoRemota.THREAD_ID
                 )
             );
         });
@@ -133,7 +133,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
             this.sendEvent(
                 new StoppedEvent(
                     'instruction breakpoint',
-                    DeleguaSessaoDepuracao.THREAD_ID
+                    DeleguaSessaoDepuracaoRemota.THREAD_ID
                 )
             );
         });
@@ -687,7 +687,7 @@ export class DeleguaSessaoDepuracao extends LoggingDebugSession {
 
     protected threadsRequest(response: DebugProtocol.ThreadsResponse): void {
         response.body = {
-            threads: [new Thread(DeleguaSessaoDepuracao.THREAD_ID, 'thread 1')],
+            threads: [new Thread(DeleguaSessaoDepuracaoRemota.THREAD_ID, 'thread 1')],
         };
         this.sendResponse(response);
     }

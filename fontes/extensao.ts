@@ -11,7 +11,7 @@ import { platform } from 'process';
 import { Lexador } from '@designliquido/delegua';
 import { FormatadorDelegua } from '@designliquido/delegua/fontes/formatadores'
 
-import { DeleguaSessaoDepuracao } from './depuracao/delegua-sessao-depuracao';
+import { DeleguaSessaoDepuracaoRemota } from './depuracao/delegua-sessao-depuracao-remota';
 import { ativarDepuracao } from './depuracao/ativacao-depuracao';
 import {
     DeleguaAdapterServerDescriptorFactory,
@@ -130,7 +130,7 @@ class DeleguaAdapterNamedPipeServerDescriptorFactory
 
             this.server = Net.createServer((socket) => {
                 // const session = new DeleguaSessaoDepuracao(workspaceFileAccessor);
-                const session = new DeleguaSessaoDepuracao();
+                const session = new DeleguaSessaoDepuracaoRemota();
                 session.setRunAsServer(true);
                 session.start(<NodeJS.ReadableStream>socket, socket);
             }).listen(pipePath);

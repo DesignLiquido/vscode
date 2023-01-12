@@ -2,9 +2,10 @@
 
 import * as vscode from 'vscode';
 import { WorkspaceFolder, DebugConfiguration, ProviderResult } from 'vscode';
-import { DeleguaSessaoDepuracao } from './delegua-sessao-depuracao';
+
 import { FileAccessor } from './assessor-arquivos';
 import { DeleguaConfigurationProvider } from './provedores';
+import { InlineDebugAdapterFactory } from './fabricas';
 
 export function ativarDepuracao(context: vscode.ExtensionContext, factory?: vscode.DebugAdapterDescriptorFactory) {
 
@@ -103,13 +104,5 @@ function pathToUri(path: string) {
 		return vscode.Uri.file(path);
 	} catch (e) {
 		return vscode.Uri.parse(path);
-	}
-}
-
-class InlineDebugAdapterFactory implements vscode.DebugAdapterDescriptorFactory {
-
-	createDebugAdapterDescriptor(_session: vscode.DebugSession): ProviderResult<vscode.DebugAdapterDescriptor> {
-		// return new vscode.DebugAdapterInlineImplementation(new DeleguaSessaoDepuracao(workspaceFileAccessor));
-        return new vscode.DebugAdapterInlineImplementation(new DeleguaSessaoDepuracao());
 	}
 }
