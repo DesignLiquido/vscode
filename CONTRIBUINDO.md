@@ -3,25 +3,35 @@
 ## Os fontes
 
 * `package.json` - Arquivo inicial de manifesto, apontando todos os arquivos da extensão.
-* `syntaxes/delegua.tmLanguage.json` - Arquivo de gramática do Text Mate: https://macromates.com/manual/en/language_grammars (inglês)
-* `language-configuration.json` - Arquivo de configuração da linguagem, onde se definem tokens e palavras reservadas.
+* Diretório `gramaticas` - Arquivos de gramática do Text Mate: https://macromates.com/manual/en/language_grammars (inglês)
+    * BIRL: `birl.tmLanguage.json`
+    * Delégua: `delegua.tmLanguage.json`
+    * EguaP: `egua.tmLanguage.json`
+    * LMHT: `lmht.tmLanguage.json`
+    * VisuAlg: `visualg.tmLanguage.json`
+* Diretório `configuracoes` - Arquivos de configuração das linguagens, onde se definem _tokens_ e palavras reservadas.
+    * BIRL: `configuracao-birl.json`
+    * Delégua: `configuracao-delegua.json`
+    * EguaP: `configuracao-eguap.json`
+    * LMHT: `configuracao-lmht.json`
+    * VisuAlg: `configuracao-visualg.json`
 
 ## Como testar
 
 * Recomendamos um Visual Studio Code em separado, como o Insiders: https://code.visualstudio.com/insiders/
-* Com o projeto aberto no Visual Studio Code Insiders, verifique se todas as configurações em `language-configuration.json` estão corretas.
+* Com o projeto aberto no Visual Studio Code Insiders, verifique se todas as configurações nos arquivos JSON de configuração das linguagens estão corretas.
 * Pressione `F5` para abrir uma nova janela com a extensão carregada.
-* Crie um novo arquivo com a extensão `.delegua` ou `.egua`.
+* Crie um novo arquivo com alguma extensão de arquivo que esta extensão compreende, como `.delegua` ou `.alg`.
 * Verifique se a sintaxe está colorida corretamente.
 
-## Modificando
+## Modificando a extensão
 
 * Você pode reiniciar a extensão pela barra de debug após realizar modificações nos arquivos.
-* Você também pode usar `Ctrl+R` ou `Cmd+R` no Mac para recarregar a janela.
+* Você também pode usar `Ctrl + R` ou `Cmd + R` no Mac para recarregar a janela.
 
-## Adicionar mais funcionalidades na linguagem
+## Adicionar mais funcionalidades na extensão
 
-* Para adicionar funcionalidades tipo IntelliSense, hovers e validadores, veja a documentação do VS Code em https://code.visualstudio.com/docs (inglês)
+* Para adicionar funcionalidades tipo IntelliSense, _hovers_ e validadores, veja a documentação do VS Code em https://code.visualstudio.com/docs (inglês).
 
 ## Instalar sua extensão
 

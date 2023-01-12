@@ -20,9 +20,11 @@ Você pode instalar pesquisando nas extensões do Visual Studio Code [ou por est
 ## Funcionalidades até então
 
 - Sintaxe colorida
-- Reconhecimento de expressões comuns das linguagens Delégua, Egua, EguaP e Portugol VisuAlg
+- Formatação de arquivos em Delégua
+- Reconhecimento de expressões comuns das linguagens Delégua, Égua, EguaP e Portugol VisuAlg
 - Ícones para arquivos `.delegua`, `.egua`, `.eguap`, `.foles`, `.lincones` e `.lmht`
-- Trechos de códigos para facilitar desenvolvimento
+- Trechos de códigos para facilitar desenvolvimento em Delégua
+- Mecanismo de completude de funções da biblioteca global para Delégua
 - Suporte a depuração para Delégua
 
 ## Depuração
