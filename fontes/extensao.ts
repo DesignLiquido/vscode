@@ -1,24 +1,16 @@
 'use strict';
 
-import * as Net from 'net';
 import * as vscode from 'vscode';
 
-import { randomBytes } from 'crypto';
-import { tmpdir } from 'os';
-import { join } from 'path';
-import { platform } from 'process';
-
-import { Lexador } from '@designliquido/delegua';
-import { FormatadorDelegua } from '@designliquido/delegua/fontes/formatadores'
-
-import { DeleguaSessaoDepuracaoRemota } from './depuracao/delegua-sessao-depuracao-remota';
-import { ativarDepuracao } from './depuracao/ativacao-depuracao';
+import { configurarDepuracao } from './depuracao/configuracao-depuracao';
 import {
+    DeleguaAdapterNamedPipeServerDescriptorFactory,
     DeleguaAdapterServerDescriptorFactory,
     DeleguaDebugAdapterExecutableFactory,
 } from './depuracao/fabricas';
 import { DeleguaProvedorDocumentacaoEmEditor } from './documentacao-em-editor';
 import { DeleguaProvedorCompletude, LiquidoProvedorCompletude } from './completude';
+import { DeleguaProvedorFormatacao } from './formatadores';
 
 /*
  * The compile time flag 'runMode' controls how the debug adapter is run.
@@ -29,24 +21,9 @@ const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'server';
 
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
-        vscode.languages.registerDocumentFormattingEditProvider('delegua', {
-            provideDocumentFormattingEdits(
-                document: vscode.TextDocument
-            ): vscode.TextEdit[] {
-                const lexador = new Lexador();
-                const formatador = new FormatadorDelegua();
-                const resultadoLexador = lexador.mapear(document.getText().split('\n'), -1);
-                return [
-                    vscode.TextEdit.replace(
-                        new vscode.Range(
-                            document.lineAt(0).range.start,
-                            document.lineAt(document.lineCount - 1).range.end
-                        ),
-                        formatador.formatar(resultadoLexador.simbolos)
-                    ),
-                ];
-            },
-        })
+        vscode.languages.registerDocumentFormattingEditProvider('delegua', 
+            new DeleguaProvedorFormatacao()
+        )
     );
 
     // IntelliSense para Delégua e Liquido.
@@ -67,14 +44,17 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Hovers
     context.subscriptions.push(
-        vscode.languages.registerHoverProvider('delegua', new DeleguaProvedorDocumentacaoEmEditor())
+        vscode.languages.registerHoverProvider(
+            'delegua', 
+            new DeleguaProvedorDocumentacaoEmEditor()
+        )
     );
 
     // debug adapters can be run in different ways by using a vscode.DebugAdapterDescriptorFactory:
     switch (runMode) {
         case 'server':
             // run the debug adapter as a server inside the extension and communicate via a socket
-            ativarDepuracao(
+            configurarDepuracao(
                 context,
                 new DeleguaAdapterServerDescriptorFactory()
             );
@@ -82,7 +62,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         case 'namedPipeServer':
             // run the debug adapter as a server inside the extension and communicate via a named pipe (Windows) or UNIX domain socket (non-Windows)
-            ativarDepuracao(
+            configurarDepuracao(
                 context,
                 new DeleguaAdapterNamedPipeServerDescriptorFactory()
             );
@@ -91,7 +71,7 @@ export function activate(context: vscode.ExtensionContext) {
         case 'external':
         default:
             // run the debug adapter as a separate process
-            ativarDepuracao(
+            configurarDepuracao(
                 context,
                 new DeleguaDebugAdapterExecutableFactory()
             );
@@ -99,7 +79,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         case 'inline':
             // run the debug adapter inside the extension and directly talk to it
-            ativarDepuracao(
+            configurarDepuracao(
                 context,
                 new DeleguaDebugAdapterExecutableFactory()
             );
@@ -109,42 +89,4 @@ export function activate(context: vscode.ExtensionContext) {
 
 export function deactivate() {
     // nothing to do
-}
-
-class DeleguaAdapterNamedPipeServerDescriptorFactory
-    implements vscode.DebugAdapterDescriptorFactory
-{
-    private server?: Net.Server;
-
-    createDebugAdapterDescriptor(
-        session: vscode.DebugSession,
-        executable: vscode.DebugAdapterExecutable | undefined
-    ): vscode.ProviderResult<vscode.DebugAdapterDescriptor> {
-        if (!this.server) {
-            // start listening on a random named pipe path
-            const pipeName = randomBytes(10).toString('utf8');
-            const pipePath =
-                platform === 'win32'
-                    ? join('\\\\.\\pipe\\', pipeName)
-                    : join(tmpdir(), pipeName);
-
-            this.server = Net.createServer((socket) => {
-                // const session = new DeleguaSessaoDepuracao(workspaceFileAccessor);
-                const session = new DeleguaSessaoDepuracaoRemota();
-                session.setRunAsServer(true);
-                session.start(<NodeJS.ReadableStream>socket, socket);
-            }).listen(pipePath);
-        }
-
-        // make VS Code connect to debug server
-        return new vscode.DebugAdapterNamedPipeServer(
-            this.server.address() as string
-        );
-    }
-
-    dispose() {
-        if (this.server) {
-            this.server.close();
-        }
-    }
 }

@@ -1,13 +1,12 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import { WorkspaceFolder, DebugConfiguration, ProviderResult } from 'vscode';
 
 import { FileAccessor } from './assessor-arquivos';
 import { DeleguaConfigurationProvider } from './provedores';
 import { InlineDebugAdapterFactory } from './fabricas';
 
-export function ativarDepuracao(context: vscode.ExtensionContext, factory?: vscode.DebugAdapterDescriptorFactory) {
+export function configurarDepuracao(context: vscode.ExtensionContext, factory?: vscode.DebugAdapterDescriptorFactory) {
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('extension.delegua.runEditorContents', (resource: vscode.Uri) => {
@@ -62,7 +61,7 @@ export function ativarDepuracao(context: vscode.ExtensionContext, factory?: vsco
 
 	// Configurações dinâmicas de inicialização da depuração.
 	context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('delegua', {
-		provideDebugConfigurations(folder: WorkspaceFolder | undefined): ProviderResult<DebugConfiguration[]> {
+		provideDebugConfigurations(folder: vscode.WorkspaceFolder | undefined): vscode.ProviderResult<vscode.DebugConfiguration[]> {
 			return [
 				{
 					name: "Execução do arquivo atual",
