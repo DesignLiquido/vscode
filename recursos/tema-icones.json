@@ -32,6 +32,9 @@
 		"_eguap": {
 			"iconPath": "./eguap-logo.svg"
 		},
+		"_lmht": {
+			"iconPath": "./lmht-logo.svg"
+		},
 		"_visualg": {
 			"iconPath": "./visualg-logo.svg"
 		},
@@ -1558,6 +1561,7 @@
 		"delegua": "_delegua",
 		"egua": "_egua",
 		"eguap": "_eguap",
+		"lmht": "_lmht",
 		"bsl": "_bsl",
 		"mdo": "_mdo",
 		"cls": "_salesforce",
@@ -1940,6 +1944,7 @@
 			"delegua": "_delegua",
 			"egua": "_egua",
 			"eguap": "_eguap",
+			"lmht": "_lmht",
 			"visualg": "_visualg",
 			"bsl": "_bsl_light",
 			"mdo": "_mdo_light",

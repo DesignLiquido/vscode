@@ -2,6 +2,7 @@
 
 import * as Net from 'net';
 import * as vscode from 'vscode';
+
 import { randomBytes } from 'crypto';
 import { tmpdir } from 'os';
 import { join } from 'path';
@@ -19,6 +20,16 @@ import { DeleguaAdapterServerDescriptorFactory, DeleguaDebugAdapterExecutableFac
 const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'server';
 
 export function activate(context: vscode.ExtensionContext) {
+
+	vscode.languages.registerDocumentFormattingEditProvider('delegua', {
+		provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
+			return [vscode.TextEdit.replace(
+				new vscode.Range(document.lineAt(0).range.start, 
+					document.lineAt(document.lineCount - 1).range.end), 
+				document.getText())
+			];
+		}
+	});
 
 	// debug adapters can be run in different ways by using a vscode.DebugAdapterDescriptorFactory:
 	switch (runMode) {
