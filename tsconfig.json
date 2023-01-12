@@ -8,7 +8,7 @@
 			"ES2020"
 		],
 		"sourceMap": true,
-		"rootDir": "depuracao",
+		"rootDir": "fontes",
 		"strict": true,   /* enable all strict type-checking options */
 		/* Additional Checks */
 		// "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */

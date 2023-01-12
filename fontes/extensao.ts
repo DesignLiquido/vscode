@@ -41,43 +41,78 @@ export function activate(context: vscode.ExtensionContext) {
         })
     );
 
-	// IntelliSense para Delégua e Liquido.
-	context.subscriptions.push(
-		vscode.languages.registerCompletionItemProvider(
-			'delegua',
-			{
-				provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
-					const texto = document.lineAt(position).text;
-					switch (texto) {
-						case 'liquido.':
-							return [
-								new vscode.CompletionItem('roteador', vscode.CompletionItemKind.Interface)
-							];
-					}
+    // IntelliSense para Delégua e Liquido.
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider(
+            { language: 'delegua', pattern: 'configuracao.delegua' },
+            {
+                provideCompletionItems(
+                    document: vscode.TextDocument,
+                    position: vscode.Position
+                ) {
+                    const texto = document.lineAt(position).text;
+                    switch (texto) {
+                        case 'liquido.':
+                            return [
+                                new vscode.CompletionItem(
+                                    'roteador',
+                                    vscode.CompletionItemKind.Interface
+                                ),
+                            ];
+                    }
 
-					return undefined;
-				}
-			},
-			'.' // acionado quando desenvolvedor digita '.'
-		)
-	);
+                    return undefined;
+                },
+            },
+            '.' // acionado quando desenvolvedor/a digita '.'
+        )
+    );
 
-	context.subscriptions.push(
-        // TODO: Só acionar com Ctrl + Espaço.
-		/* vscode.languages.registerCompletionItemProvider(
-			'delegua',
-			{
-				provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
-					return [
-						new vscode.CompletionItem('aleatorio', vscode.CompletionItemKind.Function),
-						new vscode.CompletionItem('aleatorioEntre', vscode.CompletionItemKind.Function),
-						new vscode.CompletionItem('texto', vscode.CompletionItemKind.Function)
-					];
-				}
-			},
-			' ' // acionado quando desenvolvedor digita ' '
-		) */
-	);
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider('delegua', {
+            provideCompletionItems(
+                document: vscode.TextDocument,
+                position: vscode.Position
+            ) {
+                const aleatorio = new vscode.CompletionItem(
+                    'aleatorio',
+                    vscode.CompletionItemKind.Function
+                );
+                aleatorio.documentation =
+                    'Retorna um número aleatório entre 0 e 1.';
+
+                return [
+                    aleatorio,
+                    new vscode.CompletionItem(
+                        'aleatorioEntre',
+                        vscode.CompletionItemKind.Function
+                    ),
+                    new vscode.CompletionItem(
+                        'texto',
+                        vscode.CompletionItemKind.Function
+                    ),
+                ];
+            },
+        })
+    );
+
+    // Hovers
+    context.subscriptions.push(
+        vscode.languages.registerHoverProvider('delegua', {
+            provideHover(document, position, token) {
+                const wordRange = document.getWordRangeAtPosition(position);
+                const word = document.getText(wordRange);
+                const map = {
+                    aleatorio: 'wild',
+                    escreva: 'domestic',
+                };
+                return new vscode.Hover(map[word]);
+                /* return {
+                contents: ['Hover information for word'],
+            }; */
+            },
+        })
+    );
 
     // debug adapters can be run in different ways by using a vscode.DebugAdapterDescriptorFactory:
     switch (runMode) {
