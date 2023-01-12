@@ -63,7 +63,8 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 
 	context.subscriptions.push(
-		vscode.languages.registerCompletionItemProvider(
+        // TODO: Só acionar com Ctrl + Espaço.
+		/* vscode.languages.registerCompletionItemProvider(
 			'delegua',
 			{
 				provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
@@ -75,7 +76,7 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 			},
 			' ' // acionado quando desenvolvedor digita ' '
-		)
+		) */
 	);
 
     // debug adapters can be run in different ways by using a vscode.DebugAdapterDescriptorFactory:
