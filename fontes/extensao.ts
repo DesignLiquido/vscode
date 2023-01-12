@@ -8,12 +8,17 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 import { platform } from 'process';
 
+import { Lexador } from '@designliquido/delegua';
+import { FormatadorDelegua } from '@designliquido/delegua/fontes/formatadores'
+
 import { DeleguaSessaoDepuracao } from './depuracao/delegua-sessao-depuracao';
 import { ativarDepuracao } from './depuracao/ativacao-depuracao';
 import {
     DeleguaAdapterServerDescriptorFactory,
     DeleguaDebugAdapterExecutableFactory,
 } from './depuracao/fabricas';
+import { DeleguaProvedorDocumentacaoEmEditor } from './documentacao-em-editor';
+import { DeleguaProvedorCompletude, LiquidoProvedorCompletude } from './completude';
 
 /*
  * The compile time flag 'runMode' controls how the debug adapter is run.
@@ -28,13 +33,16 @@ export function activate(context: vscode.ExtensionContext) {
             provideDocumentFormattingEdits(
                 document: vscode.TextDocument
             ): vscode.TextEdit[] {
+                const lexador = new Lexador();
+                const formatador = new FormatadorDelegua();
+                const resultadoLexador = lexador.mapear(document.getText().split('\n'), -1);
                 return [
                     vscode.TextEdit.replace(
                         new vscode.Range(
                             document.lineAt(0).range.start,
                             document.lineAt(document.lineCount - 1).range.end
                         ),
-                        document.getText()
+                        formatador.formatar(resultadoLexador.simbolos)
                     ),
                 ];
             },
@@ -45,73 +53,21 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
             { language: 'delegua', pattern: 'configuracao.delegua' },
-            {
-                provideCompletionItems(
-                    document: vscode.TextDocument,
-                    position: vscode.Position
-                ) {
-                    const texto = document.lineAt(position).text;
-                    switch (texto) {
-                        case 'liquido.':
-                            return [
-                                new vscode.CompletionItem(
-                                    'roteador',
-                                    vscode.CompletionItemKind.Interface
-                                ),
-                            ];
-                    }
-
-                    return undefined;
-                },
-            },
+            new LiquidoProvedorCompletude(),
             '.' // acionado quando desenvolvedor/a digita '.'
         )
     );
 
     context.subscriptions.push(
-        vscode.languages.registerCompletionItemProvider('delegua', {
-            provideCompletionItems(
-                document: vscode.TextDocument,
-                position: vscode.Position
-            ) {
-                const aleatorio = new vscode.CompletionItem(
-                    'aleatorio',
-                    vscode.CompletionItemKind.Function
-                );
-                aleatorio.documentation =
-                    'Retorna um número aleatório entre 0 e 1.';
-
-                return [
-                    aleatorio,
-                    new vscode.CompletionItem(
-                        'aleatorioEntre',
-                        vscode.CompletionItemKind.Function
-                    ),
-                    new vscode.CompletionItem(
-                        'texto',
-                        vscode.CompletionItemKind.Function
-                    ),
-                ];
-            },
-        })
+        vscode.languages.registerCompletionItemProvider(
+            'delegua', 
+            new DeleguaProvedorCompletude()
+        )
     );
 
     // Hovers
     context.subscriptions.push(
-        vscode.languages.registerHoverProvider('delegua', {
-            provideHover(document, position, token) {
-                const wordRange = document.getWordRangeAtPosition(position);
-                const word = document.getText(wordRange);
-                const map = {
-                    aleatorio: 'wild',
-                    escreva: 'domestic',
-                };
-                return new vscode.Hover(map[word]);
-                /* return {
-                contents: ['Hover information for word'],
-            }; */
-            },
-        })
+        vscode.languages.registerHoverProvider('delegua', new DeleguaProvedorDocumentacaoEmEditor())
     );
 
     // debug adapters can be run in different ways by using a vscode.DebugAdapterDescriptorFactory:
