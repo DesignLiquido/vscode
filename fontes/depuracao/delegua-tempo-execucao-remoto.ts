@@ -61,13 +61,13 @@ export class DeleguaTempoExecucaoRemoto extends EventEmitter {
     private _originalLine = 0;
 
     private _variaveisLocais = new Array<DebugProtocol.Variable>();
-    public get localVariables() {
+    public get variaveisEscopo() {
         return this._variaveisLocais;
     }
 
-    private _variaveisGlobais = new Array<DebugProtocol.Variable>();
-    public get globalVariables() {
-        return this._variaveisGlobais;
+    private _todasVariaveis = new Array<DebugProtocol.Variable>();
+    public get todasVariaveis() {
+        return this._todasVariaveis;
     }
 
     private _pilhaExecucao = new Array<ElementoPilhaVsCode>();
@@ -272,7 +272,7 @@ export class DeleguaTempoExecucaoRemoto extends EventEmitter {
      * @param linhas 
      */
     popularVariaveis(linhas: string[]) {
-        this._variaveisGlobais = [];
+        this._todasVariaveis = [];
         this._variaveisLocais = [];
 
         // As duas primeiras linhas são estruturas do cabeçalho da resposta. 
@@ -285,7 +285,8 @@ export class DeleguaTempoExecucaoRemoto extends EventEmitter {
                 value: informacoes[2].trim(),
                 variablesReference: 0,
             };
-            this._variaveisLocais.push(item);
+            // this._variaveisLocais.push(item);
+            this._todasVariaveis.push(item);
             /* counter++;
             let line = linhas[i];
             let tokens = line.split(':');

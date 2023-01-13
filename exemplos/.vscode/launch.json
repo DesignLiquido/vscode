@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Pedir por nome de arquivo",
             "program": "${workspaceFolder}/${command:AskForProgramName}",
-            "stopOnEntry": true
+            "stopOnEntry": false
         }
     ]
 }

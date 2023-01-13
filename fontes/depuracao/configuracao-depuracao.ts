@@ -36,7 +36,7 @@ export function configurarDepuracao(context: vscode.ExtensionContext, factory?: 
 					name: 'Depurar Arquivo',
 					request: 'launch',
 					program: targetResource.fsPath,
-					stopOnEntry: true
+					stopOnEntry: false
 				});
 			}
 		}),

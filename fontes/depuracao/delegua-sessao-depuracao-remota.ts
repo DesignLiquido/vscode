@@ -380,7 +380,7 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
                 this._tempoExecucao.obterValorVariavel(args.expression).then(resposta => {
                     const respostaEstruturada = JSON.parse(resposta);
                     response.body = { 
-                        result: respostaEstruturada && respostaEstruturada.hasOwnProperty('valor') ? respostaEstruturada.valor : '', 
+                        result: respostaEstruturada && respostaEstruturada.hasOwnProperty('valor') ? String(respostaEstruturada.valor) : '',
                         type: respostaEstruturada && respostaEstruturada.hasOwnProperty('tipo') ? respostaEstruturada.tipo : null,
                         variablesReference: 0
                     };
@@ -391,7 +391,7 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
                 this._tempoExecucao.obterValorVariavel(args.expression).then(resposta => {
                     const respostaEstruturada = JSON.parse(resposta);
                     response.body = { 
-                        result: respostaEstruturada && respostaEstruturada.hasOwnProperty('valor') ? respostaEstruturada.valor : '', 
+                        result: respostaEstruturada && respostaEstruturada.hasOwnProperty('valor') ? String(respostaEstruturada.valor) : '',
                         type: respostaEstruturada && respostaEstruturada.hasOwnProperty('tipo') ? respostaEstruturada.tipo : null,
                         variablesReference: 0
                     };
@@ -712,13 +712,13 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
     ): void {
         this._tempoExecucao.variaveis();
 
-        let variables =
+        let variaveis =
             args.variablesReference === this._escopoLocal
-                ? this._tempoExecucao.localVariables
-                : this._tempoExecucao.globalVariables;
+                ? this._tempoExecucao.variaveisEscopo
+                : this._tempoExecucao.todasVariaveis;
 
         response.body = {
-            variables: variables,
+            variables: variaveis,
         };
         this.sendResponse(response);
     }

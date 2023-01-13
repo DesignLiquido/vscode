@@ -16,7 +16,7 @@ export class DeleguaConfigurationProvider implements vscode.DebugConfigurationPr
 				config.name = 'Launch';
 				config.request = 'launch';
 				config.program = '${file}';
-				config.stopOnEntry = true;
+				config.stopOnEntry = false;
 			}
 		// }
 
