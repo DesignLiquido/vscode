@@ -87,6 +87,10 @@ classe Animal {
     escreva("correndo");
   }
 }
-classe Cachorro herda Animal {}
+classe Cachorro herda Animal {
+  latir() {
+    escreva("Au Au Au Au");
+  }
+}
 var thor = Cachorro();
 thor.corre();

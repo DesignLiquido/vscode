@@ -158,10 +158,11 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
         });
 
         this._deleguaEstaPronto = new Promise<any>((resolve, reject) => {
-            InvocacaoDelegua.localizarExecutavel()
+            /* InvocacaoDelegua.localizarExecutavel()
                 .then((caminhoExecutavel: string) => { 
                     this._processoExecucaoDelegua = InvocacaoDelegua.invocarDelegua(caminhoExecutavel, this._arquivoInicial, resolve, this._tempoExecucao);
-                });
+                }); */
+            resolve(true);
         });
     }
 
