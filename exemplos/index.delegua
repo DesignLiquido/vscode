@@ -94,3 +94,4 @@ classe Cachorro herda Animal {
 }
 var thor = Cachorro();
 thor.corre();
+thor.latir();

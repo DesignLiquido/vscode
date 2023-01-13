@@ -30,6 +30,7 @@ import { DeleguaTempoExecucaoRemoto } from './delegua-tempo-execucao-remoto';
 import { DeleguaPontoParada } from './delegua-ponto-parada';
 import { LaunchRequestArguments } from './argumentos-inicio-depuracao';
 import { InvocacaoDelegua } from './invocacao-delegua';
+import palavrasReservadas from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
 
 /**
  * Classe responsável por traduzir para o VSCode eventos enviados pelo
@@ -158,11 +159,12 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
         });
 
         this._deleguaEstaPronto = new Promise<any>((resolve, reject) => {
-            /* InvocacaoDelegua.localizarExecutavel()
+            InvocacaoDelegua.localizarExecutavel()
                 .then((caminhoExecutavel: string) => { 
                     this._processoExecucaoDelegua = InvocacaoDelegua.invocarDelegua(caminhoExecutavel, this._arquivoInicial, resolve, this._tempoExecucao);
-                }); */
-            resolve(true);
+                });
+            // Comentar acima e descomentar abaixo quando estiver depurando a linguagem.
+            // resolve(true);
         });
     }
 
@@ -261,13 +263,13 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
     ): void {
         super.configurationDoneRequest(response, args);
 
-        // notify the launchRequest that configuration has finished
+        // Notificar a requisição de início que a configuração finalizou.
         this._configuracaoFinalizada.notify();
     }
 
     /**
      * Evento acionado quando o usuário clica no botão ou usa o atalho de teclado para continuar.
-     * No Windows, o atalho é o F5, por padrão.
+     * No Windows, o atalho é o F5 por padrão.
      * @param response A resposta a ser enviada para a interface do VSCode.
      * @param args Argumentos adicionais.
      */
@@ -369,21 +371,32 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
         response: DebugProtocol.EvaluateResponse,
         args: DebugProtocol.EvaluateArguments
     ): void {
-        // let reply: string | undefined = undefined;
+        switch (args.context) {
+            case 'hover':
+                if (Object.keys(palavrasReservadas).includes(args.expression)) {
+                    return;
+                }
 
-        if (args.context === 'hover') {
-            this._tempoExecucao.obterValorVariavel(args.expression).then(resposta => {
-                response.body = { result: resposta || '', variablesReference: 0 };
-                this.sendResponse(response);
-            });
-            /* reply = this._tempoExecucao.obterValorPonteiroMouse(
-                args.expression
-            ); */
-        } else if (args.context === 'watch') {
-            this._tempoExecucao.obterValorVariavel(args.expression).then(resposta => {
-                response.body = { result: resposta || '', variablesReference: 0 };
-                this.sendResponse(response);
-            });
+                this._tempoExecucao.obterValorVariavel(args.expression).then(resposta => {
+                    const respostaEstruturada = JSON.parse(resposta);
+                    response.body = { 
+                        result: respostaEstruturada && respostaEstruturada.hasOwnProperty('valor') ? respostaEstruturada.valor : '', 
+                        type: respostaEstruturada && respostaEstruturada.hasOwnProperty('tipo') ? respostaEstruturada.tipo : null,
+                        variablesReference: 0
+                    };
+                    this.sendResponse(response);
+                });
+                break;
+            case 'watch':
+                this._tempoExecucao.obterValorVariavel(args.expression).then(resposta => {
+                    const respostaEstruturada = JSON.parse(resposta);
+                    response.body = { 
+                        result: respostaEstruturada && respostaEstruturada.hasOwnProperty('valor') ? respostaEstruturada.valor : '', 
+                        type: respostaEstruturada && respostaEstruturada.hasOwnProperty('tipo') ? respostaEstruturada.tipo : null,
+                        variablesReference: 0
+                    };
+                    this.sendResponse(response);
+                });
         }
     }
 
