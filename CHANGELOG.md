@@ -1,13 +1,19 @@
 # Histórico de Modificações
 
-## 0.0.0
+## 0.1.0
 
-- Lançamento da versão inicial, derivada da extensão Delégua.
+- Esboço de formatador de código em Delégua;
+- Ajustes no depurador quanto a inspeção de variáveis;
+- Ícone para LMHT.
+
+## 0.0.2
+
+- Sintaxe colorida, extensão de arquivo e reconhecimento de extensão para a linguagem BIRL.
 
 ## 0.0.1
 
 - Adicionado ícone e sintaxe colorida para EguaP.
 
-## 0.0.2
+## 0.0.0
 
-- Sintaxe colorida, extensão de arquivo e reconhecimento de extensão para a linguagem BIRL.
+- Lançamento da versão inicial, derivada da extensão Delégua (descontinuada).
