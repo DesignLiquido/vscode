@@ -580,9 +580,9 @@ export class DeleguaTempoExecucaoRemoto extends EventEmitter {
     public obterValorVariavel(nome: string): Promise<string> {
         this._resultadoAvaliacao = '';
         this._avaliacaoFinalizada = new Subject();
-        this.enviarParaServidorDepuracao('avaliar ' + nome + '\n');
+        this.enviarParaServidorDepuracao('avaliar-variavel ' + nome + '\n');
         return new Promise<string>((resolve, reject) => {
-            this._avaliacaoFinalizada.wait(1000).then(() => {
+            this._avaliacaoFinalizada.wait(800).then(() => {
                 resolve(this._resultadoAvaliacao);
             });
         });
@@ -626,6 +626,7 @@ export class DeleguaTempoExecucaoRemoto extends EventEmitter {
 
             switch (primeiraLinhaComando) {
                 case '--- avaliar-resposta ---':
+                case '--- avaliar-variavel-resposta ---':
                     this._resultadoAvaliacao = linhas[linhaAtual];
                     this._avaliacaoFinalizada.notify();
                     break;
@@ -651,6 +652,12 @@ export class DeleguaTempoExecucaoRemoto extends EventEmitter {
                 case '--- pilha-execucao-resposta ---':
                     // console.log('Resposta de Pilha de Execução');
                     this.popularPilhaExecucao(linhas);
+                    break;
+                case '--- sair-escopo-resposta ---':
+                    console.log('Execução continou até final do escopo e parou na instrução corrente do escopo anterior');
+                    this.enviarParaServidorDepuracao('pilha-execucao');
+                    this.enviarParaServidorDepuracao('variaveis');
+                    this.enviarEvento('pararEmEntrada');
                     break;
                 case '--- variaveis-resposta ---':
                     // console.log('Resposta de Variáveis');

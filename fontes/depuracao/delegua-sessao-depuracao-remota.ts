@@ -30,6 +30,8 @@ import { DeleguaTempoExecucaoRemoto } from './delegua-tempo-execucao-remoto';
 import { DeleguaPontoParada } from './delegua-ponto-parada';
 import { LaunchRequestArguments } from './argumentos-inicio-depuracao';
 import { InvocacaoDelegua } from './invocacao-delegua';
+
+import { inferirTipoVariavel } from '@designliquido/delegua/fontes/interpretador/inferenciador';
 import palavrasReservadas from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
 
 /**
@@ -362,6 +364,25 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
         this.sendResponse(response);
     }
 
+    private montarEvaluateResponse(response: DebugProtocol.EvaluateResponse, respostaDelegua: any) {
+        try {
+            const respostaEstruturada = JSON.parse(respostaDelegua);
+            response.body = { 
+                result: respostaEstruturada.hasOwnProperty('valor') ? String(respostaEstruturada.valor) : String(respostaEstruturada),
+                type: respostaEstruturada.hasOwnProperty('tipo') ? respostaEstruturada.tipo : inferirTipoVariavel(respostaEstruturada),
+                variablesReference: 0,
+                presentationHint: {
+                    kind: 'data'
+                }
+            };
+            return response;
+        } catch (erro: any) {
+            response.message = respostaDelegua;
+            response.success = false;
+            return response;
+        }
+    }
+
     /**
      * Avalia a expressão passada como argumento, ou pelo painel de 'watch', ou colocando o ponteiro do mouse em cima.
      * @param response A resposta a ser enviada para a interface do VSCode.
@@ -378,24 +399,12 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
                 }
 
                 this._tempoExecucao.obterValorVariavel(args.expression).then(resposta => {
-                    const respostaEstruturada = JSON.parse(resposta);
-                    response.body = { 
-                        result: respostaEstruturada && respostaEstruturada.hasOwnProperty('valor') ? String(respostaEstruturada.valor) : '',
-                        type: respostaEstruturada && respostaEstruturada.hasOwnProperty('tipo') ? respostaEstruturada.tipo : null,
-                        variablesReference: 0
-                    };
-                    this.sendResponse(response);
+                    this.sendResponse(this.montarEvaluateResponse(response, resposta));
                 });
                 break;
             case 'watch':
                 this._tempoExecucao.obterValorVariavel(args.expression).then(resposta => {
-                    const respostaEstruturada = JSON.parse(resposta);
-                    response.body = { 
-                        result: respostaEstruturada && respostaEstruturada.hasOwnProperty('valor') ? String(respostaEstruturada.valor) : '',
-                        type: respostaEstruturada && respostaEstruturada.hasOwnProperty('tipo') ? respostaEstruturada.tipo : null,
-                        variablesReference: 0
-                    };
-                    this.sendResponse(response);
+                    this.sendResponse(this.montarEvaluateResponse(response, resposta));
                 });
         }
     }
