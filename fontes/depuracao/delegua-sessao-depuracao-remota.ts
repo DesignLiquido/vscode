@@ -28,7 +28,7 @@ import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 
 import { DeleguaTempoExecucaoRemoto } from './delegua-tempo-execucao-remoto';
 import { DeleguaPontoParada } from './delegua-ponto-parada';
-import { LaunchRequestArguments } from './argumentos-inicio-depuracao';
+import { ArgumentosInicioDepuracao } from './argumentos-inicio-depuracao';
 import { InvocacaoDelegua } from './invocacao-delegua';
 
 import { inferirTipoVariavel } from '@designliquido/delegua/fontes/interpretador/inferenciador';
@@ -434,7 +434,7 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
      */
     protected async launchRequest(
         response: DebugProtocol.LaunchResponse,
-        args: LaunchRequestArguments
+        args: ArgumentosInicioDepuracao
     ) {
         // make sure to 'Stop' the buffered logging if 'trace' is not set
         logger.setup(

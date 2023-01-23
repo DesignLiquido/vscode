@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@designliquido/delegua@^0.11.14":
-  version "0.11.14"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.11.14.tgz#caf0cf6d63c285c023116da33d25aadb71a4ebf9"
-  integrity sha512-V2uSsuGbR/3yXzgmPVwpS/kQ/kfvy+srvzecTZWvOxHhfGGX5NUWMKC3N+wyKnw8imuXnZO1eokaMT0jnJXymA==
+"@designliquido/delegua@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.12.0.tgz#d40b6089ff33d884b67e7b4644c06ec71f6f8a7f"
+  integrity sha512-HCAw5mQ0+EWuKkigO/Rx1hlV90RbbMpvXpWOZ3s8y9Yu4xm0VarDdNMOcKluMRCWyh1aXu2Gsjn16b0xB/1iIA==
   dependencies:
     browser-process-hrtime "^1.0.0"
     chalk "4.1.2"
