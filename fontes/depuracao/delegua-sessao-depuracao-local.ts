@@ -1,6 +1,6 @@
 import { basename } from 'path';
 
-import { Breakpoint, InitializedEvent, LoggingDebugSession, Source, StackFrame, TerminatedEvent } from "@vscode/debugadapter";
+import { Breakpoint, InitializedEvent, LoggingDebugSession, OutputEvent, Source, StackFrame, StoppedEvent, TerminatedEvent } from "@vscode/debugadapter";
 import { DebugProtocol } from "@vscode/debugprotocol";
 
 import { AvaliadorSintatico, Importador, Lexador } from "@designliquido/delegua";
@@ -11,6 +11,8 @@ import palavrasReservadas from '@designliquido/delegua/fontes/lexador/palavras-r
 import { ArgumentosInicioDepuracao } from "./argumentos-inicio-depuracao";
 
 export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
+    private static threadId = 1;
+
     lexador: Lexador;
     avaliadorSintatico: AvaliadorSintatico;
     importador: Importador;
@@ -35,7 +37,7 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
             {},
             true);
         this.interpretador = new InterpretadorComDepuracao(this.importador, process.cwd(), 
-            console.log);
+            this.escreverEmDebugOutput.bind(this));
         this.interpretador.finalizacaoDaExecucao = this.finalizacao.bind(this);
     }
 
@@ -44,6 +46,13 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
      */
     public finalizacao() {
         this.sendEvent(new TerminatedEvent());
+    }
+
+    public escreverEmDebugOutput(texto: string) {
+        const evento: DebugProtocol.OutputEvent = new OutputEvent(`${texto}\n`);
+        evento.body.source = this.criarReferenciaSource(this._arquivoInicial);
+        evento.body.line = 0;
+        this.sendEvent(evento);
     }
 
     /**
@@ -103,8 +112,14 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         response: DebugProtocol.ContinueResponse,
         args: DebugProtocol.ContinueArguments
     ): void {
-        this.interpretador.instrucaoContinuarInterpretacao();
-        this.sendResponse(response);
+        this.interpretador.instrucaoContinuarInterpretacao().then(_ => {
+            this.sendResponse(response);
+            if (this.interpretador.pontoDeParadaAtivo) {
+                this.sendEvent(
+                    new StoppedEvent('entry', DeleguaSessaoDepuracaoLocal.threadId)
+                );
+            }
+        });
     }
 
     private montarEvaluateResponse(response: DebugProtocol.EvaluateResponse, respostaDelegua: any) {
