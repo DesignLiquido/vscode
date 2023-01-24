@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 
 import { FileAccessor } from './assessor-arquivos';
 import { DeleguaConfigurationProvider } from './provedores';
-import { InlineDebugAdapterFactory } from './fabricas';
+import { FabricaAdaptadorDepuracaoEmbutido } from './fabricas';
 
 export function configurarDepuracao(context: vscode.ExtensionContext, factory?: vscode.DebugAdapterDescriptorFactory) {
 
@@ -74,7 +74,7 @@ export function configurarDepuracao(context: vscode.ExtensionContext, factory?: 
 	}, vscode.DebugConfigurationProviderTriggerKind.Dynamic));
 
 	if (!factory) {
-		factory = new InlineDebugAdapterFactory();
+		factory = new FabricaAdaptadorDepuracaoEmbutido();
 	}
 	context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('delegua', factory));
 	if ('dispose' in factory) {

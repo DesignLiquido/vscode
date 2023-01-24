@@ -1,6 +1,6 @@
 import { basename } from 'path';
 
-import { Breakpoint, InitializedEvent, LoggingDebugSession, Source, StackFrame } from "@vscode/debugadapter";
+import { Breakpoint, InitializedEvent, LoggingDebugSession, Source, StackFrame, TerminatedEvent } from "@vscode/debugadapter";
 import { DebugProtocol } from "@vscode/debugprotocol";
 
 import { AvaliadorSintatico, Importador, Lexador } from "@designliquido/delegua";
@@ -36,6 +36,14 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
             true);
         this.interpretador = new InterpretadorComDepuracao(this.importador, process.cwd(), 
             console.log);
+        this.interpretador.finalizacaoDaExecucao = this.finalizacao.bind(this);
+    }
+
+    /**
+     * Usado pelo depurador para dizer que a execução finalizou.
+     */
+    public finalizacao() {
+        this.sendEvent(new TerminatedEvent());
     }
 
     /**
@@ -69,6 +77,7 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
             retornoImportador.retornoAvaliadorSintatico.declaracoes,
         );
 
+        this.interpretador.instrucaoContinuarInterpretacao();
         this.sendResponse(response);
     }
 
@@ -81,6 +90,20 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         response.body = {
             breakpoints: []
         };
+        this.sendResponse(response);
+    }
+
+    /**
+     * Evento acionado quando o usuário clica no botão ou usa o atalho de teclado para continuar.
+     * No Windows, o atalho é o F5 por padrão.
+     * @param response A resposta a ser enviada para a interface do VSCode.
+     * @param args Argumentos adicionais.
+     */
+    protected continueRequest(
+        response: DebugProtocol.ContinueResponse,
+        args: DebugProtocol.ContinueArguments
+    ): void {
+        this.interpretador.instrucaoContinuarInterpretacao();
         this.sendResponse(response);
     }
 
