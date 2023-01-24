@@ -1,10 +1,12 @@
+// import * as vscode from 'vscode';
 import { basename } from 'path';
 
 import { Breakpoint, InitializedEvent, LoggingDebugSession, OutputEvent, Source, StackFrame, StoppedEvent, TerminatedEvent } from "@vscode/debugadapter";
 import { DebugProtocol } from "@vscode/debugprotocol";
+import { Subject } from 'await-notify';
 
 import { AvaliadorSintatico, Importador, Lexador } from "@designliquido/delegua";
-import { InterpretadorComDepuracao } from "@designliquido/delegua/fontes/interpretador/interpretador-com-depuracao";
+import { InterpretadorComDepuracao } from "@designliquido/delegua";
 import { inferirTipoVariavel } from "@designliquido/delegua/fontes/interpretador/inferenciador";
 import palavrasReservadas from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
 
@@ -19,7 +21,10 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
     interpretador: InterpretadorComDepuracao;
 
     private _arquivoInicial = '';
+    private _hashArquivoInicial = - 1;
     private _idPontoParada = 1;
+    // private _deleguaEstaPronto: Promise<any>;
+    private _configuracaoFinalizada = new Subject();
 
     public constructor() {
         super();
@@ -38,7 +43,9 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
             true);
         this.interpretador = new InterpretadorComDepuracao(this.importador, process.cwd(), 
             this.escreverEmDebugOutput.bind(this));
+
         this.interpretador.finalizacaoDaExecucao = this.finalizacao.bind(this);
+        this.interpretador.avisoPontoParadaAtivado = this.avisoPontoParadaAtivado.bind(this);
     }
 
     /**
@@ -46,6 +53,12 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
      */
     public finalizacao() {
         this.sendEvent(new TerminatedEvent());
+    }
+
+    public avisoPontoParadaAtivado() {
+        this.sendEvent(
+            new StoppedEvent('entry', DeleguaSessaoDepuracaoLocal.threadId)
+        );
     }
 
     public escreverEmDebugOutput(texto: string) {
@@ -81,10 +94,16 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         args: ArgumentosInicioDepuracao
     ) {
         this._arquivoInicial = args.program;
+        // Por algum motivo, isso gera um hash diferente do importador.
+        // this._hashArquivoInicial = cyrb53(this._arquivoInicial);
         const retornoImportador = this.importador.importar(this._arquivoInicial);
+        this._hashArquivoInicial = retornoImportador.hashArquivo;
         this.interpretador.prepararParaDepuracao(
             retornoImportador.retornoAvaliadorSintatico.declaracoes,
         );
+
+        // Aguarda a finalização da configuração (configurationDoneRequest)
+        await this._configuracaoFinalizada.wait(1000);
 
         this.interpretador.instrucaoContinuarInterpretacao();
         this.sendResponse(response);
@@ -100,6 +119,20 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
             breakpoints: []
         };
         this.sendResponse(response);
+    }
+
+    /**
+     * Chamado após a sequência de configuração. 
+     * Indica que todos os pontos de parada, variáveis, etc, foram devidamente enviados e a depuração ('launch') pode iniciar.
+     */
+    protected configurationDoneRequest(
+        response: DebugProtocol.ConfigurationDoneResponse,
+        args: DebugProtocol.ConfigurationDoneArguments
+    ): void {
+        super.configurationDoneRequest(response, args);
+
+        // Notificar a requisição de início que a configuração finalizou.
+        this._configuracaoFinalizada.notify();
     }
 
     /**
@@ -167,6 +200,10 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         );
     }
 
+    protected pauseRequest(response: DebugProtocol.PauseResponse, args: DebugProtocol.PauseArguments, request?: DebugProtocol.Request): void {
+        super.pauseRequest(response, args);
+    }
+
     protected setBreakPointsRequest(
         response: DebugProtocol.SetBreakpointsResponse,
         args: DebugProtocol.SetBreakpointsArguments
@@ -182,16 +219,18 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
             return pontoParada;
         });
 
+        for (let pontoParada of pontosParada) {
+            this.interpretador.pontosParada.push({
+                hashArquivo: this._hashArquivoInicial,
+                linha: Number(pontoParada.line),
+            });
+        }
+
         response.body = {
             breakpoints: pontosParada,
         };
 
-        for (let pontoParada of pontosParada) {
-            this.interpretador.pontosParada.push({
-                hashArquivo: -1,
-                linha: Number(pontoParada.line),
-            });
-        }
+        this.sendResponse(response);
     }
 
     protected stackTraceRequest(

@@ -266,7 +266,7 @@
         "typescript": "^4.7.4"
     },
     "dependencies": {
-        "@designliquido/delegua": "^0.12.0",
+        "@designliquido/delegua": "^0.12.1",
         "real-executable-path": "^3.0.0"
     }
 }
