@@ -7,13 +7,15 @@ import {
     DeleguaAdapterNamedPipeServerDescriptorFactory,
     DeleguaAdapterServerDescriptorFactory,
     DeleguaDebugAdapterExecutableFactory,
+    FabricaAdaptadorDepuracaoEmbutido,
 } from './depuracao/fabricas';
 import { DeleguaProvedorDocumentacaoEmEditor } from './documentacao-em-editor';
 import { DeleguaProvedorCompletude, LiquidoProvedorCompletude } from './completude';
 import { DeleguaProvedorFormatacao } from './formatadores';
 
-/*
- * The compile time flag 'runMode' controls how the debug adapter is run.
+/**
+ * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
+ * Usar 'server' para execução remota e 'inline' para execução embutida.
  * Please note: the test suite only supports 'external' mode.
  */
 // const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
@@ -81,7 +83,7 @@ export function activate(context: vscode.ExtensionContext) {
             // run the debug adapter inside the extension and directly talk to it
             configurarDepuracao(
                 context,
-                new DeleguaDebugAdapterExecutableFactory()
+                new FabricaAdaptadorDepuracaoEmbutido()
             );
             break;
     }
