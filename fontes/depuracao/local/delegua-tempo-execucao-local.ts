@@ -6,6 +6,9 @@ import palavrasReservadas from '@designliquido/delegua/fontes/lexador/palavras-r
 
 import { ElementoPilhaVsCode } from '../elemento-pilha';
 import { AvaliadorSintaticoInterface, ImportadorInterface, InterpretadorComDepuracaoInterface, LexadorInterface } from '@designliquido/delegua/fontes/interfaces';
+import { LexadorVisuAlg } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-visualg';
+import { AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-visualg';
+import { InterpretadorVisuAlgComDepuracao } from '@designliquido/delegua/fontes/interpretador/dialetos';
 
 /**
  * Em teoria não precisaria uma classe de tempo de execução local, mas,
@@ -25,7 +28,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
     private _arquivoInicial: string = '';
     private _conteudoArquivo: string[];
     private _hashArquivoInicial = -1;
-    private _pontosParada: PontoParada[];
+    private _pontosParada: PontoParada[] = [];
     
     constructor() {
         super();
@@ -44,6 +47,18 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
 
     private selecionarDialetoPorExtensao(extensao: string) {
         switch (extensao) {
+            case "alg":
+                this.lexador = new LexadorVisuAlg();
+                this.avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
+                this.importador = new Importador(
+                    this.lexador, 
+                    this.avaliadorSintatico, 
+                    {},
+                    {},
+                    true);
+                this.interpretador = new InterpretadorVisuAlgComDepuracao(this.importador, process.cwd(), 
+                    this.escreverEmSaida.bind(this));
+                break;
             default:
                 this.lexador = new Lexador();
                 this.avaliadorSintatico = new AvaliadorSintatico();
@@ -55,6 +70,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     true);
                 this.interpretador = new InterpretadorComDepuracao(this.importador, process.cwd(), 
                     this.escreverEmSaida.bind(this));
+                break;
         }
     }
 
