@@ -18,8 +18,8 @@ import { DeleguaProvedorFormatacao } from './formatadores';
  * Usar 'server' para execução remota e 'inline' para execução embutida.
  * Please note: the test suite only supports 'external' mode.
  */
-// const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
-const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'server';
+const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
+// const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'server';
 
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(

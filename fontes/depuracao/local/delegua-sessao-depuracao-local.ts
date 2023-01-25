@@ -1,71 +1,129 @@
-// import * as vscode from 'vscode';
+import * as vscode from 'vscode';
 import { basename } from 'path';
 
-import { Breakpoint, InitializedEvent, LoggingDebugSession, OutputEvent, Source, StackFrame, StoppedEvent, TerminatedEvent } from "@vscode/debugadapter";
+import { Breakpoint, BreakpointEvent, InitializedEvent, Logger, logger, LoggingDebugSession, OutputEvent, Source, StackFrame, StoppedEvent, TerminatedEvent, Thread } from "@vscode/debugadapter";
 import { DebugProtocol } from "@vscode/debugprotocol";
 import { Subject } from 'await-notify';
 
-import { AvaliadorSintatico, Importador, Lexador } from "@designliquido/delegua";
-import { InterpretadorComDepuracao } from "@designliquido/delegua";
 import { inferirTipoVariavel } from "@designliquido/delegua/fontes/interpretador/inferenciador";
-import palavrasReservadas from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
 
-import { ArgumentosInicioDepuracao } from "./argumentos-inicio-depuracao";
+import { ArgumentosInicioDepuracao } from "../argumentos-inicio-depuracao";
+import { DeleguaTempoExecucaoLocal } from './delegua-tempo-execucao-local';
+import { DeleguaPontoParada } from '../delegua-ponto-parada';
+import { ElementoPilhaVsCode } from '../elemento-pilha';
 
 export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
     private static threadId = 1;
 
-    lexador: Lexador;
-    avaliadorSintatico: AvaliadorSintatico;
-    importador: Importador;
-    interpretador: InterpretadorComDepuracao;
+    private tempoExecucao: DeleguaTempoExecucaoLocal;
 
     private _arquivoInicial = '';
-    private _hashArquivoInicial = - 1;
+    
     private _idPontoParada = 1;
     // private _deleguaEstaPronto: Promise<any>;
     private _configuracaoFinalizada = new Subject();
 
     public constructor() {
-        super();
+        super('delegua-debug.txt');
 
         // Linhas e colunas em Delégua começam em 1.
         this.setDebuggerLinesStartAt1(true);
         this.setDebuggerColumnsStartAt1(true);
 
-        this.lexador = new Lexador();
-        this.avaliadorSintatico = new AvaliadorSintatico();
-        this.importador = new Importador(
-            this.lexador, 
-            this.avaliadorSintatico, 
-            {},
-            {},
-            true);
-        this.interpretador = new InterpretadorComDepuracao(this.importador, process.cwd(), 
-            this.escreverEmDebugOutput.bind(this));
+        this.tempoExecucao = new DeleguaTempoExecucaoLocal();
 
-        this.interpretador.finalizacaoDaExecucao = this.finalizacao.bind(this);
-        this.interpretador.avisoPontoParadaAtivado = this.avisoPontoParadaAtivado.bind(this);
-    }
+        this.tempoExecucao.on('mensagemInformacao', (mensagem: string) => {
+			vscode.window.showInformationMessage(mensagem);
+		});
 
-    /**
-     * Usado pelo depurador para dizer que a execução finalizou.
-     */
-    public finalizacao() {
-        this.sendEvent(new TerminatedEvent());
-    }
+		this.tempoExecucao.on('mudancaStatus', (mensagem: string) => {
+			vscode.window.setStatusBarMessage(mensagem);
+		});
 
-    public avisoPontoParadaAtivado() {
-        this.sendEvent(
-            new StoppedEvent('entry', DeleguaSessaoDepuracaoLocal.threadId)
+		this.tempoExecucao.on('mensagemAviso', (mensagem: string) => {
+			vscode.window.showWarningMessage('REPL: ' + mensagem);
+		});
+
+		this.tempoExecucao.on('mensagemErro', (mensagem: string) => {
+			vscode.window.showErrorMessage('REPL: ' + mensagem);
+		});
+        
+        this.tempoExecucao.on('finalizar', () => {
+            this.sendEvent(new TerminatedEvent());
+        });
+
+        this.tempoExecucao.on('pararEmEntrada', () => {
+            this.sendEvent(
+                new StoppedEvent('entry', DeleguaSessaoDepuracaoLocal.threadId)
+            );
+        });
+
+        this.tempoExecucao.on('pararEmExcecao', (exception) => {
+            if (exception) {
+                this.sendEvent(
+                    new StoppedEvent(
+                        `exception(${exception})`,
+                        DeleguaSessaoDepuracaoLocal.threadId
+                    )
+                );
+            } else {
+                this.sendEvent(
+                    new StoppedEvent(
+                        'exception',
+                        DeleguaSessaoDepuracaoLocal.threadId
+                    )
+                );
+            }
+        });
+
+        this.tempoExecucao.on('pararEmPasso', () => {
+            this.sendEvent(
+                new StoppedEvent('step', DeleguaSessaoDepuracaoLocal.threadId)
+            );
+        });
+
+        this.tempoExecucao.on('pararEmPontoParada', () => {
+            this.sendEvent(
+                new StoppedEvent('breakpoint', DeleguaSessaoDepuracaoLocal.threadId)
+            );
+        });
+
+        this.tempoExecucao.on('pararEmPontoParadaDados', () => {
+            this.sendEvent(
+                new StoppedEvent(
+                    'data breakpoint',
+                    DeleguaSessaoDepuracaoLocal.threadId
+                )
+            );
+        });
+
+        this.tempoExecucao.on('pararEmPontoParadaInstrucao', () => {
+            this.sendEvent(
+                new StoppedEvent(
+                    'instruction breakpoint',
+                    DeleguaSessaoDepuracaoLocal.threadId
+                )
+            );
+        });
+
+        this.tempoExecucao.on(
+            'pontoDeParadaValidado',
+            (pontoParada: DeleguaPontoParada) => {
+                this.sendEvent(
+                    new BreakpointEvent('changed', {
+                        verified: pontoParada.verificado,
+                        id: pontoParada.id,
+                    } as DebugProtocol.Breakpoint)
+                );
+            }
         );
-    }
 
-    public escreverEmDebugOutput(texto: string) {
-        const evento: DebugProtocol.OutputEvent = new OutputEvent(`${texto}\n`);
-        evento.body.source = this.criarReferenciaSource(this._arquivoInicial);
-        evento.body.line = 0;
-        this.sendEvent(evento);
+        this.tempoExecucao.on('saida', (texto, caminhoArquivo = '', linha = 0) => {
+            const e: DebugProtocol.OutputEvent = new OutputEvent(`${texto}\n`);
+            e.body.source = this.criarReferenciaSource(caminhoArquivo);
+            e.body.line = this.convertDebuggerLineToClient(linha);
+            this.sendEvent(e);
+        });
     }
 
     /**
@@ -93,19 +151,17 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         response: DebugProtocol.LaunchResponse,
         args: ArgumentosInicioDepuracao
     ) {
-        this._arquivoInicial = args.program;
-        // Por algum motivo, isso gera um hash diferente do importador.
-        // this._hashArquivoInicial = cyrb53(this._arquivoInicial);
-        const retornoImportador = this.importador.importar(this._arquivoInicial);
-        this._hashArquivoInicial = retornoImportador.hashArquivo;
-        this.interpretador.prepararParaDepuracao(
-            retornoImportador.retornoAvaliadorSintatico.declaracoes,
+        logger.setup(
+            args.trace ? Logger.LogLevel.Verbose : Logger.LogLevel.Stop,
+            false
         );
+        
+        this._arquivoInicial = args.program;
 
         // Aguarda a finalização da configuração (configurationDoneRequest)
         await this._configuracaoFinalizada.wait(1000);
 
-        this.interpretador.instrucaoContinuarInterpretacao();
+        this.tempoExecucao.iniciar(this._arquivoInicial, !!args.stopOnEntry);
         this.sendResponse(response);
     }
 
@@ -145,14 +201,8 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         response: DebugProtocol.ContinueResponse,
         args: DebugProtocol.ContinueArguments
     ): void {
-        this.interpretador.instrucaoContinuarInterpretacao().then(_ => {
-            this.sendResponse(response);
-            if (this.interpretador.pontoDeParadaAtivo) {
-                this.sendEvent(
-                    new StoppedEvent('entry', DeleguaSessaoDepuracaoLocal.threadId)
-                );
-            }
-        });
+        this.tempoExecucao.continuar();
+        this.sendResponse(response);
     }
 
     private montarEvaluateResponse(response: DebugProtocol.EvaluateResponse, respostaDelegua: any) {
@@ -183,24 +233,24 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         response: DebugProtocol.EvaluateResponse,
         args: DebugProtocol.EvaluateArguments
     ): void {
-        if (Object.keys(palavrasReservadas).includes(args.expression)) {
-            return;
+        const resposta = this.tempoExecucao.obterVariavel(args.expression);
+        if (resposta !== undefined) {
+            this.sendResponse(this.montarEvaluateResponse(response, resposta));
         }
-
-        const resposta = this.interpretador.obterVariavel(args.expression);
-        this.sendResponse(this.montarEvaluateResponse(response, resposta));
     }
 
     protected nextRequest(
         response: DebugProtocol.NextResponse,
         args: DebugProtocol.NextArguments
     ): void {
-        this.interpretador.instrucaoPasso().then(_ =>
-            this.sendResponse(response)
-        );
+        this.tempoExecucao.passo();
+        this.sendResponse(response);
     }
 
-    protected pauseRequest(response: DebugProtocol.PauseResponse, args: DebugProtocol.PauseArguments, request?: DebugProtocol.Request): void {
+    protected pauseRequest(
+        response: DebugProtocol.PauseResponse, 
+        args: DebugProtocol.PauseArguments, request?: DebugProtocol.Request
+    ): void {
         super.pauseRequest(response, args);
     }
 
@@ -219,17 +269,11 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
             return pontoParada;
         });
 
-        for (let pontoParada of pontosParada) {
-            this.interpretador.pontosParada.push({
-                hashArquivo: this._hashArquivoInicial,
-                linha: Number(pontoParada.line),
-            });
-        }
-
         response.body = {
             breakpoints: pontosParada,
         };
 
+        this.tempoExecucao.definirPontosParada(pontosParada);
         this.sendResponse(response);
     }
 
@@ -237,11 +281,11 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         response: DebugProtocol.StackTraceResponse,
         args: DebugProtocol.StackTraceArguments
     ): void {
-        const pilha = this.interpretador.pilhaEscoposExecucao.pilha;
+        const pilha = this.tempoExecucao.pilhaExecucao();
 
         response.body = {
             stackFrames: pilha.map(
-                (elementoPilha: any) =>
+                (elementoPilha: ElementoPilhaVsCode) =>
                     new StackFrame(
                         elementoPilha.id,
                         elementoPilha.nome,
@@ -258,25 +302,35 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         response: DebugProtocol.StepInResponse,
         args: DebugProtocol.StepInArguments
     ): void {
-        this.interpretador.adentrarEscopo().then(_ => {
-            this.sendResponse(response);
-        });
+        this.tempoExecucao.adentrarEscopo();
+        this.sendResponse(response);
     }
 
     protected stepOutRequest(
         response: DebugProtocol.StepOutResponse,
         args: DebugProtocol.StepOutArguments
     ): void {
-        this.interpretador.instrucaoProximoESair().then(_ => {
-            this.sendResponse(response);
-        });
+        this.tempoExecucao.sairEscopo();
+        this.sendResponse(response);
+    }
+
+    /**
+     * Fundamental para o funcionamento da depuração, senão o VSCode não sabe
+     * se o código está executando ou não.
+     * @param response Uma `ThreadsResponse`.
+     */
+    protected threadsRequest(response: DebugProtocol.ThreadsResponse): void {
+        response.body = {
+            threads: [new Thread(DeleguaSessaoDepuracaoLocal.threadId, 'thread 1')],
+        };
+        this.sendResponse(response);
     }
 
     protected variablesRequest(
         response: DebugProtocol.VariablesResponse,
         args: DebugProtocol.VariablesArguments
     ): void {
-        const variaveis = this.interpretador.pilhaEscoposExecucao.obterTodasVariaveis([]);
+        const variaveis = this.tempoExecucao.variaveis();
 
         response.body = {
             variables: variaveis.map(variavel => ({

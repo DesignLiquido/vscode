@@ -5,9 +5,9 @@ import { DebugProtocol } from '@vscode/debugprotocol';
 import { EventEmitter } from 'events';
 import { Subject } from 'await-notify';
 
-import { DadosDepuracao } from './dados-depuracao';
-import { ElementoPilhaVsCode } from './elemento-pilha';
-import { DeleguaPontoParada } from './delegua-ponto-parada';
+import { DadosDepuracao } from '../dados-depuracao';
+import { ElementoPilhaVsCode } from '../elemento-pilha';
+import { DeleguaPontoParada } from '../delegua-ponto-parada';
 
 /**
  * Classe responsável por se comunicar com o depurador da linguagem Delégua por _sockets_,
@@ -98,22 +98,22 @@ export class DeleguaTempoExecucaoRemoto extends EventEmitter {
         this._pilhaExecucao = [];
     }
 
-    public iniciar(program: string, stopOnEntry: boolean, connectType: string,
-        host: string, port: number, serverBase = "") {
+    public iniciar(program: string, pararNaEntrada: boolean, tipoConexao: string,
+        endereco: string, porta: number, prefixoBase = "") {
 
-        this._tipoConexao = connectType;
-        this._endereco = host;
-        this._porta = port;
-        this._serverBase = serverBase;
+        this._tipoConexao = tipoConexao;
+        this._endereco = endereco;
+        this._porta = porta;
+        this._serverBase = prefixoBase;
 
-        if (host === "127.0.0.1") {
+        if (endereco === "127.0.0.1") {
             this._serverBase = "";
         }
 
         // this.verificarPontosParada(this._arquivoFonte);
         this.conectarAoDepurador();
 
-        if (stopOnEntry) {
+        if (pararNaEntrada) {
             // we step once
             this.passo('stopOnEntry');
         } else {
@@ -160,7 +160,7 @@ export class DeleguaTempoExecucaoRemoto extends EventEmitter {
 					    '. Verifique o Debug Console do VSCode para mensagens relacionadas da comunicação entre essa extensão e Delégua.');
 				}
 
-				this.enviarEvento('onStatusChange', 'Delégua: Conectado a ' + this._endereco + ":" + this._porta);
+				this.enviarEvento('mudancaStatus', 'Delégua: Conectado a ' + this._endereco + ":" + this._porta);
 				DeleguaTempoExecucaoRemoto._primeiraExecucao = false;
 				this._inicializado = false;
 
@@ -189,7 +189,7 @@ export class DeleguaTempoExecucaoRemoto extends EventEmitter {
 				if (this._inicializado) {
 					this.imprimirSaida('Não foi possível conectar a ' + this._endereco + ":" + this._porta);
 					this.printErrorMsg('Não foi possível conectar a ' + this._endereco + ":" + this._porta);
-					this.enviarEvento('onStatusChange', "Delégua: Não foi possível conectar a " + this._endereco + ":" + this._porta);
+					this.enviarEvento('mudancaStatus', "Delégua: Não foi possível conectar a " + this._endereco + ":" + this._porta);
 				}
 
 				this._conectado = false;

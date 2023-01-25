@@ -26,9 +26,9 @@ import { Subject } from 'await-notify';
 import * as base64 from 'base64-js';
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 
-import { DeleguaTempoExecucaoRemoto } from './delegua-tempo-execucao-remoto';
-import { DeleguaPontoParada } from './delegua-ponto-parada';
-import { ArgumentosInicioDepuracao } from './argumentos-inicio-depuracao';
+import { DeleguaTempoExecucaoRemoto } from '../remota/delegua-tempo-execucao-remoto';
+import { DeleguaPontoParada } from '../delegua-ponto-parada';
+import { ArgumentosInicioDepuracao } from '../argumentos-inicio-depuracao';
 import { InvocacaoDelegua } from './invocacao-delegua';
 
 import { inferirTipoVariavel } from '@designliquido/delegua/fontes/interpretador/inferenciador';
@@ -71,11 +71,11 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
 			vscode.window.showInformationMessage(mensagem);
 		});
 
-		this._tempoExecucao.on('onStatusChange', (mensagem: string) => {
+		this._tempoExecucao.on('mudancaStatus', (mensagem: string) => {
 			vscode.window.setStatusBarMessage(mensagem);
 		});
 
-		this._tempoExecucao.on('onWarningMessage', (mensagem: string) => {
+		this._tempoExecucao.on('mensagemAviso', (mensagem: string) => {
 			vscode.window.showWarningMessage('REPL: ' + mensagem);
 		});
 
@@ -479,20 +479,20 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
         this.sendResponse(response);
     }
 
-    protected reverseContinueRequest(
+    /* protected reverseContinueRequest(
         response: DebugProtocol.ReverseContinueResponse,
         args: DebugProtocol.ReverseContinueArguments
     ): void {
         this._tempoExecucao.continuar();
         this.sendResponse(response);
-    }
+    } */
 
-    protected reverseRequest(
+    /* protected reverseRequest(
         response: DebugProtocol.ReverseContinueResponse,
         args: DebugProtocol.ReverseContinueArguments
     ): void {
         this.sendResponse(response);
-    }
+    } */
 
     protected scopesRequest(
         response: DebugProtocol.ScopesResponse,

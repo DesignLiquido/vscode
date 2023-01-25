@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as Net from 'net';
 
-import { DeleguaSessaoDepuracaoRemota } from '../delegua-sessao-depuracao-remota';
+import { DeleguaSessaoDepuracaoRemota } from '../remota/delegua-sessao-depuracao-remota';
 
 /**
  * Classe que descreve como chamar um tradutor de comandos entre Delégua e Visual Studio Code por servidor Socket. 

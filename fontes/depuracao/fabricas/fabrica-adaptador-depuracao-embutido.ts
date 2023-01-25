@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { DeleguaSessaoDepuracaoLocal } from '../delegua-sessao-depuracao-local';
+import { DeleguaSessaoDepuracaoLocal } from '../local/delegua-sessao-depuracao-local';
 
 export class FabricaAdaptadorDepuracaoEmbutido implements vscode.DebugAdapterDescriptorFactory {
 

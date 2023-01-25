@@ -1,3 +1,3 @@
-import { DeleguaSessaoDepuracaoRemota } from './delegua-sessao-depuracao-remota';
+import { DeleguaSessaoDepuracaoRemota } from './remota/delegua-sessao-depuracao-remota';
 
 DeleguaSessaoDepuracaoRemota.run(DeleguaSessaoDepuracaoRemota);
