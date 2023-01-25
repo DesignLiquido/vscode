@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.2.2
+
+- Correção de _bug_ quando depuração é iniciada sem um `launch.json` configurado.
+
 ## 0.2.1
 
 - Adicionando suporte a depuração do Portugol VisuAlg.
