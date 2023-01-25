@@ -235,7 +235,7 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
     ): void {
         const resposta = this.tempoExecucao.obterVariavel(args.expression);
         if (resposta !== undefined) {
-            this.sendResponse(this.montarEvaluateResponse(response, resposta));
+            this.sendResponse(this.montarEvaluateResponse(response, JSON.stringify(resposta)));
         }
     }
 
