@@ -20,11 +20,10 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
     private _arquivoInicial = '';
     
     private _idPontoParada = 1;
-    // private _deleguaEstaPronto: Promise<any>;
     private _configuracaoFinalizada = new Subject();
 
-    public constructor() {
-        super('delegua-debug.txt');
+    constructor() {
+        super();
 
         // Linhas e colunas em Delégua começam em 1.
         this.setDebuggerLinesStartAt1(true);
@@ -41,11 +40,11 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
 		});
 
 		this.tempoExecucao.on('mensagemAviso', (mensagem: string) => {
-			vscode.window.showWarningMessage('REPL: ' + mensagem);
+			vscode.window.showWarningMessage('Depuração: ' + mensagem);
 		});
 
 		this.tempoExecucao.on('mensagemErro', (mensagem: string) => {
-			vscode.window.showErrorMessage('REPL: ' + mensagem);
+			vscode.window.showErrorMessage('Depuração: ' + mensagem);
 		});
         
         this.tempoExecucao.on('finalizar', () => {
@@ -127,7 +126,7 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
     }
 
     /**
-     * 'initializeRequest' é a primeira requisição feita pelo VSCode para
+     * `initializeRequest` é a primeira requisição feita pelo VSCode para
      * descobrir quais funcionalidades o recurso de depuração tem.
      * @param response A resposta enviada para a interface do VSCode.
      * @param args Argumentos adicionais.
@@ -170,6 +169,7 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         args: DebugProtocol.BreakpointLocationsArguments, 
         request?: DebugProtocol.Request): void 
     {
+        // TODO: Terminar
         // const pontosParada = this.interpretador.pontosParada;
         response.body = {
             breakpoints: []
@@ -205,7 +205,13 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         this.sendResponse(response);
     }
 
-    private montarEvaluateResponse(response: DebugProtocol.EvaluateResponse, respostaDelegua: any) {
+    /**
+     * Monta respostas para `evaluateRequest`.
+     * @param response Resposta que a extensão espera.
+     * @param respostaDelegua A resposta vinda do interpretador.
+     * @returns 
+     */
+    private montarEvaluateResponse(response: DebugProtocol.EvaluateResponse, respostaDelegua: any): DebugProtocol.EvaluateResponse {
         try {
             const respostaEstruturada = JSON.parse(respostaDelegua);
             response.body = { 
@@ -239,6 +245,12 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         }
     }
 
+    /**
+     * Evento acionado quando o usuário clica no botão ou usa o atalho de teclado para a próxima instrução (passo).
+     * No Windows, o atalho é o F10, por padrão.
+     * @param response A resposta a ser enviada para a interface do VSCode.
+     * @param args Argumentos adicionais.
+     */
     protected nextRequest(
         response: DebugProtocol.NextResponse,
         args: DebugProtocol.NextArguments

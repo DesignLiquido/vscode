@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { FileAccessor } from './assessor-arquivos';
+import { AcessorArquivos } from './acessor-arquivos';
 import { DeleguaConfigurationProvider } from './provedores';
 import { FabricaAdaptadorDepuracaoEmbutido } from './fabricas';
 
@@ -82,8 +82,8 @@ export function configurarDepuracao(context: vscode.ExtensionContext, factory?: 
 	}
 }
 
-export const workspaceFileAccessor: FileAccessor = {
-	async readFile(path: string): Promise<Uint8Array> {
+export const workspaceFileAccessor: AcessorArquivos = {
+	async lerArquivo(path: string): Promise<Uint8Array> {
 		let uri: vscode.Uri;
 		try {
 			uri = pathToUri(path);
@@ -93,7 +93,7 @@ export const workspaceFileAccessor: FileAccessor = {
 
 		return await vscode.workspace.fs.readFile(uri);
 	},
-	async writeFile(path: string, contents: Uint8Array) {
+	async escreverArquivo(path: string, contents: Uint8Array) {
 		await vscode.workspace.fs.writeFile(pathToUri(path), contents);
 	}
 };
