@@ -1,10 +1,11 @@
 import { EventEmitter } from 'events';
 import { DebugProtocol } from '@vscode/debugprotocol';
 
-import { AvaliadorSintatico, Importador, InterpretadorComDepuracao, Lexador } from '@designliquido/delegua';
+import { AvaliadorSintatico, Importador, InterpretadorComDepuracao, Lexador, PontoParada } from '@designliquido/delegua';
 import palavrasReservadas from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
 
 import { ElementoPilhaVsCode } from '../elemento-pilha';
+import { AvaliadorSintaticoInterface, ImportadorInterface, InterpretadorComDepuracaoInterface, LexadorInterface } from '@designliquido/delegua/fontes/interfaces';
 
 /**
  * Em teoria não precisaria uma classe de tempo de execução local, mas,
@@ -16,31 +17,18 @@ import { ElementoPilhaVsCode } from '../elemento-pilha';
  * recebendo instruções da linguagem e emitindo os eventos correspondentes.
  */
 export class DeleguaTempoExecucaoLocal extends EventEmitter {
-    private lexador: Lexador;
-    private avaliadorSintatico: AvaliadorSintatico;
-    private importador: Importador;
-    private interpretador: InterpretadorComDepuracao;
+    private lexador: LexadorInterface;
+    private avaliadorSintatico: AvaliadorSintaticoInterface;
+    private importador: ImportadorInterface;
+    private interpretador: InterpretadorComDepuracaoInterface;
 
     private _arquivoInicial: string = '';
     private _conteudoArquivo: string[];
     private _hashArquivoInicial = -1;
+    private _pontosParada: PontoParada[];
     
     constructor() {
         super();
-
-        this.lexador = new Lexador();
-        this.avaliadorSintatico = new AvaliadorSintatico();
-        this.importador = new Importador(
-            this.lexador, 
-            this.avaliadorSintatico, 
-            {},
-            {},
-            true);
-        this.interpretador = new InterpretadorComDepuracao(this.importador, process.cwd(), 
-            this.escreverEmSaida.bind(this));
-
-        this.interpretador.finalizacaoDaExecucao = this.finalizacao.bind(this);
-        this.interpretador.avisoPontoParadaAtivado = this.avisoPontoParadaAtivado.bind(this);
     }
 
     /**
@@ -54,11 +42,36 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         });
     }
 
+    private selecionarDialetoPorExtensao(extensao: string) {
+        switch (extensao) {
+            default:
+                this.lexador = new Lexador();
+                this.avaliadorSintatico = new AvaliadorSintatico();
+                this.importador = new Importador(
+                    this.lexador, 
+                    this.avaliadorSintatico, 
+                    {},
+                    {},
+                    true);
+                this.interpretador = new InterpretadorComDepuracao(this.importador, process.cwd(), 
+                    this.escreverEmSaida.bind(this));
+        }
+    }
+
     iniciar(arquivoInicial: string, pararNaEntrada: boolean) {
+        const partesNomeArquivo = arquivoInicial.split('.');
+        this.selecionarDialetoPorExtensao(partesNomeArquivo.pop() || '.delegua');
+
+        // Inicialização do interpretador pós escolha de dialeto.
+        this.interpretador.pontosParada = this._pontosParada;
+        this.interpretador.finalizacaoDaExecucao = this.finalizacao.bind(this);
+        this.interpretador.avisoPontoParadaAtivado = this.avisoPontoParadaAtivado.bind(this);
+        
         // Por algum motivo, isso gera um hash diferente do importador.
         // this._hashArquivoInicial = cyrb53(arquivoInicial);
+        
         this._arquivoInicial = arquivoInicial;
-        const retornoImportador = this.importador.importar(arquivoInicial);
+        const retornoImportador = this.importador.importar(arquivoInicial, true, false);
         this._hashArquivoInicial = retornoImportador.hashArquivo;
         this._conteudoArquivo = this.importador.conteudoArquivosAbertos[this._hashArquivoInicial];
 
@@ -91,9 +104,16 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         this.interpretador.instrucaoContinuarInterpretacao();
     }
 
+    /**
+     * Definição dos pontos de parada. 
+     * Ocorre antes de `iniciar()`, quando o interpretador ainda não
+     * foi instanciado. Por isso usamos `this._pontosParada`.
+     * @param pontosParada Os pontos de parada vindos da extensão.
+     */
     definirPontosParada(pontosParada: DebugProtocol.Breakpoint[]) {
+        this._pontosParada = [];
         for (let pontoParada of pontosParada) {
-            this.interpretador.pontosParada.push({
+            this._pontosParada.push({
                 hashArquivo: this._hashArquivoInicial,
                 linha: Number(pontoParada.line),
             });

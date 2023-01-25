@@ -266,6 +266,12 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         super.pauseRequest(response, args);
     }
 
+    /**
+     * Definição dos pontos de parada no interpretador.
+     * Ocorre antes de `launchRequest`.
+     * @param response A resposta a ser devolvida para o VSCode.
+     * @param args Argumentos para inicialização dos pontos de parada.
+     */
     protected setBreakPointsRequest(
         response: DebugProtocol.SetBreakpointsResponse,
         args: DebugProtocol.SetBreakpointsArguments
