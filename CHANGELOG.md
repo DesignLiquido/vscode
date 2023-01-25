@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.2.1
+
+- Adicionando suporte a depuração do Portugol VisuAlg.
+
 ## 0.2.0
 
 - Reimplementação da sessão de depuração com o núcleo da linguagem inteiramente embarcado.

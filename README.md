@@ -25,7 +25,7 @@ Você pode instalar pesquisando nas extensões do Visual Studio Code [ou por est
 - Ícones para arquivos `.delegua`, `.egua`, `.eguap`, `.foles`, `.lincones` e `.lmht`
 - Trechos de códigos para facilitar desenvolvimento em Delégua
 - Mecanismo de completude de funções da biblioteca global para Delégua
-- Suporte a depuração para Delégua
+- Suporte a depuração para Delégua e Portugol VisuAlg
 
 ## Depuração
 
