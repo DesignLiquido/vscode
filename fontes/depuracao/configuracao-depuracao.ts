@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 
 import { AcessorArquivos } from './acessor-arquivos';
-import { DeleguaConfigurationProvider } from './provedores';
+import { ProvedorConfiguracaoDelegua } from './provedores';
 import { FabricaAdaptadorDepuracaoEmbutido } from './fabricas';
 
 export function configurarDepuracao(context: vscode.ExtensionContext, factory?: vscode.DebugAdapterDescriptorFactory) {
@@ -56,7 +56,7 @@ export function configurarDepuracao(context: vscode.ExtensionContext, factory?: 
 	}));
 
 	// register a configuration provider for 'delegua' debug type
-	const provider = new DeleguaConfigurationProvider();
+	const provider = new ProvedorConfiguracaoDelegua();
 	context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('delegua', provider));
 
 	// Configurações dinâmicas de inicialização da depuração.
