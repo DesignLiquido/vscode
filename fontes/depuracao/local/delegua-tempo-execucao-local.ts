@@ -24,7 +24,6 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
     private _arquivoInicial: string = '';
     private _conteudoArquivo: string[];
     private _hashArquivoInicial = -1;
-    private _aguardandoComando: boolean;
     
     constructor() {
         super();
@@ -62,7 +61,6 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         const retornoImportador = this.importador.importar(arquivoInicial);
         this._hashArquivoInicial = retornoImportador.hashArquivo;
         this._conteudoArquivo = this.importador.conteudoArquivosAbertos[this._hashArquivoInicial];
-        this._aguardandoComando = false;
 
         // Os pontos de parada são definidos antes da abertura do arquivo.
         // Por isso é necessário atualizar o _hash_ de cada ponto de parada aqui.
@@ -88,6 +86,8 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
     }
 
     continuar() {
+        this.interpretador.comando = undefined;
+        this.interpretador.pontoDeParadaAtivo = false;
         this.interpretador.instrucaoContinuarInterpretacao();
     }
 
@@ -113,6 +113,8 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
     }
 
     passo() {
+        this.interpretador.comando = 'proximo';
+        this.interpretador.pontoDeParadaAtivo = false;
         this.interpretador.instrucaoPasso().then(() => {
             this.enviarEvento('pararEmPasso');
         });

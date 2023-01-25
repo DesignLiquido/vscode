@@ -1,5 +1,13 @@
 # Histórico de Modificações
 
+## 0.2.0
+
+- Reimplementação da sessão de depuração com o núcleo da linguagem inteiramente embarcado.
+
+## 0.1.1
+
+- Depuração remota funcional na extensão. Preparação para embarcar Delégua nas dependências da extensão.
+
 ## 0.1.0
 
 - Esboço de formatador de código em Delégua;
