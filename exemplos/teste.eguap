@@ -1,2 +1,4 @@
 função teste(argumento):
     retorna argumento
+
+escreva(teste("1, 2, 3"))
