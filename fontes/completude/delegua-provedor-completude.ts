@@ -1,7 +1,5 @@
 import * as vscode from 'vscode';
-import { primitivasNumero } from './primitivas-numero';
-import { primitivasTexto } from './primitivas-texto';
-import { primitivasVetor } from './primitivas-vetor';
+import { primitivasNumero, primitivasTexto, primitivasVetor } from '../primitivas';
 
 /**
  * Classe de provedor de completude de Delégua. 
