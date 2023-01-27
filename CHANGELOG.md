@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.2.3
+
+- Inclusão de recurso de depuração para EguaP.
+
 ## 0.2.2
 
 - Correção de _bug_ quando depuração é iniciada sem um `launch.json` configurado.
