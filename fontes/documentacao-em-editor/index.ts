@@ -13,9 +13,9 @@ export class DeleguaProvedorDocumentacaoEmEditor implements vscode.HoverProvider
             escreva: documentacaoEscreva
         };
 
-        [...primitivasNumero, ...primitivasTexto, ...primitivasVetor].map(primitiva => {
+        const primitiva = [...primitivasNumero, ...primitivasTexto, ...primitivasVetor].find(primitiva => primitiva.nome === palavra)
+        if (primitiva)
             mapa[primitiva.nome] = primitiva.documentacao;
-        })
         
         return new vscode.Hover(mapa[palavra]);
     }
