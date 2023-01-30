@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.2.4
+
+- Incluindo primitivas de texto e vetor, e bibliotecas globais, no mecanismo de completude de Delégua.
+
 ## 0.2.3
 
 - Inclusão de recurso de depuração para EguaP.
