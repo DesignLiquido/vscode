@@ -11,6 +11,10 @@ const ordenar = (a: any, b: any) => {
     return 0;
 }
 
-const primitivas = [...primitivasNumero, ...primitivasTexto, ...primitivasVetor].sort(ordenar)
+const primitivas = [
+    ...primitivasNumero, 
+    ...primitivasTexto, 
+    ...primitivasVetor
+].sort(ordenar);
 
 export default primitivas;
