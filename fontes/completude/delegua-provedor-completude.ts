@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { primitivasNumero, primitivasTexto, primitivasVetor } from '../primitivas';
+import primitivas from '../primitivas';
 
 /**
  * Classe de provedor de completude de Delégua. 
@@ -10,7 +10,7 @@ import { primitivasNumero, primitivasTexto, primitivasVetor } from '../primitiva
 export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider {
 
     provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionList<vscode.CompletionItem> | vscode.CompletionItem[]> {
-        return [...primitivasNumero, ...primitivasTexto, ...primitivasVetor].map(funcaoNativa => {
+        return primitivas.map(funcaoNativa => {
             let completionItem = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function)
             completionItem.documentation = funcaoNativa.documentacao;
             return completionItem;

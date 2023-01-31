@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { primitivasNumero, primitivasTexto, primitivasVetor } from '../primitivas';
+import primitivas from '../primitivas';
 
 export class DeleguaProvedorDocumentacaoEmEditor implements vscode.HoverProvider {
     provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
@@ -13,7 +13,7 @@ export class DeleguaProvedorDocumentacaoEmEditor implements vscode.HoverProvider
             escreva: documentacaoEscreva
         };
 
-        const primitiva = [...primitivasNumero, ...primitivasTexto, ...primitivasVetor].find(primitiva => primitiva.nome === palavra)
+        const primitiva = primitivas.find(primitiva => primitiva.nome === palavra)
         if (primitiva)
             mapa[primitiva.nome] = primitiva.documentacao;
         
