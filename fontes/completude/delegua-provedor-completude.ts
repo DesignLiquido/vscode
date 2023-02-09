@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+
 import primitivas from '../primitivas';
 
 /**
@@ -14,6 +15,6 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
             let completionItem = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function)
             completionItem.documentation = funcaoNativa.documentacao;
             return completionItem;
-        })
+        });
     }
 }

@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.2.5
+
+- Atualização da versão do núcleo de Delégua para a versão 0.13.2.
+
 ## 0.2.4
 
 - Incluindo primitivas de texto e vetor, e bibliotecas globais, no mecanismo de completude de Delégua.
