@@ -1,16 +1,20 @@
 import { EventEmitter } from 'events';
 import { DebugProtocol } from '@vscode/debugprotocol';
 
-import { AvaliadorSintatico, Importador, InterpretadorComDepuracao, Lexador, PontoParada } from '@designliquido/delegua';
-import palavrasReservadas from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
+import { AvaliadorSintatico, Lexador, PontoParada } from '@designliquido/delegua';
 
 import { ElementoPilhaVsCode } from '../elemento-pilha';
-import { AvaliadorSintaticoInterface, ImportadorInterface, InterpretadorComDepuracaoInterface, LexadorInterface } from '@designliquido/delegua/fontes/interfaces';
+import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface } from '@designliquido/delegua/fontes/interfaces';
 import { LexadorVisuAlg } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-visualg';
 import { AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-visualg';
-import { InterpretadorVisuAlgComDepuracao } from '@designliquido/delegua/fontes/interpretador/dialetos';
 import { LexadorEguaP } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-eguap';
 import { AvaliadorSintaticoEguaP } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-eguap';
+import { Importador } from '@designliquido/delegua-node/fontes/importador';
+import { ImportadorInterface } from '@designliquido/delegua-node/fontes/interfaces';
+import { InterpretadorComDepuracaoImportacao } from '@designliquido/delegua-node/fontes/interpretador/interpretador-com-depuracao-importacao';
+import { InterpretadorVisuAlgComDepuracaoImportacao } from '@designliquido/delegua-node/fontes/interpretador/dialetos/interpretador-visualg-com-depuracao-importacao';
+
+import palavrasReservadas from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
 
 /**
  * Em teoria não precisaria uma classe de tempo de execução local, mas,
@@ -58,7 +62,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     {},
                     {},
                     true);
-                this.interpretador = new InterpretadorVisuAlgComDepuracao(this.importador, process.cwd(), 
+                this.interpretador = new InterpretadorVisuAlgComDepuracaoImportacao(this.importador, process.cwd(), 
                     this.escreverEmSaida.bind(this));
                 break;
             case "eguap":
@@ -70,7 +74,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     {},
                     {},
                     true);
-                this.interpretador = new InterpretadorComDepuracao(this.importador, process.cwd(), 
+                this.interpretador = new InterpretadorComDepuracaoImportacao(this.importador, process.cwd(), 
                     this.escreverEmSaida.bind(this));
                 break;
             default:
@@ -82,7 +86,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     {},
                     {},
                     true);
-                this.interpretador = new InterpretadorComDepuracao(this.importador, process.cwd(), 
+                this.interpretador = new InterpretadorComDepuracaoImportacao(this.importador, process.cwd(), 
                     this.escreverEmSaida.bind(this));
                 break;
         }
