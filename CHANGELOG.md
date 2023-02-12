@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.2.6
+
+- Passando a usar `delegua-node` ao invés do núcleo puro de Delégua como pacote;
+- Atualização das primitivas de vetor e texto para Delégua, tanto na completude quanto na documentação.
+
 ## 0.2.5
 
 - Atualização da versão do núcleo de Delégua para a versão 0.13.2.
