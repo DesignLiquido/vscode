@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.2.7
+
+- Melhoramentos em pontos de parada;
+- Atualização do funcionamento do código para o VisuAlg.
+
 ## 0.2.6
 
 - Passando a usar `delegua-node` ao invés do núcleo puro de Delégua como pacote;

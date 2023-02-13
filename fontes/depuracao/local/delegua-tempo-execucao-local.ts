@@ -1,3 +1,5 @@
+import * as vscode from 'vscode';
+
 import { EventEmitter } from 'events';
 import { DebugProtocol } from '@vscode/debugprotocol';
 
@@ -119,11 +121,22 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
             retornoImportador.retornoAvaliadorSintatico.declaracoes,
         );
 
+        this.interpretador.interfaceEntradaSaida = {
+            question: (mensagem: string, callback: Function) => {
+                vscode.window.showInputBox({
+                    prompt: mensagem,
+                    title: mensagem
+                }).then((resposta: any) => {
+                    callback(resposta);
+                });
+            }
+        };
+
         if (pararNaEntrada) {
-            // we step once
+            // Executar apenas um passo na entrada.
             this.interpretador.instrucaoPasso();
         } else {
-            // we just start to run until we hit a breakpoint or an exception
+            // Executamos até encontrar ou um ponto de parada, ou uma exceção.
             this.interpretador.instrucaoContinuarInterpretacao();
         }
     }
@@ -145,7 +158,6 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
      * @param pontosParada Os pontos de parada vindos da extensão.
      */
     definirPontosParada(pontosParada: DebugProtocol.Breakpoint[]) {
-        this._pontosParada = [];
         for (let pontoParada of pontosParada) {
             this._pontosParada.push({
                 hashArquivo: this._hashArquivoInicial,
@@ -184,13 +196,24 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         for (let i = pilha.length - 1; i >= 0; i--) {
             const pilhaElemento = pilha[i];
             const declaracaoAtual = pilhaElemento.declaracoes[pilhaElemento.declaracaoAtual];
-            pilhaRetorno.push({
-                id: ++id,
-                linha: declaracaoAtual.linha,
-                nome: this._conteudoArquivo[declaracaoAtual.linha - 1].trim(),
-                arquivo: this._arquivoInicial,
-                metodo: '<principal>'
-            });
+            if (declaracaoAtual) {
+                pilhaRetorno.push({
+                    id: ++id,
+                    linha: declaracaoAtual.linha,
+                    nome: this._conteudoArquivo[declaracaoAtual.linha - 1].trim(),
+                    arquivo: this._arquivoInicial,
+                    metodo: '<principal>'
+                });
+            } else {
+                const ultimaDeclaracaoEscopo = pilhaElemento.declaracoes[pilhaElemento.declaracoes.length - 1];
+                pilhaRetorno.push({
+                    id: ++id,
+                    linha: ultimaDeclaracaoEscopo.linha,
+                    nome: this._conteudoArquivo[ultimaDeclaracaoEscopo.linha - 1].trim(),
+                    arquivo: this._arquivoInicial,
+                    metodo: '<principal>'
+                });
+            }
         }
 
         return pilhaRetorno;

@@ -141,6 +141,7 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         response.body.supportsSetVariable = true;
         response.body.supportsRestartRequest = false;
         response.body.supportsModulesRequest = false;
+        response.body.supportsConfigurationDoneRequest = true;
 
         this.sendResponse(response);
         this.sendEvent(new InitializedEvent());
@@ -158,7 +159,7 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         this._arquivoInicial = args.program;
 
         // Aguarda a finalização da configuração (configurationDoneRequest)
-        await this._configuracaoFinalizada.wait(1000);
+        await this._configuracaoFinalizada.wait(10000);
 
         this.tempoExecucao.iniciar(this._arquivoInicial, !!args.stopOnEntry);
         this.sendResponse(response);
@@ -284,6 +285,7 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
                 this.convertDebuggerLineToClient(linha)
             ));
             pontoParada.id = this._idPontoParada++;
+            pontoParada.source = args.source;
             return pontoParada;
         });
 
