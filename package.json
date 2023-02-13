@@ -55,7 +55,6 @@
         "testar": "npm run typecheck"
     },
     "main": "./dist/extensao.js",
-    "browser": "./dist/extensao-web.js",
     "activationEvents": [
         "onDebugResolve:delegua",
         "onDebugDynamicConfigurations:delegua",
