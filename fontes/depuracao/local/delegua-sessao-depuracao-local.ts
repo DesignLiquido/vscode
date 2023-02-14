@@ -240,7 +240,7 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         response: DebugProtocol.EvaluateResponse,
         args: DebugProtocol.EvaluateArguments
     ): void {
-        const resposta = this.tempoExecucao.obterVariavel(args.expression);
+        const resposta = this.tempoExecucao.obterVariavel(args.expression.toLowerCase());
         if (resposta !== undefined) {
             this.sendResponse(this.montarEvaluateResponse(response, JSON.stringify(resposta)));
         }
@@ -297,6 +297,12 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
         this.sendResponse(response);
     }
 
+    /**
+     * Evento ativado quando a execucão para por algum motivo, seja
+     * porque um passo foi executado, seja por um ponto de parada encontrado.
+     * @param response Uma `StackTraceResponse`.
+     * @param args Argumentos adicionais.
+     */
     protected stackTraceRequest(
         response: DebugProtocol.StackTraceResponse,
         args: DebugProtocol.StackTraceArguments
@@ -336,7 +342,7 @@ export class DeleguaSessaoDepuracaoLocal extends LoggingDebugSession {
 
     /**
      * Fundamental para o funcionamento da depuração, senão o VSCode não sabe
-     * se o código está executando ou não.
+     * se o código está executando ou não, e onde.
      * @param response Uma `ThreadsResponse`.
      */
     protected threadsRequest(response: DebugProtocol.ThreadsResponse): void {
