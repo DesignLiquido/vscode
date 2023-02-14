@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.2.8
+
+- Mudança de lógica no descarte de escopos de execução durante depuração, o que corrige alguns comportamentos quanto depurando código em todas as linguagens suportadas;
+- Ajuste na inspeção "hover" de variável, que não estava funcionando para variáveis com caracteres maiúsculos.
+
 ## 0.2.7
 
 - Melhoramentos em pontos de parada;
