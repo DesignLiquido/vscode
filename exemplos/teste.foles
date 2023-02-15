@@ -1,0 +1,25 @@
+.minha-classe {
+    cor-destaque: #f4f500;
+    tamanho-fonte: 16px;
+    largura-maxima: 20cm;
+}
+
+#elemento-caixa {
+    altura: 40px;
+}
+
+lmht {
+    largura-borda-direita: 130mm;
+}
+
+.minha-segunda-classe {
+    margem-superior: 13mm;
+}
+
+#meu-segundo-id {
+    largura: 400mm;
+}
+
+%campos {
+    margem-inferior: 50px;
+}

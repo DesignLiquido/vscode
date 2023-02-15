@@ -197,6 +197,17 @@
                 "configuration": "./configuracoes/configuracao-eguap.json"
             },
             {
+                "id": "foles",
+                "aliases": [
+                    "FolEs",
+                    "foles"
+                ],
+                "extensions": [
+                    ".foles"
+                ],
+                "configuration": "./configuracoes/configuracao-foles.json"
+            },
+            {
                 "id": "lmht",
                 "aliases": [
                     "LMHT",
@@ -234,6 +245,11 @@
                 "language": "eguap",
                 "scopeName": "source.eguap",
                 "path": "./gramaticas/eguap.tmLanguage.json"
+            },
+            {
+                "language": "foles",
+                "scopeName": "source.foles",
+                "path": "./gramaticas/foles.tmLanguage.json"
             },
             {
                 "language": "lmht",
