@@ -10,7 +10,7 @@ import {
     FabricaAdaptadorDepuracaoEmbutido,
 } from './depuracao/fabricas';
 import { DeleguaProvedorDocumentacaoEmEditor } from './documentacao-em-editor';
-import { DeleguaProvedorCompletude, LiquidoProvedorCompletude } from './completude';
+import { DeleguaProvedorCompletude, FolesProvedorCompletude, LiquidoProvedorCompletude } from './completude';
 import { DeleguaProvedorFormatacao } from './formatadores';
 
 /**
@@ -19,7 +19,6 @@ import { DeleguaProvedorFormatacao } from './formatadores';
  * Please note: the test suite only supports 'external' mode.
  */
 const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
-// const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'server';
 
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
@@ -41,6 +40,14 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerCompletionItemProvider(
             'delegua', 
             new DeleguaProvedorCompletude()
+        )
+    );
+
+    // IntelliSense para FolEs
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider(
+            'foles', 
+            new FolesProvedorCompletude()
         )
     );
 
