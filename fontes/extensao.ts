@@ -9,7 +9,7 @@ import {
     DeleguaDebugAdapterExecutableFactory,
     FabricaAdaptadorDepuracaoEmbutido,
 } from './depuracao/fabricas';
-import { DeleguaProvedorDocumentacaoEmEditor } from './documentacao-em-editor';
+import { DeleguaProvedorDocumentacaoEmEditor, FolesProvedorDocumentacaoEmEditor } from './documentacao-em-editor';
 import { DeleguaProvedorCompletude, FolesProvedorCompletude, LiquidoProvedorCompletude } from './completude';
 import { DeleguaProvedorFormatacao } from './formatadores';
 
@@ -56,6 +56,13 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerHoverProvider(
             'delegua', 
             new DeleguaProvedorDocumentacaoEmEditor()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerHoverProvider(
+            'foles', 
+            new FolesProvedorDocumentacaoEmEditor()
         )
     );
 

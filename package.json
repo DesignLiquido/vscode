@@ -292,6 +292,7 @@
     },
     "dependencies": {
         "@designliquido/delegua-node": "^0.4.0",
+        "@designliquido/foles": "^0.2.1",
         "real-executable-path": "^3.0.0"
     }
 }

@@ -19,6 +19,13 @@
     browser-process-hrtime "^1.0.0"
     esprima "^4.0.1"
 
+"@designliquido/foles@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.2.1.tgz#4a1f5af0b32e62d7159f9055d0054a9bc996674e"
+  integrity sha512-FJra8CZi0nJvW2uI9rwdOrapPG/ZAb+bW8pUoQ9vgUaFxiP7aBCnkVg8ufiDRKwu2/uqL+zHZ6T0Of8LANYqmw==
+  dependencies:
+    commander "^9.4.1"
+
 "@eslint/eslintrc@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-1.3.0.tgz#29f92c30bb3e771e4a2048c95fa6855392dfac4f"
