@@ -32,6 +32,12 @@
 		"_eguap": {
 			"iconPath": "./eguap-logo.svg"
 		},
+		"_foles": {
+			"iconPath": "./foles-logo.svg"
+		},
+		"_lincones": {
+			"iconPath": "./lincones-logo.svg"
+		},
 		"_lmht": {
 			"iconPath": "./lmht-logo.svg"
 		},
@@ -1561,6 +1567,8 @@
 		"delegua": "_delegua",
 		"egua": "_egua",
 		"eguap": "_eguap",
+		"foles": "_foles",
+		"lincones": "_lincones",
 		"lmht": "_lmht",
 		"bsl": "_bsl",
 		"mdo": "_mdo",
@@ -1944,6 +1952,8 @@
 			"delegua": "_delegua",
 			"egua": "_egua",
 			"eguap": "_eguap",
+			"foles": "_foles",
+			"lincones": "_lincones",
 			"lmht": "_lmht",
 			"visualg": "_visualg",
 			"bsl": "_bsl_light",

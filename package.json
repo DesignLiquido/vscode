@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.2.8",
+    "version": "0.3.0",
     "engines": {
         "vscode": "^1.68.0"
     },
@@ -206,6 +206,17 @@
                     ".foles"
                 ],
                 "configuration": "./configuracoes/configuracao-foles.json"
+            },
+            {
+                "id": "lincones",
+                "aliases": [
+                    "LinConEs",
+                    "lincones"
+                ],
+                "extensions": [
+                    ".lincones"
+                ],
+                "configuration": "./configuracoes/configuracao-lincones.json"
             },
             {
                 "id": "lmht",

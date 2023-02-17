@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.3.0
+
+- Sintaxe de FolEs e LinConEs;
+- Ícones;
+- Algum autocompletar e documentação.
+
 ## 0.2.8
 
 - Mudança de lógica no descarte de escopos de execução durante depuração, o que corrige alguns comportamentos quanto depurando código em todas as linguagens suportadas;
