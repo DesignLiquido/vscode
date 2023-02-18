@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.3.0",
+    "version": "0.3.1",
     "engines": {
         "vscode": "^1.68.0"
     },
@@ -302,7 +302,7 @@
         "typescript": "^4.7.4"
     },
     "dependencies": {
-        "@designliquido/delegua-node": "^0.4.0",
+        "@designliquido/delegua-node": "^0.5.0",
         "@designliquido/foles": "^0.2.1",
         "real-executable-path": "^3.0.0"
     }

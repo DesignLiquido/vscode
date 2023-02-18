@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.3.1
+
+- Correção de bugs no dialeto VisuAlg;
+- Atualização de ícone de LinCones.
+
 ## 0.3.0
 
 - Sintaxe de FolEs e LinConEs;
