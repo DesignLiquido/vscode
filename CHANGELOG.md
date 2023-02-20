@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.3.2
+
+- Melhoramentos no dialeto VisuAlg.
+
 ## 0.3.1
 
 - Correção de bugs no dialeto VisuAlg;
