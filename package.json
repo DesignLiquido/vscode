@@ -52,7 +52,12 @@
         "publicar": "vsce publish",
         "publicar-pre-lancamento": "vsce publish --pre-release",
         "vscode:pre-publicar": "rimraf dist && npm run -S esbuild-base -- --minify && npm run -S esbuild-web -- --minify",
-        "testar": "npm run typecheck"
+        "testar": "npm run typecheck",
+        "vscode:pre-empacotar": "npm run pre-empacotar",
+        "webpack": "webpack --mode development",
+        "webpack-dev": "webpack --mode development --watch",
+        "pre-empacotar": "webpack --mode production --devtool hidden-source-map",
+        "test-compile": "tsc -p ./"
     },
     "main": "./dist/extensao.js",
     "activationEvents": [
@@ -299,7 +304,10 @@
         "base64-js": "^1.5.1",
         "esbuild": "^0.14.45",
         "eslint": "^8.18.0",
-        "typescript": "^4.7.4"
+        "ts-loader": "^9.4.2",
+        "typescript": "^4.7.4",
+        "webpack": "^5.75.0",
+        "webpack-cli": "^5.0.1"
     },
     "dependencies": {
         "@designliquido/delegua-node": "^0.6.0",
