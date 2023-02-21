@@ -1,14 +1,10 @@
-'use strict';
-
 import * as vscode from 'vscode';
 
 import { configurarDepuracao } from './depuracao/configuracao-depuracao';
-import {
-    FabricaAdaptadorDepuracaoEmbutido
-} from './depuracao/fabricas';
 import { DeleguaProvedorDocumentacaoEmEditor } from './documentacao-em-editor';
 import { DeleguaProvedorCompletude, LiquidoProvedorCompletude } from './completude';
 import { DeleguaProvedorFormatacao } from './formatadores';
+import { FabricaAdaptadorDepuracaoWeb } from './depuracao/fabricas/fabrica-adaptador-depuracao-web';
 
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
@@ -43,7 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     configurarDepuracao(
         context,
-        new FabricaAdaptadorDepuracaoEmbutido()
+        new FabricaAdaptadorDepuracaoWeb()
     );
 }
 

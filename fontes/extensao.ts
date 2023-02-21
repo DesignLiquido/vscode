@@ -1,16 +1,21 @@
-'use strict';
-
 import * as vscode from 'vscode';
 
 import { configurarDepuracao } from './depuracao/configuracao-depuracao';
+import { FabricaAdaptadorDepuracaoEmbutido } from './depuracao/fabricas';
 import {
-    DeleguaAdapterNamedPipeServerDescriptorFactory,
     DeleguaAdapterServerDescriptorFactory,
+    DeleguaAdapterNamedPipeServerDescriptorFactory,
     DeleguaDebugAdapterExecutableFactory,
-    FabricaAdaptadorDepuracaoEmbutido,
-} from './depuracao/fabricas';
-import { DeleguaProvedorDocumentacaoEmEditor, FolesProvedorDocumentacaoEmEditor } from './documentacao-em-editor';
-import { DeleguaProvedorCompletude, FolesProvedorCompletude, LiquidoProvedorCompletude } from './completude';
+} from './depuracao/fabricas/remotas';
+import {
+    DeleguaProvedorDocumentacaoEmEditor,
+    FolesProvedorDocumentacaoEmEditor,
+} from './documentacao-em-editor';
+import {
+    DeleguaProvedorCompletude,
+    FolesProvedorCompletude,
+    LiquidoProvedorCompletude,
+} from './completude';
 import { DeleguaProvedorFormatacao } from './formatadores';
 
 /**
@@ -22,7 +27,8 @@ const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
 
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
-        vscode.languages.registerDocumentFormattingEditProvider('delegua', 
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'delegua',
             new DeleguaProvedorFormatacao()
         )
     );
@@ -38,7 +44,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
-            'delegua', 
+            'delegua',
             new DeleguaProvedorCompletude()
         )
     );
@@ -46,7 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
     // IntelliSense para FolEs
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
-            'foles', 
+            'foles',
             new FolesProvedorCompletude()
         )
     );
@@ -54,14 +60,14 @@ export function activate(context: vscode.ExtensionContext) {
     // Hovers
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(
-            'delegua', 
+            'delegua',
             new DeleguaProvedorDocumentacaoEmEditor()
         )
     );
 
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(
-            'foles', 
+            'foles',
             new FolesProvedorDocumentacaoEmEditor()
         )
     );

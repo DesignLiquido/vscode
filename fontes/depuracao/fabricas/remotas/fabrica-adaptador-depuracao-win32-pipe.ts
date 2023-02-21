@@ -5,7 +5,7 @@ import { randomBytes } from 'crypto';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { platform } from 'process';
-import { DeleguaSessaoDepuracaoRemota } from '../remota/delegua-sessao-depuracao-remota';
+import { DeleguaSessaoDepuracaoRemota } from '../../remota/delegua-sessao-depuracao-remota';
 
 export class DeleguaAdapterNamedPipeServerDescriptorFactory
     implements vscode.DebugAdapterDescriptorFactory
