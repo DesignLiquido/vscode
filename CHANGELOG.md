@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.3.3
+
+- Melhoramentos no dialeto Portugol Studio.
+
 ## 0.3.2
 
 - Melhoramentos no dialeto VisuAlg.
