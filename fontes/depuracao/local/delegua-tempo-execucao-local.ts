@@ -94,6 +94,11 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         }
     }
 
+    /**
+     * 
+     * @param arquivoInicial 
+     * @param pararNaEntrada 
+     */
     iniciar(arquivoInicial: string, pararNaEntrada: boolean) {
         const partesNomeArquivo = arquivoInicial.split('.');
         this.selecionarDialetoPorExtensao(partesNomeArquivo.pop() || '.delegua');

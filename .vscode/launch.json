@@ -14,7 +14,7 @@
 				"${workspaceFolder}${pathSeparator}exemplos"
             ],
 			"outFiles": [
-				"${workspaceFolder}/dist/**/*.js"
+			 	"${workspaceFolder}/dist/**/*.js"
 			],
 			"preLaunchTask": "npm: watch"
         }

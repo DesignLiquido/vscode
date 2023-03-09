@@ -2,12 +2,13 @@
 	"compilerOptions": {
 		"module": "commonjs",
 		"target": "ES2020",
-		"outDir": "out",
+		"outDir": "dist",
 		"lib": [
 			"WebWorker",
 			"ES2020"
 		],
 		"sourceMap": true,
+		"mapRoot": "./dist",
 		"rootDir": "fontes",
 		"strict": true,   /* enable all strict type-checking options */
 		/* Additional Checks */
