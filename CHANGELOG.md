@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.3.4
+
+- Atualização de vários recursos de vários dialetos.
+
 ## 0.3.3
 
 - Melhoramentos no dialeto Portugol Studio.

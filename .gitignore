@@ -4,3 +4,4 @@ node_modules
 *.log
 *.vsix
 *.zip
+.DS_Store
