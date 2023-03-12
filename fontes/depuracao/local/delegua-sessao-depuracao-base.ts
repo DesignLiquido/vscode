@@ -116,8 +116,8 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
             }
         );
 
-        this.tempoExecucao.on('saida', (texto, caminhoArquivo = '', linha = 0) => {
-            const e: DebugProtocol.OutputEvent = new OutputEvent(`${texto}\n`);
+        this.tempoExecucao.on('saida', (texto: string, mesmaLinha = false, caminhoArquivo = '', linha = 0) => {
+            const e: DebugProtocol.OutputEvent = new OutputEvent(`${texto}${mesmaLinha ? '' : '\n'}`);
             e.body.source = this.criarReferenciaSource(caminhoArquivo);
             e.body.line = this.convertDebuggerLineToClient(linha);
             this.sendEvent(e);

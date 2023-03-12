@@ -65,7 +65,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     {},
                     true);
                 this.interpretador = new InterpretadorVisuAlgComDepuracaoImportacao(this.importador, process.cwd(), 
-                    this.escreverEmSaida.bind(this));
+                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
                 break;
             case "eguap":
                 this.lexador = new LexadorEguaP();
@@ -77,7 +77,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     {},
                     true);
                 this.interpretador = new InterpretadorComDepuracaoImportacao(this.importador, process.cwd(), 
-                    this.escreverEmSaida.bind(this));
+                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
                 break;
             default:
                 this.lexador = new Lexador();
@@ -89,7 +89,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     {},
                     true);
                 this.interpretador = new InterpretadorComDepuracaoImportacao(this.importador, process.cwd(), 
-                    this.escreverEmSaida.bind(this));
+                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
                 break;
         }
     }
@@ -173,6 +173,10 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
 
     escreverEmSaida(mensagem: string) {
         this.enviarEvento('saida', mensagem);
+    }
+
+    escreverEmSaidaMesmaLinha(mensagem: string) {
+        this.enviarEvento('saida', mensagem, true);
     }
 
     obterVariavel(nome: string) {
