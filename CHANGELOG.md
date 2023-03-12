@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.3.5
+
+- Corrigindo bug que não escrevia em console quando o método de saída é de escrita na mesma linha.
+
 ## 0.3.4
 
 - Atualização de vários recursos de vários dialetos.
