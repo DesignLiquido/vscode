@@ -15,4 +15,4 @@ export const primitivasNumero = [
         nome: 'real',
         documentacao: 'Converte um número inteiro ou texto, que não apresente letras, em um número flutuante.'
     },
-]
+];

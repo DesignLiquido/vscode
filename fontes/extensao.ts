@@ -17,6 +17,7 @@ import {
     LiquidoProvedorCompletude,
 } from './completude';
 import { DeleguaProvedorFormatacao } from './formatadores';
+import { VisuAlgProvedorCompletude } from './completude/visualg-provedor-completude';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -54,6 +55,14 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerCompletionItemProvider(
             'foles',
             new FolesProvedorCompletude()
+        )
+    );
+
+    // IntelliSense para VisuAlg
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider(
+            'visualg',
+            new VisuAlgProvedorCompletude()
         )
     );
 
