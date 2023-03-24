@@ -150,18 +150,25 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         response: DebugProtocol.LaunchResponse,
         args: ArgumentosInicioDepuracao
     ) {
-        logger.setup(
-            args.trace ? Logger.LogLevel.Verbose : Logger.LogLevel.Stop,
-            false
-        );
-        
-        this._arquivoInicial = args.program;
-
-        // Aguarda a finalização da configuração (configurationDoneRequest)
-        await this._configuracaoFinalizada.wait(10000);
-
-        this.tempoExecucao.iniciar(this._arquivoInicial, !!args.stopOnEntry);
-        this.sendResponse(response);
+        try {
+            logger.setup(
+                args.trace ? Logger.LogLevel.Verbose : Logger.LogLevel.Stop,
+                false
+            );
+            
+            this._arquivoInicial = args.program;
+    
+            // Aguarda a finalização da configuração (configurationDoneRequest)
+            await this._configuracaoFinalizada.wait(10000);
+    
+            this.tempoExecucao.iniciar(this._arquivoInicial, !!args.stopOnEntry);
+            this.sendResponse(response);
+        } catch (erro: any) {
+            response.success = false;
+            response.message = `[Linha: ${erro.simbolo.linha}] ${erro.message}`;
+            this.sendResponse(response);
+            throw erro;
+        }
     }
 
     protected breakpointLocationsRequest(
