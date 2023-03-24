@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.3.6
+
+- Implementação da biblioteca básica do VisuAlg; 
+- Provedor de completude para VisuAlg.
+
 ## 0.3.5
 
 - Corrigindo bug que não escrevia em console quando o método de saída é de escrita na mesma linha.
