@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.3.7
+
+- Ajustes para VisuAlg no núcleo da linguagem;
+- Documentação-em-código para VisuAlg (colocar o mouse em cima do nome da função, mostra o que ela faz).
+
 ## 0.3.6
 
 - Implementação da biblioteca básica do VisuAlg; 
