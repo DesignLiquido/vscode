@@ -18,6 +18,7 @@ import {
 } from './completude';
 import { DeleguaProvedorFormatacao } from './formatadores';
 import { VisuAlgProvedorCompletude } from './completude/visualg-provedor-completude';
+import { VisuAlgProvedorDocumentacaoEmEditor } from './documentacao-em-editor/visualg-documentacao-em-editor';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -78,6 +79,13 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerHoverProvider(
             'foles',
             new FolesProvedorDocumentacaoEmEditor()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerHoverProvider(
+            'visualg',
+            new VisuAlgProvedorDocumentacaoEmEditor()
         )
     );
 
