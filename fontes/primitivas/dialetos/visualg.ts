@@ -1,3 +1,18 @@
+export const primitivasEntradaSaidaVisuAlg = [
+    {
+        nome: 'escreva',
+        documentacao: 'Escreve na saída padrão da aplicação, normalmente um prompt ou um console.'
+    },
+    {
+        nome: 'escreval',
+        documentacao: 'Escreve na saída padrão da aplicação, normalmente um prompt ou um console, e quebra a linha.'
+    },
+    {
+        nome: 'leia',
+        documentacao: 'Lê da entrada padrão um valor.'
+    },
+];
+
 export const primitivasNumeroVisuAlg = [
     {
         nome: 'abs',

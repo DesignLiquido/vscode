@@ -1,6 +1,10 @@
 import * as vscode from 'vscode';
 
-import { primitivasCaracteresVisuAlg, primitivasNumeroVisuAlg } from '../primitivas/dialetos/visualg';
+import { 
+    primitivasCaracteresVisuAlg, 
+    primitivasEntradaSaidaVisuAlg, 
+    primitivasNumeroVisuAlg 
+} from '../primitivas/dialetos/visualg';
 
 /**
  * Provedor de documentação para "hover" (ponteiro do _mouse_ por cima do elemento de código.)
@@ -15,10 +19,6 @@ export class VisuAlgProvedorDocumentacaoEmEditor
     ): vscode.ProviderResult<vscode.Hover> {
         const intervalo = document.getWordRangeAtPosition(position);
         const palavra = document.getText(intervalo);
-
-        let mapa = {
-            
-        };
 
         const primitivaCaracter = primitivasCaracteresVisuAlg.find(
             (primitiva) => primitiva.nome === palavra
@@ -36,6 +36,14 @@ export class VisuAlgProvedorDocumentacaoEmEditor
             return new vscode.Hover(primitivaNumero.documentacao);
         }
 
-        return new vscode.Hover(mapa[palavra]);
+        const primitivaEntradaSaida = primitivasEntradaSaidaVisuAlg.find(
+            (primitiva) => primitiva.nome === palavra
+        );
+
+        if (primitivaEntradaSaida) {
+            return new vscode.Hover(primitivaEntradaSaida.documentacao);
+        }
+
+        return new vscode.Hover('');
     }
 }

@@ -1,6 +1,10 @@
 import * as vscode from 'vscode';
 
-import { primitivasCaracteresVisuAlg, primitivasNumeroVisuAlg } from '../primitivas/dialetos/visualg';
+import { 
+    primitivasCaracteresVisuAlg, 
+    primitivasEntradaSaidaVisuAlg,
+    primitivasNumeroVisuAlg 
+} from '../primitivas/dialetos/visualg';
 
 /**
  * Classe de provedor de completude de Delégua. 
@@ -17,6 +21,10 @@ export class VisuAlgProvedorCompletude implements vscode.CompletionItemProvider 
             return completionItem;
         })
         .concat(primitivasCaracteresVisuAlg.map(funcaoNativa => {
+            let completionItem = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function);
+            completionItem.documentation = funcaoNativa.documentacao;
+            return completionItem;
+        })).concat(primitivasEntradaSaidaVisuAlg.map(funcaoNativa => {
             let completionItem = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function);
             completionItem.documentation = funcaoNativa.documentacao;
             return completionItem;
