@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { Breakpoint, BreakpointEvent, InitializedEvent, Logger, logger, LoggingDebugSession, OutputEvent, Source, StackFrame, StoppedEvent, TerminatedEvent, Thread } from "@vscode/debugadapter";
+import { Breakpoint, BreakpointEvent, Handles, InitializedEvent, Logger, logger, LoggingDebugSession, OutputEvent, Scope, Source, StackFrame, StoppedEvent, TerminatedEvent, Thread } from "@vscode/debugadapter";
 import { DebugProtocol } from "@vscode/debugprotocol";
 import { Subject } from 'await-notify';
 
@@ -20,6 +20,9 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
     
     private _idPontoParada = 1;
     private _configuracaoFinalizada = new Subject();
+    private _alocadorEscopos = new Handles<string>();
+    // private _referenciaEscopoLocal = 0;
+    private _referenciaEscopoGlobal = 0;
 
     constructor() {
         super();
@@ -123,6 +126,13 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
             this.sendEvent(e);
         });
     }
+
+    // Descomentar se precisar descobrir a sequência de requisições
+    // que o VSCode pede a esta sessão, e se alguma requisição
+    // não foi implementada ainda.
+    /* protected dispatchRequest(request: DebugProtocol.Request): void {
+        super.dispatchRequest(request);
+    } */
 
     /**
      * `initializeRequest` é a primeira requisição feita pelo VSCode para
@@ -248,8 +258,12 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
     ): void {
         const resposta = this.tempoExecucao.obterVariavel(args.expression.toLowerCase());
         if (resposta !== undefined) {
-            this.sendResponse(this.montarEvaluateResponse(response, JSON.stringify(resposta)));
+            const responseModificada = this.montarEvaluateResponse(response, JSON.stringify(resposta));
+            this.sendResponse(responseModificada);
+            return;
         }
+
+        this.sendResponse(response);
     }
 
     /**
@@ -271,6 +285,43 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         args: DebugProtocol.PauseArguments, request?: DebugProtocol.Request
     ): void {
         super.pauseRequest(response, args);
+    }
+
+    /**
+     * Aparentemente necessário para exibir as variáveis no painel de 
+     * variáveis da depuração.
+     * Por enquanto trabalhando apenas com escopo global.
+     * @param response A resposta a ser devolvida para o VSCode.
+     * @param args Argumentos de inicialização de escopos.
+     */
+    protected scopesRequest(
+        response: DebugProtocol.ScopesResponse,
+        args: DebugProtocol.ScopesArguments
+    ): void {
+        const referenciaElementoPilha = args.frameId;
+        const escopos = new Array<Scope>();
+        /* scopes.push(
+            new Scope(
+                'Local',
+                this._variableHandles.create('local_' + frameReference),
+                false
+            )
+        ); */
+        escopos.push(
+            new Scope(
+                'Global',
+                this._alocadorEscopos.create('global_' + referenciaElementoPilha),
+                false // `true` para iniciar fechado.
+            )
+        );
+
+        // this._referenciaEscopoLocal = scopes[0].variablesReference;
+        this._referenciaEscopoGlobal = escopos[0].variablesReference;
+
+        response.body = {
+            scopes: escopos,
+        };
+        this.sendResponse(response);
     }
 
     /**
@@ -349,6 +400,10 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
     /**
      * Fundamental para o funcionamento da depuração, senão o VSCode não sabe
      * se o código está executando ou não, e onde.
+     * 
+     * Como Delégua e dialetos são baseados em Node, e Node tem uma thread só, 
+     * basta enviar um registro fixo de thread para fazer o restante das inspeções
+     * funcionarem adequadamente. 
      * @param response Uma `ThreadsResponse`.
      */
     protected threadsRequest(response: DebugProtocol.ThreadsResponse): void {
@@ -369,7 +424,7 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
                 name: variavel.nome,
                 type: variavel.tipo,
                 value: variavel.valor,
-                variablesReference: 0
+                variablesReference: this._referenciaEscopoGlobal
             })),
         };
         this.sendResponse(response);
