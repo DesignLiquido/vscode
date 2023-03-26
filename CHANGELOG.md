@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.3.8
+
+- Registrando funções de entrada e saída do VisuAlg nos provedores de completude e documentação-em-código;
+- Correção de bug na chamada do formatador Delégua;
+- Correção de bug na depuração que não mostrava as variáveis atuais.
+
 ## 0.3.7
 
 - Ajustes para VisuAlg no núcleo da linguagem;
