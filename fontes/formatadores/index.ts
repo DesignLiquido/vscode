@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as sistemaOperacional from 'node:os';
 
 import { Lexador } from '@designliquido/delegua';
 import { FormatadorDelegua } from '@designliquido/delegua/fontes/formatadores';
@@ -14,7 +15,7 @@ export class DeleguaProvedorFormatacao implements vscode.DocumentFormattingEditP
                     document.lineAt(0).range.start,
                     document.lineAt(document.lineCount - 1).range.end
                 ),
-                formatador.formatar(resultadoLexador.simbolos)
+                formatador.formatar(resultadoLexador.simbolos, sistemaOperacional.EOL)
             ),
         ];
     }
