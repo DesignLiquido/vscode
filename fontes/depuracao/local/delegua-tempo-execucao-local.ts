@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { EventEmitter } from 'events';
 import { DebugProtocol } from '@vscode/debugprotocol';
 
-import { AvaliadorSintatico, Lexador, PontoParada } from '@designliquido/delegua';
+import { AvaliadorSintatico, cyrb53, Lexador, PontoParada } from '@designliquido/delegua';
 
 import { ElementoPilhaVsCode } from '../elemento-pilha';
 import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface } from '@designliquido/delegua/fontes/interfaces';
@@ -165,7 +165,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
     definirPontosParada(pontosParada: DebugProtocol.Breakpoint[]) {
         for (let pontoParada of pontosParada) {
             this._pontosParada.push({
-                hashArquivo: this._hashArquivoInicial,
+                hashArquivo: cyrb53(pontoParada.source?.path?.toLowerCase() || ''),
                 linha: Number(pontoParada.line),
             });
         }

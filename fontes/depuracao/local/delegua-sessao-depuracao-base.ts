@@ -10,6 +10,7 @@ import { ArgumentosInicioDepuracao } from "../argumentos-inicio-depuracao";
 import { DeleguaTempoExecucaoLocal } from './delegua-tempo-execucao-local';
 import { DeleguaPontoParada } from '../delegua-ponto-parada';
 import { ElementoPilhaVsCode } from '../elemento-pilha';
+import { PontoParadaExtensao } from '../ponto-parada-extensao';
 
 export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
     private static threadId = 1;
@@ -337,7 +338,7 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         const linhas = args.lines || [];
 
         const pontosParada = linhas.map(linha => {
-            const pontoParada = <DebugProtocol.Breakpoint>(new Breakpoint(
+            const pontoParada = <PontoParadaExtensao>(new Breakpoint(
                 true, 
                 this.convertDebuggerLineToClient(linha)
             ));
