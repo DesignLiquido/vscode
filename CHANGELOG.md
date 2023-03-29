@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.3.9
+
+- Resolvido bug: `enquanto (verdadeiro)` em Delégua causa loop infinito: https://github.com/DesignLiquido/vscode/issues/6
+- Resolvido bug: `inteiro(leia())` chama o prompt três vezes: https://github.com/DesignLiquido/vscode/issues/7
+- Resolvido bug: reatribuição de variáveis causando valores `NaN`.
+
 ## 0.3.8
 
 - Registrando funções de entrada e saída do VisuAlg nos provedores de completude e documentação-em-código;
