@@ -2,28 +2,28 @@
 # yarn lockfile v1
 
 
-"@designliquido/delegua-node@^0.13.0":
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-0.13.0.tgz#389919824e17171158b77d1e021f9e2ec09267d0"
-  integrity sha512-MJMKdkmycVeQ2zE1vvurXL1EGEY3nkiP/At3YzgurNHRUJIg+4Ose1TmD1hCRSCEDmnupkQMAGmML8WG4YyCnQ==
+"@designliquido/delegua-node@^0.15.7":
+  version "0.15.7"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-0.15.7.tgz#a8b6d7ea34f0451909908b4ed681e65d43a42f07"
+  integrity sha512-kfepZ8Lq2U2PZbQMiy87RMcGWjb+SbjM0WBXMHulF7z8ykR1GfBVc/4Ktm7DCG7BoZJd4BzbbZF9Wn3/P+b26w==
   dependencies:
-    "@designliquido/delegua" "^0.15.4"
+    "@designliquido/delegua" "^0.15.7"
     chalk "4.1.2"
     commander "^9.4.1"
 
-"@designliquido/delegua@^0.15.4":
-  version "0.15.4"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.15.4.tgz#11ffd5e70c720901029c3b72c4456fa8454c3267"
-  integrity sha512-uxmrwk8z3RDniFWw235nDR2YT1mFqUA8yDWj6Ownd5XvKlU+OJns1VQYiWR+Jwp4habcx823ooPShN/jq1FLoA==
+"@designliquido/delegua@^0.15.7":
+  version "0.15.7"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.15.7.tgz#564ff142137ca83716749f89e2991a108ef61dce"
+  integrity sha512-8kZJj7nVGlhaWWhN/7yYag7aXqeYIOxkng0mbSw+HlxwF7xkHZUTVEtELoFGi1eZxmx9HNSdGuqDZL1qFx6EVA==
   dependencies:
     antlr4ts "^0.5.0-alpha.4"
     browser-process-hrtime "^1.0.0"
     esprima "^4.0.1"
 
-"@designliquido/foles@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.2.1.tgz#4a1f5af0b32e62d7159f9055d0054a9bc996674e"
-  integrity sha512-FJra8CZi0nJvW2uI9rwdOrapPG/ZAb+bW8pUoQ9vgUaFxiP7aBCnkVg8ufiDRKwu2/uqL+zHZ6T0Of8LANYqmw==
+"@designliquido/foles@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.2.2.tgz#483a830c4c6f5e03cc26fe958810e43656a9b29a"
+  integrity sha512-IzssbvDtKHRBrLvFFbmSDBRb2rp+TejrWq3/td1d+XeVNUQ0y2OwZEzxVdqFcx2tvcWk/pd/ec8Vr9/5cbKKlQ==
   dependencies:
     commander "^9.4.1"
 

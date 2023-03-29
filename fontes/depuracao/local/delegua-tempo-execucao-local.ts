@@ -171,6 +171,10 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         }
     }
 
+    reiniciarPontosParada() {
+        this._pontosParada = [];
+    }
+
     escreverEmSaida(mensagem: string) {
         this.enviarEvento('saida', mensagem);
     }
