@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.3.11
+
+- Resolvido bug: avaliação sintática de comparação igual no VisuAlg devolvendo símbolo errado pro interpretador.
+
 ## 0.3.10
 
 - Resolvido bug: reatribuição de variáveis causando valores `NaN` em depuração.
