@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.3.10
+
+- Resolvido bug: reatribuição de variáveis causando valores `NaN` em depuração.
+
 ## 0.3.9
 
 - Resolvido bug: `enquanto (verdadeiro)` em Delégua causa loop infinito: https://github.com/DesignLiquido/vscode/issues/6
