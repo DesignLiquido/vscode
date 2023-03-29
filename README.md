@@ -1,6 +1,6 @@
-# Extensão das linguagens da Design Líquido para Visual Studio Code
+# Linguagens em Português para Visual Studio Code
 
-Essa extensão visa melhorar a produtividade de projetos escritos usando as linguagens: 
+Essa extensão visa melhorar a produtividade de projetos escritos usando as linguagens da Design Líquido: 
 
 - [Delégua](https://github.com/DesignLiquido/delegua);
 - [LMHT](https://github.com/DesignLiquido/LMHT);
@@ -11,7 +11,8 @@ Essa extensão também oferece suporte parcial a outras linguagens que são dial
 
 - [Egua](https://egua.tech);
 - [EguaP](https://github.com/DesignLiquido/delegua/wiki/Dialetos#eguap);
-- [VisuAlg](https://visualg3.com.br/). 
+- [Portugol Studio](http://lite.acad.univali.br/portugol/);
+- [Portugol VisuAlg](https://visualg3.com.br/).
 
 ## Instalação
 
