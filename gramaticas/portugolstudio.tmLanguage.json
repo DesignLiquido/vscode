@@ -1,7 +1,7 @@
 {
     "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-    "name": "VisuAlg",
-    "scopeName": "source.visualg",
+    "name": "portugolstudio",
+    "scopeName": "source.portugolstudio",
     "patterns": [
         { "include": "#keywords" },
         { "include": "#functions" },
@@ -21,8 +21,8 @@
         "keywords": {
             "patterns": [
                 {
-                    "name": "keyword.control.visualg",
-                    "match": "(?i)\\b(algoritmo|var|inicio|fimalgoritmo|se|senão|fimse|para|fazer|enquanto|escolha|caso|padrao|tente|pegue|finalmente|retorna|funcao|função|escreva|leia)\\b"
+                    "name": "keyword.control.portugolstudio",
+                    "match": "(?i)\\b(programa|inicio|se|senao|para|faca|enquanto|escolha|caso|padrao|tente|pegue|finalmente|retorna|funcao|escreva|inteiro|real)\\b"
                 }
             ]
         },
@@ -37,15 +37,15 @@
         "constants": {
             "patterns": [
                 {
-                    "name": "constant.language.visualg",
+                    "name": "constant.language.portugolstudio",
                     "match": "(?i)\\b(falso|verdadeiro)\\b"
                 }
             ]
         },
 		"functions": {
 			"patterns": [{
-				"name": "keyword.function.visualg",
-				"match": "\\b(escreva|escreval|leia)\\b"
+				"name": "keyword.function.portugolstudio",
+				"match": "\\b(escreva|escreval)\\b"
 			}]
 		},
         "identifiers": {
@@ -83,23 +83,23 @@
         "strings": {
             "patterns": [
                 {
-                    "name": "string.quoted.single.visualg",
+                    "name": "string.quoted.single.portugolstudio",
                     "begin": "\\'",
                     "end": "\\'",
                     "patterns": [
                         {
-                            "name": "constant.character.escape.visualg",
+                            "name": "constant.character.escape.portugolstudio",
                             "match": "\\\\."
                         }
                     ]
                 },
                 {
-                    "name": "string.quoted.double.visualg",
+                    "name": "string.quoted.double.portugolstudio",
                     "begin": "\"",
                     "end": "\"",
                     "patterns": [
                         {
-                            "name": "constant.character.escape.visualg",
+                            "name": "constant.character.escape.portugolstudio",
                             "match": "\\\\."
                         }
                     ]

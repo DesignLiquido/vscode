@@ -235,6 +235,18 @@
                 "configuration": "./configuracoes/configuracao-lmht.json"
             },
             {
+                "id": "portugolstudio",
+                "aliases": [
+                    "Portugol Studio",
+                    "Portugol Webstudio",
+                    "portugolstudio"
+                ],
+                "extensions": [
+                    ".por"
+                ],
+                "configuration": "./configuracoes/configuracao-portugolstudio.json"
+            },
+            {
                 "id": "visualg",
                 "aliases": [
                     "VisuAlg",
@@ -271,6 +283,11 @@
                 "language": "lmht",
                 "scopeName": "source.lmht",
                 "path": "./gramaticas/lmht.tmLanguage.json"
+            },
+            {
+                "language": "portugolstudio",
+                "scopeName": "source.portugolstudio",
+                "path": "./gramaticas/portugolstudio.tmLanguage.json"
             },
             {
                 "language": "visualg",

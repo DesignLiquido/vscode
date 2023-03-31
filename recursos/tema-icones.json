@@ -41,6 +41,9 @@
 		"_lmht": {
 			"iconPath": "./lmht-logo.svg"
 		},
+		"_portugolstudio": {
+			"iconPath": "./portugol-studio-logo.svg"
+		},
 		"_visualg": {
 			"iconPath": "./visualg-logo.svg"
 		},
@@ -1570,6 +1573,7 @@
 		"foles": "_foles",
 		"lincones": "_lincones",
 		"lmht": "_lmht",
+		"por": "_portugolstudio",
 		"bsl": "_bsl",
 		"mdo": "_mdo",
 		"cls": "_salesforce",
@@ -1949,13 +1953,14 @@
 	"light": {
 		"file": "_default_light",
 		"fileExtensions": {
+			"alg": "_visualg",
 			"delegua": "_delegua",
 			"egua": "_egua",
 			"eguap": "_eguap",
 			"foles": "_foles",
 			"lincones": "_lincones",
 			"lmht": "_lmht",
-			"visualg": "_visualg",
+			"por": "_portugolstudio",
 			"bsl": "_bsl_light",
 			"mdo": "_mdo_light",
 			"cls": "_salesforce_light",

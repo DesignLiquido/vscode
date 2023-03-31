@@ -1,0 +1,41 @@
+var n1 = 1;
+var n1 = leia("digite o numero1");
+var n2 = 1;
+var n2 = leia("digite o numero2");
+var n3 = 1;
+var n3 = leia("digite o numero3");
+
+var a = n1;
+var b = n2;
+var c = n3;
+
+se (n1 > n2 e n1 > n3){
+    c = n1;
+    se (n2 > n3){
+        a = n3;
+        b = n2;
+    }senao{
+        a = n2;
+        b = n3;
+    }
+}senao se (n2 > n1 e n2 > n3){
+    c = n2;
+    se (n1 > n3){
+        a = n3;
+        b = n1;
+    }senao{
+        a = n1;
+        b = n3;
+    }
+}senao {
+    c = n3;
+    se (n2 > n1){
+         a = n1;
+         b = n2;
+    }senao{
+         a = n2;
+         b = n1;
+    }
+}
+
+escreva("ordem crescente "+a+" - "+b+" - "+ c);
