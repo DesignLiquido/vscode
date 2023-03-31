@@ -19,6 +19,7 @@ export class ProvedorConfiguracaoDelegua
 				switch (editor.document.languageId) {
 					case 'delegua':
                     case 'eguap':
+                    case 'portugolstudio':
 					case 'visualg':
 						config.type = 'delegua';
 						config.name = 'Executar arquivo Delégua ou dialeto';

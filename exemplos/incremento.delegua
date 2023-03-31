@@ -1,0 +1,3 @@
+var numero = 5;
+numero++;
+escreva(numero);

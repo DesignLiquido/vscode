@@ -7,7 +7,9 @@ import { AvaliadorSintatico, cyrb53, Lexador, PontoParada } from '@designliquido
 
 import { ElementoPilhaVsCode } from '../elemento-pilha';
 import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface } from '@designliquido/delegua/fontes/interfaces';
+import { LexadorPortugolStudio } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-portugol-studio';
 import { LexadorVisuAlg } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-visualg';
+import { AvaliadorSintaticoPortugolStudio } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-portugol-studio';
 import { AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-visualg';
 import { LexadorEguaP } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-eguap';
 import { AvaliadorSintaticoEguaP } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-eguap';
@@ -17,6 +19,7 @@ import { InterpretadorComDepuracaoImportacao } from '@designliquido/delegua-node
 import { InterpretadorVisuAlgComDepuracaoImportacao } from '@designliquido/delegua-node/fontes/interpretador/dialetos/interpretador-visualg-com-depuracao-importacao';
 
 import palavrasReservadas from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
+import { InterpretadorPortugolStudioComDepuracao } from '@designliquido/delegua/fontes/interpretador/dialetos';
 
 /**
  * Em teoria não precisaria uma classe de tempo de execução local, mas,
@@ -79,6 +82,18 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                 this.interpretador = new InterpretadorComDepuracaoImportacao(this.importador, process.cwd(), 
                     this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
                 break;
+            case "por":
+                this.lexador = new LexadorPortugolStudio();
+                this.avaliadorSintatico = new AvaliadorSintaticoPortugolStudio();
+                this.importador = new Importador(
+                    this.lexador, 
+                    this.avaliadorSintatico, 
+                    {},
+                    {},
+                    true);
+                this.interpretador = new InterpretadorPortugolStudioComDepuracao(process.cwd(), 
+                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
+                break;
             default:
                 this.lexador = new Lexador();
                 this.avaliadorSintatico = new AvaliadorSintatico();
@@ -108,19 +123,10 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         this.interpretador.finalizacaoDaExecucao = this.finalizacao.bind(this);
         this.interpretador.avisoPontoParadaAtivado = this.avisoPontoParadaAtivado.bind(this);
         
-        // Por algum motivo, isso gera um hash diferente do importador.
-        // this._hashArquivoInicial = cyrb53(arquivoInicial);
-        
         this._arquivoInicial = arquivoInicial;
         const retornoImportador = this.importador.importar(arquivoInicial, true, false);
         this._hashArquivoInicial = retornoImportador.hashArquivo;
         this._conteudoArquivo = this.importador.conteudoArquivosAbertos[this._hashArquivoInicial];
-
-        // Os pontos de parada são definidos antes da abertura do arquivo.
-        // Por isso é necessário atualizar o _hash_ de cada ponto de parada aqui.
-        for (let pontoParada of this.interpretador.pontosParada) {
-            pontoParada.hashArquivo = retornoImportador.hashArquivo;
-        }
 
         this.interpretador.prepararParaDepuracao(
             retornoImportador.retornoAvaliadorSintatico.declaracoes,

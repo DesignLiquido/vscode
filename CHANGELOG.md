@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.4.0
+
+- Suporte inicial a Portugol Studio e Portugol Webstudio.
+
 ## 0.3.11
 
 - Resolvido bug: avaliação sintática de comparação igual no VisuAlg devolvendo símbolo errado pro interpretador.
