@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.4.0",
+    "version": "0.4.1",
     "engines": {
         "vscode": "^1.68.0"
     },
@@ -64,9 +64,6 @@
     "activationEvents": [
         "onDebugResolve:delegua",
         "onDebugDynamicConfigurations:delegua",
-        "onCommand:extension.delegua.translate.delegua",
-        "onCommand:extension.delegua.translate.javascript",
-        "onCommand:extension.delegua.translate.visualg",
         "onCommand:extension.delegua.getProgramName",
         "onCommand:extension.delegua.runEditorContents",
         "onCommand:extension.delegua.debugEditorContents"
@@ -77,15 +74,15 @@
     "contributes": {
         "commands": [
             {
-                "command": "extension.delegua.translate.delegua",
+                "command": "extension.delegua.traduzir.delegua",
                 "title": "Tradução: Traduzir fonte Delégua para JavaScript"
             },
             {
-                "command": "extension.delegua.translate.javascript",
+                "command": "extension.delegua.traduzir.javascript",
                 "title": "Tradução: Traduzir fonte JavaScript para Delégua"
             },
             {
-                "command": "extension.delegua.translate.visualg",
+                "command": "extension.delegua.traduzir.visualg",
                 "title": "Tradução: Traduzir fonte VisuAlg para Delégua"
             }
         ],

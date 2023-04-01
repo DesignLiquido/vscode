@@ -1,5 +1,12 @@
 # Histórico de Modificações
 
+## 0.4.1
+
+- Adicionados três comandos de tradução de arquivos:
+    - VisuAlg para Delégua
+    - Delégua para JavaScript
+    - JavaScript para Delégua
+
 ## 0.4.0
 
 - Suporte inicial a Portugol Studio e Portugol Webstudio.

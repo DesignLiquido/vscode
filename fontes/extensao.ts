@@ -31,19 +31,19 @@ const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand(
-            'extension.delegua.translate.delegua',
+            'extension.delegua.traduzir.delegua',
             () => traduzir('delegua', 'js')
         )
     );
     context.subscriptions.push(
         vscode.commands.registerCommand(
-            'extension.delegua.translate.javascript',
+            'extension.delegua.traduzir.javascript',
             () => traduzir('js', 'delegua')
         )
     );
     context.subscriptions.push(
         vscode.commands.registerCommand(
-            'extension.delegua.translate.visualg',
+            'extension.delegua.traduzir.visualg',
             () => traduzir('alg', 'delegua')
         )
     );

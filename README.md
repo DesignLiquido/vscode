@@ -22,11 +22,21 @@ Você pode instalar pesquisando nas extensões do Visual Studio Code [ou por est
 
 - Sintaxe colorida
 - Formatação de arquivos em Delégua
-- Reconhecimento de expressões comuns das linguagens Delégua, Égua, EguaP e Portugol VisuAlg
+- Reconhecimento de expressões comuns das linguagens Delégua, Égua, EguaP e dialetos de Portugol, como VisuAlg e Portugol Studio/Webstudio
 - Ícones para arquivos `.delegua`, `.egua`, `.eguap`, `.foles`, `.lincones` e `.lmht`
 - Trechos de códigos para facilitar desenvolvimento em Delégua
 - Mecanismo de completude de funções da biblioteca global para Delégua
-- Suporte a depuração para Delégua e Portugol VisuAlg
+- Suporte a depuração para Delégua, EguaP, Portugol VisuAlg e Portugol Studio/Webstudio
+
+## Tradução entre linguagens
+
+Essa extensão suporta tradução entre linguagens:
+
+- VisuAlg para Delégua;
+- Delégua para JavaScript
+- JavaScript para Delégua
+
+Pressione `Ctrl` + `Shift` + `p` (`Cmd` + `Shift` + `p` no Mac) e digite "tradução" para ter acesso aos comandos. Você pode atribuir atalhos de teclado a eles se quiser.
 
 ## Depuração
 
