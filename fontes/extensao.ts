@@ -32,27 +32,19 @@ const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
 let traduzir = {
     deLinguagem: '',
     paraLinguagem: ''
-}
+};
 
 function translate(): any {
     try {
-        //TODO: melhorar essa lógica obscura de `ifs` @Samuel
         let caminhoDaJanelaAtualAberta = vscode.window.activeTextEditor?.document?.fileName ?? '';
-        const eTraducaoPermitida = caminhoDaJanelaAtualAberta.includes('.delegua') && traduzir.paraLinguagem !== 'js';
-        if(eTraducaoPermitida){
-            return vscode.window.showErrorMessage('O arquivo .delegua só pode ser traduzido para JavaScript');
-        }
-        const eTraducaoPermitida2 = caminhoDaJanelaAtualAberta.includes('.js') && traduzir.paraLinguagem !== 'delegua';
-        if(eTraducaoPermitida2){
-            return vscode.window.showErrorMessage('O arquivo .js só pode ser traduzido para Delégua');
-        }
-        const eTraducaoPermitida3 = caminhoDaJanelaAtualAberta.includes('.visualg') && traduzir.paraLinguagem !== 'delegua';
-        if(eTraducaoPermitida3){
-            return vscode.window.showErrorMessage('O arquivo .visualg só pode ser traduzido para Delégua');
+        const extensaoArquivo = caminhoDaJanelaAtualAberta.split('.').pop() || '';
+        if (!extensaoArquivo || extensaoArquivo !== traduzir.deLinguagem){
+            return vscode.window.showErrorMessage('O arquivo atual não pode ser traduzido para o destino selecionado!');
         }
 
         let resultadoTraducao = '';
-        const delegua = new Delegua(undefined, undefined, undefined, traduzir.paraLinguagem || 'delegua', (traducao) => { resultadoTraducao = traducao; }, undefined);
+        const traduzirPara = traduzir.deLinguagem === 'alg' ? 'alg' : traduzir.paraLinguagem;
+        const delegua = new Delegua(undefined, undefined, undefined, traduzirPara, (traducao) => { resultadoTraducao = traducao; }, undefined);
 
         if (!caminhoDaJanelaAtualAberta) { return; };
 
@@ -80,7 +72,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.commands.registerCommand('extension.delegua.translate.delegua', () => commandTranslate('delegua', 'js')));
     context.subscriptions.push(vscode.commands.registerCommand('extension.delegua.translate.javascript', () => commandTranslate('js', 'delegua')));
-    context.subscriptions.push(vscode.commands.registerCommand('extension.delegua.translate.visualg', () => commandTranslate('visualg', 'delegua')));
+    context.subscriptions.push(vscode.commands.registerCommand('extension.delegua.translate.visualg', () => commandTranslate('alg', 'delegua')));
 
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
