@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 
 import { configurarDepuracao } from './depuracao/configuracao-depuracao';
 import { FabricaAdaptadorDepuracaoEmbutido } from './depuracao/fabricas';
@@ -20,8 +19,7 @@ import {
 import { DeleguaProvedorFormatacao } from './formatadores';
 import { VisuAlgProvedorCompletude } from './completude/visualg-provedor-completude';
 import { VisuAlgProvedorDocumentacaoEmEditor } from './documentacao-em-editor/visualg-documentacao-em-editor';
-
-import { Delegua } from '@designliquido/delegua-node/fontes/delegua'
+import { traduzir } from './traducao';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -29,50 +27,26 @@ import { Delegua } from '@designliquido/delegua-node/fontes/delegua'
  * Please note: the test suite only supports 'external' mode.
  */
 const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
-let traduzir = {
-    deLinguagem: '',
-    paraLinguagem: ''
-};
 
-function translate(): any {
-    try {
-        let caminhoDaJanelaAtualAberta = vscode.window.activeTextEditor?.document?.fileName ?? '';
-        const extensaoArquivo = caminhoDaJanelaAtualAberta.split('.').pop() || '';
-        if (!extensaoArquivo || extensaoArquivo !== traduzir.deLinguagem){
-            return vscode.window.showErrorMessage('O arquivo atual não pode ser traduzido para o destino selecionado!');
-        }
-
-        let resultadoTraducao = '';
-        const traduzirPara = traduzir.deLinguagem === 'alg' ? 'alg' : traduzir.paraLinguagem;
-        const delegua = new Delegua(undefined, undefined, undefined, traduzirPara, (traducao) => { resultadoTraducao = traducao; }, undefined);
-
-        if (!caminhoDaJanelaAtualAberta) { return; };
-
-        delegua.traduzirArquivo(caminhoDaJanelaAtualAberta, true);
-
-        if (!resultadoTraducao) { return; };
-
-        const nomeArquivo = path.basename(caminhoDaJanelaAtualAberta).replace(`.${traduzir.deLinguagem}`, '');
-
-        vscode.env.clipboard.writeText(resultadoTraducao);
-        vscode.window.showInformationMessage(`O arquivo foi traduzido e salvo no caminho atual com nome: ${nomeArquivo}.${traduzir.paraLinguagem}`);
-        vscode.window.showInformationMessage("Tradução copiada para área de transferência");
-    } catch (error: any) {
-        return vscode.window.showInformationMessage(error.message);
-    }
-};
-
-const commandTranslate = (deLinguagem, paraLinguagem) => {
-    traduzir.deLinguagem = deLinguagem;
-    traduzir.paraLinguagem = paraLinguagem;
-    return translate();
-}
-
-export function activate(context: vscode.ExtensionContext) {    
-
-    context.subscriptions.push(vscode.commands.registerCommand('extension.delegua.translate.delegua', () => commandTranslate('delegua', 'js')));
-    context.subscriptions.push(vscode.commands.registerCommand('extension.delegua.translate.javascript', () => commandTranslate('js', 'delegua')));
-    context.subscriptions.push(vscode.commands.registerCommand('extension.delegua.translate.visualg', () => commandTranslate('alg', 'delegua')));
+export function activate(context: vscode.ExtensionContext) {
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
+            'extension.delegua.translate.delegua',
+            () => traduzir('delegua', 'js')
+        )
+    );
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
+            'extension.delegua.translate.javascript',
+            () => traduzir('js', 'delegua')
+        )
+    );
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
+            'extension.delegua.translate.visualg',
+            () => traduzir('alg', 'delegua')
+        )
+    );
 
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
