@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 
 import { configurarDepuracao } from './depuracao/configuracao-depuracao';
 import { FabricaAdaptadorDepuracaoEmbutido } from './depuracao/fabricas';
@@ -20,9 +21,7 @@ import { DeleguaProvedorFormatacao } from './formatadores';
 import { VisuAlgProvedorCompletude } from './completude/visualg-provedor-completude';
 import { VisuAlgProvedorDocumentacaoEmEditor } from './documentacao-em-editor/visualg-documentacao-em-editor';
 
-import { TradutorJavaScript } from '@designliquido/delegua/fontes/tradutores';
-import { AvaliadorSintatico } from '@designliquido/delegua/fontes/avaliador-sintatico';
-import { Lexador } from '@designliquido/delegua/fontes/lexador';
+import { Delegua } from '@designliquido/delegua-node/fontes/delegua'
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -30,48 +29,65 @@ import { Lexador } from '@designliquido/delegua/fontes/lexador';
  * Please note: the test suite only supports 'external' mode.
  */
 const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
-
-function selecionarTexto() {
-    let editor = vscode.window.activeTextEditor;
-    if (!editor) {
-        return ''; // No open text editor
-    }
-
-    let selection = editor.selection;
-    return editor.document.getText(selection);
+let traduzir = {
+    deLinguagem: '',
+    paraLinguagem: ''
 }
 
-const registrarComandoTraduzirECopiar = vscode.commands.registerCommand('traduzir.clipboard', async function () {
-    let text = selecionarTexto();
-    if (text == '') return;
+function translate(): any {
+    try {
+        //TODO: melhorar essa lógica obscura de `ifs` @Samuel
+        let caminhoDaJanelaAtualAberta = vscode.window.activeTextEditor?.document?.fileName ?? '';
+        const eTraducaoPermitida = caminhoDaJanelaAtualAberta.includes('.delegua') && traduzir.paraLinguagem !== 'js';
+        if(eTraducaoPermitida){
+            return vscode.window.showErrorMessage('O arquivo .delegua só pode ser traduzido para JavaScript');
+        }
+        const eTraducaoPermitida2 = caminhoDaJanelaAtualAberta.includes('.js') && traduzir.paraLinguagem !== 'delegua';
+        if(eTraducaoPermitida2){
+            return vscode.window.showErrorMessage('O arquivo .js só pode ser traduzido para Delégua');
+        }
+        const eTraducaoPermitida3 = caminhoDaJanelaAtualAberta.includes('.visualg') && traduzir.paraLinguagem !== 'delegua';
+        if(eTraducaoPermitida3){
+            return vscode.window.showErrorMessage('O arquivo .visualg só pode ser traduzido para Delégua');
+        }
 
-    try {            
-        let lexador = new Lexador();
-        let avaliadorSintatico = new AvaliadorSintatico();
-        const tradutorJavaScript = new TradutorJavaScript();
-            
-        const retornoLexador = lexador.mapear(text.split('\n'),-1);
-        const retornoAvaliadorSintatico = avaliadorSintatico.analisar(retornoLexador);
-        
-        const resultadoTraducao = tradutorJavaScript.traduzir(retornoAvaliadorSintatico.declaracoes);
-        if (!resultadoTraducao) return;
+        let resultadoTraducao = '';
+        const delegua = new Delegua(undefined, undefined, undefined, traduzir.paraLinguagem || 'delegua', (traducao) => { resultadoTraducao = traducao; }, undefined);
+
+        if (!caminhoDaJanelaAtualAberta) { return; };
+
+        delegua.traduzirArquivo(caminhoDaJanelaAtualAberta, true);
+
+        if (!resultadoTraducao) { return; };
+
+        const nomeArquivo = path.basename(caminhoDaJanelaAtualAberta).replace(`.${traduzir.deLinguagem}`, '');
 
         vscode.env.clipboard.writeText(resultadoTraducao);
-        vscode.window.showInformationMessage("cole o resultado da tradução em um novo arquivo");
+        vscode.window.showInformationMessage(`O arquivo foi traduzido e salvo no caminho atual com nome: ${nomeArquivo}.${traduzir.paraLinguagem}`);
+        vscode.window.showInformationMessage("Tradução copiada para área de transferência");
     } catch (error: any) {
         return vscode.window.showInformationMessage(error.message);
     }
-});
+};
 
-export function activate(context: vscode.ExtensionContext) {
+const commandTranslate = (deLinguagem, paraLinguagem) => {
+    traduzir.deLinguagem = deLinguagem;
+    traduzir.paraLinguagem = paraLinguagem;
+    return translate();
+}
+
+export function activate(context: vscode.ExtensionContext) {    
+
+    context.subscriptions.push(vscode.commands.registerCommand('extension.delegua.translate.delegua', () => commandTranslate('delegua', 'js')));
+    context.subscriptions.push(vscode.commands.registerCommand('extension.delegua.translate.javascript', () => commandTranslate('js', 'delegua')));
+    context.subscriptions.push(vscode.commands.registerCommand('extension.delegua.translate.visualg', () => commandTranslate('visualg', 'delegua')));
+
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
             'delegua',
             new DeleguaProvedorFormatacao()
         )
     );
-
-    context.subscriptions.push(registrarComandoTraduzirECopiar);
 
     // IntelliSense para Delégua e Liquido.
     context.subscriptions.push(

@@ -20,7 +20,8 @@
         "lmht",
         "foles",
         "lincones",
-        "portugol"
+        "portugol",
+        "tradutor"
     ],
     "categories": [
         "Programming Languages"
@@ -63,7 +64,9 @@
     "activationEvents": [
         "onDebugResolve:delegua",
         "onDebugDynamicConfigurations:delegua",
-        "onCommand:traduzir.clipboard",
+        "onCommand:extension.delegua.translate.delegua",
+        "onCommand:extension.delegua.translate.javascript",
+        "onCommand:extension.delegua.translate.visualg",
         "onCommand:extension.delegua.getProgramName",
         "onCommand:extension.delegua.runEditorContents",
         "onCommand:extension.delegua.debugEditorContents"
@@ -74,17 +77,16 @@
     "contributes": {
         "commands": [
             {
-                "command": "traduzir.clipboard",
-                "category": "Traducao",
-                "title": "traduzir e copiar"
-            }
-        ],
-        "keybindings": [
+                "command": "extension.delegua.translate.delegua",
+                "title": "Tradução: Traduzir fonte Delégua para JavaScript"
+            },
             {
-                "command": "traduzir.clipboard",
-                "key": "alt+t",
-                "mac": "alt+t",
-                "when": "editorHasSelection"
+                "command": "extension.delegua.translate.javascript",
+                "title": "Tradução: Traduzir fonte JavaScript para Delégua"
+            },
+            {
+                "command": "extension.delegua.translate.visualg",
+                "title": "Tradução: Traduzir fonte VisuAlg para Delégua"
             }
         ],
         "breakpoints": [
