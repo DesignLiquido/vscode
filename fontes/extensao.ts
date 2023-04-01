@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 
 import { configurarDepuracao } from './depuracao/configuracao-depuracao';
 import { FabricaAdaptadorDepuracaoEmbutido } from './depuracao/fabricas';
@@ -20,9 +21,7 @@ import { DeleguaProvedorFormatacao } from './formatadores';
 import { VisuAlgProvedorCompletude } from './completude/visualg-provedor-completude';
 import { VisuAlgProvedorDocumentacaoEmEditor } from './documentacao-em-editor/visualg-documentacao-em-editor';
 
-import { TradutorJavaScript } from '@designliquido/delegua/fontes/tradutores';
-import { AvaliadorSintatico } from '@designliquido/delegua/fontes/avaliador-sintatico';
-import { Lexador } from '@designliquido/delegua/fontes/lexador';
+import { Delegua } from '@designliquido/delegua-node/fontes/delegua'
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -30,48 +29,57 @@ import { Lexador } from '@designliquido/delegua/fontes/lexador';
  * Please note: the test suite only supports 'external' mode.
  */
 const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
+let traduzir = {
+    deLinguagem: '',
+    paraLinguagem: ''
+};
 
-function selecionarTexto() {
-    let editor = vscode.window.activeTextEditor;
-    if (!editor) {
-        return ''; // No open text editor
-    }
+function translate(): any {
+    try {
+        let caminhoDaJanelaAtualAberta = vscode.window.activeTextEditor?.document?.fileName ?? '';
+        const extensaoArquivo = caminhoDaJanelaAtualAberta.split('.').pop() || '';
+        if (!extensaoArquivo || extensaoArquivo !== traduzir.deLinguagem){
+            return vscode.window.showErrorMessage('O arquivo atual não pode ser traduzido para o destino selecionado!');
+        }
 
-    let selection = editor.selection;
-    return editor.document.getText(selection);
-}
+        let resultadoTraducao = '';
+        const traduzirPara = traduzir.deLinguagem === 'alg' ? 'alg' : traduzir.paraLinguagem;
+        const delegua = new Delegua(undefined, undefined, undefined, traduzirPara, (traducao) => { resultadoTraducao = traducao; }, undefined);
 
-const registrarComandoTraduzirECopiar = vscode.commands.registerCommand('traduzir.clipboard', async function () {
-    let text = selecionarTexto();
-    if (text == '') return;
+        if (!caminhoDaJanelaAtualAberta) { return; };
 
-    try {            
-        let lexador = new Lexador();
-        let avaliadorSintatico = new AvaliadorSintatico();
-        const tradutorJavaScript = new TradutorJavaScript();
-            
-        const retornoLexador = lexador.mapear(text.split('\n'),-1);
-        const retornoAvaliadorSintatico = avaliadorSintatico.analisar(retornoLexador);
-        
-        const resultadoTraducao = tradutorJavaScript.traduzir(retornoAvaliadorSintatico.declaracoes);
-        if (!resultadoTraducao) return;
+        delegua.traduzirArquivo(caminhoDaJanelaAtualAberta, true);
+
+        if (!resultadoTraducao) { return; };
+
+        const nomeArquivo = path.basename(caminhoDaJanelaAtualAberta).replace(`.${traduzir.deLinguagem}`, '');
 
         vscode.env.clipboard.writeText(resultadoTraducao);
-        vscode.window.showInformationMessage("cole o resultado da tradução em um novo arquivo");
+        vscode.window.showInformationMessage(`O arquivo foi traduzido e salvo no caminho atual com nome: ${nomeArquivo}.${traduzir.paraLinguagem}`);
+        vscode.window.showInformationMessage("Tradução copiada para área de transferência");
     } catch (error: any) {
         return vscode.window.showInformationMessage(error.message);
     }
-});
+};
 
-export function activate(context: vscode.ExtensionContext) {
+const commandTranslate = (deLinguagem, paraLinguagem) => {
+    traduzir.deLinguagem = deLinguagem;
+    traduzir.paraLinguagem = paraLinguagem;
+    return translate();
+}
+
+export function activate(context: vscode.ExtensionContext) {    
+
+    context.subscriptions.push(vscode.commands.registerCommand('extension.delegua.translate.delegua', () => commandTranslate('delegua', 'js')));
+    context.subscriptions.push(vscode.commands.registerCommand('extension.delegua.translate.javascript', () => commandTranslate('js', 'delegua')));
+    context.subscriptions.push(vscode.commands.registerCommand('extension.delegua.translate.visualg', () => commandTranslate('alg', 'delegua')));
+
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
             'delegua',
             new DeleguaProvedorFormatacao()
         )
     );
-
-    context.subscriptions.push(registrarComandoTraduzirECopiar);
 
     // IntelliSense para Delégua e Liquido.
     context.subscriptions.push(
