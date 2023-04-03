@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.4.2
+
+- Correções de bugs em instruções `enquanto` e `escolha` do VisuAlg.
+
 ## 0.4.1
 
 - Adicionados três comandos de tradução de arquivos:
