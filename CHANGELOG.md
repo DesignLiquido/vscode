@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.4.4
+
+- Correção em operadores lógicos `NAO` e `XOU` no dialeto VisuAlg.
+
 ## 0.4.3
 
 - Correção de bug ao intercalar comandos "próximo" e "continuar" na mesma depuração com VisuAlg.
