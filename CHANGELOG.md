@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.4.3
+
+- Correção de bug ao intercalar comandos "próximo" e "continuar" na mesma depuração com VisuAlg.
+
 ## 0.4.2
 
 - Correções de bugs em instruções `enquanto` e `escolha` do VisuAlg.
