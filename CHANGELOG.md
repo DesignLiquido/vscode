@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.4.5
+
+- Redesenho da arquitetura de resolução de argumentos em tempo de depuração para todos os dialetos com suporte à depuração;
+- Correção no Avaliador Sintático de Delégua quanto ao pragma (arquivo + linha) de atribuições de vetor.
+
 ## 0.4.4
 
 - Correção em operadores lógicos `NAO` e `XOU` no dialeto VisuAlg.
