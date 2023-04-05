@@ -1,0 +1,7 @@
+var vetor = [];
+
+para (var i = 0; i < 5; i = i + 1) {
+    var n1 = leia("Digite o numero ");
+    vetor[i] = inteiro(n1);
+}
+escreva(vetor);
