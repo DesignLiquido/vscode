@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.4.6
+
+- Remoção de bugs de atribuição para variáveis indexadas em vários dialetos.
+
 ## 0.4.5
 
 - Redesenho da arquitetura de resolução de argumentos em tempo de depuração para todos os dialetos com suporte à depuração;
