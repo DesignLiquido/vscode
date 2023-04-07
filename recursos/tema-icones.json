@@ -41,6 +41,9 @@
 		"_lmht": {
 			"iconPath": "./lmht-logo.svg"
 		},
+		"_mapler": {
+			"iconPath": "./mapler-logo.svg"
+		},
 		"_portugolstudio": {
 			"iconPath": "./portugol-studio-logo.svg"
 		},
@@ -1573,6 +1576,7 @@
 		"foles": "_foles",
 		"lincones": "_lincones",
 		"lmht": "_lmht",
+		"mapler": "_mapler",
 		"por": "_portugolstudio",
 		"bsl": "_bsl",
 		"mdo": "_mdo",
@@ -1960,6 +1964,7 @@
 			"foles": "_foles",
 			"lincones": "_lincones",
 			"lmht": "_lmht",
+			"mapler": "_mapler",
 			"por": "_portugolstudio",
 			"bsl": "_bsl_light",
 			"mdo": "_mdo_light",

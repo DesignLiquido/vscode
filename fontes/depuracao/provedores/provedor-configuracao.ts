@@ -19,6 +19,7 @@ export class ProvedorConfiguracaoDelegua
 				switch (editor.document.languageId) {
 					case 'delegua':
                     case 'eguap':
+                    case 'mapler':
                     case 'portugolstudio':
 					case 'visualg':
 						config.type = 'delegua';

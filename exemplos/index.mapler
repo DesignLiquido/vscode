@@ -1,0 +1,5 @@
+// Estrutura Básica:
+variaveis
+inicio
+    escrever "Olá Mundo!";
+fim
