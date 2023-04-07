@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.5.0
+
+- Início do suporte ao dialeto [Mapler](https://portugol.sourceforge.io/).
+
 ## 0.4.7
 
 - Corrigindo bugs no dialeto VisuAlg em que funções e procedimentos que vinham antes de `var` não eram reconhecidos corretamente.
