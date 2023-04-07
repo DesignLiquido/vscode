@@ -18,6 +18,7 @@
         "visualg",
         "egua",
         "lmht",
+        "mapler",
         "foles",
         "lincones",
         "portugol",
@@ -94,6 +95,9 @@
                 "language": "eguap"
             },
             {
+                "language": "mapler"
+            },
+            {
                 "language": "portugolstudio"
             },
             {
@@ -106,6 +110,7 @@
                 "languages": [
                     "delegua",
                     "eguap",
+                    "mapler",
                     "portugolstudio",
                     "visualg"
                 ],
@@ -254,6 +259,17 @@
                 "configuration": "./configuracoes/configuracao-lmht.json"
             },
             {
+                "id": "mapler",
+                "aliases": [
+                    "MAPLER",
+                    "mapler"
+                ],
+                "extensions": [
+                    ".mapler"
+                ],
+                "configuration": "./configuracoes/configuracao-mapler.json"
+            },
+            {
                 "id": "portugolstudio",
                 "aliases": [
                     "Portugol Studio",
@@ -304,6 +320,11 @@
                 "path": "./gramaticas/lmht.tmLanguage.json"
             },
             {
+                "language": "mapler",
+                "scopeName": "source.mapler",
+                "path": "./gramaticas/mapler.tmLanguage.json"
+            },
+            {
                 "language": "portugolstudio",
                 "scopeName": "source.portugolstudio",
                 "path": "./gramaticas/portugolstudio.tmLanguage.json"
@@ -346,7 +367,7 @@
         "webpack-cli": "^5.0.1"
     },
     "dependencies": {
-        "@designliquido/delegua-node": "^0.15.16",
+        "@designliquido/delegua-node": "^0.16.0",
         "@designliquido/foles": "^0.2.2",
         "real-executable-path": "^3.0.0"
     }

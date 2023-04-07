@@ -1,0 +1,102 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Mapler",
+    "scopeName": "source.mapler",
+    "patterns": [
+        { "include": "#keywords" },
+        { "include": "#functions" },
+        { "include": "#constants" },
+        { "include": "#numbers" },
+        { "include": "#logical" },
+        { "include": "#types" },
+        { "include": "#comments" },
+        { "include": "#arithmetic" },
+        { "include": "#assignments" },
+        { "include": "#comparison" },
+        { "include": "#strings" },
+        { "include": "#storages" },
+        { "include": "#identifiers" }
+    ],
+    "repository": {
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "keyword.control.mapler",
+                    "match": "(?i)\\b(variaveis|inicio|fim|ate|se|senao|fim se|para|fim para|repita|fazer|enquanto|fim enquanto|passo|modulo|escrever|ler)\\b"
+                }
+            ]
+        },
+        "comments": {
+            "patterns": [
+                {
+                    "match": "(//).*",
+                    "name": "comment.line.double-slash"
+                }
+            ]
+        },
+        "constants": {
+            "patterns": [
+                {
+                    "name": "constant.language.mapler",
+                    "match": "(?i)\\b(falso|verdadeiro)\\b"
+                }
+            ]
+        },
+		"functions": {
+			"patterns": [{
+				"name": "keyword.function.mapler",
+				"match": "\\b(escrever|ler)\\b"
+			}]
+		},
+        "identifiers": {
+            "patterns": [
+                {
+                    "name": "entity.name.function",
+                    "match": "([_a-zA-Z0-9]+)(?=[ ]*[=][ ]*(\\(|modulo))"
+                },
+                {
+                    "name": "variable.parameter",
+                    "match": "([_a-zA-Z0-9]+)(?=[ ]*[=])"
+                },
+                {
+                    "name": "entity.other.attribute-name",
+                    "match": "([_a-zA-Z0-9]+)(?=[ ]*[:])"
+                },
+                {
+                    "name": "entity.name.function",
+                    "match": "([_a-zA-Z0-9]+)(?=([\\s]*\\())"
+                },
+                {
+                    "name": "variable.language",
+                    "match": "[_a-zA-Z0-9]+"
+                }
+            ]
+        },
+        "strings": {
+            "patterns": [
+                {
+                    "name": "string.quoted.single.mapler",
+                    "begin": "\\'",
+                    "end": "\\'",
+                    "patterns": [
+                        {
+                            "name": "constant.character.escape.mapler",
+                            "match": "\\\\."
+                        }
+                    ]
+                },
+                {
+                    "name": "string.quoted.double.mapler",
+                    "begin": "\"",
+                    "end": "\"",
+                    "patterns": [
+                        {
+                            "name": "constant.character.escape.mapler",
+                            "match": "\\\\."
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
