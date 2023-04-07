@@ -13,6 +13,8 @@ import { AvaliadorSintaticoPortugolStudio } from '@designliquido/delegua/fontes/
 import { AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-visualg';
 import { LexadorEguaP } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-eguap';
 import { AvaliadorSintaticoEguaP } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-eguap';
+import { LexadorMapler } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-mapler';
+import { AvaliadorSintaticoMapler } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-mapler';
 import { Importador } from '@designliquido/delegua-node/fontes/importador';
 import { ImportadorInterface } from '@designliquido/delegua-node/fontes/interfaces';
 import { InterpretadorComDepuracaoImportacao } from '@designliquido/delegua-node/fontes/interpretador/interpretador-com-depuracao-importacao';
@@ -73,6 +75,18 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
             case "eguap":
                 this.lexador = new LexadorEguaP();
                 this.avaliadorSintatico = new AvaliadorSintaticoEguaP();
+                this.importador = new Importador(
+                    this.lexador, 
+                    this.avaliadorSintatico, 
+                    {},
+                    {},
+                    true);
+                this.interpretador = new InterpretadorComDepuracaoImportacao(this.importador, process.cwd(), 
+                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
+                break;
+            case "mapler":
+                this.lexador = new LexadorMapler();
+                this.avaliadorSintatico = new AvaliadorSintaticoMapler();
                 this.importador = new Importador(
                     this.lexador, 
                     this.avaliadorSintatico, 
