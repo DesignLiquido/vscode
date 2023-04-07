@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.4.7
+
+- Corrigindo bugs no dialeto VisuAlg em que funções e procedimentos que vinham antes de `var` não eram reconhecidos corretamente.
+
 ## 0.4.6
 
 - Remoção de bugs de atribuição para variáveis indexadas em vários dialetos.
