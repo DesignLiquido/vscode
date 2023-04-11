@@ -59,7 +59,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
     }
 
     private selecionarDialetoPorExtensao(extensao: string) {
-        switch (extensao) {
+        switch (extensao.toLowerCase()) {
             case "alg":
                 this.lexador = new LexadorVisuAlg();
                 this.avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
