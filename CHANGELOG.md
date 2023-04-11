@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.5.1
+
+- Forçando extensão do arquivo corrente em minúscula na hora de alocar os componentes de interpretação para depuração.
+
 ## 0.5.0
 
 - Início do suporte ao dialeto [Mapler](https://portugol.sourceforge.io/).
