@@ -346,6 +346,10 @@
             {
                 "language": "delegua",
                 "path": "./snippets/delegua.code-snippets"
+            },
+            {
+                "language": "visualg",
+                "path": "./snippets/visualg.code-snippets"
             }
         ]
     },
