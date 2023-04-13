@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.5.2
+
+- Correção em instrução `para` do dialeto VisuAlg para aceitar identificadores e números.
+
 ## 0.5.1
 
 - Forçando extensão do arquivo corrente em minúscula na hora de alocar os componentes de interpretação para depuração.
