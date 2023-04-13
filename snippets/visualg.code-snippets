@@ -1,0 +1,80 @@
+{
+	"Estrutura Básica": {
+		"prefix": "algoritmo",
+		"body": [
+			"algoritmo \"$1Nome do Programa\"",
+			"",
+			"var",
+			"",
+			"$2teste: caractere",
+			"",
+			"inicio",
+			"",
+			"$2teste <- \"Este é um teste.\"",
+			"escreval (\"Variável Teste\")",
+			"escreva (\"O valor da variável TESTE é: \" + $2teste)",
+			"",
+			"fimalgoritmo"
+		],
+		"description": "Estrutura Básica do Algoritmo"
+	},
+
+	"Escreve a frase na tela": {
+		"prefix": "escreva",
+		"body": [
+			"escreva('$1')",
+		],
+		"description": "Escreve a frase na tela"
+	},
+
+	"Escreve a frase na tela e pula uma linha": {
+		"prefix": "escreval",
+		"body": [
+			"escreval('$1')",
+		],
+		"description": "Escreve a frase na tela e pula uma linha"
+	},
+	
+	"Estrutura Se Então Senao": {
+		"prefix": "se",
+		"body": [
+			"se ($1verdadeiro) entao",
+			"\tescreval ($2\"true\")",
+			"senao",
+			"\tescreval ($3\"false\")",
+			"fimse"
+		],
+		"description": "Constrói a estrutura Se Então Senao"
+	},
+	
+	"Estrutura Enquanto Faça": {
+		"prefix": "enquanto",
+		"body": [
+			"enquanto ($1verdadeiro) faca",
+			"\tescreval ($2\"true\")",
+		    "fimenquanto"
+		],
+		"description": "Constrói a estrutura Enquanto Faça"
+	},
+	
+	"Estrutura Para Faça": {
+		"prefix": "para",
+		"body": [
+			"para $1i de $2inicial ate $3final passo $4k faca",
+			"\tescreval ($1i)",
+		    "fimpara"
+		],
+		"description": "Constrói a estrutura Para Faça"
+	},
+	
+	"Estrutura Repita Até": {
+		"prefix": "repita",
+		"body": [
+			"repita",
+			"\tescreval($1\"teste\")",
+			"ate verdadeiro"
+		],
+		"description": "Constrói a estrutura Repita Até"
+	},
+
+}
