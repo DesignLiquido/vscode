@@ -39,9 +39,9 @@
 		"prefix": "se",
 		"body": [
 			"se ($1verdadeiro) entao",
-			"escreval ($2\"true\")",
+			"\tescreval ($2\"true\")",
 			"senao",
-			"escreval ($3\"false\")",
+			"\tescreval ($3\"false\")",
 			"fimse"
 		],
 		"description": "Constrói a estrutura Se Então Senao"
@@ -51,7 +51,7 @@
 		"prefix": "enquanto",
 		"body": [
 			"enquanto ($1verdadeiro) faca",
-			"escreval ($2\"true\")",
+			"\tescreval ($2\"true\")",
 		    "fimenquanto"
 		],
 		"description": "Constrói a estrutura Enquanto Faça"
@@ -61,7 +61,7 @@
 		"prefix": "para",
 		"body": [
 			"para $1i de $2inicial ate $3final passo $4k faca",
-			"escreval ($1i)",
+			"\tescreval ($1i)",
 		    "fimpara"
 		],
 		"description": "Constrói a estrutura Para Faça"
@@ -71,7 +71,7 @@
 		"prefix": "repita",
 		"body": [
 			"repita",
-			"escreval($1\"teste\")",
+			"\tescreval($1\"teste\")",
 			"ate verdadeiro"
 		],
 		"description": "Constrói a estrutura Repita Até"
