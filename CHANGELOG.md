@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.5.3
+
+- Adição de esboços para VisuAlg;
+- Correção em instrução `para` do dialeto VisuAlg para aceitar operações matemáticas básicas na denifição de condições.
+
 ## 0.5.2
 
 - Correção em instrução `para` do dialeto VisuAlg para aceitar identificadores e números.
