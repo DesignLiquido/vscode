@@ -3,7 +3,11 @@
 		"prefix": "algoritmo",
 		"body": [
 			"algoritmo \"$1Nome do Programa\"",
-			"",
+			"// Disciplina  :  [Linguagem e Lógica de Programação]",
+			"// Professor   : [Nome do Professor]",
+			"// Descrição   : Aqui você descreve o que o programa faz! (função)",
+			"// Autor(a)    : Nome do(a) aluno(a)",
+			"// Data atual  : ${DATA_ATUAL}/${MES_ATUAL}/${ANO_ATUAL}",
 			"var",
 			"",
 			"$2teste: caractere",
@@ -22,7 +26,7 @@
 	"Escreve a frase na tela": {
 		"prefix": "escreva",
 		"body": [
-			"escreva('$1')",
+			"escreva(\"$1\")",
 		],
 		"description": "Escreve a frase na tela"
 	},
@@ -30,7 +34,7 @@
 	"Escreve a frase na tela e pula uma linha": {
 		"prefix": "escreval",
 		"body": [
-			"escreval('$1')",
+			"escreval(\"$1\")",
 		],
 		"description": "Escreve a frase na tela e pula uma linha"
 	},
@@ -52,7 +56,7 @@
 		"body": [
 			"enquanto ($1verdadeiro) faca",
 			"\tescreval ($2\"true\")",
-		    "fimenquanto"
+			"fimenquanto"
 		],
 		"description": "Constrói a estrutura Enquanto Faça"
 	},
@@ -62,7 +66,7 @@
 		"body": [
 			"para $1i de $2inicial ate $3final passo $4k faca",
 			"\tescreval ($1i)",
-		    "fimpara"
+			"fimpara"
 		],
 		"description": "Constrói a estrutura Para Faça"
 	},
