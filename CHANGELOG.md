@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.5.4
+
+- Resolvendo casos em que `leia()` é usado com vetores em VisuAlg, fazendo a conversão automática de tipos.
+
 ## 0.5.3
 
 - Adição de esboços para VisuAlg;
