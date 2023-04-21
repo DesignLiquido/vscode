@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.5.5
+
+- Repensando estrutura de laço de repetição na instrução `para` do VisuAlg para ficar idêntico ao interpretador original.
+
 ## 0.5.4
 
 - Resolvendo casos em que `leia()` é usado com vetores em VisuAlg, fazendo a conversão automática de tipos.
