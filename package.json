@@ -371,7 +371,7 @@
         "webpack-cli": "^5.0.1"
     },
     "dependencies": {
-        "@designliquido/delegua-node": "^0.16.4",
+        "@designliquido/delegua-node": "^0.17.1",
         "@designliquido/foles": "^0.2.2",
         "real-executable-path": "^3.0.0"
     }
