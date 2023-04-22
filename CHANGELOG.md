@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.5.6
+
+- Novo recurso de imutabilidade em Delégua (constantes);
+- Novas palavras reservadas: `const`, `constante`, `fixo`, `variavel`, `variável`.
+
 ## 0.5.5
 
 - Repensando estrutura de laço de repetição na instrução `para` do VisuAlg para ficar idêntico ao interpretador original.
