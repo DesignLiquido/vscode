@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.5.7
+
+- Correção de bug no método `filtrarPor()` em Delégua.
+
 ## 0.5.6
 
 - Novo recurso de imutabilidade em Delégua (constantes);
