@@ -402,8 +402,8 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
      * Fundamental para o funcionamento da depuração, senão o VSCode não sabe
      * se o código está executando ou não, e onde.
      * 
-     * Como Delégua e dialetos são baseados em Node, e Node tem uma thread só, 
-     * basta enviar um registro fixo de thread para fazer o restante das inspeções
+     * Como Delégua e dialetos são baseados em Node, e Node tem uma _thread_ só, 
+     * basta enviar um registro fixo de _thread_ para fazer o restante das inspeções
      * funcionarem adequadamente. 
      * @param response Uma `ThreadsResponse`.
      */
@@ -414,6 +414,12 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         this.sendResponse(response);
     }
 
+    /**
+     * Devolve todas as variáveis em tempo de execução. Normalmente é a informação 
+     * apresentada no painel "Variables" do VSCode enquanto depurando o código. 
+     * @param response Uma `VariablesResponse`
+     * @param args Normalmente a referência da variável, mas não usamos até então (ver comentário abaixo)
+     */
     protected variablesRequest(
         response: DebugProtocol.VariablesResponse,
         args: DebugProtocol.VariablesArguments
@@ -424,9 +430,20 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
             variables: variaveis.map(variavel => ({
                 name: variavel.nome,
                 type: variavel.tipo,
-                value: variavel.valor,
-                variablesReference: this._referenciaEscopoGlobal
-            })),
+                value: String(variavel.valor),
+                // TODO: Essa `variablesReference` deve ser maior que zero quando o objeto é composto.
+                // Por exemplo, formado por outras variáveis. 
+                // Por enquanto todas as referências são definidas como zero porque até então
+                // as linguagens não fazem referência de outras variáveis. 
+                // variablesReference: this._referenciaEscopoGlobal,
+                variablesReference: 0,
+                namedVariables: 0,
+                indexedVariables: 0,
+                presentationHint: {
+                    kind: 'data',
+                    attributes: ['rawString']
+                } as DebugProtocol.VariablePresentationHint
+            } as DebugProtocol.Variable)),
         };
         this.sendResponse(response);
     }
