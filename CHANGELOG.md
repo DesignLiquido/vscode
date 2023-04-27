@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.5.8
+
+- Permitindo quebras de linha entre cláusulas `caso` de comando `escolha` no VisuAlg.
+
 ## 0.5.7
 
 - Correção de bug no método `filtrarPor()` em Delégua.
