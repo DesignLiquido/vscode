@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.5.8",
+    "version": "0.6.0",
     "engines": {
         "vscode": "^1.68.0"
     },
@@ -89,6 +89,9 @@
         ],
         "breakpoints": [
             {
+                "language": "birl"
+            },
+            {
                 "language": "delegua"
             },
             {
@@ -108,6 +111,7 @@
             {
                 "type": "delegua",
                 "languages": [
+                    "birl",
                     "delegua",
                     "eguap",
                     "mapler",
@@ -371,7 +375,7 @@
         "webpack-cli": "^5.0.1"
     },
     "dependencies": {
-        "@designliquido/delegua-node": "^0.17.3",
+        "@designliquido/delegua-node": "^0.17.4",
         "@designliquido/foles": "^0.2.2",
         "real-executable-path": "^3.0.0"
     }

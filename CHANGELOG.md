@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.6.0
+
+- Adicionando suporte à depuração para BIRL.
+
 ## 0.5.8
 
 - Permitindo quebras de linha entre cláusulas `caso` de comando `escolha` no VisuAlg.
