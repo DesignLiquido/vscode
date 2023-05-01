@@ -9,7 +9,7 @@ import { FabricaAdaptadorDepuracaoEmbutido } from './fabricas';
 export function configurarDepuracao(context: vscode.ExtensionContext, factory?: vscode.DebugAdapterDescriptorFactory) {
 
 	context.subscriptions.push(
-		vscode.commands.registerCommand('extension.delegua.runEditorContents', (resource: vscode.Uri) => {
+		vscode.commands.registerCommand('extension.designliquido.runEditorContents', (resource: vscode.Uri) => {
 			let targetResource = resource;
 			if (!targetResource && vscode.window.activeTextEditor) {
 				targetResource = vscode.window.activeTextEditor.document.uri;
@@ -25,7 +25,7 @@ export function configurarDepuracao(context: vscode.ExtensionContext, factory?: 
 				);
 			}
 		}),
-		vscode.commands.registerCommand('extension.delegua.debugEditorContents', (resource: vscode.Uri) => {
+		vscode.commands.registerCommand('extension.designliquido.debugEditorContents', (resource: vscode.Uri) => {
 			let targetResource = resource;
 			if (!targetResource && vscode.window.activeTextEditor) {
 				targetResource = vscode.window.activeTextEditor.document.uri;
@@ -40,7 +40,7 @@ export function configurarDepuracao(context: vscode.ExtensionContext, factory?: 
 				});
 			}
 		}),
-		vscode.commands.registerCommand('extension.delegua.toggleFormatting', (variable) => {
+		vscode.commands.registerCommand('extension.designliquido.toggleFormatting', (variable) => {
 			const ds = vscode.debug.activeDebugSession;
 			if (ds) {
 				ds.customRequest('toggleFormatting');
@@ -48,7 +48,7 @@ export function configurarDepuracao(context: vscode.ExtensionContext, factory?: 
 		})
 	);
 
-	context.subscriptions.push(vscode.commands.registerCommand('extension.delegua.getProgramName', config => {
+	context.subscriptions.push(vscode.commands.registerCommand('extension.designliquido.getProgramName', config => {
 		return vscode.window.showInputBox({
 			placeHolder: "Por favor, forneça o nome de um arquivo Delégua no diretório de trabalho",
 			value: "index.delegua"

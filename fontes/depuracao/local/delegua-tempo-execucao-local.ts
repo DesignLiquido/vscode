@@ -22,6 +22,8 @@ import { InterpretadorVisuAlgComDepuracaoImportacao } from '@designliquido/deleg
 
 import palavrasReservadas from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
 import { InterpretadorPortugolStudioComDepuracao } from '@designliquido/delegua/fontes/interpretador/dialetos';
+import { LexadorBirl } from '@designliquido/delegua/fontes/lexador/dialetos';
+import { AvaliadorSintaticoBirl } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos';
 
 /**
  * Em teoria não precisaria uma classe de tempo de execução local, mas,
@@ -70,6 +72,18 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     {},
                     true);
                 this.interpretador = new InterpretadorVisuAlgComDepuracaoImportacao(this.importador, process.cwd(), 
+                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
+                break;
+            case "birl":
+                this.lexador = new LexadorBirl();
+                this.avaliadorSintatico = new AvaliadorSintaticoBirl();
+                this.importador = new Importador(
+                    this.lexador, 
+                    this.avaliadorSintatico, 
+                    {},
+                    {},
+                    true);
+                this.interpretador = new InterpretadorComDepuracaoImportacao(this.importador, process.cwd(), 
                     this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
                 break;
             case "eguap":

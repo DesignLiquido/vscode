@@ -1,5 +1,35 @@
 # Histórico de Modificações
 
+## 0.6.0
+
+- Adicionando suporte à depuração para BIRL.
+
+## 0.5.8
+
+- Permitindo quebras de linha entre cláusulas `caso` de comando `escolha` no VisuAlg.
+
+## 0.5.7
+
+- Correção de bug no método `filtrarPor()` em Delégua.
+
+## 0.5.6
+
+- Novo recurso de imutabilidade em Delégua (constantes);
+- Novas palavras reservadas: `const`, `constante`, `fixo`, `variavel`, `variável`.
+
+## 0.5.5
+
+- Repensando estrutura de laço de repetição na instrução `para` do VisuAlg para ficar idêntico ao interpretador original.
+
+## 0.5.4
+
+- Resolvendo casos em que `leia()` é usado com vetores em VisuAlg, fazendo a conversão automática de tipos.
+
+## 0.5.3
+
+- Adição de esboços para VisuAlg;
+- Correção em instrução `para` do dialeto VisuAlg para aceitar operações matemáticas básicas na denifição de condições.
+
 ## 0.5.2
 
 - Correção em instrução `para` do dialeto VisuAlg para aceitar identificadores e números.

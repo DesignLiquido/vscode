@@ -31,22 +31,40 @@ const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand(
-            'extension.delegua.traduzir.delegua',
-            () => traduzir('delegua', 'js')
+            'extension.designliquido.traduzir.delegua',
+            async () => await traduzir('delegua', 'js')
         )
     );
+
+    // TODO: Corrigir o suporte a XSLT para poder ativar essa transformação.
+    /* context.subscriptions.push(
+        vscode.commands.registerCommand(
+            'extension.designliquido.traduzir.html',
+            async () => await traduzir('html', 'lmht')
+        )
+    ); */
+
     context.subscriptions.push(
         vscode.commands.registerCommand(
-            'extension.delegua.traduzir.javascript',
-            () => traduzir('js', 'delegua')
+            'extension.designliquido.traduzir.javascript',
+            async () => await traduzir('js', 'delegua')
         )
     );
+
+    // TODO: Corrigir o suporte a XSLT para poder ativar essa transformação.
+    /* context.subscriptions.push(
+        vscode.commands.registerCommand(
+            'extension.designliquido.traduzir.lmht',
+            async () => await traduzir('lmht', 'html')
+        )
+    ); */
+    
     context.subscriptions.push(
         vscode.commands.registerCommand(
-            'extension.delegua.traduzir.visualg',
-            () => traduzir('alg', 'delegua')
+            'extension.designliquido.traduzir.visualg',
+            async () => await traduzir('alg', 'delegua')
         )
-    );
+    );    
 
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(

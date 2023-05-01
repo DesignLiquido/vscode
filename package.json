@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.5.2",
+    "version": "0.6.0",
     "engines": {
         "vscode": "^1.68.0"
     },
@@ -63,11 +63,11 @@
     },
     "main": "./dist/extensao.js",
     "activationEvents": [
-        "onDebugResolve:delegua",
-        "onDebugDynamicConfigurations:delegua",
-        "onCommand:extension.delegua.getProgramName",
-        "onCommand:extension.delegua.runEditorContents",
-        "onCommand:extension.delegua.debugEditorContents"
+        "onDebugResolve:designliquido",
+        "onDebugDynamicConfigurations:designliquido",
+        "onCommand:extension.designliquido.getProgramName",
+        "onCommand:extension.designliquido.runEditorContents",
+        "onCommand:extension.designliquido.debugEditorContents"
     ],
     "workspaceTrust": {
         "request": "never"
@@ -75,19 +75,22 @@
     "contributes": {
         "commands": [
             {
-                "command": "extension.delegua.traduzir.delegua",
+                "command": "extension.designliquido.traduzir.delegua",
                 "title": "Tradução: Traduzir fonte Delégua para JavaScript"
             },
             {
-                "command": "extension.delegua.traduzir.javascript",
+                "command": "extension.designliquido.traduzir.javascript",
                 "title": "Tradução: Traduzir fonte JavaScript para Delégua"
             },
             {
-                "command": "extension.delegua.traduzir.visualg",
+                "command": "extension.designliquido.traduzir.visualg",
                 "title": "Tradução: Traduzir fonte VisuAlg para Delégua"
             }
         ],
         "breakpoints": [
+            {
+                "language": "birl"
+            },
             {
                 "language": "delegua"
             },
@@ -108,6 +111,7 @@
             {
                 "type": "delegua",
                 "languages": [
+                    "birl",
                     "delegua",
                     "eguap",
                     "mapler",
@@ -176,7 +180,7 @@
                     }
                 ],
                 "variables": {
-                    "AskForProgramName": "extension.delegua.getProgramName"
+                    "AskForProgramName": "extension.designliquido.getProgramName"
                 }
             }
         ],

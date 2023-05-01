@@ -17,6 +17,7 @@ export class ProvedorConfiguracaoDelegua
 			const editor = vscode.window.activeTextEditor;
 			if (editor && editor.document.languageId) {
 				switch (editor.document.languageId) {
+                    case 'birl':
 					case 'delegua':
                     case 'eguap':
                     case 'mapler':
