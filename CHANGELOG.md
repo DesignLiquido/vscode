@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.6.1
+
+- Correção de bug em blocos de repetição com `retorna` em Delégua.
+
 ## 0.6.0
 
 - Adicionando suporte à depuração para BIRL.
