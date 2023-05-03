@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.6.2
+
+- Correção de bug em blocos de repetição com `sustar` em Delégua.
+
 ## 0.6.1
 
 - Correção de bug em blocos de repetição com `retorna` em Delégua.
