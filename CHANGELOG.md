@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.6.3
+
+- Atualização do núcleo de Delégua e dialetos para a versão 0.19.1;
+- Nova instrução em Delégua: `para cada`;
+- Nova primitiva para vetor: `vetor.concatenar()`.
+
 ## 0.6.2
 
 - Correção de bug em blocos de repetição com `sustar` em Delégua.
