@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.6.4
+
+- Ajustes em tradução de Delégua para JavaScript e vice-versa.
+
 ## 0.6.3
 
 - Atualização do núcleo de Delégua e dialetos para a versão 0.19.1;
