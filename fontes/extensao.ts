@@ -20,6 +20,7 @@ import { DeleguaProvedorFormatacao } from './formatadores';
 import { VisuAlgProvedorCompletude } from './completude/visualg-provedor-completude';
 import { VisuAlgProvedorDocumentacaoEmEditor } from './documentacao-em-editor/visualg-documentacao-em-editor';
 import { traduzir } from './traducao';
+import { analiseSemantica } from './analise-semantica';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -29,6 +30,26 @@ import { traduzir } from './traducao';
 const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
 
 export function activate(context: vscode.ExtensionContext) {
+    const deleguaDiagnostics = vscode.languages.createDiagnosticCollection("delegua");
+	context.subscriptions.push(deleguaDiagnostics);
+
+    vscode.workspace.onDidChangeTextDocument((e) => { 
+        const errosAnaliseSemantica = analiseSemantica(e);
+        if (errosAnaliseSemantica.length > 0) {
+            const diagnostics: vscode.Diagnostic[] = errosAnaliseSemantica.map(err => {
+                const range = new vscode.Range(Number(err.linha), 0, Number(err.linha), 1000);
+
+                return new vscode.Diagnostic(
+                    range,
+                    String(err.mensagem),
+                    vscode.DiagnosticSeverity.Warning
+                );
+            });
+
+            deleguaDiagnostics.set(e.document.uri, diagnostics);
+        }
+    });
+
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.delegua',
