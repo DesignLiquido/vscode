@@ -42,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
                 return new vscode.Diagnostic(
                     range,
                     String(err.mensagem),
-                    vscode.DiagnosticSeverity.Warning
+                    vscode.DiagnosticSeverity.Error
                 );
             });
 
