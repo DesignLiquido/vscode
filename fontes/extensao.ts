@@ -30,25 +30,20 @@ import { analiseSemantica } from './analise-semantica';
 const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
 
 export function activate(context: vscode.ExtensionContext) {
-    const deleguaDiagnostics = vscode.languages.createDiagnosticCollection("delegua");
-	context.subscriptions.push(deleguaDiagnostics);
+    const diagnosticosDelegua = vscode.languages.createDiagnosticCollection("delegua");
+	context.subscriptions.push(diagnosticosDelegua);
 
-    vscode.workspace.onDidChangeTextDocument((e) => { 
-        const errosAnaliseSemantica = analiseSemantica(e);
-        if (errosAnaliseSemantica.length > 0) {
-            const diagnostics: vscode.Diagnostic[] = errosAnaliseSemantica.map(err => {
-                const range = new vscode.Range(Number(err.linha), 0, Number(err.linha), 1000);
+    if (vscode.window.activeTextEditor) {
+		analiseSemantica(vscode.window.activeTextEditor.document, diagnosticosDelegua);
+	}
 
-                return new vscode.Diagnostic(
-                    range,
-                    String(err.mensagem),
-                    vscode.DiagnosticSeverity.Error
-                );
-            });
+    context.subscriptions.push(
+		vscode.workspace.onDidChangeTextDocument((e) => analiseSemantica(e.document, diagnosticosDelegua))
+	);
 
-            deleguaDiagnostics.set(e.document.uri, diagnostics);
-        }
-    });
+	context.subscriptions.push(
+		vscode.workspace.onDidCloseTextDocument(doc => diagnosticosDelegua.delete(doc.uri))
+	);
 
     context.subscriptions.push(
         vscode.commands.registerCommand(

@@ -6,8 +6,11 @@ import { AvaliadorSintaticoInterface, LexadorInterface } from '@designliquido/de
 import { ErroAnalisadorSemantico } from '@designliquido/delegua/fontes/interfaces/erros';
 
 
-export function analiseSemantica(e: vscode.TextDocumentChangeEvent): ErroAnalisadorSemantico[] {
-    const extensaoArquivo = e.document.fileName.split('.')[1];
+export function analiseSemantica(
+    documento: vscode.TextDocument, 
+    diagnosticos: vscode.DiagnosticCollection
+): void {
+    const extensaoArquivo = documento.fileName.split('.')[1];
     let lexador: LexadorInterface;
     let avaliadorSintatico: AvaliadorSintaticoInterface;
     let analisadorSemantico: AnalisadorSemantico;
@@ -18,12 +21,31 @@ export function analiseSemantica(e: vscode.TextDocumentChangeEvent): ErroAnalisa
             avaliadorSintatico = new AvaliadorSintatico();
             analisadorSemantico = new AnalisadorSemantico(); 
 
-            const linhas = e.document.getText().split('\n').map(l => l + '\0');
+            const linhas = documento.getText().split('\n').map(l => l + '\0');
             const resultadoLexador = lexador.mapear(linhas, -1);
             const resultadoAvaliadorSintatico = avaliadorSintatico.analisar(resultadoLexador, -1);
             const resultadoAnalisadorSemantico = analisadorSemantico.analisar(resultadoAvaliadorSintatico.declaracoes);
-            return resultadoAnalisadorSemantico.erros;
+            popularDiagnosticos(resultadoAnalisadorSemantico.erros, diagnosticos, documento);
     }
+}
 
-    return [];
+function popularDiagnosticos(
+    errosAnaliseSemantica: ErroAnalisadorSemantico[],
+    diagnosticos: vscode.DiagnosticCollection, 
+    documento: vscode.TextDocument
+) {
+    const listaOcorrenciasSemanticas: vscode.Diagnostic[] = errosAnaliseSemantica.map(err => {
+        const numeroLinha = Number(err.linha) - 1;
+        const linha = documento.lineAt(numeroLinha);
+        const textoLinha = linha.text;
+        const range = new vscode.Range(numeroLinha, 0, numeroLinha, textoLinha.length);
+
+        return new vscode.Diagnostic(
+            range,
+            String(err.mensagem),
+            vscode.DiagnosticSeverity.Error
+        );
+    });
+
+    diagnosticos.set(documento.uri, listaOcorrenciasSemanticas);
 }
