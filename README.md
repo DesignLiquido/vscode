@@ -11,6 +11,7 @@ Essa extensão também oferece suporte parcial a outras linguagens que são dial
 
 - [Egua](https://egua.tech);
 - [EguaP](https://github.com/DesignLiquido/delegua/wiki/Dialetos#eguap);
+- [Portugol Mapler](https://portugol.sourceforge.io/);
 - [Portugol Studio](http://lite.acad.univali.br/portugol/);
 - [Portugol VisuAlg](https://visualg3.com.br/).
 
@@ -22,6 +23,7 @@ Você pode instalar pesquisando nas extensões do Visual Studio Code [ou por est
 
 - Sintaxe colorida
 - Formatação de arquivos em Delégua
+- Análise semântica para Delégua
 - Reconhecimento de expressões comuns das linguagens Delégua, Égua, EguaP e dialetos de Portugol, como VisuAlg e Portugol Studio/Webstudio
 - Ícones para arquivos `.delegua`, `.egua`, `.eguap`, `.foles`, `.lincones` e `.lmht`
 - Trechos de códigos para facilitar desenvolvimento em Delégua

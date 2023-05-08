@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.7.0
+
+- Introdução de avaliação semântica para Delégua.
+
 ## 0.6.4
 
 - Ajustes em tradução de Delégua para JavaScript e vice-versa.
