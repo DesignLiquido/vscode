@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.7.1
+
+- Implementação de passo dinâmico para instrução `para`, em caso de intervalos serem determinados por uma ou duas variáveis. 
+
 ## 0.7.0
 
 - Introdução de avaliação semântica para Delégua.
