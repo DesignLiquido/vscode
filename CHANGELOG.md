@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.7.2
+
+- Novo método para vetores em Delégua: `encaixar`. 
+
 ## 0.7.1
 
 - Implementação de passo dinâmico para instrução `para`, em caso de intervalos serem determinados por uma ou duas variáveis. 
