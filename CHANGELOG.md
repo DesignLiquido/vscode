@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.7.3
+
+- Novos métodos para vetores em Delégua: `aparar`, `apararInicio`, `apararFim`;
+- Novo método para textos em Delégua: `concatenar`;
+- Correção de bug no passo dinâmico para instrução `para`, no VisuAlg.
+
 ## 0.7.2
 
 - Novo método para vetores em Delégua: `encaixar`. 
