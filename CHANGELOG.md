@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.7.4
+
+- Método `ordenar()` em Delégua agora aceita como parâmetro uma função.
+
 ## 0.7.3
 
 - Novos métodos para vetores em Delégua: `aparar`, `apararInicio`, `apararFim`;
