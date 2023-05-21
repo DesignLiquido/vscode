@@ -22,6 +22,7 @@
         "foles",
         "lincones",
         "portugol",
+        "potigol",
         "tradutor"
     ],
     "categories": [
@@ -104,6 +105,9 @@
                 "language": "portugolstudio"
             },
             {
+                "language": "potigol"
+            },
+            {
                 "language": "visualg"
             }
         ],
@@ -116,6 +120,7 @@
                     "eguap",
                     "mapler",
                     "portugolstudio",
+                    "potigol",
                     "visualg"
                 ],
                 "label": "Delégua",
@@ -286,6 +291,18 @@
                 "configuration": "./configuracoes/configuracao-portugolstudio.json"
             },
             {
+                "id": "potigol",
+                "aliases": [
+                    "Potigol",
+                    "potigol"
+                ],
+                "extensions": [
+                    ".poti",
+                    ".potigol"
+                ],
+                "configuration": "./configuracoes/configuracao-potigol.json"
+            },
+            {
                 "id": "visualg",
                 "aliases": [
                     "VisuAlg",
@@ -332,6 +349,11 @@
                 "language": "portugolstudio",
                 "scopeName": "source.portugolstudio",
                 "path": "./gramaticas/portugolstudio.tmLanguage.json"
+            },
+            {
+                "language": "potigol",
+                "scopeName": "source.potigol",
+                "path": "./gramaticas/potigol.tmLanguage.json"
             },
             {
                 "language": "visualg",
