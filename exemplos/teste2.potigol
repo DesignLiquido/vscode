@@ -1,0 +1,2 @@
+a, b = leia_inteiro
+escreva "X = {a + b}"

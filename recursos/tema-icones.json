@@ -47,6 +47,9 @@
 		"_portugolstudio": {
 			"iconPath": "./portugol-studio-logo.svg"
 		},
+		"_potigol": {
+			"iconPath": "./potigol-logo.svg"
+		},
 		"_visualg": {
 			"iconPath": "./visualg-logo.svg"
 		},
@@ -1578,6 +1581,8 @@
 		"lmht": "_lmht",
 		"mapler": "_mapler",
 		"por": "_portugolstudio",
+		"poti": "_potigol",
+		"potigol": "_potigol",
 		"bsl": "_bsl",
 		"mdo": "_mdo",
 		"cls": "_salesforce",
@@ -1966,6 +1971,8 @@
 			"lmht": "_lmht",
 			"mapler": "_mapler",
 			"por": "_portugolstudio",
+			"poti": "_potigol",
+			"potigol": "_potigol",
 			"bsl": "_bsl_light",
 			"mdo": "_mdo_light",
 			"cls": "_salesforce_light",
