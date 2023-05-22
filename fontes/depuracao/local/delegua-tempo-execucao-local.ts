@@ -20,7 +20,7 @@ import { ImportadorInterface } from '@designliquido/delegua-node/fontes/interfac
 import { InterpretadorComDepuracaoImportacao } from '@designliquido/delegua-node/fontes/interpretador/interpretador-com-depuracao-importacao';
 import { InterpretadorVisuAlgComDepuracaoImportacao } from '@designliquido/delegua-node/fontes/interpretador/dialetos/interpretador-visualg-com-depuracao-importacao';
 
-import palavrasReservadas from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
+import { palavrasReservadas } from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
 import { InterpretadorPortugolStudioComDepuracao } from '@designliquido/delegua/fontes/interpretador/dialetos';
 import { LexadorBirl } from '@designliquido/delegua/fontes/lexador/dialetos';
 import { AvaliadorSintaticoBirl } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos';

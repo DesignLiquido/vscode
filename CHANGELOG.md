@@ -1,9 +1,13 @@
 # Histórico de Modificações
 
+## 0.7.6
+
+- Correções de métodos de primitivas em Delégua.
 
 ## 0.7.5
 
 - Interpolação de texto em Delégua agora suporta chamada de função e expressões.
+
 ## 0.7.4
 
 - Método `ordenar()` em Delégua agora aceita como parâmetro uma função.

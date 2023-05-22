@@ -32,7 +32,7 @@ import { ArgumentosInicioDepuracao } from '../argumentos-inicio-depuracao';
 import { InvocacaoDelegua } from './invocacao-delegua';
 
 import { inferirTipoVariavel } from '@designliquido/delegua/fontes/interpretador/inferenciador';
-import palavrasReservadas from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
+import { palavrasReservadas } from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
 
 /**
  * Classe responsável por traduzir para o VSCode eventos enviados pelo
