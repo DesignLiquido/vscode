@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.8.0
+
+- Tradução de Delégua para Python.
+- Atribuição de variáveis na mesma linha em Delégua.
+- Definindo `tipo de` equivalente ao typeof do JavaScript para Delégua
+
 ## 0.7.6
 
 - Correções de métodos de primitivas em Delégua.
