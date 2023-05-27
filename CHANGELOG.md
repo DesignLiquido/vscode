@@ -1,6 +1,6 @@
 # Histórico de Modificações
 
-## 0.8.0
+## 0.7.7
 
 - Tradução de Delégua para Python.
 - Atribuição de variáveis na mesma linha em Delégua.
