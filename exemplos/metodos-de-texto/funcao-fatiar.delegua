@@ -1,0 +1,5 @@
+var t = "Um dois três quatro"
+escreva(t.fatiar()) // "um dois três quatro", ou seja, não faz nada.
+escreva(t.fatiar(2, 7)) // "dois"
+escreva(t.fatiar(8, 12)) // "três"
+escreva(t.fatiar(8)) // "três quatro", ou seja, seleciona tudo da posição 8 até o final do texto.

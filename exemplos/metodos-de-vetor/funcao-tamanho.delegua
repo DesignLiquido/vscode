@@ -1,0 +1,2 @@
+var vetor = [0, 1, 2, 3, 4]
+escreva(vetor.tamanho()) // 5

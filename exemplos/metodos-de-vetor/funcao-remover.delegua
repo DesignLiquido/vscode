@@ -1,0 +1,3 @@
+var vetor = [1, 2, 3]
+vetor.remover(2)
+escreva(vetor) // [1, 3]

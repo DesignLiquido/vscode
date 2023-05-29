@@ -1,0 +1,2 @@
+var t = "Eu gosto de caju e de graviola"
+t.subtexto(3, 16) // Resultado será "gosto de caju"

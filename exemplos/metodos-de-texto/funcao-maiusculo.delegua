@@ -1,0 +1,8 @@
+var t = "tudo em minúsculo"
+escreva(t.maiusculo()) // Imprimirá "TUDO EM MINÚSCULO"
+
+
+var v = [1 ,2, 3 ,4 , 5]
+escreva(v.fatiar(1))
+escreva(v.fatiar(2,3))
+escreva(v)

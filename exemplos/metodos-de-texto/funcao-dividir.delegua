@@ -1,0 +1,5 @@
+var texto = "um dois três"
+var textoDividido = texto.dividir(' ') // ['um','dois','três']
+
+escreva(textoDividido)
+dividir()

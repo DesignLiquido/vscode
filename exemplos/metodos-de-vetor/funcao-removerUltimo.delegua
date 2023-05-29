@@ -1,0 +1,4 @@
+var vetor = [1, 2, 3]
+var ultimoElemento = vetor.removerUltimo()
+escreva(ultimoElemento) // 3
+escreva(vetor) // [1, 2]

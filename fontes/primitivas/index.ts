@@ -1,6 +1,7 @@
 import { primitivasNumero } from './primitivas-numero';
 import { primitivasTexto } from './primitivas-texto';
 import { primitivasVetor } from './primitivas-vetor';
+import { metodosBibliotecaGlobal } from './metodos-biblioteca-global';
 
 const ordenar = (a: any, b: any) => {
     const nome1 = a['nome'].toUpperCase();
@@ -20,7 +21,8 @@ const ordenar = (a: any, b: any) => {
 const primitivas = [
     ...primitivasNumero, 
     ...primitivasTexto, 
-    ...primitivasVetor
+    ...primitivasVetor,
+    ...metodosBibliotecaGlobal
 ].sort(ordenar);
 
 export default primitivas;

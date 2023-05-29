@@ -1,0 +1,2 @@
+var numeroAleatorio = aleatorioEntre(1, 9);
+escreva(numeroAleatorio); // Retornará um valor entre 1 e 8.

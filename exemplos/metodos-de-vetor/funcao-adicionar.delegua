@@ -1,0 +1,5 @@
+var v = []
+v.adicionar(7)
+v.adicionar(5)
+v.adicionar(3)
+escreva(v) // [7, 5, 3]

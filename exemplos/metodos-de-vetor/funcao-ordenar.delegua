@@ -1,0 +1,19 @@
+//A ordenação padrão é ascendente, ou seja, para o caso de números, a ordem fica do menor para o maior.
+
+var v = [4, 2, 12, 5]
+escreva(v.ordenar()) // [2, 4, 5, 12]
+
+
+//Para o caso de textos, a ordenação é feita em ordem alfabética, caractere a caractere.
+var v = ["aaa", "a", "aba", "abb", "abc"]
+escreva(v.ordenar()) // ["a", "aaa", "aba", "abb", "abc"]
+
+
+//ordenar() também aceita um argumento que descreve como a ordenação deve ser feita, através de uma função que retorna inteiros. O algoritmo é a ordenação bolha. Se o inteiro for maior que zero, os elementos devem ser trocados de lugar.
+var numeros = [4, 2, 12, 8];
+
+numeros.ordenar(funcao(a, b) {
+     retorna b - a;
+});
+
+escreva(numeros); // [12, 8, 4, 2]

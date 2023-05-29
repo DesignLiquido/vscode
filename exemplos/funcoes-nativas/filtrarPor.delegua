@@ -1,0 +1,7 @@
+var listaDeIdades = [91, 32, 15, 44, 12, 18, 101];
+
+funcao checarIdade(idade) {
+  retorna(idade >= 18);
+}
+
+escreva(filtrarPor(listaDeIdades, checarIdade)); // [91, 32, 44, 18, 101]

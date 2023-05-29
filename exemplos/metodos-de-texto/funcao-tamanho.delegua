@@ -1,0 +1,2 @@
+var t = "Um dois três quatro"
+t.tamanho() // 19

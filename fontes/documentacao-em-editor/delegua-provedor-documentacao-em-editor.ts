@@ -6,8 +6,7 @@ import primitivas from '../primitivas';
  * Provedor de documentação para "hover" (ponteiro do _mouse_ por cima do elemento de código.)
  */
 export class DeleguaProvedorDocumentacaoEmEditor
-    implements vscode.HoverProvider
-{
+    implements vscode.HoverProvider {
     provideHover(
         document: vscode.TextDocument,
         position: vscode.Position,
@@ -16,24 +15,20 @@ export class DeleguaProvedorDocumentacaoEmEditor
         const intervalo = document.getWordRangeAtPosition(position);
         const palavra = document.getText(intervalo);
 
-        const documentacaoEscreva = new vscode.MarkdownString(
-            'Escreve um ou mais argumentos na saída padrão da aplicação.',
-            true
-        );
-        documentacaoEscreva.appendCodeblock(
-            'função escreva(...argumentos)',
-            'delegua'
-        );
-
         let mapa = {
-            escreva: documentacaoEscreva,
         };
 
         const primitiva = primitivas.find(
             (primitiva) => primitiva.nome === palavra
         );
+
         if (primitiva) {
-            mapa[primitiva.nome] = primitiva.documentacao;
+            const documentacaoElemento = new vscode.MarkdownString(primitiva.documentacao);
+
+            documentacaoElemento.appendCodeblock((primitiva as any).exemploCodigo,
+                'delegua'
+            );
+            mapa[primitiva.nome] = documentacaoElemento;
         }
 
         return new vscode.Hover(mapa[palavra]);
