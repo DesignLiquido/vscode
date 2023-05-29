@@ -76,15 +76,19 @@
     "contributes": {
         "commands": [
             {
-                "command": "extension.designliquido.traduzir.delegua",
+                "command": "extension.designliquido.traduzir.delegua.para.javascript",
                 "title": "Tradução: Traduzir fonte Delégua para JavaScript"
             },
             {
-                "command": "extension.designliquido.traduzir.javascript",
+                "command": "extension.designliquido.traduzir.delegua.para.python",
+                "title": "Tradução: Traduzir fonte Delégua para Python"
+            },
+            {
+                "command": "extension.designliquido.traduzir.javascript.para.delegua",
                 "title": "Tradução: Traduzir fonte JavaScript para Delégua"
             },
             {
-                "command": "extension.designliquido.traduzir.visualg",
+                "command": "extension.designliquido.traduzir.visualg.para.delegua",
                 "title": "Tradução: Traduzir fonte VisuAlg para Delégua"
             }
         ],

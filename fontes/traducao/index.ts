@@ -67,12 +67,11 @@ export async function traduzir(deLinguagem: string, paraLinguagem: string): Prom
 
 function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: string, caminhoArquivoAbertoEditor: string): string {
     let resultadoTraducao = '';
-    const traduzirPara = deLinguagem === 'alg' ? 'alg' : paraLinguagem;
     const delegua = new Delegua(
         undefined,
         undefined,
         undefined,
-        traduzirPara,
+        `${deLinguagem}-para-${paraLinguagem}`,
         (traducao: string) => {
             resultadoTraducao = traducao;
         },

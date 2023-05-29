@@ -47,8 +47,15 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
-            'extension.designliquido.traduzir.delegua',
+            'extension.designliquido.traduzir.delegua.para.javascript',
             async () => await traduzir('delegua', 'js')
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
+            'extension.designliquido.traduzir.delegua.para.python',
+            async () => await traduzir('delegua', 'py')
         )
     );
 
@@ -62,7 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
-            'extension.designliquido.traduzir.javascript',
+            'extension.designliquido.traduzir.javascript.para.delegua',
             async () => await traduzir('js', 'delegua')
         )
     );
@@ -77,7 +84,7 @@ export function activate(context: vscode.ExtensionContext) {
     
     context.subscriptions.push(
         vscode.commands.registerCommand(
-            'extension.designliquido.traduzir.visualg',
+            'extension.designliquido.traduzir.visualg.para.delegua',
             async () => await traduzir('alg', 'delegua')
         )
     );    
