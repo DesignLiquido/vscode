@@ -37,6 +37,7 @@ Essa extensão suporta tradução entre linguagens:
 - VisuAlg para Delégua;
 - Delégua para JavaScript
 - JavaScript para Delégua
+- Delégua para Python
 
 Pressione `Ctrl` + `Shift` + `p` (`Cmd` + `Shift` + `p` no Mac) e digite "tradução" para ter acesso aos comandos. Você pode atribuir atalhos de teclado a eles se quiser.
 
