@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.7.9
+
+- Correção fundamental em estrutura chamável.
+
 ## 0.7.8
 
 - Melhorias na forma de realizar a tradução de arquivos.
