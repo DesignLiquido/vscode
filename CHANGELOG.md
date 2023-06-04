@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.7.10
+
+- Melhorias no dialeto de Portugol Studio.
+
 ## 0.7.9
 
 - Correção fundamental em estrutura chamável.
