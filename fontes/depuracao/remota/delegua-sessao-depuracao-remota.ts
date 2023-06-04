@@ -296,7 +296,6 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
 	}
 
     protected dataBreakpointInfoRequest(response: DebugProtocol.DataBreakpointInfoResponse, args: DebugProtocol.DataBreakpointInfoArguments): void {
-
 		response.body = {
             dataId: null,
             description: "cannot break on data access",

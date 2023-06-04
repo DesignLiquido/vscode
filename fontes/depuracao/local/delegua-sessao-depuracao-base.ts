@@ -135,6 +135,11 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         super.dispatchRequest(request);
     } */
 
+    // Descomentar para testar quando o VSCode finaliza a depuração.
+    /* protected disconnectRequest(response: DebugProtocol.DisconnectResponse, args: DebugProtocol.DisconnectArguments, request?: DebugProtocol.Request): void {
+		console.log(`disconnectRequest suspend: ${args.suspendDebuggee}, terminate: ${args.terminateDebuggee}`);
+	} */
+
     /**
      * `initializeRequest` é a primeira requisição feita pelo VSCode para
      * descobrir quais funcionalidades o recurso de depuração tem.
@@ -152,6 +157,9 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         response.body.supportsRestartRequest = false;
         response.body.supportsModulesRequest = false;
         response.body.supportsConfigurationDoneRequest = true;
+        response.body.supportSuspendDebuggee = false;
+        response.body.supportTerminateDebuggee = true;
+        response.body.supportsTerminateRequest = true;
 
         this.sendResponse(response);
         this.sendEvent(new InitializedEvent());
@@ -281,12 +289,14 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         this.sendResponse(response);
     }
 
-    protected pauseRequest(
+    // TODO: Descomentar quando comando de pausa estiver devidamente implementado em Delégua.
+    /* protected pauseRequest(
         response: DebugProtocol.PauseResponse, 
         args: DebugProtocol.PauseArguments, request?: DebugProtocol.Request
     ): void {
+        this.tempoExecucao.pausar();
         super.pauseRequest(response, args);
-    }
+    } */
 
     /**
      * Aparentemente necessário para exibir as variáveis no painel de 

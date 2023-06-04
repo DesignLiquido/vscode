@@ -1,0 +1,6 @@
+var a = 0
+var b = 1
+enquanto (verdadeiro) {
+    a += 1
+    b = a + 1
+}

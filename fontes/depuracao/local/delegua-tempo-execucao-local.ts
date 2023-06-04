@@ -173,9 +173,11 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
 
         if (pararNaEntrada) {
             // Executar apenas um passo na entrada.
+            this.interpretador.comando = 'proximo';
             this.interpretador.instrucaoPasso();
         } else {
             // Executamos até encontrar ou um ponto de parada, ou uma exceção.
+            this.interpretador.comando = 'continuar';
             this.interpretador.instrucaoContinuarInterpretacao();
         }
     }
@@ -185,7 +187,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
     }
 
     continuar() {
-        this.interpretador.comando = undefined;
+        this.interpretador.comando = 'continuar';
         this.interpretador.pontoDeParadaAtivo = false;
         this.interpretador.instrucaoContinuarInterpretacao();
     }
@@ -232,6 +234,12 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
             this.enviarEvento('pararEmPasso');
         });
     }
+
+    // TODO: Recolocar quando comando 'pausar' estiver devidamente implementado em Delégua.
+    /* pausar() {
+        this.interpretador.comando = 'pausar';
+        this.enviarEvento('pararEmPasso');
+    } */
 
     pilhaExecucao(): ElementoPilhaVsCode[] {
         // O primeiro elemento da pilha é apenas onde fica o ambiente global.
