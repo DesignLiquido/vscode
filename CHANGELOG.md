@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.7.11
+
+- Comparação lexicográfica de textos para Delégua e EguaP;
+- Ajustes em métodos de primitivas de texto.
+
 ## 0.7.10
 
 - Melhorias no dialeto de Portugol Studio.
