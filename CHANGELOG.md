@@ -1,8 +1,12 @@
 # Histórico de Modificações
 
+## 0.7.12
+
+- Documentação de métodos primitivos em Delégua.
+
 ## 0.7.11
 
-- Comparação lexicográfica de textos para Delégua e EguaP;
+- Comparação lexicográfica de textos para Delégua e EguaP.
 - Ajustes em métodos de primitivas de texto.
 
 ## 0.7.10
@@ -21,7 +25,7 @@
 
 - Tradução de Delégua para Python.
 - Atribuição de variáveis na mesma linha em Delégua.
-- Definindo `tipo de` equivalente ao typeof do JavaScript para Delégua
+- Definindo `tipo de` equivalente ao typeof do JavaScript para Delégua.
 
 ## 0.7.6
 
