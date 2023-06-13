@@ -1,0 +1,3 @@
+var t = "um dois três"
+t.inclui("dois") // verdadeiro
+t.inclui("quatro") // falso

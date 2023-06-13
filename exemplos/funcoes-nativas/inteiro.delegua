@@ -1,0 +1,5 @@
+// Variável para teste
+var testeTexto = "111";
+
+escreva(111 + inteiro(testeTexto));
+// 222

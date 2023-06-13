@@ -1,0 +1,4 @@
+var numeroAleatorio = aleatorio();
+
+escreva(numeroAleatorio);
+// 0.8540051495195808

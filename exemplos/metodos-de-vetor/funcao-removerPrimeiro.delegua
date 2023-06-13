@@ -1,0 +1,4 @@
+var vetor = [1, 2, 3]
+var primeiroElemento = vetor.removerPrimeiro()
+escreva(primeiroElemento) // 1
+escreva(vetor) // [2, 3]

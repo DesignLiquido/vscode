@@ -1,0 +1,5 @@
+var v = []
+v.empilhar(7)
+v.empilhar(5)
+v.empilhar(3)
+escreva(v) // [7, 5, 3]

@@ -1,0 +1,2 @@
+var v = [1, 2, 3]
+escreva(v.inverter()) // [3, 2, 1]

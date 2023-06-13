@@ -1,0 +1,3 @@
+var v = [1, 2, 3]
+escreva(v.inclui(2)) // verdadeiro
+escreva(v.inclui(4)) // falso

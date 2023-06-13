@@ -1,0 +1,4 @@
+var v = [1, 2, 3, 4, 5]
+escreva(v.fatiar()) // "[1, 2, 3, 4, 5]", ou seja, não faz coisa alguma.
+escreva(v.fatiar(2, 4)) // "[3, 4]"
+escreva(v.fatiar(2)) // "[3, 4, 5]", ou seja, seleciona tudo da posição 3 até o final do vetor.
