@@ -1,0 +1,2 @@
+var vetorA = ['maçã', 'laranja', 'banana', 'morango']
+escreva(vetorA.juntar(', ')) 

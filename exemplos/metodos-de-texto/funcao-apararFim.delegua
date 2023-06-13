@@ -1,0 +1,2 @@
+var t = "   meu texto com espaços no início e no fim       "
+escreva("|" + t.apararFim() + "|") // "|   meu texto com espaços no início e no fim|"

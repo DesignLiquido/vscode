@@ -1,0 +1,5 @@
+// Variável para teste
+var testeNumero = 123;
+
+escreva("123" + texto(testeNumero));
+// 123123

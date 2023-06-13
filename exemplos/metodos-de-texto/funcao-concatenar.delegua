@@ -1,0 +1,3 @@
+var t1 = "um" 
+var t2 = "dois três"
+escreva(t1.concatenar(t2)) // "umdois três"

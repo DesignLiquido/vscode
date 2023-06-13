@@ -1,0 +1,5 @@
+// Variável para teste
+var testeTexto = "504.69";
+
+escreva(0.01 + real(testeTexto));
+// 504.7

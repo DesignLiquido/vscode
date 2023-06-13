@@ -21,7 +21,7 @@ const ordenar = (a: any, b: any) => {
 const primitivas = [
     ...primitivasNumero, 
     ...primitivasTexto, 
-    ...primitivasVetor,
+   // ...primitivasVetor,
     ...metodosBibliotecaGlobal
 ].sort(ordenar);
 
