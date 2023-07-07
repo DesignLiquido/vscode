@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://marketplace.visualstudio.com/items?itemName=designliquido.designliquido-vscode" title="Extensão no Visual Studio Marketplace">
-    <img src="https://img.shields.io/visual-studio-marketplace/d/designliquido.designliquido-vscode?label=Visual%20Studio%20Marketplace" alt="Extensão no Visual Studio Marketplace" />
+    <img src="https://img.shields.io/visual-studio-marketplace/i/designliquido.designliquido-vscode?label=Visual%20Studio%20Marketplace" alt="Extensão no Visual Studio Marketplace" />
   </a>
   <a href="https://marketplace.visualstudio.com/items?itemName=designliquido.designliquido-vscode" title="Extensão na open-vsx.org">
     <img src="https://img.shields.io/open-vsx/dt/designliquido/designliquido-vscode?label=open-vsx.org" alt="Extensão na open-vsx.org" />
