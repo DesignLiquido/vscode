@@ -1,5 +1,14 @@
 # Linguagens em Português para Visual Studio Code
 
+<p align="center">
+  <a href="https://marketplace.visualstudio.com/items?itemName=designliquido.designliquido-vscode" title="Extensão no Visual Studio Marketplace">
+    <img src="https://img.shields.io/visual-studio-marketplace/i/designliquido.designliquido-vscode?label=Visual%20Studio%20Marketplace" alt="Extensão no Visual Studio Marketplace" />
+  </a>
+  <a href="https://open-vsx.org/extension/designliquido/designliquido-vscode" title="Extensão na open-vsx.org">
+    <img src="https://img.shields.io/open-vsx/dt/designliquido/designliquido-vscode?label=open-vsx.org" alt="Extensão na open-vsx.org" />
+  </a>
+</p>
+
 Essa extensão visa melhorar a produtividade de projetos escritos usando as linguagens da Design Líquido: 
 
 - [Delégua](https://github.com/DesignLiquido/delegua);
