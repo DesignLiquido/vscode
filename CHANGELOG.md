@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.7.13
+
+- Correção de _bug_ em passo decremental do VisuAlg.
+
 ## 0.7.12
 
 - Documentação de métodos primitivos em Delégua.
