@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.7.14
+
+- Melhorias no avaliador semântico ao atribuir variáveis
+
 ## 0.7.13
 
 - Correção de _bug_ em passo decremental do VisuAlg.
