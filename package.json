@@ -401,7 +401,7 @@
         "webpack-cli": "^5.0.1"
     },
     "dependencies": {
-        "@designliquido/delegua-node": "^0.22.4",
+        "@designliquido/delegua-node": "^0.22.5",
         "@designliquido/foles": "^0.2.2",
         "lodash": "^4.17.21",
         "real-executable-path": "^3.0.0"
