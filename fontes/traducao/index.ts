@@ -1,17 +1,12 @@
 import * as vscode from 'vscode';
 import * as caminho from 'path';
+import * as sistemaArquivos from 'fs';
 
 import { Delegua } from '@designliquido/delegua-node/fontes/delegua';
+import { FolEs } from '@designliquido/foles';
 
-// Não conseguimos usar o 'saxon-js' porque o pacote é um lixo.
-// Não apenas é muito mal documentado como também falha por motivos misteriosos.
-// Da mesma forma, até a versão 0.2.0, o pacote '@designliquido/lmht-js' depende do 'saxon-js'.
-// Funciona em aplicações web tradicionais ou no Node.js puro, mas não funciona para o VSCode. 
-// O erro é: `Activating extension failed: abstractNode is not defined.`
-// Por isso, a tradução de LMHT para HTML e vice-versa por enquanto
-// não fica ativada, ou até acharmos um pacote que processe o XSLT de LMHT
-// a contento, ou criando um.
-// Uma ideia é fazer um _fork_ de https://github.com/fiduswriter/xslt-processor.
+// TODO: Ajustar https://github.com/DesignLiquido/xslt-processor para
+// funcionar com LMHT, e então se livrar do 'saxon-js'.
 
 // import SaxonJS from 'saxon-js';
 // import { ConversorHtml, ConversorLmht } from '@designliquido/lmht-js';
@@ -39,6 +34,9 @@ export async function traduzir(deLinguagem: string, paraLinguagem: string): Prom
             case 'lmht':
             case 'html':
                 // resultadoTraducao = await traduzirPorMotorLmht(deLinguagem, paraLinguagem, caminhoArquivoAbertoEditor);
+                break;
+            case 'foles':
+                resultadoTraducao = traduzirPorMotorFolEs(deLinguagem, paraLinguagem, caminhoArquivoAbertoEditor);
                 break;
             default:
                 resultadoTraducao = traduzirPorMotorDelegua(deLinguagem, paraLinguagem, caminhoArquivoAbertoEditor);
@@ -86,7 +84,14 @@ function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: string, cam
     return resultadoTraducao;
 }
 
-// Essa seria a forma de usar caso '@designliquido/lmht-js' ou 'saxon-js' funciocnassem da maneira correta.
+function traduzirPorMotorFolEs(deLinguagem: string, paraLinguagem: string, caminhoArquivoAbertoEditor: string): string {
+    const foles = new FolEs();
+    const resultadoTraducao = foles.converterParaCss(caminhoArquivoAbertoEditor);
+    sistemaArquivos.writeFileSync(caminhoArquivoAbertoEditor.split('.')[0] + '.css', resultadoTraducao);
+    return resultadoTraducao;
+}
+
+// Essa seria a forma de usar caso '@designliquido/lmht-js' ou 'saxon-js' funcionassem da maneira correta.
 // Por enquanto esse código fica aqui como referência do que fazer mais adiante.
 /* async function traduzirPorMotorLmht(deLinguagem: string, paraLinguagem: string, caminhoArquivoAbertoEditor: string): Promise<string> {
     switch (paraLinguagem.toLowerCase()) {

@@ -74,6 +74,13 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
+            'extension.designliquido.traduzir.foles.para.css',
+            async () => await traduzir('foles', 'css')
+        )
+    );
+
     // TODO: Corrigir o suporte a XSLT para poder ativar essa transformação.
     /* context.subscriptions.push(
         vscode.commands.registerCommand(

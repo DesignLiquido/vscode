@@ -2,31 +2,31 @@
 # yarn lockfile v1
 
 
-"@designliquido/delegua-node@^0.22.5":
-  version "0.22.5"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-0.22.5.tgz#9967f8407971e97e3b8997103624e4058c5515cd"
-  integrity sha512-c5qumX5iFP3xK7yh9roJbUv4I1wWLpFR5whV7x1SpUN+1//WonyW9IJiCx0NDLESqFtTYx4N6w9eMf6lr+XJrw==
+"@designliquido/delegua-node@^0.22.6":
+  version "0.22.6"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-0.22.6.tgz#43e6dc1f638ab6162f5035c699035080b76e5522"
+  integrity sha512-lEj+wtFUrUpRmMGUU+dpoGBe7LifCthoeqqgvlu46zN7jtbrAKArLtdW8HrpB12NnAwRBOJDYEvZORMtonZpDw==
   dependencies:
-    "@designliquido/delegua" "0.22.5"
+    "@designliquido/delegua" "0.22.6"
     chalk "4.1.2"
     commander "^9.4.1"
     json-colorizer "^2.2.2"
     lodash.clonedeep "^4.5.0"
 
-"@designliquido/delegua@0.22.5":
-  version "0.22.5"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.22.5.tgz#1f117642c80f4a33df119141c5eddae5526e810e"
-  integrity sha512-ZV5Ce4tZhdFfoN/LJKVt7FTfDOyGjEtpwdB1cOG7QtZPmxWucWzpSK8SvMJPJh57du9559RbRg0r98SU7nAMjQ==
+"@designliquido/delegua@0.22.6":
+  version "0.22.6"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.22.6.tgz#0a4c17cf05e0b8800f0ab27fbe0711a777a11a30"
+  integrity sha512-uk36Mppgjlr0Lw/aHgW8ytvSoqTMg4H3xEShmEVjRzJe6il28nNUSWZKcs/UziP7usrSmLWf4WZOULrFD5UpKw==
   dependencies:
     antlr4ts "^0.5.0-alpha.4"
     browser-process-hrtime "^1.0.0"
     esprima "^4.0.1"
     lodash.clonedeep "^4.5.0"
 
-"@designliquido/foles@^0.2.2":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.2.3.tgz#c2449bcf42ac1cca78fa640e5b9dffcafba185d1"
-  integrity sha512-flBKNVvmXuHnrwRoPfH40HCR0Mnpma9aW04G218tfCm45/0Glnlb2jlOpMYQzO23WHGnqSZn2AgJPi2F4+oOjw==
+"@designliquido/foles@^0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.3.4.tgz#91d2694f43ccf1120cbd241ad04016bd204a3eac"
+  integrity sha512-Fe3IH4C78h684pNmRn2hziXrIjNq4tNcp4bq7FqeI/rp341tSB5/DUKfey0nYXYHnYeqDIR6tZzfz44kxotSfg==
   dependencies:
     commander "^9.4.1"
     vlq "^2.0.4"

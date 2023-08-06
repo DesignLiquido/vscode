@@ -1,8 +1,13 @@
 # Histórico de Modificações
 
+## 0.7.15
+
+- Atualização de Delégua e FolEs para as versões mais recentes;
+- Adição do comando "Traduzir fonte FolEs para CSS".
+
 ## 0.7.14
 
-- Melhorias no avaliador semântico ao atribuir variáveis
+- Melhorias no avaliador semântico ao atribuir variáveis.
 
 ## 0.7.13
 
@@ -153,9 +158,9 @@
 ## 0.4.1
 
 - Adicionados três comandos de tradução de arquivos:
-    - VisuAlg para Delégua
-    - Delégua para JavaScript
-    - JavaScript para Delégua
+    - VisuAlg para Delégua;
+    - Delégua para JavaScript;
+    - JavaScript para Delégua.
 
 ## 0.4.0
 
