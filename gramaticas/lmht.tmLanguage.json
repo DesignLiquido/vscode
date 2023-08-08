@@ -2125,7 +2125,7 @@
 					]
 				},
 				{
-					"begin": "(?i)(<)(address|article|aside|blockquote|body|button|caption|colgroup|datalist|dd|details|dialog|div|dl|dt|fieldset|figcaption|figure|footer|form|head|header|hgroup|lmht|h[1-6]|label|legend|li|main|map|menu|meter|nav|ol|optgroup|option|output|p|pre|progress|section|select|slot|summary|table|tbody|td|template|textarea|tfoot|th|thead|tr|ul)(?=\\s|/?>)",
+					"begin": "(?i)(<)(address|artigo|aparte|citacao|citação|corpo|botao|botão|caption|grupo-colunas|lista-pesquisavel|lista-pesquisável|lista-definições|lista-definicoes|definicao|definição|detalhes|modal|divisão|divisao|lista-definicoes|lista-definiçoes|lista-definições|termo|campos|figcaption|figure|footer|formulario|formulário|cabeca|cabeça|cabeca-tabela|cabeça-tabela|header|hgroup|html|h[1-6]|etiqueta|legend|item-lista|principal|map|menu|medidor|navegacao|navegação|lista-numerada|grupo-opcoes|grupo-opçoes|grupo-opções|opcao|opçao|opção|output|paragrafo|parágrafo|preformatado|progresso|secao|seção|selecao|seleção|slot|sumario|sumário|tabela|corpo-tabela|celula|célula|invisivel|invisível|area-texto|área-texto|tfoot|th|thead|linha|lista-simples)(?=\\s|/?>)",
 					"beginCaptures": {
 						"1": {
 							"name": "punctuation.definition.tag.begin.lmht"
@@ -2148,7 +2148,7 @@
 					]
 				},
 				{
-					"begin": "(?i)(</)(address|article|aside|blockquote|body|button|caption|colgroup|datalist|dd|details|dialog|div|dl|dt|fieldset|figcaption|figure|footer|form|head|header|hgroup|lmht|h[1-6]|label|legend|li|main|map|menu|meter|nav|ol|optgroup|option|output|p|pre|progress|section|select|slot|summary|table|tbody|td|template|textarea|tfoot|th|thead|tr|ul)(?=\\s|/?>)",
+					"begin": "(?i)(</)(address|artigo|aparte|citacao|citação|corpo|botao|botão|caption|grupo-colunas|lista-pesquisavel|lista-pesquisável|lista-definições|lista-definicoes|definicao|definição|detalhes|modal|divisão|divisao|lista-definicoes|lista-definiçoes|lista-definições|termo|campos|figcaption|figure|footer|formulario|formulário|cabeca|cabeça|cabeca-tabela|cabeça-tabela|header|hgroup|html|h[1-6]|etiqueta|legend|item-lista|principal|map|menu|medidor|navegacao|navegação|lista-numerada|grupo-opcoes|grupo-opçoes|grupo-opções|opcao|opçao|opção|output|paragrafo|parágrafo|preformatado|progresso|secao|seção|selecao|seleção|slot|sumario|sumário|tabela|corpo-tabela|celula|célula|invisivel|invisível|area-texto|área-texto|tfoot|th|thead|linha|lista-simples)(?=\\s|/?>)",
 					"beginCaptures": {
 						"1": {
 							"name": "punctuation.definition.tag.begin.lmht"
