@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.7.16
+
+- Atualização de Delégua e FolEs para as versões 0.22.7 e 0.4.0, respectivamente.
+
 ## 0.7.15
 
 - Atualização de Delégua e FolEs para as versões mais recentes;
