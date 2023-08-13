@@ -6,7 +6,7 @@
 * Diretório `gramaticas` - Arquivos de gramática do Text Mate: https://macromates.com/manual/en/language_grammars (inglês)
     * BIRL: `birl.tmLanguage.json`
     * Delégua: `delegua.tmLanguage.json`
-    * Pituguês: `egua.tmLanguage.json`
+    * Pituguês: `pitugues.tmLanguage.json`
     * LMHT: `lmht.tmLanguage.json`
     * VisuAlg: `visualg.tmLanguage.json`
 * Diretório `configuracoes` - Arquivos de configuração das linguagens, onde se definem _tokens_ e palavras reservadas.
