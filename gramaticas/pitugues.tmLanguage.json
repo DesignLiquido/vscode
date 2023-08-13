@@ -1,10 +1,10 @@
 {
 	"information_for_contributors": [
-		"Derivado de https://raw.githubusercontent.com/microsoft/vscode/main/extensions/eguap/syntaxes/MagicPython.tmLanguage.json"
+		"Derivado de https://raw.githubusercontent.com/microsoft/vscode/main/extensions/pitugues/syntaxes/MagicPython.tmLanguage.json"
 	],
 	"version": "1",
-	"name": "EguaP",
-	"scopeName": "source.eguap",
+	"name": "Pituguês",
+	"scopeName": "source.pitugues",
 	"patterns": [
 		{
 			"include": "#statement"
@@ -52,7 +52,7 @@
 		"semicolon": {
 			"patterns": [
 				{
-					"name": "invalid.deprecated.semicolon.eguap",
+					"name": "invalid.deprecated.semicolon.pitugues",
 					"match": "\\;$"
 				}
 			]
@@ -60,33 +60,33 @@
 		"comments": {
 			"patterns": [
 				{
-					"name": "comment.line.number-sign.eguap",
-					"contentName": "meta.typehint.comment.eguap",
+					"name": "comment.line.number-sign.pitugues",
+					"contentName": "meta.typehint.comment.pitugues",
 					"begin": "(?x)\n  (?:\n    \\# \\s* (type:)\n    \\s*+ (?# we want `\\s*+` which is possessive quantifier since\n             we do not actually want to backtrack when matching\n             whitespace here)\n    (?! $ | \\#)\n  )\n",
 					"end": "(?:$|(?=\\#))",
 					"beginCaptures": {
 						"0": {
-							"name": "meta.typehint.comment.eguap"
+							"name": "meta.typehint.comment.pitugues"
 						},
 						"1": {
-							"name": "comment.typehint.directive.notation.eguap"
+							"name": "comment.typehint.directive.notation.pitugues"
 						}
 					},
 					"patterns": [
 						{
-							"name": "comment.typehint.ignore.notation.eguap",
+							"name": "comment.typehint.ignore.notation.pitugues",
 							"match": "(?x)\n  \\G ignore\n  (?= \\s* (?: $ | \\#))\n"
 						},
 						{
-							"name": "comment.typehint.type.notation.eguap",
+							"name": "comment.typehint.type.notation.pitugues",
 							"match": "(?x)\n  (?<!\\.)\\b(\n    bool | bytes | float | int | object | str\n    | List | Dict | Iterable | Sequence | Set\n    | FrozenSet | Callable | Union | Tuple\n    | Any | None\n  )\\b\n"
 						},
 						{
-							"name": "comment.typehint.punctuation.notation.eguap",
+							"name": "comment.typehint.punctuation.notation.pitugues",
 							"match": "([\\[\\]\\(\\),\\.\\=\\*]|(->))"
 						},
 						{
-							"name": "comment.typehint.variable.notation.eguap",
+							"name": "comment.typehint.variable.notation.pitugues",
 							"match": "([[:alpha:]_]\\w*)"
 						}
 					]
@@ -109,17 +109,17 @@
 		"docstring": {
 			"patterns": [
 				{
-					"name": "string.quoted.docstring.multi.eguap",
+					"name": "string.quoted.docstring.multi.pitugues",
 					"begin": "(\\'\\'\\'|\\\"\\\"\\\")",
 					"end": "(\\1)",
 					"beginCaptures": {
 						"1": {
-							"name": "punctuation.definition.string.begin.eguap"
+							"name": "punctuation.definition.string.begin.pitugues"
 						}
 					},
 					"endCaptures": {
 						"1": {
-							"name": "punctuation.definition.string.end.eguap"
+							"name": "punctuation.definition.string.end.pitugues"
 						}
 					},
 					"patterns": [
@@ -135,20 +135,20 @@
 					]
 				},
 				{
-					"name": "string.quoted.docstring.raw.multi.eguap",
+					"name": "string.quoted.docstring.raw.multi.pitugues",
 					"begin": "([rR])(\\'\\'\\'|\\\"\\\"\\\")",
 					"end": "(\\2)",
 					"beginCaptures": {
 						"1": {
-							"name": "storage.type.string.eguap"
+							"name": "storage.type.string.pitugues"
 						},
 						"2": {
-							"name": "punctuation.definition.string.begin.eguap"
+							"name": "punctuation.definition.string.begin.pitugues"
 						}
 					},
 					"endCaptures": {
 						"1": {
-							"name": "punctuation.definition.string.end.eguap"
+							"name": "punctuation.definition.string.end.pitugues"
 						}
 					},
 					"patterns": [
@@ -164,20 +164,20 @@
 					]
 				},
 				{
-					"name": "string.quoted.docstring.single.eguap",
+					"name": "string.quoted.docstring.single.pitugues",
 					"begin": "(\\'|\\\")",
 					"end": "(\\1)|(\\n)",
 					"beginCaptures": {
 						"1": {
-							"name": "punctuation.definition.string.begin.eguap"
+							"name": "punctuation.definition.string.begin.pitugues"
 						}
 					},
 					"endCaptures": {
 						"1": {
-							"name": "punctuation.definition.string.end.eguap"
+							"name": "punctuation.definition.string.end.pitugues"
 						},
 						"2": {
-							"name": "invalid.illegal.newline.eguap"
+							"name": "invalid.illegal.newline.pitugues"
 						}
 					},
 					"patterns": [
@@ -190,23 +190,23 @@
 					]
 				},
 				{
-					"name": "string.quoted.docstring.raw.single.eguap",
+					"name": "string.quoted.docstring.raw.single.pitugues",
 					"begin": "([rR])(\\'|\\\")",
 					"end": "(\\2)|(\\n)",
 					"beginCaptures": {
 						"1": {
-							"name": "storage.type.string.eguap"
+							"name": "storage.type.string.pitugues"
 						},
 						"2": {
-							"name": "punctuation.definition.string.begin.eguap"
+							"name": "punctuation.definition.string.begin.pitugues"
 						}
 					},
 					"endCaptures": {
 						"1": {
-							"name": "punctuation.definition.string.end.eguap"
+							"name": "punctuation.definition.string.end.pitugues"
 						},
 						"2": {
-							"name": "invalid.illegal.newline.eguap"
+							"name": "invalid.illegal.newline.pitugues"
 						}
 					},
 					"patterns": [
@@ -237,43 +237,43 @@
 			"match": "(?x)\n  (?:\n    (?:^|\\G) \\s* (?# '\\G' is necessary for ST)\n    ((?:>>>|\\.\\.\\.) \\s) (?=\\s*\\S)\n  )\n",
 			"captures": {
 				"1": {
-					"name": "keyword.control.flow.eguap"
+					"name": "keyword.control.flow.pitugues"
 				}
 			}
 		},
 		"statement-keyword": {
 			"patterns": [
 				{
-					"name": "storage.type.function.eguap",
+					"name": "storage.type.function.pitugues",
 					"match": "\\b((async\\s+)?\\s*(funcao|função))\\b"
 				},
 				{
-					"name": "keyword.control.flow.eguap",
+					"name": "keyword.control.flow.pitugues",
 					"comment": "if `as` is eventually followed by `:` or line continuation\nit's probably control flow like:\n    with foo as bar, \\\n         Foo as Bar:\n      try:\n        do_stuff()\n      except Exception as e:\n        pass\n",
 					"match": "\\b(?<!\\.)as\\b(?=.*[:\\\\])"
 				},
 				{
-					"name": "keyword.control.import.eguap",
+					"name": "keyword.control.import.pitugues",
 					"comment": "other legal use of `as` is in an import",
 					"match": "\\b(?<!\\.)as\\b"
 				},
 				{
-					"name": "keyword.control.flow.eguap",
+					"name": "keyword.control.flow.pitugues",
 					"match": "(?x)\n  \\b(?<!\\.)(\n    async | continua | del | assert | sustar | finalmente | para\n    | senao | senão | se | except | pass | para\n    | retorna | tente | enquanto | with\n  )\\b\n"
 				},
 				{
-					"name": "storage.modifier.declaration.eguap",
+					"name": "storage.modifier.declaration.pitugues",
 					"match": "(?x)\n  \\b(?<!\\.)(\n    global | nonlocal\n  )\\b\n"
 				},
 				{
-					"name": "storage.type.class.eguap",
+					"name": "storage.type.class.pitugues",
 					"match": "\\b(?<!\\.)(class)\\b"
 				},
 				{
 					"match": "(?x)\n  ^\\s*(\n    case | match\n  )(?=\\s*([-+\\w\\d(\\[{'\":#]|$))\\b\n",
 					"captures": {
 						"1": {
-							"name": "keyword.control.flow.eguap"
+							"name": "keyword.control.flow.pitugues"
 						}
 					}
 				}
@@ -389,12 +389,12 @@
 			]
 		},
 		"member-access": {
-			"name": "meta.member.access.eguap",
+			"name": "meta.member.access.pitugues",
 			"begin": "(\\.)\\s*(?!\\.)",
 			"end": "(?x)\n  # stop when you've just read non-whitespace followed by non-word\n  # i.e. when finished reading an identifier or function call\n  (?<=\\S)(?=\\W) |\n  # stop when seeing the start of something that's not a word,\n  # i.e. when seeing a non-identifier\n  (^|(?<=\\s))(?=[^\\\\\\w\\s]) |\n  $\n",
 			"beginCaptures": {
 				"1": {
-					"name": "punctuation.separator.period.eguap"
+					"name": "punctuation.separator.period.pitugues"
 				}
 			},
 			"patterns": [
@@ -433,11 +433,11 @@
 		},
 		"member-access-attribute": {
 			"comment": "Highlight attribute access in otherwise non-specialized cases.",
-			"name": "meta.attribute.eguap",
+			"name": "meta.attribute.pitugues",
 			"match": "(?x)\n  \\b ([[:alpha:]_]\\w*) \\b\n"
 		},
 		"special-names": {
-			"name": "constant.other.caps.eguap",
+			"name": "constant.other.caps.pitugues",
 			"match": "(?x)\n  \\b\n    # we want to see \"enough\", meaning 2 or more upper-case\n    # letters in the beginning of the constant\n    #\n    # for more details refer to:\n    #   https://github.com/MagicStack/MagicPython/issues/42\n    (\n      _* [[:upper:]] [_\\d]* [[:upper:]]\n    )\n    [[:upper:]\\d]* (_\\w*)?\n  \\b\n"
 		},
 		"curly-braces": {
@@ -445,17 +445,17 @@
 			"end": "\\}",
 			"beginCaptures": {
 				"0": {
-					"name": "punctuation.definition.dict.begin.eguap"
+					"name": "punctuation.definition.dict.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"0": {
-					"name": "punctuation.definition.dict.end.eguap"
+					"name": "punctuation.definition.dict.end.pitugues"
 				}
 			},
 			"patterns": [
 				{
-					"name": "punctuation.separator.dict.eguap",
+					"name": "punctuation.separator.dict.pitugues",
 					"match": ":"
 				},
 				{
@@ -468,12 +468,12 @@
 			"end": "\\]",
 			"beginCaptures": {
 				"0": {
-					"name": "punctuation.definition.list.begin.eguap"
+					"name": "punctuation.definition.list.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"0": {
-					"name": "punctuation.definition.list.end.eguap"
+					"name": "punctuation.definition.list.end.pitugues"
 				}
 			},
 			"patterns": [
@@ -488,7 +488,7 @@
 			"end": "(\\))",
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.arguments.end.eguap"
+					"name": "punctuation.definition.arguments.end.pitugues"
 				}
 			},
 			"patterns": [
@@ -502,12 +502,12 @@
 			"end": "\\)",
 			"beginCaptures": {
 				"0": {
-					"name": "punctuation.parenthesis.begin.eguap"
+					"name": "punctuation.parenthesis.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"0": {
-					"name": "punctuation.parenthesis.end.eguap"
+					"name": "punctuation.parenthesis.end.pitugues"
 				}
 			},
 			"patterns": [
@@ -522,10 +522,10 @@
 					"match": "(\\\\)\\s*(\\S.*$\\n?)",
 					"captures": {
 						"1": {
-							"name": "punctuation.separator.continuation.line.eguap"
+							"name": "punctuation.separator.continuation.line.pitugues"
 						},
 						"2": {
-							"name": "invalid.illegal.line.continuation.eguap"
+							"name": "invalid.illegal.line.continuation.pitugues"
 						}
 					}
 				},
@@ -534,7 +534,7 @@
 					"end": "(?x)\n  (?=^\\s*$)\n  |\n  (?! (\\s* [rR]? (\\'\\'\\'|\\\"\\\"\\\"|\\'|\\\"))\n      |\n      (\\G $)  (?# '\\G' is necessary for ST)\n  )\n",
 					"beginCaptures": {
 						"1": {
-							"name": "punctuation.separator.continuation.line.eguap"
+							"name": "punctuation.separator.continuation.line.pitugues"
 						}
 					},
 					"patterns": [
@@ -549,40 +549,40 @@
 			]
 		},
 		"assignment-operator": {
-			"name": "keyword.operator.assignment.eguap",
+			"name": "keyword.operator.assignment.pitugues",
 			"match": "(?x)\n     <<= | >>= | //= | \\*\\*=\n    | \\+= | -= | /= | @=\n    | \\*= | %= | ~= | \\^= | &= | \\|=\n    | =(?!=)\n"
 		},
 		"operator": {
 			"match": "(?x)\n    \\b(?<!\\.)\n      (?:\n        (e | ou | não | em | é)                         (?# 1)\n        |\n        (para | se | senão | await | (?:yield(?:\\s+from)?))  (?# 2)\n      )\n    (?!\\s*:)\\b\n\n    | (<< | >> | & | \\| | \\^ | ~)                          (?# 3)\n\n    | (\\*\\* | \\* | \\+ | - | % | // | / | @)                (?# 4)\n\n    | (!= | == | >= | <= | < | >)                          (?# 5)\n\n    | (:=)                                                 (?# 6)\n",
 			"captures": {
 				"1": {
-					"name": "keyword.operator.logical.eguap"
+					"name": "keyword.operator.logical.pitugues"
 				},
 				"2": {
-					"name": "keyword.control.flow.eguap"
+					"name": "keyword.control.flow.pitugues"
 				},
 				"3": {
-					"name": "keyword.operator.bitwise.eguap"
+					"name": "keyword.operator.bitwise.pitugues"
 				},
 				"4": {
-					"name": "keyword.operator.arithmetic.eguap"
+					"name": "keyword.operator.arithmetic.pitugues"
 				},
 				"5": {
-					"name": "keyword.operator.comparison.eguap"
+					"name": "keyword.operator.comparison.pitugues"
 				},
 				"6": {
-					"name": "keyword.operator.assignment.eguap"
+					"name": "keyword.operator.assignment.pitugues"
 				}
 			}
 		},
 		"punctuation": {
 			"patterns": [
 				{
-					"name": "punctuation.separator.colon.eguap",
+					"name": "punctuation.separator.colon.pitugues",
 					"match": ":"
 				},
 				{
-					"name": "punctuation.separator.element.eguap",
+					"name": "punctuation.separator.element.pitugues",
 					"match": ","
 				}
 			]
@@ -590,7 +590,7 @@
 		"literal": {
 			"patterns": [
 				{
-					"name": "constant.language.eguap",
+					"name": "constant.language.pitugues",
 					"match": "\\b(True|False|None|NotImplemented|Ellipsis)\\b"
 				},
 				{
@@ -599,7 +599,7 @@
 			]
 		},
 		"number": {
-			"name": "constant.numeric.eguap",
+			"name": "constant.numeric.pitugues",
 			"patterns": [
 				{
 					"include": "#number-float"
@@ -620,66 +620,66 @@
 					"include": "#number-long"
 				},
 				{
-					"name": "invalid.illegal.name.eguap",
+					"name": "invalid.illegal.name.pitugues",
 					"match": "\\b[0-9]+\\w+"
 				}
 			]
 		},
 		"number-float": {
-			"name": "constant.numeric.float.eguap",
+			"name": "constant.numeric.float.pitugues",
 			"match": "(?x)\n  (?<! \\w)(?:\n    (?:\n      \\.[0-9](?: _?[0-9] )*\n      |\n      [0-9](?: _?[0-9] )* \\. [0-9](?: _?[0-9] )*\n      |\n      [0-9](?: _?[0-9] )* \\.\n    ) (?: [eE][+-]?[0-9](?: _?[0-9] )* )?\n    |\n    [0-9](?: _?[0-9] )* (?: [eE][+-]?[0-9](?: _?[0-9] )* )\n  )([jJ])?\\b\n",
 			"captures": {
 				"1": {
-					"name": "storage.type.imaginary.number.eguap"
+					"name": "storage.type.imaginary.number.pitugues"
 				}
 			}
 		},
 		"number-dec": {
-			"name": "constant.numeric.dec.eguap",
+			"name": "constant.numeric.dec.pitugues",
 			"match": "(?x)\n  (?<![\\w\\.])(?:\n      [1-9](?: _?[0-9] )*\n      |\n      0+\n      |\n      [0-9](?: _?[0-9] )* ([jJ])\n      |\n      0 ([0-9]+)(?![eE\\.])\n  )\\b\n",
 			"captures": {
 				"1": {
-					"name": "storage.type.imaginary.number.eguap"
+					"name": "storage.type.imaginary.number.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.dec.eguap"
+					"name": "invalid.illegal.dec.pitugues"
 				}
 			}
 		},
 		"number-hex": {
-			"name": "constant.numeric.hex.eguap",
+			"name": "constant.numeric.hex.pitugues",
 			"match": "(?x)\n  (?<![\\w\\.])\n    (0[xX]) (_?[0-9a-fA-F])+\n  \\b\n",
 			"captures": {
 				"1": {
-					"name": "storage.type.number.eguap"
+					"name": "storage.type.number.pitugues"
 				}
 			}
 		},
 		"number-oct": {
-			"name": "constant.numeric.oct.eguap",
+			"name": "constant.numeric.oct.pitugues",
 			"match": "(?x)\n  (?<![\\w\\.])\n    (0[oO]) (_?[0-7])+\n  \\b\n",
 			"captures": {
 				"1": {
-					"name": "storage.type.number.eguap"
+					"name": "storage.type.number.pitugues"
 				}
 			}
 		},
 		"number-bin": {
-			"name": "constant.numeric.bin.eguap",
+			"name": "constant.numeric.bin.pitugues",
 			"match": "(?x)\n  (?<![\\w\\.])\n    (0[bB]) (_?[01])+\n  \\b\n",
 			"captures": {
 				"1": {
-					"name": "storage.type.number.eguap"
+					"name": "storage.type.number.pitugues"
 				}
 			}
 		},
 		"number-long": {
-			"name": "constant.numeric.bin.eguap",
-			"comment": "this is to support eguap2 syntax for long ints",
+			"name": "constant.numeric.bin.pitugues",
+			"comment": "this is to support pitugues2 syntax for long ints",
 			"match": "(?x)\n  (?<![\\w\\.])\n    ([1-9][0-9]* | 0) ([lL])\n  \\b\n",
 			"captures": {
 				"2": {
-					"name": "storage.type.number.eguap"
+					"name": "storage.type.number.pitugues"
 				}
 			}
 		},
@@ -829,12 +829,12 @@
 			"end": "(\\})|(?=\\n)",
 			"beginCaptures": {
 				"1": {
-					"name": "constant.character.format.placeholder.other.eguap"
+					"name": "constant.character.format.placeholder.other.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "constant.character.format.placeholder.other.eguap"
+					"name": "constant.character.format.placeholder.other.pitugues"
 				}
 			},
 			"patterns": [
@@ -871,57 +871,57 @@
 		"escape-sequence-unicode": {
 			"patterns": [
 				{
-					"name": "constant.character.escape.eguap",
+					"name": "constant.character.escape.pitugues",
 					"match": "(?x)\n  \\\\ (\n        u[0-9A-Fa-f]{4}\n        | U[0-9A-Fa-f]{8}\n        | N\\{[\\w\\s]+?\\}\n     )\n"
 				}
 			]
 		},
 		"escape-sequence": {
-			"name": "constant.character.escape.eguap",
+			"name": "constant.character.escape.pitugues",
 			"match": "(?x)\n  \\\\ (\n        x[0-9A-Fa-f]{2}\n        | [0-7]{1,3}\n        | [\\\\\"'abfnrtv]\n     )\n"
 		},
 		"string-line-continuation": {
-			"name": "constant.language.eguap",
+			"name": "constant.language.pitugues",
 			"match": "\\\\$"
 		},
 		"string-formatting": {
-			"name": "meta.format.percent.eguap",
+			"name": "meta.format.percent.pitugues",
 			"match": "(?x)\n  (\n    % (\\([\\w\\s]*\\))?\n      [-+#0 ]*\n      (\\d+|\\*)? (\\.(\\d+|\\*))?\n      ([hlL])?\n      [diouxXeEfFgGcrsab%]\n  )\n",
 			"captures": {
 				"1": {
-					"name": "constant.character.format.placeholder.other.eguap"
+					"name": "constant.character.format.placeholder.other.pitugues"
 				}
 			}
 		},
 		"string-brace-formatting": {
 			"patterns": [
 				{
-					"name": "meta.format.brace.eguap",
+					"name": "meta.format.brace.pitugues",
 					"match": "(?x)\n  (\n    {{ | }}\n    | (?:\n      {\n        \\w* (\\.[[:alpha:]_]\\w* | \\[[^\\]'\"]+\\])*\n        (![rsa])?\n        ( : \\w? [<>=^]? [-+ ]? \\#?\n          \\d* ,? (\\.\\d+)? [bcdeEfFgGnosxX%]? )?\n      })\n  )\n",
 					"captures": {
 						"1": {
-							"name": "constant.character.format.placeholder.other.eguap"
+							"name": "constant.character.format.placeholder.other.pitugues"
 						},
 						"3": {
-							"name": "storage.type.format.eguap"
+							"name": "storage.type.format.pitugues"
 						},
 						"4": {
-							"name": "storage.type.format.eguap"
+							"name": "storage.type.format.pitugues"
 						}
 					}
 				},
 				{
-					"name": "meta.format.brace.eguap",
+					"name": "meta.format.brace.pitugues",
 					"match": "(?x)\n  (\n    {\n      \\w* (\\.[[:alpha:]_]\\w* | \\[[^\\]'\"]+\\])*\n      (![rsa])?\n      (:)\n        [^'\"{}\\n]* (?:\n          \\{ [^'\"}\\n]*? \\} [^'\"{}\\n]*\n        )*\n    }\n  )\n",
 					"captures": {
 						"1": {
-							"name": "constant.character.format.placeholder.other.eguap"
+							"name": "constant.character.format.placeholder.other.pitugues"
 						},
 						"3": {
-							"name": "storage.type.format.eguap"
+							"name": "storage.type.format.pitugues"
 						},
 						"4": {
-							"name": "storage.type.format.eguap"
+							"name": "storage.type.format.pitugues"
 						}
 					}
 				}
@@ -938,7 +938,7 @@
 			]
 		},
 		"fstring-formatting-singe-brace": {
-			"name": "invalid.illegal.brace.eguap",
+			"name": "invalid.illegal.brace.pitugues",
 			"match": "(}(?!}))"
 		},
 		"import": {
@@ -949,12 +949,12 @@
 					"end": "$|(?=import)",
 					"beginCaptures": {
 						"1": {
-							"name": "keyword.control.import.eguap"
+							"name": "keyword.control.import.pitugues"
 						}
 					},
 					"patterns": [
 						{
-							"name": "punctuation.separator.period.eguap",
+							"name": "punctuation.separator.period.pitugues",
 							"match": "\\.+"
 						},
 						{
@@ -967,12 +967,12 @@
 					"end": "$",
 					"beginCaptures": {
 						"1": {
-							"name": "keyword.control.import.eguap"
+							"name": "keyword.control.import.pitugues"
 						}
 					},
 					"patterns": [
 						{
-							"name": "keyword.control.import.eguap",
+							"name": "keyword.control.import.pitugues",
 							"match": "\\b(?<!\\.)as\\b"
 						},
 						{
@@ -985,17 +985,17 @@
 		"class-declaration": {
 			"patterns": [
 				{
-					"name": "meta.class.eguap",
+					"name": "meta.class.pitugues",
 					"begin": "(?x)\n  \\s*(classe)\\s+\n    (?=\n      [[:alpha:]_]\\w* \\s* (:|\\()\n    )\n",
 					"end": "(:)",
 					"beginCaptures": {
 						"1": {
-							"name": "storage.type.class.eguap"
+							"name": "storage.type.class.pitugues"
 						}
 					},
 					"endCaptures": {
 						"1": {
-							"name": "punctuation.section.class.begin.eguap"
+							"name": "punctuation.section.class.begin.pitugues"
 						}
 					},
 					"patterns": [
@@ -1018,40 +1018,40 @@
 					"include": "#builtin-possible-callables"
 				},
 				{
-					"name": "entity.name.type.class.eguap",
+					"name": "entity.name.type.class.pitugues",
 					"match": "(?x)\n  \\b ([[:alpha:]_]\\w*) \\b\n"
 				}
 			]
 		},
 		"class-inheritance": {
-			"name": "meta.class.inheritance.eguap",
+			"name": "meta.class.inheritance.pitugues",
 			"begin": "(\\()",
 			"end": "(\\))",
 			"beginCaptures": {
 				"1": {
-					"name": "punctuation.definition.inheritance.begin.eguap"
+					"name": "punctuation.definition.inheritance.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.inheritance.end.eguap"
+					"name": "punctuation.definition.inheritance.end.pitugues"
 				}
 			},
 			"patterns": [
 				{
-					"name": "keyword.operator.unpacking.arguments.eguap",
+					"name": "keyword.operator.unpacking.arguments.pitugues",
 					"match": "(\\*\\*|\\*)"
 				},
 				{
-					"name": "punctuation.separator.inheritance.eguap",
+					"name": "punctuation.separator.inheritance.pitugues",
 					"match": ","
 				},
 				{
-					"name": "keyword.operator.assignment.eguap",
+					"name": "keyword.operator.assignment.pitugues",
 					"match": "=(?!=)"
 				},
 				{
-					"name": "support.type.metaclass.eguap",
+					"name": "support.type.metaclass.pitugues",
 					"match": "\\bmetaclass\\b"
 				},
 				{
@@ -1078,10 +1078,10 @@
 			"match": "(?x)\n  \\b ([[:alpha:]_]\\w*) \\s*(=)(?!=)\n",
 			"captures": {
 				"1": {
-					"name": "entity.other.inherited-class.eguap variable.parameter.class.eguap"
+					"name": "entity.other.inherited-class.pitugues variable.parameter.class.pitugues"
 				},
 				"2": {
-					"name": "keyword.operator.assignment.eguap"
+					"name": "keyword.operator.assignment.pitugues"
 				}
 			}
 		},
@@ -1089,17 +1089,17 @@
 			"match": "(?x)\n  \\b ([[:alpha:]_]\\w*) \\b\n",
 			"captures": {
 				"1": {
-					"name": "entity.other.inherited-class.eguap"
+					"name": "entity.other.inherited-class.pitugues"
 				}
 			}
 		},
 		"member-access-class": {
-			"name": "meta.member.access.eguap",
+			"name": "meta.member.access.pitugues",
 			"begin": "(\\.)\\s*(?!\\.)",
 			"end": "(?<=\\S)(?=\\W)|$",
 			"beginCaptures": {
 				"1": {
-					"name": "punctuation.separator.period.eguap"
+					"name": "punctuation.separator.period.pitugues"
 				}
 			},
 			"patterns": [
@@ -1120,7 +1120,7 @@
 					"match": "((?<=\\.)lambda|lambda(?=\\s*[\\.=]))",
 					"captures": {
 						"1": {
-							"name": "keyword.control.flow.eguap"
+							"name": "keyword.control.flow.pitugues"
 						}
 					}
 				},
@@ -1128,32 +1128,32 @@
 					"match": "\\b(lambda)\\s*?(?=[,\\n]|$)",
 					"captures": {
 						"1": {
-							"name": "storage.type.function.lambda.eguap"
+							"name": "storage.type.function.lambda.pitugues"
 						}
 					}
 				},
 				{
-					"name": "meta.lambda-function.eguap",
+					"name": "meta.lambda-function.pitugues",
 					"begin": "(?x)\n  \\b (lambda) \\b\n",
 					"end": "(:)|(\\n)",
 					"beginCaptures": {
 						"1": {
-							"name": "storage.type.function.lambda.eguap"
+							"name": "storage.type.function.lambda.pitugues"
 						}
 					},
 					"endCaptures": {
 						"1": {
-							"name": "punctuation.section.function.lambda.begin.eguap"
+							"name": "punctuation.section.function.lambda.begin.pitugues"
 						}
 					},
-					"contentName": "meta.function.lambda.parameters.eguap",
+					"contentName": "meta.function.lambda.parameters.pitugues",
 					"patterns": [
 						{
-							"name": "keyword.operator.positional.parameter.eguap",
+							"name": "keyword.operator.positional.parameter.pitugues",
 							"match": "/"
 						},
 						{
-							"name": "keyword.operator.unpacking.parameter.eguap",
+							"name": "keyword.operator.unpacking.parameter.pitugues",
 							"match": "(\\*\\*|\\*)"
 						},
 						{
@@ -1166,10 +1166,10 @@
 							"match": "([[:alpha:]_]\\w*)\\s*(?:(,)|(?=:|$))",
 							"captures": {
 								"1": {
-									"name": "variable.parameter.function.language.eguap"
+									"name": "variable.parameter.function.language.pitugues"
 								},
 								"2": {
-									"name": "punctuation.separator.parameters.eguap"
+									"name": "punctuation.separator.parameters.pitugues"
 								}
 							}
 						},
@@ -1196,11 +1196,11 @@
 			]
 		},
 		"lambda-incomplete": {
-			"name": "storage.type.function.lambda.eguap",
+			"name": "storage.type.function.lambda.pitugues",
 			"match": "\\blambda(?=\\s*[,)])"
 		},
 		"lambda-nested-incomplete": {
-			"name": "storage.type.function.lambda.eguap",
+			"name": "storage.type.function.lambda.pitugues",
 			"match": "\\blambda(?=\\s*[:,)])"
 		},
 		"lambda-parameter-with-default": {
@@ -1208,15 +1208,15 @@
 			"end": "(,)|(?=:|$)",
 			"beginCaptures": {
 				"1": {
-					"name": "variable.parameter.function.language.eguap"
+					"name": "variable.parameter.function.language.pitugues"
 				},
 				"2": {
-					"name": "keyword.operator.eguap"
+					"name": "keyword.operator.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.separator.parameters.eguap"
+					"name": "punctuation.separator.parameters.pitugues"
 				}
 			},
 			"patterns": [
@@ -1230,13 +1230,13 @@
 			"begin": "\\bfor\\b",
 			"beginCaptures": {
 				"0": {
-					"name": "keyword.control.flow.eguap"
+					"name": "keyword.control.flow.pitugues"
 				}
 			},
 			"end": "\\bin\\b",
 			"endCaptures": {
 				"0": {
-					"name": "keyword.control.flow.eguap"
+					"name": "keyword.control.flow.pitugues"
 				}
 			},
 			"patterns": [
@@ -1246,20 +1246,20 @@
 			]
 		},
 		"function-declaration": {
-			"name": "meta.function.eguap",
+			"name": "meta.function.pitugues",
 			"begin": "(?x)\n  \\s*\n  (?:\\b(async) \\s+)? \\b(funcao|função)\\s+\n    (?=\n      [[:alpha:]_][[:word:]]* \\s* \\(\n    )\n",
 			"end": "(:|(?=[#'\"\\n]))",
 			"beginCaptures": {
 				"1": {
-					"name": "storage.type.function.async.eguap"
+					"name": "storage.type.function.async.pitugues"
 				},
 				"2": {
-					"name": "storage.type.function.eguap"
+					"name": "storage.type.function.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.section.function.begin.eguap"
+					"name": "punctuation.section.function.begin.pitugues"
 				}
 			},
 			"patterns": [
@@ -1286,32 +1286,32 @@
 					"include": "#builtin-possible-callables"
 				},
 				{
-					"name": "entity.name.function.eguap",
+					"name": "entity.name.function.pitugues",
 					"match": "(?x)\n  \\b ([[:alpha:]_]\\w*) \\b\n"
 				}
 			]
 		},
 		"parameters": {
-			"name": "meta.function.parameters.eguap",
+			"name": "meta.function.parameters.pitugues",
 			"begin": "(\\()",
 			"end": "(\\))",
 			"beginCaptures": {
 				"1": {
-					"name": "punctuation.definition.parameters.begin.eguap"
+					"name": "punctuation.definition.parameters.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.parameters.end.eguap"
+					"name": "punctuation.definition.parameters.end.pitugues"
 				}
 			},
 			"patterns": [
 				{
-					"name": "keyword.operator.positional.parameter.eguap",
+					"name": "keyword.operator.positional.parameter.pitugues",
 					"match": "/"
 				},
 				{
-					"name": "keyword.operator.unpacking.parameter.eguap",
+					"name": "keyword.operator.unpacking.parameter.pitugues",
 					"match": "(\\*\\*|\\*)"
 				},
 				{
@@ -1330,10 +1330,10 @@
 					"match": "(?x)\n  ([[:alpha:]_]\\w*)\n    \\s* (?: (,) | (?=[)#\\n=]))\n",
 					"captures": {
 						"1": {
-							"name": "variable.parameter.function.language.eguap"
+							"name": "variable.parameter.function.language.pitugues"
 						},
 						"2": {
-							"name": "punctuation.separator.parameters.eguap"
+							"name": "punctuation.separator.parameters.pitugues"
 						}
 					}
 				},
@@ -1352,16 +1352,16 @@
 			"match": "(?x)\n  \\b ((self)|(cls)) \\b \\s*(?:(,)|(?=\\)))\n",
 			"captures": {
 				"1": {
-					"name": "variable.parameter.function.language.eguap"
+					"name": "variable.parameter.function.language.pitugues"
 				},
 				"2": {
-					"name": "variable.parameter.function.language.special.self.eguap"
+					"name": "variable.parameter.function.language.special.self.pitugues"
 				},
 				"3": {
-					"name": "variable.parameter.function.language.special.cls.eguap"
+					"name": "variable.parameter.function.language.special.cls.pitugues"
 				},
 				"4": {
-					"name": "punctuation.separator.parameters.eguap"
+					"name": "punctuation.separator.parameters.pitugues"
 				}
 			}
 		},
@@ -1370,12 +1370,12 @@
 			"end": "(,)|(?=\\))",
 			"beginCaptures": {
 				"1": {
-					"name": "keyword.operator.eguap"
+					"name": "keyword.operator.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.separator.parameters.eguap"
+					"name": "punctuation.separator.parameters.pitugues"
 				}
 			},
 			"patterns": [
@@ -1389,15 +1389,15 @@
 			"end": "(,)|(?=\\))",
 			"beginCaptures": {
 				"1": {
-					"name": "variable.parameter.function.language.eguap"
+					"name": "variable.parameter.function.language.pitugues"
 				},
 				"2": {
-					"name": "punctuation.separator.annotation.eguap"
+					"name": "punctuation.separator.annotation.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.separator.parameters.eguap"
+					"name": "punctuation.separator.parameters.pitugues"
 				}
 			},
 			"patterns": [
@@ -1405,7 +1405,7 @@
 					"include": "#expression"
 				},
 				{
-					"name": "keyword.operator.assignment.eguap",
+					"name": "keyword.operator.assignment.pitugues",
 					"match": "=(?!=)"
 				}
 			]
@@ -1415,7 +1415,7 @@
 			"end": "(?=:)",
 			"beginCaptures": {
 				"1": {
-					"name": "punctuation.separator.annotation.result.eguap"
+					"name": "punctuation.separator.annotation.result.pitugues"
 				}
 			},
 			"patterns": [
@@ -1427,12 +1427,12 @@
 		"item-access": {
 			"patterns": [
 				{
-					"name": "meta.item-access.eguap",
+					"name": "meta.item-access.pitugues",
 					"begin": "(?x)\n  \\b(?=\n    [[:alpha:]_]\\w* \\s* \\[\n  )\n",
 					"end": "(\\])",
 					"endCaptures": {
 						"1": {
-							"name": "punctuation.definition.arguments.end.eguap"
+							"name": "punctuation.definition.arguments.end.pitugues"
 						}
 					},
 					"patterns": [
@@ -1461,7 +1461,7 @@
 					"include": "#special-names"
 				},
 				{
-					"name": "meta.indexed-name.eguap",
+					"name": "meta.indexed-name.pitugues",
 					"match": "(?x)\n  \\b ([[:alpha:]_]\\w*) \\b\n"
 				}
 			]
@@ -1471,13 +1471,13 @@
 			"end": "(?=\\])",
 			"beginCaptures": {
 				"1": {
-					"name": "punctuation.definition.arguments.begin.eguap"
+					"name": "punctuation.definition.arguments.begin.pitugues"
 				}
 			},
-			"contentName": "meta.item-access.arguments.eguap",
+			"contentName": "meta.item-access.arguments.pitugues",
 			"patterns": [
 				{
-					"name": "punctuation.separator.slice.eguap",
+					"name": "punctuation.separator.slice.pitugues",
 					"match": ":"
 				},
 				{
@@ -1486,23 +1486,23 @@
 			]
 		},
 		"decorator": {
-			"name": "meta.function.decorator.eguap",
+			"name": "meta.function.decorator.pitugues",
 			"begin": "(?x)\n  ^\\s*\n  ((@)) \\s* (?=[[:alpha:]_]\\w*)\n",
 			"end": "(?x)\n  ( \\) )\n    # trailing whitespace and comments are legal\n    (?: (.*?) (?=\\s*(?:\\#|$)) )\n  | (?=\\n|\\#)\n",
 			"beginCaptures": {
 				"1": {
-					"name": "entity.name.function.decorator.eguap"
+					"name": "entity.name.function.decorator.pitugues"
 				},
 				"2": {
-					"name": "punctuation.definition.decorator.eguap"
+					"name": "punctuation.definition.decorator.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.arguments.end.eguap"
+					"name": "punctuation.definition.arguments.end.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.decorator.eguap"
+					"name": "invalid.illegal.decorator.pitugues"
 				}
 			},
 			"patterns": [
@@ -1523,11 +1523,11 @@
 					"include": "#illegal-object-name"
 				},
 				{
-					"name": "entity.name.function.decorator.eguap",
+					"name": "entity.name.function.decorator.pitugues",
 					"match": "(?x)\n  ([[:alpha:]_]\\w*) | (\\.)\n",
 					"captures": {
 						"2": {
-							"name": "punctuation.separator.period.eguap"
+							"name": "punctuation.separator.period.pitugues"
 						}
 					}
 				},
@@ -1535,11 +1535,11 @@
 					"include": "#line-continuation"
 				},
 				{
-					"name": "invalid.illegal.decorator.eguap",
+					"name": "invalid.illegal.decorator.pitugues",
 					"match": "(?x)\n  \\s* ([^([:alpha:]\\s_\\.#\\\\] .*?) (?=\\#|$)\n",
 					"captures": {
 						"1": {
-							"name": "invalid.illegal.decorator.eguap"
+							"name": "invalid.illegal.decorator.pitugues"
 						}
 					}
 				}
@@ -1547,12 +1547,12 @@
 		},
 		"call-wrapper-inheritance": {
 			"comment": "same as a function call, but in inheritance context",
-			"name": "meta.function-call.eguap",
+			"name": "meta.function-call.pitugues",
 			"begin": "(?x)\n  \\b(?=\n    ([[:alpha:]_]\\w*) \\s* (\\()\n  )\n",
 			"end": "(\\))",
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.arguments.end.eguap"
+					"name": "punctuation.definition.arguments.end.pitugues"
 				}
 			},
 			"patterns": [
@@ -1578,13 +1578,13 @@
 			]
 		},
 		"function-call": {
-			"name": "meta.function-call.eguap",
+			"name": "meta.function-call.pitugues",
 			"comment": "Regular function call of the type \"name(args)\"",
 			"begin": "(?x)\n  \\b(?=\n    ([[:alpha:]_]\\w*) \\s* (\\()\n  )\n",
 			"end": "(\\))",
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.arguments.end.eguap"
+					"name": "punctuation.definition.arguments.end.pitugues"
 				}
 			},
 			"patterns": [
@@ -1606,7 +1606,7 @@
 				},
 				{
 					"comment": "Some color schemas support meta.function-call.generic scope",
-					"name": "meta.function-call.generic.eguap",
+					"name": "meta.function-call.generic.pitugues",
 					"match": "(?x)\n  \\b ([[:alpha:]_]\\w*) \\b\n"
 				}
 			]
@@ -1616,20 +1616,20 @@
 			"end": "(?=\\))(?!\\)\\s*\\()",
 			"beginCaptures": {
 				"1": {
-					"name": "punctuation.definition.arguments.begin.eguap"
+					"name": "punctuation.definition.arguments.begin.pitugues"
 				}
 			},
-			"contentName": "meta.function-call.arguments.eguap",
+			"contentName": "meta.function-call.arguments.pitugues",
 			"patterns": [
 				{
-					"name": "punctuation.separator.arguments.eguap",
+					"name": "punctuation.separator.arguments.pitugues",
 					"match": "(,)"
 				},
 				{
 					"match": "(?x)\n  (?:(?<=[,(])|^) \\s* (\\*{1,2})\n",
 					"captures": {
 						"1": {
-							"name": "keyword.operator.unpacking.arguments.eguap"
+							"name": "keyword.operator.unpacking.arguments.pitugues"
 						}
 					}
 				},
@@ -1643,15 +1643,15 @@
 					"match": "\\b([[:alpha:]_]\\w*)\\s*(=)(?!=)",
 					"captures": {
 						"1": {
-							"name": "variable.parameter.function-call.eguap"
+							"name": "variable.parameter.function-call.pitugues"
 						},
 						"2": {
-							"name": "keyword.operator.assignment.eguap"
+							"name": "keyword.operator.assignment.pitugues"
 						}
 					}
 				},
 				{
-					"name": "keyword.operator.assignment.eguap",
+					"name": "keyword.operator.assignment.pitugues",
 					"match": "=(?!=)"
 				},
 				{
@@ -1661,10 +1661,10 @@
 					"match": "\\s*(\\))\\s*(\\()",
 					"captures": {
 						"1": {
-							"name": "punctuation.definition.arguments.end.eguap"
+							"name": "punctuation.definition.arguments.end.pitugues"
 						},
 						"2": {
-							"name": "punctuation.definition.arguments.begin.eguap"
+							"name": "punctuation.definition.arguments.begin.pitugues"
 						}
 					}
 				}
@@ -1700,31 +1700,31 @@
 			]
 		},
 		"builtin-exceptions": {
-			"name": "support.type.exception.eguap",
+			"name": "support.type.exception.pitugues",
 			"match": "(?x) (?<!\\.) \\b(\n  (\n    Arithmetic | Assertion | Attribute | Buffer | BlockingIO\n    | BrokenPipe | ChildProcess\n    | (Connection (Aborted | Refused | Reset)?)\n    | EOF | Environment | FileExists | FileNotFound\n    | FloatingPoint | IO | Import | Indentation | Index | Interrupted\n    | IsADirectory | NotADirectory | Permission | ProcessLookup\n    | Timeout\n    | Key | Lookup | Memory | Name | NotImplemented | OS | Overflow\n    | Reference | Runtime | Recursion | Syntax | System\n    | Tab | Type | UnboundLocal | Unicode(Encode|Decode|Translate)?\n    | Value | Windows | ZeroDivision | ModuleNotFound\n  ) Error\n|\n  ((Pending)?Deprecation | Runtime | Syntax | User | Future | Import\n    | Unicode | Bytes | Resource\n  )? Warning\n|\n  SystemExit | Stop(Async)?Iteration\n  | KeyboardInterrupt\n  | GeneratorExit | (Base)?Exception\n)\\b\n"
 		},
 		"builtin-functions": {
 			"patterns": [
 				{
-					"name": "support.function.builtin.eguap",
+					"name": "support.function.builtin.pitugues",
 					"match": "(?x)\n  (?<!\\.) \\b(\n    __import__ | abs | aiter | all | any | anext | ascii | bin\n    | breakpoint | callable | chr | compile | copyright | credits\n    | delattr | dir | divmod | enumerate | eval | exec | exit\n    | filter | format | getattr | globals | hasattr | hash | help\n    | hex | id | input | isinstance | issubclass | iter | len\n    | license | locals | map | max | memoryview | min | next\n    | oct | open | ord | pow | print | quit | range | reload | repr\n    | reversed | round | setattr | sorted | sum | vars | zip\n  )\\b\n"
 				},
 				{
-					"name": "variable.legacy.builtin.eguap",
+					"name": "variable.legacy.builtin.pitugues",
 					"match": "(?x)\n  (?<!\\.) \\b(\n    file | reduce | intern | raw_input | unicode | cmp | basestring\n    | execfile | long | xrange\n  )\\b\n"
 				}
 			]
 		},
 		"builtin-types": {
-			"name": "support.type.eguap",
+			"name": "support.type.pitugues",
 			"match": "(?x)\n  (?<!\\.) \\b(\n    bool | bytearray | bytes | classmethod | complex | dict\n    | float | frozenset | int | list | object | property\n    | set | slice | staticmethod | str | tuple | type\n\n    (?# Although 'super' is not a type, it's related to types,\n        and is special enough to be highlighted differently from\n        other built-ins)\n    | super\n  )\\b\n"
 		},
 		"magic-function-names": {
-			"comment": "these methods have magic interpretation by eguap and are generally called\nindirectly through syntactic constructs\n",
+			"comment": "these methods have magic interpretation by pitugues and are generally called\nindirectly through syntactic constructs\n",
 			"match": "(?x)\n  \\b(\n    __(?:\n      abs | add | aenter | aexit | aiter | and | anext\n      | await | bool | call | ceil | class_getitem\n      | cmp | coerce | complex | contains | copy\n      | deepcopy | del | delattr | delete | delitem\n      | delslice | dir | div | divmod | enter | eq\n      | exit | float | floor | floordiv | format | ge\n      | get | getattr | getattribute | getinitargs\n      | getitem | getnewargs | getslice | getstate | gt\n      | hash | hex | iadd | iand | idiv | ifloordiv |\n      | ilshift | imod | imul | index | init\n      | instancecheck | int | invert | ior | ipow\n      | irshift | isub | iter | itruediv | ixor | le\n      | len | long | lshift | lt | missing | mod | mul\n      | ne | neg | new | next | nonzero | oct | or | pos\n      | pow | radd | rand | rdiv | rdivmod | reduce\n      | reduce_ex | repr | reversed | rfloordiv |\n      | rlshift | rmod | rmul | ror | round | rpow\n      | rrshift | rshift | rsub | rtruediv | rxor | set\n      | setattr | setitem | set_name | setslice\n      | setstate | sizeof | str | sub | subclasscheck\n      | truediv | trunc | unicode | xor | matmul\n      | rmatmul | imatmul | init_subclass | set_name\n      | fspath | bytes | prepare | length_hint\n    )__\n  )\\b\n",
 			"captures": {
 				"1": {
-					"name": "support.function.magic.eguap"
+					"name": "support.function.magic.pitugues"
 				}
 			}
 		},
@@ -1733,7 +1733,7 @@
 			"match": "(?x)\n  \\b(\n    __(?:\n      all | annotations | bases | builtins | class\n      | closure | code | debug | defaults | dict | doc | file | func\n      | globals | kwdefaults | match_args | members | metaclass | methods\n      | module | mro | mro_entries | name | qualname | post_init | self\n      | signature | slots | subclasses | version | weakref | wrapped\n      | classcell | spec | path | package | future | traceback\n    )__\n  )\\b\n",
 			"captures": {
 				"1": {
-					"name": "support.variable.magic.eguap"
+					"name": "support.variable.magic.pitugues"
 				}
 			}
 		},
@@ -1751,10 +1751,10 @@
 			"match": "(?x)\n  \\b(?:\n    (\n      and | assert | async | await | sustar | classe | continua | funcao | função\n      | del | elif | else | except | finally | for | from | global\n      | if | in | is | (?<=\\.)lambda | lambda(?=\\s*[\\.=])\n      | nao | não | ou | pass | raise | retorna | tente | enquanto | with\n      | yield\n    ) | (\n      as | import\n    )\n  )\\b\n",
 			"captures": {
 				"1": {
-					"name": "keyword.control.flow.eguap"
+					"name": "keyword.control.flow.pitugues"
 				},
 				"2": {
-					"name": "keyword.control.import.eguap"
+					"name": "keyword.control.import.pitugues"
 				}
 			}
 		},
@@ -1762,19 +1762,19 @@
 			"match": "(?x)\n  \\b (?<!\\.) (?:\n    (self) | (cls)\n  )\\b\n",
 			"captures": {
 				"1": {
-					"name": "variable.language.special.self.eguap"
+					"name": "variable.language.special.self.pitugues"
 				},
 				"2": {
-					"name": "variable.language.special.cls.eguap"
+					"name": "variable.language.special.cls.pitugues"
 				}
 			}
 		},
 		"ellipsis": {
-			"name": "constant.other.ellipsis.eguap",
+			"name": "constant.other.ellipsis.pitugues",
 			"match": "\\.\\.\\."
 		},
 		"backticks": {
-			"name": "invalid.deprecated.backtick.eguap",
+			"name": "invalid.deprecated.backtick.pitugues",
 			"begin": "\\`",
 			"end": "(?:\\`|(?<!\\\\)(\\n))",
 			"patterns": [
@@ -1786,15 +1786,15 @@
 		"illegal-operator": {
 			"patterns": [
 				{
-					"name": "invalid.illegal.operator.eguap",
+					"name": "invalid.illegal.operator.pitugues",
 					"match": "&&|\\|\\||--|\\+\\+"
 				},
 				{
-					"name": "invalid.illegal.operator.eguap",
+					"name": "invalid.illegal.operator.pitugues",
 					"match": "[?$]"
 				},
 				{
-					"name": "invalid.illegal.operator.eguap",
+					"name": "invalid.illegal.operator.pitugues",
 					"comment": "We don't want `!` to flash when we're typing `!=`",
 					"match": "!\\b"
 				}
@@ -1802,11 +1802,11 @@
 		},
 		"illegal-object-name": {
 			"comment": "It's illegal to name class or function \"True\"",
-			"name": "keyword.illegal.name.eguap",
+			"name": "keyword.illegal.name.pitugues",
 			"match": "\\b(True|False|None)\\b"
 		},
 		"illegal-anno": {
-			"name": "invalid.illegal.annotation.eguap",
+			"name": "invalid.illegal.annotation.pitugues",
 			"match": "->"
 		},
 		"regexp-base-expression": {
@@ -1842,18 +1842,18 @@
 					"match": "({)(\\s*?)(})",
 					"captures": {
 						"1": {
-							"name": "constant.character.format.placeholder.other.eguap"
+							"name": "constant.character.format.placeholder.other.pitugues"
 						},
 						"2": {
-							"name": "invalid.illegal.brace.eguap"
+							"name": "invalid.illegal.brace.pitugues"
 						},
 						"3": {
-							"name": "constant.character.format.placeholder.other.eguap"
+							"name": "constant.character.format.placeholder.other.pitugues"
 						}
 					}
 				},
 				{
-					"name": "constant.character.escape.eguap",
+					"name": "constant.character.escape.pitugues",
 					"match": "({{|}})"
 				}
 			]
@@ -1984,16 +1984,16 @@
 			"match": "(?:\\b(NOTE|XXX|HACK|FIXME|BUG|TODO)\\b)",
 			"captures": {
 				"1": {
-					"name": "keyword.codetag.notation.eguap"
+					"name": "keyword.codetag.notation.pitugues"
 				}
 			}
 		},
 		"comments-base": {
-			"name": "comment.line.number-sign.eguap",
+			"name": "comment.line.number-sign.pitugues",
 			"begin": "(\\#)",
 			"beginCaptures": {
 				"1": {
-					"name": "punctuation.definition.comment.eguap"
+					"name": "punctuation.definition.comment.pitugues"
 				}
 			},
 			"end": "($)",
@@ -2004,11 +2004,11 @@
 			]
 		},
 		"comments-string-single-three": {
-			"name": "comment.line.number-sign.eguap",
+			"name": "comment.line.number-sign.pitugues",
 			"begin": "(\\#)",
 			"beginCaptures": {
 				"1": {
-					"name": "punctuation.definition.comment.eguap"
+					"name": "punctuation.definition.comment.pitugues"
 				}
 			},
 			"end": "($|(?='''))",
@@ -2019,11 +2019,11 @@
 			]
 		},
 		"comments-string-double-three": {
-			"name": "comment.line.number-sign.eguap",
+			"name": "comment.line.number-sign.pitugues",
 			"begin": "(\\#)",
 			"beginCaptures": {
 				"1": {
-					"name": "punctuation.definition.comment.eguap"
+					"name": "punctuation.definition.comment.pitugues"
 				}
 			},
 			"end": "($|(?=\"\"\"))",
@@ -2101,7 +2101,7 @@
 							"name": "punctuation.character.set.end.regexp constant.other.set.regexp"
 						},
 						"2": {
-							"name": "invalid.illegal.newline.eguap"
+							"name": "invalid.illegal.newline.pitugues"
 						}
 					},
 					"patterns": [
@@ -2133,7 +2133,7 @@
 					"name": "support.other.parenthesis.regexp punctuation.parenthesis.named.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2156,7 +2156,7 @@
 					"name": "punctuation.comment.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2181,7 +2181,7 @@
 					"name": "keyword.operator.lookahead.regexp punctuation.parenthesis.lookahead.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2206,7 +2206,7 @@
 					"name": "keyword.operator.lookahead.negative.regexp punctuation.parenthesis.lookahead.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2231,7 +2231,7 @@
 					"name": "keyword.operator.lookbehind.regexp punctuation.parenthesis.lookbehind.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2256,7 +2256,7 @@
 					"name": "keyword.operator.lookbehind.negative.regexp punctuation.parenthesis.lookbehind.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2281,7 +2281,7 @@
 					"name": "keyword.operator.conditional.negative.regexp punctuation.parenthesis.conditional.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2303,7 +2303,7 @@
 					"name": "support.other.parenthesis.regexp punctuation.parenthesis.non-capturing.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2325,7 +2325,7 @@
 					"name": "support.other.parenthesis.regexp punctuation.parenthesis.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2405,7 +2405,7 @@
 							"name": "punctuation.character.set.end.regexp constant.other.set.regexp"
 						},
 						"2": {
-							"name": "invalid.illegal.newline.eguap"
+							"name": "invalid.illegal.newline.pitugues"
 						}
 					},
 					"patterns": [
@@ -2437,7 +2437,7 @@
 					"name": "support.other.parenthesis.regexp punctuation.parenthesis.named.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2463,7 +2463,7 @@
 					"name": "punctuation.comment.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2488,7 +2488,7 @@
 					"name": "keyword.operator.lookahead.regexp punctuation.parenthesis.lookahead.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2516,7 +2516,7 @@
 					"name": "keyword.operator.lookahead.negative.regexp punctuation.parenthesis.lookahead.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2544,7 +2544,7 @@
 					"name": "keyword.operator.lookbehind.regexp punctuation.parenthesis.lookbehind.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2572,7 +2572,7 @@
 					"name": "keyword.operator.lookbehind.negative.regexp punctuation.parenthesis.lookbehind.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2600,7 +2600,7 @@
 					"name": "keyword.operator.conditional.negative.regexp punctuation.parenthesis.conditional.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2625,7 +2625,7 @@
 					"name": "support.other.parenthesis.regexp punctuation.parenthesis.non-capturing.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2650,7 +2650,7 @@
 					"name": "support.other.parenthesis.regexp punctuation.parenthesis.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2730,7 +2730,7 @@
 							"name": "punctuation.character.set.end.regexp constant.other.set.regexp"
 						},
 						"2": {
-							"name": "invalid.illegal.newline.eguap"
+							"name": "invalid.illegal.newline.pitugues"
 						}
 					},
 					"patterns": [
@@ -2762,7 +2762,7 @@
 					"name": "support.other.parenthesis.regexp punctuation.parenthesis.named.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2785,7 +2785,7 @@
 					"name": "punctuation.comment.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2810,7 +2810,7 @@
 					"name": "keyword.operator.lookahead.regexp punctuation.parenthesis.lookahead.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2835,7 +2835,7 @@
 					"name": "keyword.operator.lookahead.negative.regexp punctuation.parenthesis.lookahead.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2860,7 +2860,7 @@
 					"name": "keyword.operator.lookbehind.regexp punctuation.parenthesis.lookbehind.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2885,7 +2885,7 @@
 					"name": "keyword.operator.lookbehind.negative.regexp punctuation.parenthesis.lookbehind.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2910,7 +2910,7 @@
 					"name": "keyword.operator.conditional.negative.regexp punctuation.parenthesis.conditional.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2932,7 +2932,7 @@
 					"name": "support.other.parenthesis.regexp punctuation.parenthesis.non-capturing.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -2954,7 +2954,7 @@
 					"name": "support.other.parenthesis.regexp punctuation.parenthesis.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3034,7 +3034,7 @@
 							"name": "punctuation.character.set.end.regexp constant.other.set.regexp"
 						},
 						"2": {
-							"name": "invalid.illegal.newline.eguap"
+							"name": "invalid.illegal.newline.pitugues"
 						}
 					},
 					"patterns": [
@@ -3066,7 +3066,7 @@
 					"name": "support.other.parenthesis.regexp punctuation.parenthesis.named.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3092,7 +3092,7 @@
 					"name": "punctuation.comment.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3117,7 +3117,7 @@
 					"name": "keyword.operator.lookahead.regexp punctuation.parenthesis.lookahead.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3145,7 +3145,7 @@
 					"name": "keyword.operator.lookahead.negative.regexp punctuation.parenthesis.lookahead.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3173,7 +3173,7 @@
 					"name": "keyword.operator.lookbehind.regexp punctuation.parenthesis.lookbehind.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3201,7 +3201,7 @@
 					"name": "keyword.operator.lookbehind.negative.regexp punctuation.parenthesis.lookbehind.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3229,7 +3229,7 @@
 					"name": "keyword.operator.conditional.negative.regexp punctuation.parenthesis.conditional.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3254,7 +3254,7 @@
 					"name": "support.other.parenthesis.regexp punctuation.parenthesis.non-capturing.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3279,7 +3279,7 @@
 					"name": "support.other.parenthesis.regexp punctuation.parenthesis.end.regexp"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3292,29 +3292,29 @@
 			]
 		},
 		"regexp-single-one-line": {
-			"name": "string.regexp.quoted.single.eguap",
+			"name": "string.regexp.quoted.single.pitugues",
 			"begin": "\\b(([uU]r)|([bB]r)|(r[bB]?))(\\')",
 			"end": "(\\')|(?<!\\\\)(\\n)",
 			"beginCaptures": {
 				"2": {
-					"name": "invalid.deprecated.prefix.eguap"
+					"name": "invalid.deprecated.prefix.pitugues"
 				},
 				"3": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"4": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"5": {
-					"name": "punctuation.definition.string.begin.eguap"
+					"name": "punctuation.definition.string.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap"
+					"name": "punctuation.definition.string.end.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3324,29 +3324,29 @@
 			]
 		},
 		"regexp-single-three-line": {
-			"name": "string.regexp.quoted.multi.eguap",
+			"name": "string.regexp.quoted.multi.pitugues",
 			"begin": "\\b(([uU]r)|([bB]r)|(r[bB]?))(\\'\\'\\')",
 			"end": "(\\'\\'\\')",
 			"beginCaptures": {
 				"2": {
-					"name": "invalid.deprecated.prefix.eguap"
+					"name": "invalid.deprecated.prefix.pitugues"
 				},
 				"3": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"4": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"5": {
-					"name": "punctuation.definition.string.begin.eguap"
+					"name": "punctuation.definition.string.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap"
+					"name": "punctuation.definition.string.end.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3356,29 +3356,29 @@
 			]
 		},
 		"regexp-double-one-line": {
-			"name": "string.regexp.quoted.single.eguap",
+			"name": "string.regexp.quoted.single.pitugues",
 			"begin": "\\b(([uU]r)|([bB]r)|(r[bB]?))(\")",
 			"end": "(\")|(?<!\\\\)(\\n)",
 			"beginCaptures": {
 				"2": {
-					"name": "invalid.deprecated.prefix.eguap"
+					"name": "invalid.deprecated.prefix.pitugues"
 				},
 				"3": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"4": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"5": {
-					"name": "punctuation.definition.string.begin.eguap"
+					"name": "punctuation.definition.string.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap"
+					"name": "punctuation.definition.string.end.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3388,29 +3388,29 @@
 			]
 		},
 		"regexp-double-three-line": {
-			"name": "string.regexp.quoted.multi.eguap",
+			"name": "string.regexp.quoted.multi.pitugues",
 			"begin": "\\b(([uU]r)|([bB]r)|(r[bB]?))(\"\"\")",
 			"end": "(\"\"\")",
 			"beginCaptures": {
 				"2": {
-					"name": "invalid.deprecated.prefix.eguap"
+					"name": "invalid.deprecated.prefix.pitugues"
 				},
 				"3": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"4": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"5": {
-					"name": "punctuation.definition.string.begin.eguap"
+					"name": "punctuation.definition.string.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap"
+					"name": "punctuation.definition.string.end.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3420,26 +3420,26 @@
 			]
 		},
 		"string-raw-quoted-single-line": {
-			"name": "string.quoted.raw.single.eguap",
+			"name": "string.quoted.raw.single.pitugues",
 			"begin": "\\b(([uU]R)|(R))((['\"]))",
 			"end": "(\\4)|((?<!\\\\)\\n)",
 			"beginCaptures": {
 				"2": {
-					"name": "invalid.deprecated.prefix.eguap"
+					"name": "invalid.deprecated.prefix.pitugues"
 				},
 				"3": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"4": {
-					"name": "punctuation.definition.string.begin.eguap"
+					"name": "punctuation.definition.string.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap"
+					"name": "punctuation.definition.string.end.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3455,23 +3455,23 @@
 			]
 		},
 		"string-bin-quoted-single-line": {
-			"name": "string.quoted.binary.single.eguap",
+			"name": "string.quoted.binary.single.pitugues",
 			"begin": "(\\b[bB])((['\"]))",
 			"end": "(\\2)|((?<!\\\\)\\n)",
 			"beginCaptures": {
 				"1": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"2": {
-					"name": "punctuation.definition.string.begin.eguap"
+					"name": "punctuation.definition.string.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap"
+					"name": "punctuation.definition.string.end.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3481,23 +3481,23 @@
 			]
 		},
 		"string-raw-bin-quoted-single-line": {
-			"name": "string.quoted.raw.binary.single.eguap",
+			"name": "string.quoted.raw.binary.single.pitugues",
 			"begin": "(\\b(?:R[bB]|[bB]R))((['\"]))",
 			"end": "(\\2)|((?<!\\\\)\\n)",
 			"beginCaptures": {
 				"1": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"2": {
-					"name": "punctuation.definition.string.begin.eguap"
+					"name": "punctuation.definition.string.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap"
+					"name": "punctuation.definition.string.end.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3507,26 +3507,26 @@
 			]
 		},
 		"string-quoted-single-line": {
-			"name": "string.quoted.single.eguap",
+			"name": "string.quoted.single.pitugues",
 			"begin": "(?:\\b([rR])(?=[uU]))?([uU])?((['\"]))",
 			"end": "(\\3)|((?<!\\\\)\\n)",
 			"beginCaptures": {
 				"1": {
-					"name": "invalid.illegal.prefix.eguap"
+					"name": "invalid.illegal.prefix.pitugues"
 				},
 				"2": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"3": {
-					"name": "punctuation.definition.string.begin.eguap"
+					"name": "punctuation.definition.string.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap"
+					"name": "punctuation.definition.string.end.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3594,26 +3594,26 @@
 			]
 		},
 		"string-raw-quoted-multi-line": {
-			"name": "string.quoted.raw.multi.eguap",
+			"name": "string.quoted.raw.multi.pitugues",
 			"begin": "\\b(([uU]R)|(R))('''|\"\"\")",
 			"end": "(\\4)",
 			"beginCaptures": {
 				"2": {
-					"name": "invalid.deprecated.prefix.eguap"
+					"name": "invalid.deprecated.prefix.pitugues"
 				},
 				"3": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"4": {
-					"name": "punctuation.definition.string.begin.eguap"
+					"name": "punctuation.definition.string.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap"
+					"name": "punctuation.definition.string.end.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3629,23 +3629,23 @@
 			]
 		},
 		"string-bin-quoted-multi-line": {
-			"name": "string.quoted.binary.multi.eguap",
+			"name": "string.quoted.binary.multi.pitugues",
 			"begin": "(\\b[bB])('''|\"\"\")",
 			"end": "(\\2)",
 			"beginCaptures": {
 				"1": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"2": {
-					"name": "punctuation.definition.string.begin.eguap"
+					"name": "punctuation.definition.string.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap"
+					"name": "punctuation.definition.string.end.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3655,23 +3655,23 @@
 			]
 		},
 		"string-raw-bin-quoted-multi-line": {
-			"name": "string.quoted.raw.binary.multi.eguap",
+			"name": "string.quoted.raw.binary.multi.pitugues",
 			"begin": "(\\b(?:R[bB]|[bB]R))('''|\"\"\")",
 			"end": "(\\2)",
 			"beginCaptures": {
 				"1": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"2": {
-					"name": "punctuation.definition.string.begin.eguap"
+					"name": "punctuation.definition.string.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap"
+					"name": "punctuation.definition.string.end.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3681,26 +3681,26 @@
 			]
 		},
 		"string-quoted-multi-line": {
-			"name": "string.quoted.multi.eguap",
+			"name": "string.quoted.multi.pitugues",
 			"begin": "(?:\\b([rR])(?=[uU]))?([uU])?('''|\"\"\")",
 			"end": "(\\3)",
 			"beginCaptures": {
 				"1": {
-					"name": "invalid.illegal.prefix.eguap"
+					"name": "invalid.illegal.prefix.pitugues"
 				},
 				"2": {
-					"name": "storage.type.string.eguap"
+					"name": "storage.type.string.pitugues"
 				},
 				"3": {
-					"name": "punctuation.definition.string.begin.eguap"
+					"name": "punctuation.definition.string.begin.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap"
+					"name": "punctuation.definition.string.end.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3768,26 +3768,26 @@
 			]
 		},
 		"fstring-fnorm-quoted-single-line": {
-			"name": "meta.fstring.eguap",
+			"name": "meta.fstring.pitugues",
 			"begin": "(\\b[fF])([bBuU])?((['\"]))",
 			"end": "(\\3)|((?<!\\\\)\\n)",
 			"beginCaptures": {
 				"1": {
-					"name": "string.interpolated.eguap string.quoted.single.eguap storage.type.string.eguap"
+					"name": "string.interpolated.pitugues string.quoted.single.pitugues storage.type.string.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.prefix.eguap"
+					"name": "invalid.illegal.prefix.pitugues"
 				},
 				"3": {
-					"name": "punctuation.definition.string.begin.eguap string.interpolated.eguap string.quoted.single.eguap"
+					"name": "punctuation.definition.string.begin.pitugues string.interpolated.pitugues string.quoted.single.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap string.interpolated.eguap string.quoted.single.eguap"
+					"name": "punctuation.definition.string.end.pitugues string.interpolated.pitugues string.quoted.single.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3806,26 +3806,26 @@
 			]
 		},
 		"fstring-normf-quoted-single-line": {
-			"name": "meta.fstring.eguap",
+			"name": "meta.fstring.pitugues",
 			"begin": "(\\b[bBuU])([fF])((['\"]))",
 			"end": "(\\3)|((?<!\\\\)\\n)",
 			"beginCaptures": {
 				"1": {
-					"name": "invalid.illegal.prefix.eguap"
+					"name": "invalid.illegal.prefix.pitugues"
 				},
 				"2": {
-					"name": "string.interpolated.eguap string.quoted.single.eguap storage.type.string.eguap"
+					"name": "string.interpolated.pitugues string.quoted.single.pitugues storage.type.string.pitugues"
 				},
 				"3": {
-					"name": "punctuation.definition.string.begin.eguap string.quoted.single.eguap"
+					"name": "punctuation.definition.string.begin.pitugues string.quoted.single.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap string.interpolated.eguap string.quoted.single.eguap"
+					"name": "punctuation.definition.string.end.pitugues string.interpolated.pitugues string.quoted.single.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3844,23 +3844,23 @@
 			]
 		},
 		"fstring-raw-quoted-single-line": {
-			"name": "meta.fstring.eguap",
+			"name": "meta.fstring.pitugues",
 			"begin": "(\\b(?:[rR][fF]|[fF][rR]))((['\"]))",
 			"end": "(\\2)|((?<!\\\\)\\n)",
 			"beginCaptures": {
 				"1": {
-					"name": "string.interpolated.eguap string.quoted.raw.single.eguap storage.type.string.eguap"
+					"name": "string.interpolated.pitugues string.quoted.raw.single.pitugues storage.type.string.pitugues"
 				},
 				"2": {
-					"name": "punctuation.definition.string.begin.eguap string.quoted.raw.single.eguap"
+					"name": "punctuation.definition.string.begin.pitugues string.quoted.raw.single.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap string.interpolated.eguap string.quoted.raw.single.eguap"
+					"name": "punctuation.definition.string.end.pitugues string.interpolated.pitugues string.quoted.raw.single.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -3879,11 +3879,11 @@
 			]
 		},
 		"fstring-single-core": {
-			"name": "string.interpolated.eguap string.quoted.single.eguap",
+			"name": "string.interpolated.pitugues string.quoted.single.pitugues",
 			"match": "(?x)\n  (.+?)\n    (\n      (?# .* and .*? in multi-line match need special handling of\n        newlines otherwise SublimeText and Atom will match slightly\n        differently.\n\n        The guard for newlines has to be separate from the\n        lookahead because of special $ matching rule.)\n      ($\\n?)\n      |\n      (?=[\\\\\\}\\{]|(['\"])|((?<!\\\\)\\n))\n    )\n  (?# due to how multiline regexps are matched we need a special case\n    for matching a newline character)\n  | \\n\n"
 		},
 		"fstring-raw-single-core": {
-			"name": "string.interpolated.eguap string.quoted.raw.single.eguap",
+			"name": "string.interpolated.pitugues string.quoted.raw.single.pitugues",
 			"match": "(?x)\n  (.+?)\n    (\n      (?# .* and .*? in multi-line match need special handling of\n        newlines otherwise SublimeText and Atom will match slightly\n        differently.\n\n        The guard for newlines has to be separate from the\n        lookahead because of special $ matching rule.)\n      ($\\n?)\n      |\n      (?=[\\\\\\}\\{]|(['\"])|((?<!\\\\)\\n))\n    )\n  (?# due to how multiline regexps are matched we need a special case\n    for matching a newline character)\n  | \\n\n"
 		},
 		"fstring-single-brace": {
@@ -3892,12 +3892,12 @@
 			"end": "(?x)\n  (\\})|(?=\\n)\n",
 			"beginCaptures": {
 				"1": {
-					"name": "constant.character.format.placeholder.other.eguap"
+					"name": "constant.character.format.placeholder.other.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "constant.character.format.placeholder.other.eguap"
+					"name": "constant.character.format.placeholder.other.pitugues"
 				}
 			},
 			"patterns": [
@@ -3912,21 +3912,21 @@
 		"fstring-terminator-single": {
 			"patterns": [
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "(=(![rsa])?)(?=})"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "(=?![rsa])(?=})"
 				},
 				{
 					"match": "(?x)\n  ( (?: =?) (?: ![rsa])? )\n    ( : \\w? [<>=^]? [-+ ]? \\#?\n      \\d* ,? (\\.\\d+)? [bcdeEfFgGnosxX%]? )(?=})\n",
 					"captures": {
 						"1": {
-							"name": "storage.type.format.eguap"
+							"name": "storage.type.format.pitugues"
 						},
 						"2": {
-							"name": "storage.type.format.eguap"
+							"name": "storage.type.format.pitugues"
 						}
 					}
 				},
@@ -3940,10 +3940,10 @@
 			"end": "(?=})|(?=\\n)",
 			"beginCaptures": {
 				"1": {
-					"name": "storage.type.format.eguap"
+					"name": "storage.type.format.pitugues"
 				},
 				"2": {
-					"name": "storage.type.format.eguap"
+					"name": "storage.type.format.pitugues"
 				}
 			},
 			"patterns": [
@@ -3954,60 +3954,60 @@
 					"include": "#fstring-single-brace"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "([bcdeEfFgGnosxX%])(?=})"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "(\\.\\d+)"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "(,)"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "(\\d+)"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "(\\#)"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "([-+ ])"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "([<>=^])"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "(\\w)"
 				}
 			]
 		},
 		"fstring-fnorm-quoted-multi-line": {
-			"name": "meta.fstring.eguap",
+			"name": "meta.fstring.pitugues",
 			"begin": "(\\b[fF])([bBuU])?('''|\"\"\")",
 			"end": "(\\3)",
 			"beginCaptures": {
 				"1": {
-					"name": "string.interpolated.eguap string.quoted.multi.eguap storage.type.string.eguap"
+					"name": "string.interpolated.pitugues string.quoted.multi.pitugues storage.type.string.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.prefix.eguap"
+					"name": "invalid.illegal.prefix.pitugues"
 				},
 				"3": {
-					"name": "punctuation.definition.string.begin.eguap string.interpolated.eguap string.quoted.multi.eguap"
+					"name": "punctuation.definition.string.begin.pitugues string.interpolated.pitugues string.quoted.multi.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap string.interpolated.eguap string.quoted.multi.eguap"
+					"name": "punctuation.definition.string.end.pitugues string.interpolated.pitugues string.quoted.multi.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -4026,26 +4026,26 @@
 			]
 		},
 		"fstring-normf-quoted-multi-line": {
-			"name": "meta.fstring.eguap",
+			"name": "meta.fstring.pitugues",
 			"begin": "(\\b[bBuU])([fF])('''|\"\"\")",
 			"end": "(\\3)",
 			"beginCaptures": {
 				"1": {
-					"name": "invalid.illegal.prefix.eguap"
+					"name": "invalid.illegal.prefix.pitugues"
 				},
 				"2": {
-					"name": "string.interpolated.eguap string.quoted.multi.eguap storage.type.string.eguap"
+					"name": "string.interpolated.pitugues string.quoted.multi.pitugues storage.type.string.pitugues"
 				},
 				"3": {
-					"name": "punctuation.definition.string.begin.eguap string.quoted.multi.eguap"
+					"name": "punctuation.definition.string.begin.pitugues string.quoted.multi.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap string.interpolated.eguap string.quoted.multi.eguap"
+					"name": "punctuation.definition.string.end.pitugues string.interpolated.pitugues string.quoted.multi.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -4064,23 +4064,23 @@
 			]
 		},
 		"fstring-raw-quoted-multi-line": {
-			"name": "meta.fstring.eguap",
+			"name": "meta.fstring.pitugues",
 			"begin": "(\\b(?:[rR][fF]|[fF][rR]))('''|\"\"\")",
 			"end": "(\\2)",
 			"beginCaptures": {
 				"1": {
-					"name": "string.interpolated.eguap string.quoted.raw.multi.eguap storage.type.string.eguap"
+					"name": "string.interpolated.pitugues string.quoted.raw.multi.pitugues storage.type.string.pitugues"
 				},
 				"2": {
-					"name": "punctuation.definition.string.begin.eguap string.quoted.raw.multi.eguap"
+					"name": "punctuation.definition.string.begin.pitugues string.quoted.raw.multi.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "punctuation.definition.string.end.eguap string.interpolated.eguap string.quoted.raw.multi.eguap"
+					"name": "punctuation.definition.string.end.pitugues string.interpolated.pitugues string.quoted.raw.multi.pitugues"
 				},
 				"2": {
-					"name": "invalid.illegal.newline.eguap"
+					"name": "invalid.illegal.newline.pitugues"
 				}
 			},
 			"patterns": [
@@ -4099,11 +4099,11 @@
 			]
 		},
 		"fstring-multi-core": {
-			"name": "string.interpolated.eguap string.quoted.multi.eguap",
+			"name": "string.interpolated.pitugues string.quoted.multi.pitugues",
 			"match": "(?x)\n  (.+?)\n    (\n      (?# .* and .*? in multi-line match need special handling of\n        newlines otherwise SublimeText and Atom will match slightly\n        differently.\n\n        The guard for newlines has to be separate from the\n        lookahead because of special $ matching rule.)\n      ($\\n?)\n      |\n      (?=[\\\\\\}\\{]|'''|\"\"\")\n    )\n  (?# due to how multiline regexps are matched we need a special case\n    for matching a newline character)\n  | \\n\n"
 		},
 		"fstring-raw-multi-core": {
-			"name": "string.interpolated.eguap string.quoted.raw.multi.eguap",
+			"name": "string.interpolated.pitugues string.quoted.raw.multi.pitugues",
 			"match": "(?x)\n  (.+?)\n    (\n      (?# .* and .*? in multi-line match need special handling of\n        newlines otherwise SublimeText and Atom will match slightly\n        differently.\n\n        The guard for newlines has to be separate from the\n        lookahead because of special $ matching rule.)\n      ($\\n?)\n      |\n      (?=[\\\\\\}\\{]|'''|\"\"\")\n    )\n  (?# due to how multiline regexps are matched we need a special case\n    for matching a newline character)\n  | \\n\n"
 		},
 		"fstring-multi-brace": {
@@ -4112,12 +4112,12 @@
 			"end": "(?x)\n  (\\})\n",
 			"beginCaptures": {
 				"1": {
-					"name": "constant.character.format.placeholder.other.eguap"
+					"name": "constant.character.format.placeholder.other.pitugues"
 				}
 			},
 			"endCaptures": {
 				"1": {
-					"name": "constant.character.format.placeholder.other.eguap"
+					"name": "constant.character.format.placeholder.other.pitugues"
 				}
 			},
 			"patterns": [
@@ -4132,21 +4132,21 @@
 		"fstring-terminator-multi": {
 			"patterns": [
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "(=(![rsa])?)(?=})"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "(=?![rsa])(?=})"
 				},
 				{
 					"match": "(?x)\n  ( (?: =?) (?: ![rsa])? )\n    ( : \\w? [<>=^]? [-+ ]? \\#?\n      \\d* ,? (\\.\\d+)? [bcdeEfFgGnosxX%]? )(?=})\n",
 					"captures": {
 						"1": {
-							"name": "storage.type.format.eguap"
+							"name": "storage.type.format.pitugues"
 						},
 						"2": {
-							"name": "storage.type.format.eguap"
+							"name": "storage.type.format.pitugues"
 						}
 					}
 				},
@@ -4160,10 +4160,10 @@
 			"end": "(?=})",
 			"beginCaptures": {
 				"1": {
-					"name": "storage.type.format.eguap"
+					"name": "storage.type.format.pitugues"
 				},
 				"2": {
-					"name": "storage.type.format.eguap"
+					"name": "storage.type.format.pitugues"
 				}
 			},
 			"patterns": [
@@ -4174,35 +4174,35 @@
 					"include": "#fstring-multi-brace"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "([bcdeEfFgGnosxX%])(?=})"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "(\\.\\d+)"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "(,)"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "(\\d+)"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "(\\#)"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "([-+ ])"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "([<>=^])"
 				},
 				{
-					"name": "storage.type.format.eguap",
+					"name": "storage.type.format.pitugues",
 					"match": "(\\w)"
 				}
 			]

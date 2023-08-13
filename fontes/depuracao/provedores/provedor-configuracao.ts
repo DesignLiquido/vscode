@@ -19,7 +19,7 @@ export class ProvedorConfiguracaoDelegua
 				switch (editor.document.languageId) {
                     case 'birl':
 					case 'delegua':
-                    case 'eguap':
+                    case 'pitugues':
                     case 'mapler':
                     case 'portugolstudio':
 					case 'visualg':

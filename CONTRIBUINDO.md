@@ -6,13 +6,13 @@
 * Diretório `gramaticas` - Arquivos de gramática do Text Mate: https://macromates.com/manual/en/language_grammars (inglês)
     * BIRL: `birl.tmLanguage.json`
     * Delégua: `delegua.tmLanguage.json`
-    * EguaP: `egua.tmLanguage.json`
+    * Pituguês: `egua.tmLanguage.json`
     * LMHT: `lmht.tmLanguage.json`
     * VisuAlg: `visualg.tmLanguage.json`
 * Diretório `configuracoes` - Arquivos de configuração das linguagens, onde se definem _tokens_ e palavras reservadas.
     * BIRL: `configuracao-birl.json`
     * Delégua: `configuracao-delegua.json`
-    * EguaP: `configuracao-eguap.json`
+    * Pituguês: `configuracao-pitugues.json`
     * LMHT: `configuracao-lmht.json`
     * VisuAlg: `configuracao-visualg.json`
 

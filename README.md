@@ -19,7 +19,7 @@ Essa extensão visa melhorar a produtividade de projetos escritos usando as ling
 Essa extensão também oferece suporte parcial a outras linguagens que são dialetos de Delégua:
 
 - [Egua](https://egua.tech);
-- [EguaP](https://github.com/DesignLiquido/delegua/wiki/Dialetos#eguap);
+- [Pituguês](https://github.com/DesignLiquido/delegua/wiki/Dialetos#pitugues);
 - [Portugol Mapler](https://portugol.sourceforge.io/);
 - [Portugol Studio](http://lite.acad.univali.br/portugol/);
 - [Portugol VisuAlg](https://visualg3.com.br/).
@@ -33,11 +33,11 @@ Você pode instalar pesquisando nas extensões do Visual Studio Code [ou por est
 - Sintaxe colorida
 - Formatação de arquivos em Delégua
 - Análise semântica para Delégua
-- Reconhecimento de expressões comuns das linguagens Delégua, Égua, EguaP e dialetos de Portugol, como VisuAlg e Portugol Studio/Webstudio
-- Ícones para arquivos `.delegua`, `.egua`, `.eguap`, `.foles`, `.lincones` e `.lmht`
+- Reconhecimento de expressões comuns das linguagens Delégua, Égua, Pituguês e dialetos de Portugol, como VisuAlg e Portugol Studio/Webstudio
+- Ícones para arquivos `.delegua`, `.egua`, `.pitugues`, `.foles`, `.lincones` e `.lmht`
 - Trechos de códigos para facilitar desenvolvimento em Delégua
 - Mecanismo de completude de funções da biblioteca global para Delégua
-- Suporte a depuração para Delégua, EguaP, Portugol VisuAlg e Portugol Studio/Webstudio
+- Suporte a depuração para Delégua, Pituguês, Portugol VisuAlg e Portugol Studio/Webstudio
 
 ## Tradução entre linguagens
 

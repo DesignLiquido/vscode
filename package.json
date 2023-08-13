@@ -104,7 +104,7 @@
                 "language": "delegua"
             },
             {
-                "language": "eguap"
+                "language": "pitugues"
             },
             {
                 "language": "mapler"
@@ -125,7 +125,7 @@
                 "languages": [
                     "birl",
                     "delegua",
-                    "eguap",
+                    "pitugues",
                     "mapler",
                     "portugolstudio",
                     "potigol",
@@ -232,15 +232,15 @@
                 "configuration": "./configuracoes/configuracao-delegua.json"
             },
             {
-                "id": "eguap",
+                "id": "pitugues",
                 "aliases": [
-                    "EguaP",
-                    "eguap"
+                    "Pituguês",
+                    "pitugues"
                 ],
                 "extensions": [
-                    ".eguap"
+                    ".pitugues"
                 ],
-                "configuration": "./configuracoes/configuracao-eguap.json"
+                "configuration": "./configuracoes/configuracao-pitugues.json"
             },
             {
                 "id": "foles",
@@ -334,9 +334,9 @@
                 "path": "./gramaticas/delegua.tmLanguage.json"
             },
             {
-                "language": "eguap",
-                "scopeName": "source.eguap",
-                "path": "./gramaticas/eguap.tmLanguage.json"
+                "language": "pitugues",
+                "scopeName": "source.pitugues",
+                "path": "./gramaticas/pitugues.tmLanguage.json"
             },
             {
                 "language": "foles",
