@@ -67,20 +67,16 @@ function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: string, cam
     let resultadoTraducao = '';
     const delegua = new Delegua(
         undefined,
-        undefined,
-        undefined,
-        `${deLinguagem}-para-${paraLinguagem}`,
         (traducao: string) => {
             resultadoTraducao = traducao;
-        },
-        undefined
+        }
     );
 
     if (!caminhoArquivoAbertoEditor) {
         return '';
     }
 
-    delegua.traduzirArquivo(caminhoArquivoAbertoEditor, true);
+    delegua.traduzirArquivo(caminhoArquivoAbertoEditor, `${deLinguagem}-para-${paraLinguagem}`, true);
     return resultadoTraducao;
 }
 

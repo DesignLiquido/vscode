@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.7.17
+
+- Atualização de Delégua e FolEs para as versões 0.24.1 e 0.4.1, respectivamente;
+- [Implementação de referência para parâmetros no dialeto VisuAlg](https://github.com/DesignLiquido/delegua/issues/476).
+
 ## 0.7.16
 
 - Atualização de Delégua e FolEs para as versões 0.22.7 e 0.4.0, respectivamente.

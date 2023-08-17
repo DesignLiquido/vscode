@@ -47,6 +47,13 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
+            'extension.designliquido.traduzir.delegua.para.assemblyscript',
+            async () => await traduzir('delegua', 'assemblyscript')
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
             'extension.designliquido.traduzir.delegua.para.javascript',
             async () => await traduzir('delegua', 'js')
         )
