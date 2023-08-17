@@ -3,14 +3,13 @@ import * as vscode from 'vscode';
 import { EventEmitter } from 'events';
 import { DebugProtocol } from '@vscode/debugprotocol';
 
-import { AvaliadorSintatico, cyrb53, Lexador, PontoParada } from '@designliquido/delegua';
+import { cyrb53, PontoParada } from '@designliquido/delegua';
 
 import { ElementoPilhaVsCode } from '../elemento-pilha';
-import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface } from '@designliquido/delegua/fontes/interfaces';
+import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/fontes/interfaces';
 import { LexadorPortugolStudio } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-portugol-studio';
 import { LexadorVisuAlg } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-visualg';
 import { AvaliadorSintaticoPortugolStudio } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-portugol-studio';
-import { AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-visualg';
 import { LexadorPitugues } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-pitugues';
 import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-pitugues';
 import { LexadorMapler } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-mapler';
@@ -23,7 +22,10 @@ import { InterpretadorVisuAlgComDepuracaoImportacao } from '@designliquido/deleg
 import { palavrasReservadas } from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
 import { InterpretadorPortugolStudioComDepuracao } from '@designliquido/delegua/fontes/interpretador/dialetos';
 import { LexadorBirl } from '@designliquido/delegua/fontes/lexador/dialetos';
-import { AvaliadorSintaticoBirl } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos';
+import { AvaliadorSintaticoBirl, AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos';
+import { Declaracao } from '@designliquido/delegua/fontes/declaracoes';
+import { Lexador } from '@designliquido/delegua/fontes/lexador';
+import { AvaliadorSintatico } from '@designliquido/delegua/fontes/avaliador-sintatico';
 
 /**
  * Em teoria não precisaria uma classe de tempo de execução local, mas,
@@ -35,8 +37,8 @@ import { AvaliadorSintaticoBirl } from '@designliquido/delegua/fontes/avaliador-
  * recebendo instruções da linguagem e emitindo os eventos correspondentes.
  */
 export class DeleguaTempoExecucaoLocal extends EventEmitter {
-    private lexador: LexadorInterface;
-    private avaliadorSintatico: AvaliadorSintaticoInterface;
+    private lexador: LexadorInterface<SimboloInterface>;
+    private avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>;
     private importador: ImportadorInterface;
     private interpretador: InterpretadorComDepuracaoInterface;
 

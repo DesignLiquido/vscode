@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
 
 import { AnalisadorSemantico } from '@designliquido/delegua/fontes/analisador-semantico';
-import { AvaliadorSintatico, Lexador } from '@designliquido/delegua';
-import { AvaliadorSintaticoInterface, LexadorInterface } from '@designliquido/delegua/fontes/interfaces';
+import { avaliadores, lexadores } from '@designliquido/delegua';
+import { AvaliadorSintaticoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/fontes/interfaces';
 import { ErroAnalisadorSemantico } from '@designliquido/delegua/fontes/interfaces/erros';
+import { Declaracao } from '@designliquido/delegua/fontes/declaracoes';
 
 
 export function analiseSemantica(
@@ -11,14 +12,14 @@ export function analiseSemantica(
     diagnosticos: vscode.DiagnosticCollection
 ): void {
     const extensaoArquivo = documento.fileName.split('.')[1];
-    let lexador: LexadorInterface;
-    let avaliadorSintatico: AvaliadorSintaticoInterface;
+    let lexador: LexadorInterface<SimboloInterface>;
+    let avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>;
     let analisadorSemantico: AnalisadorSemantico;
 
     switch (extensaoArquivo) {
         case "delegua":
-            lexador = new Lexador();
-            avaliadorSintatico = new AvaliadorSintatico();
+            lexador = new lexadores.Lexador();
+            avaliadorSintatico = new avaliadores.AvaliadorSintatico();
             analisadorSemantico = new AnalisadorSemantico(); 
 
             const linhas = documento.getText().split('\n').map(l => l + '\0');
