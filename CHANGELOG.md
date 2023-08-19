@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.7.18
+
+- Dialeto VisuAlg suporta tanto `para v de 1 ate 10` quanto `para v <- 1 ate 10` (https://github.com/DesignLiquido/delegua/issues/478);
+- Vários _bugs_ retirados de diversos dialetos. Versão de Delégua atualizada para 0.24.2.
+
 ## 0.7.17
 
 - Atualização de Delégua e FolEs para as versões 0.24.1 e 0.4.1, respectivamente;
