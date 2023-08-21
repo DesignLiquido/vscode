@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.7.19
+
+- Adicionada lógica para obter erros específicos de execução do VisuAlg;
+- Atualizado modelo de comando do `launch.json` para executar o arquivo aberto.
+
 ## 0.7.18
 
 - Dialeto VisuAlg suporta tanto `para v de 1 ate 10` quanto `para v <- 1 ate 10` (https://github.com/DesignLiquido/delegua/issues/478);
