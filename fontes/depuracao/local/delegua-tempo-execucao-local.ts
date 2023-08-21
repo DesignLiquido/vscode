@@ -39,7 +39,7 @@ import { AvaliadorSintatico } from '@designliquido/delegua/fontes/avaliador-sint
 export class DeleguaTempoExecucaoLocal extends EventEmitter {
     private lexador: LexadorInterface<SimboloInterface>;
     private avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>;
-    private importador: ImportadorInterface;
+    private importador: ImportadorInterface<SimboloInterface, Declaracao>;
     private interpretador: InterpretadorComDepuracaoInterface;
 
     private _arquivoInicial: string = '';
@@ -154,7 +154,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         this.interpretador.avisoPontoParadaAtivado = this.avisoPontoParadaAtivado.bind(this);
         
         this._arquivoInicial = arquivoInicial;
-        const retornoImportador = this.importador.importar(arquivoInicial, true, false);
+        const retornoImportador = this.importador.importar(arquivoInicial, true);
         this._hashArquivoInicial = retornoImportador.hashArquivo;
         this._conteudoArquivo = this.importador.conteudoArquivosAbertos[this._hashArquivoInicial];
 
@@ -176,11 +176,21 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         if (pararNaEntrada) {
             // Executar apenas um passo na entrada.
             this.interpretador.comando = 'proximo';
-            this.interpretador.instrucaoPasso();
+            this.interpretador.instrucaoPasso().then(_ => {
+                // Pós-execução
+                for (let erro of this.interpretador.erros) {
+                    this.enviarEvento('saida', erro);
+                }
+            });
         } else {
             // Executamos até encontrar ou um ponto de parada, ou uma exceção.
             this.interpretador.comando = 'continuar';
-            this.interpretador.instrucaoContinuarInterpretacao();
+            this.interpretador.instrucaoContinuarInterpretacao().then(_ => {
+                // Pós-execução
+                for (let erro of this.interpretador.erros) {
+                    this.enviarEvento('saida', erro);
+                }
+            });
         }
     }
 
