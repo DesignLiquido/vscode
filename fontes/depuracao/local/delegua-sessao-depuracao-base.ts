@@ -184,7 +184,12 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
             this.sendResponse(response);
         } catch (erro: any) {
             response.success = false;
-            response.message = `[Linha: ${erro.simbolo.linha}] ${erro.message}`;
+            if (erro.hasOwnProperty('simbolo')) {
+                response.message = `[Linha: ${erro.simbolo.linha}] ${erro.message}`;
+            } else {
+                response.message = `${erro.message}`;
+            }
+            
             this.sendResponse(response);
             throw erro;
         }

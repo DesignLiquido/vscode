@@ -174,8 +174,8 @@
                     {
                         "type": "delegua",
                         "request": "launch",
-                        "name": "Pedir por nome de arquivo",
-                        "program": "${workspaceFolder}/${command:AskForProgramName}",
+                        "name": "Executar arquivo aberto",
+                        "program": "${file}",
                         "stopOnEntry": false
                     }
                 ],
