@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.7.20
+
+- Nova tradução: Delégua para AssemblyScript;
+- Correção em _bug_ do VisuAlg que não permitia usar uma função de uma biblioteca global usando uma variável.
+
 ## 0.7.19
 
 - Adicionada lógica para obter erros específicos de execução do VisuAlg;

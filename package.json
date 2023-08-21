@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.7.19",
+    "version": "0.7.20",
     "engines": {
         "vscode": "^1.68.0"
     },
@@ -75,6 +75,10 @@
     },
     "contributes": {
         "commands": [
+            {
+                "command": "extension.designliquido.traduzir.delegua.para.assemblyscript",
+                "title": "Tradução: Traduzir fonte Delégua para AssemblyScript"
+            },
             {
                 "command": "extension.designliquido.traduzir.delegua.para.javascript",
                 "title": "Tradução: Traduzir fonte Delégua para JavaScript"
@@ -182,12 +186,12 @@
                 "configurationSnippets": [
                     {
                         "label": "Depuração em Delégua: Iniciar",
-                        "description": "Uma nova configuração para depuração para arquivo fonte Delégua.",
+                        "description": "Nova configuração para depuração de fontes em Delégua ou dialetos de Portugol.",
                         "body": {
                             "type": "delegua",
                             "request": "launch",
-                            "name": "Pedir por nome de arquivo",
-                            "program": "^\"\\${workspaceFolder}/\\${command:AskForProgramName}\"",
+                            "name": "Executar arquivo aberto",
+                            "program": "^\"\\${file}\"",
                             "stopOnEntry": false
                         }
                     }
@@ -405,7 +409,7 @@
         "webpack-cli": "^5.0.1"
     },
     "dependencies": {
-        "@designliquido/delegua-node": "^0.24.2",
+        "@designliquido/delegua-node": "^0.24.3",
         "@designliquido/foles": "^0.4.1",
         "lodash": "^4.17.21",
         "real-executable-path": "^3.0.0"
