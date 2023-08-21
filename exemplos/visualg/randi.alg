@@ -2,8 +2,10 @@ algoritmo "número aleatório"
 
 var
     k: inteiro
+    l: inteiro
 inicio
-    k <- randi(-5)
+    l <- 10
+    k <- randi(l)
     escreva ("Número aleatório " + k)
 
 fimalgoritmo
