@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.7.21
+
+- `escolha` em Delégua e Pituguês agora aceitam declarações de variáveis e constantes;
+- Portando recursos de Delégua em Pituguês, como constantes e a instrução `falhar`.
+
 ## 0.7.20
 
 - Nova tradução: Delégua para AssemblyScript;
