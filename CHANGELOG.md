@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.7.22
+
+- Removido _bug_ em instrução `escolha` de Delégua.
+
 ## 0.7.21
 
 - `escolha` em Delégua e Pituguês agora aceitam declarações de variáveis e constantes;
