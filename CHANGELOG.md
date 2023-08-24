@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.7.23
+
+- Correções no tradutor reverso de JavaScript para Delégua.
+
 ## 0.7.22
 
 - Removido _bug_ em instrução `escolha` de Delégua.
