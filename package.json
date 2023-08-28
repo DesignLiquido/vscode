@@ -92,8 +92,16 @@
                 "title": "Tradução: Traduzir fonte FolEs para CSS"
             },
             {
+                "command": "extension.designliquido.traduzir.html.para.lmht",
+                "title": "Tradução: Traduzir fonte HTML para LMHT"
+            },
+            {
                 "command": "extension.designliquido.traduzir.javascript.para.delegua",
                 "title": "Tradução: Traduzir fonte JavaScript para Delégua"
+            },
+            {
+                "command": "extension.designliquido.traduzir.lmht.para.html",
+                "title": "Tradução: Traduzir fonte LMHT para HTML"
             },
             {
                 "command": "extension.designliquido.traduzir.visualg.para.delegua",
@@ -145,7 +153,7 @@
                             "program": {
                                 "type": "string",
                                 "description": "Caminho absoluto para arquivo fonte Delégua.",
-                                "default": "${workspaceFolder}/${command:AskForProgramName}"
+                                "default": "${file}"
                             },
                             "stopOnEntry": {
                                 "type": "boolean",
@@ -195,10 +203,7 @@
                             "stopOnEntry": false
                         }
                     }
-                ],
-                "variables": {
-                    "AskForProgramName": "extension.designliquido.getProgramName"
-                }
+                ]
             }
         ],
         "languages": [
@@ -411,6 +416,7 @@
     "dependencies": {
         "@designliquido/delegua-node": "^0.24.6",
         "@designliquido/foles": "^0.4.1",
+        "@designliquido/lmht-js": "^0.3.0",
         "lodash": "^4.17.21",
         "real-executable-path": "^3.0.0"
     }

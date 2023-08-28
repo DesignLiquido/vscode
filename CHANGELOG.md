@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.8.0
+
+- Novas traduções:
+    - LMHT para HTML
+    - HTML para LMHT
+
 ## 0.7.23
 
 - Correções no tradutor reverso de JavaScript para Delégua.

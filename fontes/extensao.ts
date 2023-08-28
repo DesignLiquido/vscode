@@ -45,61 +45,67 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.workspace.onDidCloseTextDocument(doc => diagnosticosDelegua.delete(doc.uri))
 	);
 
+    // TODO: Remover bug da traducão reversa.
+    /* context.subscriptions.push(
+        vscode.commands.registerCommand(
+            'extension.designliquido.traduzir.css.para.foles',
+            () => traduzir('css', 'foles')
+        )
+    ); */
+
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.delegua.para.assemblyscript',
-            async () => await traduzir('delegua', 'assemblyscript')
+            () => traduzir('delegua', 'assemblyscript')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.delegua.para.javascript',
-            async () => await traduzir('delegua', 'js')
+            () => traduzir('delegua', 'js')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.delegua.para.python',
-            async () => await traduzir('delegua', 'py')
-        )
-    );
-
-    // TODO: Corrigir o suporte a XSLT para poder ativar essa transformação.
-    /* context.subscriptions.push(
-        vscode.commands.registerCommand(
-            'extension.designliquido.traduzir.html',
-            async () => await traduzir('html', 'lmht')
-        )
-    ); */
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand(
-            'extension.designliquido.traduzir.javascript.para.delegua',
-            async () => await traduzir('js', 'delegua')
+            () => traduzir('delegua', 'py')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.foles.para.css',
-            async () => await traduzir('foles', 'css')
+            () => traduzir('foles', 'css')
         )
     );
 
-    // TODO: Corrigir o suporte a XSLT para poder ativar essa transformação.
-    /* context.subscriptions.push(
+    context.subscriptions.push(
         vscode.commands.registerCommand(
-            'extension.designliquido.traduzir.lmht',
-            async () => await traduzir('lmht', 'html')
+            'extension.designliquido.traduzir.html.para.lmht',
+            () => traduzir('html', 'lmht')
         )
-    ); */
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
+            'extension.designliquido.traduzir.javascript.para.delegua',
+            () => traduzir('js', 'delegua')
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
+            'extension.designliquido.traduzir.lmht.para.html',
+            () => traduzir('lmht', 'html')
+        )
+    );
     
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.visualg.para.delegua',
-            async () => await traduzir('alg', 'delegua')
+            () => traduzir('alg', 'delegua')
         )
     );    
 

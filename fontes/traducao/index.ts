@@ -4,12 +4,7 @@ import * as sistemaArquivos from 'fs';
 
 import { Delegua } from '@designliquido/delegua-node/fontes/delegua';
 import { FolEs } from '@designliquido/foles';
-
-// TODO: Ajustar https://github.com/DesignLiquido/xslt-processor para
-// funcionar com LMHT, e então se livrar do 'saxon-js'.
-
-// import SaxonJS from 'saxon-js';
-// import { ConversorHtml, ConversorLmht } from '@designliquido/lmht-js';
+import { ConversorHtml, ConversorLmht } from '@designliquido/lmht-js';
 
 /**
  * Ponto de entrada para todas as traduções desta extensão.
@@ -17,7 +12,7 @@ import { FolEs } from '@designliquido/foles';
  * @param paraLinguagem Linguagem de destino.
  * @returns Normalmente `void`, mas pode retornar mensagens de erro.
  */
-export async function traduzir(deLinguagem: string, paraLinguagem: string): Promise<any> {
+export function traduzir(deLinguagem: string, paraLinguagem: string): any {
     try {
         let caminhoArquivoAbertoEditor =
             vscode.window.activeTextEditor?.document?.fileName ?? '';
@@ -33,8 +28,9 @@ export async function traduzir(deLinguagem: string, paraLinguagem: string): Prom
         switch (deLinguagem.toLowerCase()) {
             case 'lmht':
             case 'html':
-                // resultadoTraducao = await traduzirPorMotorLmht(deLinguagem, paraLinguagem, caminhoArquivoAbertoEditor);
+                resultadoTraducao = traduzirPorMotorLmht(deLinguagem, paraLinguagem, caminhoArquivoAbertoEditor);
                 break;
+            case 'css':
             case 'foles':
                 resultadoTraducao = traduzirPorMotorFolEs(deLinguagem, paraLinguagem, caminhoArquivoAbertoEditor);
                 break;
@@ -63,6 +59,13 @@ export async function traduzir(deLinguagem: string, paraLinguagem: string): Prom
     }
 }
 
+/**
+ * Traduções pelo motor de Delégua, seja diretas ou reversas.
+ * @param deLinguagem Extensão da linguagem de origem.
+ * @param paraLinguagem Extensão da linguagem de destino.
+ * @param caminhoArquivoAbertoEditor O arquivo a ser traduzido.
+ * @returns O texto com o conteúdo da tradução.
+ */
 function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: string, caminhoArquivoAbertoEditor: string): string {
     let resultadoTraducao = '';
     const delegua = new Delegua(
@@ -80,26 +83,49 @@ function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: string, cam
     return resultadoTraducao;
 }
 
+/**
+ * Tradução de FolEs para CSS, ou CSS para FolEs.
+ * @param deLinguagem Extensão da linguagem de origem.
+ * @param paraLinguagem Extensão da linguagem de destino.
+ * @param caminhoArquivoAbertoEditor O arquivo a ser traduzido.
+ * @returns O texto com o conteúdo da tradução.
+ */
 function traduzirPorMotorFolEs(deLinguagem: string, paraLinguagem: string, caminhoArquivoAbertoEditor: string): string {
     const foles = new FolEs();
-    const resultadoTraducao = foles.converterParaCss(caminhoArquivoAbertoEditor);
-    sistemaArquivos.writeFileSync(caminhoArquivoAbertoEditor.split('.')[0] + '.css', resultadoTraducao);
+    let resultadoTraducao = '';
+    switch (deLinguagem.toLowerCase()) {
+        case 'foles':
+            resultadoTraducao = foles.converterParaCss(caminhoArquivoAbertoEditor);
+            break;
+        case 'css':
+            resultadoTraducao = foles.converterParaFolEs(caminhoArquivoAbertoEditor);
+            break;
+    }
+
+    sistemaArquivos.writeFileSync(caminhoArquivoAbertoEditor.split('.')[0] + `.${paraLinguagem}`, resultadoTraducao);
     return resultadoTraducao;
 }
 
-// Essa seria a forma de usar caso '@designliquido/lmht-js' ou 'saxon-js' funcionassem da maneira correta.
-// Por enquanto esse código fica aqui como referência do que fazer mais adiante.
-/* async function traduzirPorMotorLmht(deLinguagem: string, paraLinguagem: string, caminhoArquivoAbertoEditor: string): Promise<string> {
-    switch (paraLinguagem.toLowerCase()) {
+/**
+ * Tradução de LMHT para HTML, ou HTML para LMHT.
+ * @param deLinguagem Extensão da linguagem de origem.
+ * @param paraLinguagem Extensão da linguagem de destino.
+ * @param caminhoArquivoAbertoEditor O arquivo a ser traduzido.
+ * @returns O texto com o conteúdo da tradução.
+ */
+function traduzirPorMotorLmht(deLinguagem: string, paraLinguagem: string, caminhoArquivoAbertoEditor: string): string {
+    let resultadoTraducao = '';
+    switch (deLinguagem.toLowerCase()) {
         case 'html':
             const conversorHtml = new ConversorHtml();
-            const resultadoHtml = await conversorHtml.converterPorArquivo(caminhoArquivoAbertoEditor);
-            return resultadoHtml;
+            resultadoTraducao = conversorHtml.converterPorArquivo(caminhoArquivoAbertoEditor);
+            break;
         case 'lmht':
             const conversorLmht = new ConversorLmht();
-            const resultadoLmht = await conversorLmht.converterPorArquivo(caminhoArquivoAbertoEditor);
-            return resultadoLmht;
-        default:
-            return '';
+            resultadoTraducao = conversorLmht.converterPorArquivo(caminhoArquivoAbertoEditor);
+            break;
     }
-} */
+
+    sistemaArquivos.writeFileSync(caminhoArquivoAbertoEditor.split('.')[0] + `.${paraLinguagem}`, resultadoTraducao);
+    return resultadoTraducao;
+}
