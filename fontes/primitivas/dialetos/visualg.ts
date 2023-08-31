@@ -1,7 +1,9 @@
-export const primitivasEntradaSaidaVisuAlg = [
+export const primitivasEntradaSaidaVisuAlg: {nome: string, descricao?: string, documentacao: string, exemploCodigo?: string}[] = [
     {
         nome: 'escreva',
-        documentacao: 'Escreve na saída padrão da aplicação, normalmente um prompt ou um console.'
+        descricao: 'Escreve na saída padrão da aplicação, normalmente um prompt ou um console.',
+        documentacao: '# `escreva()`\nEscreve na saída padrão da aplicação, normalmente um prompt ou um console.',
+        exemploCodigo: '`escreva("Olá mundo")`\n`escreva(minhaVariavel)`'
     },
     {
         nome: 'escreval',
@@ -13,7 +15,7 @@ export const primitivasEntradaSaidaVisuAlg = [
     },
 ];
 
-export const primitivasNumeroVisuAlg = [
+export const primitivasNumeroVisuAlg: {nome: string, descricao?: string, documentacao: string, exemploCodigo?: string}[] = [
     {
         nome: 'abs',
         documentacao: 'Retorna o valor absoluto de uma expressão do tipo inteiro ou real. Equivale a `|expressão|` na álgebra.'
@@ -92,7 +94,7 @@ export const primitivasNumeroVisuAlg = [
     }
 ];
 
-export const primitivasCaracteresVisuAlg = [
+export const primitivasCaracteresVisuAlg: {nome: string, descricao?: string, documentacao: string, exemploCodigo?: string}[] = [
     {
         nome: 'asc',
         documentacao: 'Retorna um inteiro com o código ASCII do primeiro caracter da expressão.'

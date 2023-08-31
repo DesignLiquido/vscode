@@ -25,7 +25,12 @@ export class VisuAlgProvedorDocumentacaoEmEditor
         );
 
         if (primitivaCaracter) {
-            return new vscode.Hover(primitivaCaracter.documentacao);
+            const documentacaoElemento = new vscode.MarkdownString(primitivaCaracter.documentacao);
+            if (primitivaCaracter.exemploCodigo) {
+                documentacaoElemento.appendCodeblock(primitivaCaracter.exemploCodigo);
+            }
+            
+            return new vscode.Hover(documentacaoElemento);
         }
 
         const primitivaNumero = primitivasNumeroVisuAlg.find(
@@ -33,7 +38,12 @@ export class VisuAlgProvedorDocumentacaoEmEditor
         );
 
         if (primitivaNumero) {
-            return new vscode.Hover(primitivaNumero.documentacao);
+            const documentacaoElemento = new vscode.MarkdownString(primitivaNumero.documentacao);
+            if (primitivaNumero.exemploCodigo) {
+                documentacaoElemento.appendCodeblock(primitivaNumero.exemploCodigo);
+            }
+
+            return new vscode.Hover(documentacaoElemento);
         }
 
         const primitivaEntradaSaida = primitivasEntradaSaidaVisuAlg.find(
@@ -41,7 +51,12 @@ export class VisuAlgProvedorDocumentacaoEmEditor
         );
 
         if (primitivaEntradaSaida) {
-            return new vscode.Hover(primitivaEntradaSaida.documentacao);
+            const documentacaoElemento = new vscode.MarkdownString(primitivaEntradaSaida.documentacao);
+            if (primitivaEntradaSaida.exemploCodigo) {
+                documentacaoElemento.appendCodeblock(primitivaEntradaSaida.exemploCodigo);
+            }
+
+            return new vscode.Hover(documentacaoElemento);
         }
 
         return new vscode.Hover('');
