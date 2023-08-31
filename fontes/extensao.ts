@@ -18,7 +18,7 @@ import {
 } from './completude';
 import { DeleguaProvedorFormatacao } from './formatadores';
 import { VisuAlgProvedorCompletude } from './completude/visualg-provedor-completude';
-import { VisuAlgProvedorDocumentacaoEmEditor } from './documentacao-em-editor/visualg-documentacao-em-editor';
+import { VisuAlgProvedorDocumentacaoEmEditor } from './documentacao-em-editor/visualg-provedor-documentacao-em-editor';
 import { traduzir } from './traducao';
 import { analiseSemantica } from './analise-semantica';
 
