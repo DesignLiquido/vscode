@@ -17,6 +17,8 @@ export class FolesProvedorDocumentacaoEmEditor
         const palavra = document.getText(intervalo);
 
         const modificador = modificadoresFoles[palavra];
-        return new vscode.Hover(modificador.documentacao);
+        const elementoDocumentacao = new vscode.MarkdownString(modificador.documentacao);
+        elementoDocumentacao.appendCodeblock(modificador.exemploCodigo);
+        return new vscode.Hover(elementoDocumentacao);
     }
 }
