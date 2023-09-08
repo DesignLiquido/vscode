@@ -23,21 +23,21 @@
     esprima "^4.0.1"
     lodash.clonedeep "^4.5.0"
 
-"@designliquido/foles@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.4.1.tgz#6220bfad6ade8fafc7e94704a70a8c6dea04e48d"
-  integrity sha512-H+bqcFCAO2orxb213faorVeZMvqY1jEDw8wWw8eq6pBK09jyNtSZoP6WmmEW2aULRkCjaRNmAtGVfmdVhZr1FA==
+"@designliquido/foles@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.5.0.tgz#58604022725ad7d1fa4f740ed1b9221473307af4"
+  integrity sha512-teowTG3cFHdHmsU9SCxkiYWrWux0020nYwI/ew0LbJPJ0mdYOz0s1BFRGJ1RhTRIRo+xFaPJEnK0uaGO5b0Rxw==
   dependencies:
     commander "^9.4.1"
     vlq "^2.0.4"
 
-"@designliquido/lmht-js@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/lmht-js/-/lmht-js-0.3.0.tgz#7c2d5d1cc7b0d95ca19b261dd80a55c747ada687"
-  integrity sha512-9Z8Xov3PL3jDaOc+nPOy4BJb6+CfBDW5+iVrJ2eiKkrqm2LWyNPy5n0Gilxx/+ZiOJ/LEHavSNrfZFjbYI2Lcg==
+"@designliquido/lmht-js@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/lmht-js/-/lmht-js-0.3.1.tgz#45d1ddd4331e5de59007722171d02ad34cc326e3"
+  integrity sha512-8UyOkQoguFxN1hs60mLo+JSg0D/N62eZWT2zNk2aqysHQG4appuEx1QlEsoWJ48hI21x/0RpN6CCVvN5uh0uUg==
   dependencies:
     jsdom "^21.1.1"
-    xslt-processor "^1.2.5"
+    xslt-processor "^1.2.7"
 
 "@discoveryjs/json-ext@^0.5.0":
   version "0.5.7"
@@ -2202,10 +2202,10 @@ xmlchars@^2.2.0:
   resolved "https://registry.yarnpkg.com/xmlchars/-/xmlchars-2.2.0.tgz#060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb"
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
 
-xslt-processor@^1.2.5:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/xslt-processor/-/xslt-processor-1.2.5.tgz#492027f388c5abec21dc60f03dc6a44f22285a2f"
-  integrity sha512-W9fJH91+T5wWpVChwh3hzlJNRPTp03Bz+wSC+N0dvCyoR24ICwqgCqEYmYoB+Zyvy/JR4Npr9aMlmjlmiUiJ6A==
+xslt-processor@^1.2.7:
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/xslt-processor/-/xslt-processor-1.2.7.tgz#0bc1fc6d60e756af9e3285d77b159b3d75142728"
+  integrity sha512-b7SH+M/TLtKWupNBV5o9k1RZLJ9UDVxKdiQD0jrNKSVPzjHh3loKAcEjSuq6At/U5s1Og1y1LybbpDXFLl0epQ==
   dependencies:
     he "^1.2.0"
 
