@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.8.3
+
+- Dialeto VisuAlg aceita tanto `=` quanto `:=` para atribuição.
+
 ## 0.8.2
 
 - Dialeto VisuAlg aceita tanto `caracter` quanto `caractere`;
