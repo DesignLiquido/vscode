@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.8.2
+
+- Dialeto VisuAlg aceita tanto `caracter` quanto `caractere`;
+- Atualização da biblioteca `lmht-js`.
+
 ## 0.8.1
 
 - Atualização de núcleos de FolEs e LMHT;

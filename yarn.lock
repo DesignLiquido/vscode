@@ -2,21 +2,21 @@
 # yarn lockfile v1
 
 
-"@designliquido/delegua-node@^0.24.6":
-  version "0.24.6"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-0.24.6.tgz#c93a658b1d1eb26d38a2e847953e046c9b2970eb"
-  integrity sha512-UU6js8o/dCupyA+Uc2Pw2qtKQitEZCYliGvHMZ5sErOtY2fTSl+K7SDhS8P08fkzSnvwSQz7AcWcXt4gFLB0Yw==
+"@designliquido/delegua-node@^0.24.7":
+  version "0.24.7"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-0.24.7.tgz#1b9f4337adaf93fb05299b116ccaad0cd3011447"
+  integrity sha512-yqC7CXcyvXcAyHFJy6edCT5eMvrRKCMyW7kZyPgSHa7q08zZZ43dko8VahMRie3zkjMZyU2zyMGHAHaspvS38A==
   dependencies:
-    "@designliquido/delegua" "0.24.6"
+    "@designliquido/delegua" "0.24.7"
     chalk "4.1.2"
     commander "^9.4.1"
     json-colorizer "^2.2.2"
     lodash.clonedeep "^4.5.0"
 
-"@designliquido/delegua@0.24.6":
-  version "0.24.6"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.24.6.tgz#33c692c27fb2bb6f100403dfc0c82fc861a23ae3"
-  integrity sha512-2PAQdU5Ypd22CnNkBxulD1rZ4o9fXe4q4fN+ftB69QEDfTx5N3zYVZbSWKCwKTrIrHt6bkafmhhrsuh4CxVtwA==
+"@designliquido/delegua@0.24.7":
+  version "0.24.7"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.24.7.tgz#73d3dccc102659cf360e431cf328857d1c222a83"
+  integrity sha512-O2+uCZmlhCiFxiYcKL7RUDJ6U3VWAle4KPlMTZpvTzblObFjS0oJjtzO8xSYzSaJ5nH291NMdc8lN7itRfnhlA==
   dependencies:
     antlr4ts "^0.5.0-alpha.4"
     browser-process-hrtime "^1.0.0"
@@ -31,13 +31,13 @@
     commander "^9.4.1"
     vlq "^2.0.4"
 
-"@designliquido/lmht-js@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@designliquido/lmht-js/-/lmht-js-0.3.1.tgz#45d1ddd4331e5de59007722171d02ad34cc326e3"
-  integrity sha512-8UyOkQoguFxN1hs60mLo+JSg0D/N62eZWT2zNk2aqysHQG4appuEx1QlEsoWJ48hI21x/0RpN6CCVvN5uh0uUg==
+"@designliquido/lmht-js@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@designliquido/lmht-js/-/lmht-js-0.3.2.tgz#f674e43c7ef49c6eb4852dcac62d035cdb8b3841"
+  integrity sha512-LnLndipPaW914ZBWIMMrbjadfQ4tG/HjA+fe5WCEdf3gZ3kQFBWP1Qd1UAgUK/k8GA0oIZV70oj4245S1ctB7A==
   dependencies:
     jsdom "^21.1.1"
-    xslt-processor "^1.2.7"
+    xslt-processor "^1.2.8"
 
 "@discoveryjs/json-ext@^0.5.0":
   version "0.5.7"
@@ -2202,10 +2202,10 @@ xmlchars@^2.2.0:
   resolved "https://registry.yarnpkg.com/xmlchars/-/xmlchars-2.2.0.tgz#060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb"
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
 
-xslt-processor@^1.2.7:
-  version "1.2.7"
-  resolved "https://registry.yarnpkg.com/xslt-processor/-/xslt-processor-1.2.7.tgz#0bc1fc6d60e756af9e3285d77b159b3d75142728"
-  integrity sha512-b7SH+M/TLtKWupNBV5o9k1RZLJ9UDVxKdiQD0jrNKSVPzjHh3loKAcEjSuq6At/U5s1Og1y1LybbpDXFLl0epQ==
+xslt-processor@^1.2.8:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/xslt-processor/-/xslt-processor-1.2.8.tgz#8e6c6f69d06af1eb791b55218fee29f690603694"
+  integrity sha512-DtIZdGwfL07PZXBD17q5UMyHPntzTadIZpITCKvLwIn/tfsRlHYHcBSonrubXry/1SSs7+UeeX4VlMALYQw3mA==
   dependencies:
     he "^1.2.0"
 
