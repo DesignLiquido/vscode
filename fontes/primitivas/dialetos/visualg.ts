@@ -2,39 +2,53 @@ export const primitivasEntradaSaidaVisuAlg: {nome: string, descricao?: string, d
     {
         nome: 'escreva',
         descricao: 'Escreve na saída padrão da aplicação, normalmente um prompt ou um console.',
-        documentacao: '# `escreva()`\nEscreve na saída padrão da aplicação, normalmente um prompt ou um console.',
+        documentacao: '# `escreva()`\nEscreve no dispositivo de saída padrão (isto é, na área à direita da metade inferior da tela do VisuAlg) o conteúdo de cada uma das expressões passadas como parâmetro. ',
         exemploCodigo: '`escreva("Olá mundo")`\n`escreva(minhaVariavel)`'
     },
     {
         nome: 'escreval',
-        documentacao: 'Escreve na saída padrão da aplicação, normalmente um prompt ou um console, e quebra a linha.'
+        descricao: 'Escreve na saída padrão da aplicação, normalmente um prompt ou um console, e quebra a linha.',
+        documentacao: '# `escreval()`\nEscreve na saída padrão da aplicação, tal qual o comando escreva(), com a única diferença que pula uma linha em seguida. ',
+        exemploCodigo: '`escreval("Olá mundo")`\n`escreval(minhaVariavel)`'
     },
     {
         nome: 'leia',
-        documentacao: 'Lê da entrada padrão um valor.'
+        descricao: 'A entrada de dados no Visualg é feita através deste comando.',
+        documentacao: '# `leia()`\n Este comando recebe valores digitados pelos usuários, atribuindo-os às variáveis especificadas.',
+        exemploCodigo: '`escreva("Digite sua idade:")`\n`leia(minhaIdade)`'
     },
 ];
 
 export const primitivasNumeroVisuAlg: {nome: string, descricao?: string, documentacao: string, exemploCodigo?: string}[] = [
     {
         nome: 'abs',
-        documentacao: 'Retorna o valor absoluto de uma expressão do tipo inteiro ou real. Equivale a `|expressão|` na álgebra.'
+        descricao: 'Função algébrica do VisuAlg.',
+        documentacao: '# `abs()`\n Retorna o valor absoluto de uma expressão do tipo inteiro ou real. Equivale a `|expressão|` na álgebra.',
+        exemploCodigo: '`escreval( abs(a - b) )`'
     },
     {
         nome: 'arccos',
-        documentacao: 'Retorna o ângulo (em radianos) cujo cosseno é representado por `expressão`.'
+        descricao: 'Função trigonométrica do VisuAlg.',
+        documentacao: '# `arccos()`\n Retorna o ângulo (em radianos) cujo cosseno é representado por `expressão`.',
+        exemploCodigo: '`escreval( arccos(x) )`'
     },
     {
         nome: 'arcsen',
-        documentacao: 'Retorna o ângulo (em radianos) cujo seno é representado por `expressão`.'
+        descricao: 'Função trigonométrica do VisuAlg.',
+        documentacao: '# `arcsen(<expressão>)`\n Retorna o ângulo (em radianos) cujo seno é representado por `expressão`.',
+        exemploCodigo: '`escreval( arcsen(90) )`',
     },
     {
         nome: 'arctan',
-        documentacao: 'Retorna o ângulo (em radianos) cuja tangente é representada por `expressão`.'
+        descricao: 'Função trigonométrica do VisuAlg.',
+        documentacao: '# `arctan(<expressão>)`\n Retorna o ângulo (em radianos) cuja tangente é representada por `expressão`.',
+        exemploCodigo: '`escreval( arctan(75) )`',
     },
     {
         nome: 'cos',
-        documentacao: 'Retorna o cosseno do ângulo (em radianos) representado por `expressão`.'
+        descricao: 'Função trigonométrica do VisuAlg.',
+        documentacao: '# `cos(<expressão>)`\n Retorna o cosseno do ângulo (em radianos) representado por `expressão`.',
+        exemploCodigo: '`escreval( cos(90) )`',
     },
     {
         nome: 'cotan',
