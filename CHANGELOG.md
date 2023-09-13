@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.8.4
+
+- Correções de bugs em diferentes dialetos (VisuAlg e Potigol).
+
 ## 0.8.3
 
 - Dialeto VisuAlg aceita tanto `=` quanto `:=` para atribuição.
