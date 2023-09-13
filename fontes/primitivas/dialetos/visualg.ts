@@ -23,88 +23,116 @@ export const primitivasNumeroVisuAlg: {nome: string, descricao?: string, documen
     {
         nome: 'abs',
         descricao: 'Função algébrica do VisuAlg.',
-        documentacao: '# `abs()`\n Retorna o valor absoluto de uma expressão do tipo inteiro ou real. Equivale a `|expressão|` na álgebra.',
-        exemploCodigo: '`escreval( abs(a - b) )`'
+        documentacao: '# `abs(expressão)`\n Retorna o valor absoluto de uma expressão do tipo inteiro ou real. Equivale a `expressão` na álgebra. No exemplo abaixo, apesar do resultado da subtração ser -15, a função abs retornará 15 (valor positivo).',
+        exemploCodigo: '`a <- 5`\n`b <- 20``escreval(abs(a - b))`'
     },
     {
         nome: 'arccos',
         descricao: 'Função trigonométrica do VisuAlg.',
-        documentacao: '# `arccos()`\n Retorna o ângulo (em radianos) cujo cosseno é representado por `expressão`.',
-        exemploCodigo: '`escreval( arccos(x) )`'
+        documentacao: '# `arccos(expressão)`\n Retorna o ângulo (em radianos) cujo cosseno é representado por `expressão`.',
+        exemploCodigo: '`x <- 180`\n`escreval(arccos(x))`'
     },
     {
         nome: 'arcsen',
         descricao: 'Função trigonométrica do VisuAlg.',
-        documentacao: '# `arcsen(<expressão>)`\n Retorna o ângulo (em radianos) cujo seno é representado por `expressão`.',
-        exemploCodigo: '`escreval( arcsen(90) )`',
+        documentacao: '# `arcsen(expressão)`\n Retorna o ângulo (em radianos) cujo seno é representado por `expressão`.',
+        exemploCodigo: '`x <- 90`\n`escreval(arcsen(x))`',
     },
     {
         nome: 'arctan',
         descricao: 'Função trigonométrica do VisuAlg.',
-        documentacao: '# `arctan(<expressão>)`\n Retorna o ângulo (em radianos) cuja tangente é representada por `expressão`.',
-        exemploCodigo: '`escreval( arctan(75) )`',
+        documentacao: '# `arctan(expressão)`\n Retorna o ângulo (em radianos) cuja tangente é representada por `expressão`.',
+        exemploCodigo: '`x <- 75`\n`escreval(arctan(x))`',
     },
     {
         nome: 'cos',
         descricao: 'Função trigonométrica do VisuAlg.',
-        documentacao: '# `cos(<expressão>)`\n Retorna o cosseno do ângulo (em radianos) representado por `expressão`.',
-        exemploCodigo: '`escreval( cos(90) )`',
+        documentacao: '# `cos(expressão)`\n Retorna o cosseno do ângulo (em radianos) representado por `expressão`.',
+        exemploCodigo: '`x <- 90`\n`escreval(cos(x))`',
     },
     {
         nome: 'cotan',
-        documentacao: 'Retorna a co-tangente do ângulo (em radianos) representado por `expressão`.'
+        descricao: 'Função trigonométrica do VisuAlg.',
+        documentacao: '# `cotan(expressão)`\n Retorna a co-tangente do ângulo (em radianos) representado por `expressão`.',
+        exemploCodigo: '`x <- 90`\n`escreval(cotan(x))`',
     },
     {
         nome: 'exp',
-        documentacao: 'Retorna o valor de `base` elevado a `expoente`, sendo ambos expressões do tipo real.'
+        descricao: 'Função numérica do VisuAlg.',
+        documentacao: '# `exp(base, expoente)`\n Retorna o valor de `base` elevado a `expoente`, sendo ambos expressões do tipo real. No exemplo abaixo, a função está elevando a base 9 no expoente 2, resultando no valor 81.',
+        exemploCodigo: '`a <- 9`\n`b <- 2`\n`escreval(exp(a, b))`',
     },
     {
         nome: 'grauprad',
-        documentacao: 'Retorna o valor em radianos, correspondente ao valor em graus representado por `expressão`.'
+        descricao: 'Função trigonométrica do VisuAlg.',
+        documentacao: '# `grauprad(expressão)`\n Retorna o valor em radianos, correspondente ao valor em graus representado por `expressão`.',
+        exemploCodigo: '`x <- 90`\n`escreval(grauprad(x))`',
     },
     {
         nome: 'int',
-        documentacao: 'Retorna a parte inteira do valor representado por `expressão`.'
+        descricao: 'Função algébrica do VisuAlg.',
+        documentacao: '# `int(expressão)`\n Retorna a parte inteira do valor representado por `expressão`. No exemplo abaixo, o resultado da divisão de 9 por 2 seria 4.5, mas a função int retornará 4, o número inteiro.',
+        exemploCodigo: '`a <- 9`\n`b <- 2`\n`escreval(int(a / b))`',
     },
     {
         nome: 'log',
-        documentacao: 'Retorna o logaritmo na base 10 do valor representado por `expressão`.'
+        descricao: 'Função algébrica do VisuAlg.',
+        documentacao: '# `log(expressão)`\n Retorna o logaritmo na base 10 do valor representado por `expressão`. No exemplo abaixo, a função retornará o valor 3, que é o logaritmo de 1000 na base 10.',
+        exemploCodigo: '`a <- 1000`\n`escreval(log(a))`',
     },
     {
         nome: 'logn',
-        documentacao: 'Retorna o logaritmo neperiano (base e) do valor representado por `expressão`.'
+        descricao: 'Função algébrica do VisuAlg.',
+        documentacao: '# `logn(expressão)`\n Retorna o logaritmo neperiano (base e) do valor representado por `expressão`.',
+        exemploCodigo: '`a <- 1000`\n`escreval(logn(a))`',
     },
     {
         nome: 'pi',
-        documentacao: 'Retorna o valor 3.141592.'
+        descricao: 'Função numérica do VisuAlg.',
+        documentacao: '# `pi`\n Retorna o valor de pi (π), 3.141592, e permite usá-lo em operações matemáticas.',
+        exemploCodigo: '`a <- 3`\n`escreval(a * pi)`',
     },
     {
         nome: 'quad',
-        documentacao: 'Retorna o quadrado do valor representado por `expressão`.'
+        descricao: 'Função algébrica do VisuAlg.',
+        documentacao: '# `quad(expressão)`\n Retorna o quadrado do valor representado por `expressão`. No exemplo abaixo, a função retornará o valor 9, que é equivalente a 3 elevado ao quadrado.',
+        exemploCodigo: '`a <- 3`\n`escreval(quad(a))`',
     },
     {
         nome: 'radpgrau',
-        documentacao: 'Retorna o valor em graus correspondente ao valor em radianos, representado por `expressão`.'
+        descricao: 'Função trigonométrica do VisuAlg.',
+        documentacao: '# `radpgrau(expressão)`\n Retorna o valor em graus correspondente ao valor em radianos, representado por `expressão`.',
+        exemploCodigo: '`x <- 90`\n`escreval(radpgrau(x))`',
     },
     {
         nome: 'raizq',
-        documentacao: 'Retorna a raiz quadrada do valor representado por `expressão`.'
+        descricao: 'Função algébrica do VisuAlg.',
+        documentacao: '# `raizq(expressão)`\n Retorna a raiz quadrada do valor representado por `expressão`. No exemplo abaixo, a função retornará o valor 5, a raiz quadrada de 25.',
+        exemploCodigo: '`a <- 25`\n`escreval(raizq(a))`',
     },
     {
         nome: 'rand',
-        documentacao: 'Retorna um número real gerado aleatoriamente, maior ou igual a zero e menor que um.'
+        descricao: 'Função numérica do VisuAlg.',
+        documentacao: '# `rand`\n Retorna um número real gerado aleatoriamente, maior ou igual a 0 e menor do que 1. No exemplo abaixo, rand é multiplicado por 10 para gerar um número aleatório entre 0 e 10, sendo que o resultado muito provavelmente será um número decimal (com casas após a vírgula). Para gerar números inteiros aleatoriamente, é recomendado utilizar a função `randi`.',
+        exemploCodigo: '`escreval(rand * 10)`',
     },
     {
         nome: 'randi',
-        documentacao: 'Retorna um número inteiro gerado aleatoriamente, maior ou igual a zero e menor que `limite`.'
+        descricao: 'Função numérica do VisuAlg.',
+        documentacao: '# `randi(limite)`\n Retorna um número inteiro gerado aleatoriamente, maior ou igual a 0 e menor do que o `limite` especificado. O exemplo abaixo retornará um número aleatório entre 0 e 100.',
+        exemploCodigo: '`escreval(randi(100))`',
     },
     {
         nome: 'sen',
-        documentacao: 'Retorna o seno do ângulo (em radianos) representado por `expressão`.'
+        descricao: 'Função trigonométrica do VisuAlg.',
+        documentacao: '# `sen(expressão)`\n Retorna o seno do ângulo (em radianos) representado por `expressão`.',
+        exemploCodigo: '`x <- 90`\n`escreval(sen(x))`',
     },
     {
         nome: 'tan',
-        documentacao: 'Retorna a tangente do ângulo (em radianos) representado por `expressão`.'
+        descricao: 'Função trigonométrica do VisuAlg.',
+        documentacao: '# `tan(expressão)`\n Retorna a tangente do ângulo (em radianos) representado por `expressão`.',
+        exemploCodigo: '`x <- 90`\n`escreval(tan(x))`',
     }
 ];
 
