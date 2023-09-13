@@ -21,8 +21,9 @@ import { InterpretadorVisuAlgComDepuracaoImportacao } from '@designliquido/deleg
 
 import { palavrasReservadas } from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
 import { InterpretadorPortugolStudioComDepuracao } from '@designliquido/delegua/fontes/interpretador/dialetos';
-import { LexadorBirl } from '@designliquido/delegua/fontes/lexador/dialetos';
-import { AvaliadorSintaticoBirl, AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos';
+import { InterpretadorPotigolComDepuracao } from '@designliquido/delegua/fontes/interpretador/dialetos/potigol/interpretador-potigol-com-depuracao';
+import { LexadorBirl, LexadorPotigol } from '@designliquido/delegua/fontes/lexador/dialetos';
+import { AvaliadorSintaticoBirl, AvaliadorSintaticoPotigol, AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos';
 import { Declaracao } from '@designliquido/delegua/fontes/declaracoes';
 import { Lexador } from '@designliquido/delegua/fontes/lexador';
 import { AvaliadorSintatico } from '@designliquido/delegua/fontes/avaliador-sintatico';
@@ -122,6 +123,19 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     {},
                     true);
                 this.interpretador = new InterpretadorPortugolStudioComDepuracao(process.cwd(), 
+                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
+                break;
+            case "poti":
+            case "potigol":
+                this.lexador = new LexadorPotigol();
+                this.avaliadorSintatico = new AvaliadorSintaticoPotigol();
+                this.importador = new Importador(
+                    this.lexador, 
+                    this.avaliadorSintatico, 
+                    {},
+                    {},
+                    true);
+                this.interpretador = new InterpretadorPotigolComDepuracao(process.cwd(), 
                     this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
                 break;
             default:

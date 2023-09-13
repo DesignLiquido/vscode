@@ -22,6 +22,7 @@ export class ProvedorConfiguracaoDelegua
                     case 'pitugues':
                     case 'mapler':
                     case 'portugolstudio':
+                    case 'potigol':
 					case 'visualg':
 						config.type = 'delegua';
 						config.name = 'Executar arquivo Delégua ou dialeto';
