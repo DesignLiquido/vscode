@@ -139,38 +139,56 @@ export const primitivasNumeroVisuAlg: {nome: string, descricao?: string, documen
 export const primitivasCaracteresVisuAlg: {nome: string, descricao?: string, documentacao: string, exemploCodigo?: string}[] = [
     {
         nome: 'asc',
-        documentacao: 'Retorna um inteiro com o código ASCII do primeiro caracter da expressão.'
+        descricao: 'Função do VisuAlg para manipulação de cadeias de caracteres (strings).',
+        documentacao: '# `asc(expressão)`\n Retorna um inteiro com o código ASCII do primeiro caracter da `expressão`. A função `asc` só tem efeito sobre variáveis do tipo caracter/caractere. No exemplo abaixo, a função retornará o número 76, correspondente ao código ASCII da letra L.',
+        exemploCodigo: '`nome <- "Lucas"`\n`escreva(asc(nome))`',
     },
     {
         nome: 'carac',
-        documentacao: 'Retorna o caracter cujo código ASCII corresponde à expressão.'
+        descricao: 'Função do VisuAlg para manipulação de cadeias de caracteres (strings).',
+        documentacao: '# `carac(expressão)`\n Retorna o caracter cujo código ASCII corresponde à `expressão`. A função `carac` só tem efeito sobre variáveis do tipo inteiro. No exemplo abaixo, a função retornará a letra V, que corresponde ao código ASCII de número 86.',
+        exemploCodigo: '`valor <- 86`\n`escreva(carac(valor))`',
     },
     {
         nome: 'caracpnum',
-        documentacao: 'Retorna o inteiro ou real representado pela expressão. Corresponde a `StrToTin()` ou `StrToFloat()` do Delphi, `Val()` do Basic ou Clipper, etc.'
+        descricao: 'Função do VisuAlg para manipulação de cadeias de caracteres (strings).',
+        documentacao: '# `caracpnum(expressão)`\n Retorna o inteiro ou real representado pela `expressão`. Corresponde a `StrToTin()` ou `StrToFloat()` do Delphi, `Val()` do Basic ou Clipper, etc. A função `caracpnum` só tem efeito sobre variáveis do tipo caracter/caractere.',
+        exemploCodigo: '`letra <- "W"`\n`escreva(caracpnum(letra))`',
     },
     {
         nome: 'compr',
-        documentacao: 'Retorna um inteiro contendo o comprimento (quantidade de caracteres) da expressão.'
+        descricao: 'Função do VisuAlg para manipulação de cadeias de caracteres (strings).',
+        documentacao: '# `compr(expressão)`\n Retorna um inteiro contendo o comprimento (quantidade de caracteres) da `expressão`. A função `compr` só tem efeito sobre variáveis do tipo caracter/caractere.No exemplo abaixo, a função retornará o número 5, correspondente à quantidade de caracteres do nome "Lucas".',
+        exemploCodigo: '`nome <- "Lucas"`\n`escreva(compr(nome))`',
     },
     {
         nome: 'copia',
-        documentacao: 'Retorna um valor do tipo caracter contendo uma cópia parcial da expressão, a partir do caracter `p`, contendo `n` caracteres. Os caracteres são numerados da esquerda para a direita, começando de 1. Corresponde a `Copy()` do Delphi, `Mid$()` do Basic ou `Substr()` do Clipper.'
+        descricao: 'Função do VisuAlg para manipulação de cadeias de caracteres (strings).',
+        documentacao: '# `copia(expressão1; expressão2, expressão3)`\n Retorna um valor do tipo caracter contendo uma cópia parcial da `expressão1`, a partir da posição especificada por `expressão2` até a posição especificada por `expressão3`. Os caracteres são numerados da esquerda para a direita, começando de 1. Corresponde a `Copy()` do Delphi, `Mid$()` do Basic ou `Substr()` do Clipper. No exemplo abaixo, a função copia a palavra "Matemática" a partir da 5ª letra, retornando 6 caracteres: "mática".',
+        exemploCodigo: '`materia <- "Matemática"`\n`escreva(copia(materia; 5, 6))`',
     },
     {
         nome: 'maiusc',
-        documentacao: 'Retorna um valor caracter contendo a expressão em maiúsculas.'
+        descricao: 'Função do VisuAlg para manipulação de cadeias de caracteres (strings).',
+        documentacao: '# `maiusc(expressão)`\n Retorna um valor caracter contendo a expressão em letras maiúsculas. A função `maiusc` só tem efeito sobre variáveis do tipo caracter/caractere. No exemplo abaixo, a função retornará a string "LUCAS".',
+        exemploCodigo: '`nome <- "Lucas"`\n`escreva(maiusc(nome))`',
     },
     {
         nome: 'minusc',
-        documentacao: 'Retorna um valor caracter contendo a expressão em minúsculas.'
+        descricao: 'Função do VisuAlg para manipulação de cadeias de caracteres (strings).',
+        documentacao: '# `minusc(expressão)`\n Retorna um valor caracter contendo a expressão em letras minúsculas. A função `minusc` só tem efeito sobre variáveis do tipo caracter/caractere. No exemplo abaixo, a função retornará a string "lucas".',
+        exemploCodigo: '`nome <- "LUCAS"`\n`escreva(minusc(nome))`',
     },
     {
         nome: 'numpcarac',
-        documentacao: 'Retorna um valor caracter contendo a representação de `n` como uma cadeia de caracteres. Corresponde a `IntToStr()` ou `FloatToStr()` do Delphi, `Str()` do Basic ou Clipper.'
+        descricao: 'Função do VisuAlg para manipulação de cadeias de caracteres (strings).',
+        documentacao: '# `numpcarac(expressão)`\n Retorna um valor caracter contendo a representação de `expressão` como uma cadeia de caracteres. Corresponde a `IntToStr()` ou `FloatToStr()` do Delphi, `Str()` do Basic ou Clipper. A função `numpcarac` só tem efeito sobre variáveis do tipo inteiro ou real. No exemplo abaixo, a função transforma o número 8 na string "8".',
+        exemploCodigo: '`valor <- 8`\n`escreva(numpcarac(valor))`',
     },
     {
         nome: 'pos',
-        documentacao: 'Retorna um inteiro que indica a posição em que a cadeia `subc` se encontra em `c`, ou zero se `subc` não estiver contida em `c`. Corresponde funcionalmente a `Pos()` do Delphi, `Instr()` do Basic ou `At()` do Clipper, embora a ordem dos parâmetros possa ser diferente em algumas destas linguagens.'
+        descricao: 'Função do VisuAlg para manipulação de cadeias de caracteres (strings).',
+        documentacao: '# `pos(expressão1, expressão2)`\n Retorna um inteiro que indica a posição em que a `expressão1` se encontra na cadeia `expressão2`, ou zero se a `expressão1` não estiver contida na `expressão2`. Corresponde funcionalmente a `Pos()` do Delphi, `Instr()` do Basic ou `At()` do Clipper, embora a ordem dos parâmetros possa ser diferente em algumas destas linguagens. A função `pos` só tem efeito sobre variáveis do tipo caracter/caractere. No exemplo abaixo, a função retorna o número 3, que é a posição da letra "f" na palavra "Informática".',
+        exemploCodigo: '`materia <- "Informática"`\n`escreva(pos("f", materia))`',
     },
 ];
