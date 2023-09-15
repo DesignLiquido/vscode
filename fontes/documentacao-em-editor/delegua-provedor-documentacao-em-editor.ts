@@ -15,8 +15,7 @@ export class DeleguaProvedorDocumentacaoEmEditor
         const intervalo = document.getWordRangeAtPosition(position);
         const palavra = document.getText(intervalo);
 
-        let mapa = {
-        };
+        let mapa = {};
 
         const primitiva = primitivas.find(
             (primitiva) => primitiva.nome === palavra

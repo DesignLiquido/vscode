@@ -21,6 +21,7 @@ import { VisuAlgProvedorCompletude } from './completude/visualg-provedor-complet
 import { VisuAlgProvedorDocumentacaoEmEditor } from './documentacao-em-editor/visualg-provedor-documentacao-em-editor';
 import { traduzir } from './traducao';
 import { analiseSemantica } from './analise-semantica';
+import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -52,6 +53,8 @@ export function activate(context: vscode.ExtensionContext) {
             () => traduzir('css', 'foles')
         )
     ); */
+
+    // Traduções
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
@@ -167,6 +170,14 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerHoverProvider(
             'visualg',
             new VisuAlgProvedorDocumentacaoEmEditor()
+        )
+    );
+
+    // Assinaturas de funções e métodos
+    context.subscriptions.push(
+        vscode.languages.registerSignatureHelpProvider(
+            'delegua',
+            new DeleguaProvedorAssinaturaMetodos()
         )
     );
 

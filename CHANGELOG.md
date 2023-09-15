@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.9.0
+
+- Correções no dialeto VisuAlg para aceitar tanto comandos com acentos quanto sem;
+- Implementação de funcionalidade de assinatura de funções da blblioteca global e primitivas para Delégua.
+
 ## 0.8.6
 
 - Correções no dialeto de Potigol:

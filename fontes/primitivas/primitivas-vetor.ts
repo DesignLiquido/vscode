@@ -1,4 +1,6 @@
-export const primitivasVetor = [
+import { PrimitivaOuMetodo } from "./tipos";
+
+export const primitivasVetor: PrimitivaOuMetodo[] = [
     {
         nome: 'adicionar',
         documentacao: '### Descrição \n \n' +
