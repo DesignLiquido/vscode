@@ -1,5 +1,12 @@
 # Histórico de Modificações
 
+## 0.8.6
+
+- Correções no dialeto de Potigol:
+    - Atribuição de múltiplas constantes;
+    - interpolação;
+    - Manejo de tipos inteiros.
+
 ## 0.8.5
 
 - Suporte à depuração para Potigol.
