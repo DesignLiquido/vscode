@@ -155,4 +155,64 @@ export default {
     documentacao: '# `coluna`\n Caso esteja inserida dentro da estrutura `<grupo-colunas>`, e a mesma contenha a estrutura `<tabela>`, então a estrutura `<coluna>` representa uma ou mais colunas da estrutura `<grupo-colunas>`. Caso a estrutura `<coluna>` esteja armazenando uma estrutura `<envelope-texto>`, o valor dela não poderá ser nulo.',
     exemploCodigo: '<grupo-colunas>\n <coluna span="2" estilo="background-color:blue">\n <coluna estilo="background-color:white">\n</grupo-colunas>'
   },
+  'definicao': {
+    nomeHtml: 'dfn',
+    descricao: 'Estrutura que representa uma instância de definição de um termo.',
+    documentacao: '# `definicao`\n É utilizada para especificar um termo que será melhor explicado posteriormente ou em seguida dentro do conteúdo da página. A estrutura mais próxima deverá conter a definição do conteúdo inserido dentro da estrutura `<definicao>`.',
+    exemploCodigo: '<paragrafo>\n <definicao>Abacaxi</definicao> é uma fruta cujo nome começa com a letra A e tem a cor amarela.\n</parágrafo>'
+  },
+  'definição': {
+    nomeHtml: 'dfn',
+    descricao: 'Estrutura que representa uma instância de definição de um termo.',
+    documentacao: '# `definição`\n É utilizada para especificar um termo que será melhor explicado posteriormente ou em seguida dentro do conteúdo da página. A estrutura mais próxima deverá conter a definição do conteúdo inserido dentro da estrutura `<definição>`.',
+    exemploCodigo: '<paragrafo>\n <definição>Abacaxi</definição> é uma fruta cujo nome começa com a letra A e tem a cor amarela.\n</parágrafo>'
+  },
+  'detalhes': {
+    nomeHtml: 'details',
+    descricao: 'Estrutura que especifica detalhes adicionais que o usuário pode abrir e fechar sob demanda.',
+    documentacao: '# `detalhes`\n Renderiza um campo em que o usuário pode tanto minimizar quanto restaurar dentro da página. Seu conteúdo deverá ser focado em detalhes ou informações adicionais.',
+    exemploCodigo: '<detalhes>\n <sumario>Exemplo</sumario>\n <paragrafo>\n  Este é um texto de exemplo que será aberto quando o usuário interagir com a estrutura detalhes.\n </paragrafo>\n</detalhes>'
+  },
+  'endereco': {
+    nomeHtml: 'address',
+    descricao: 'Declara as informações de contato vindas do autor ou proprietário do artigo ou da página.',
+    documentacao: '# `endereco`\nA estrutura não deverá declarar um endereço arbitrário (caixa postal), a menos que esse endereço de fato contenha informações relevantes de contato - a estrutura `<parágrafo>` ou `<paragrafo>` é a mais recomendada para a declaração de caixas postais. Também é recomendado a utilização de somente e exclusivamente de conteúdos citados acima, de modo com que a organização e sistematização da página seja de fácil acesso.',
+    exemploCodigo: '<endereco>\n Conteúdo escrito por <ligacao href="mailto:central@pedroartigos.com">Pedro Alves</ligacao>\n Visite a nossa sede em: <quebra-linha />\n Rua 25 de Março, 1616 <quebra-linha />\n São Paulo, SP <quebra-linha />\n Brasil\n</endereco>'
+  },
+  'endereço': {
+    nomeHtml: 'address',
+    descricao: 'Declara as informações de contato vindas do autor ou proprietário do artigo ou da página.',
+    documentacao: '# `endereço`\nA estrutura não deverá declarar um endereço arbitrário (caixa postal), a menos que esse endereço de fato contenha informações relevantes de contato - a estrutura `<parágrafo>` ou `<paragrafo>` é a mais recomendada para a declaração de caixas postais. Também é recomendado a utilização de somente e exclusivamente de conteúdos citados acima, de modo com que a organização e sistematização da página seja de fácil acesso.',
+    exemploCodigo: '<endereço>\n Conteúdo escrito por <ligacao href="mailto:central@pedroartigos.com">Pedro Alves</ligacao>\n Visite a nossa sede em: <quebra-linha />\n Rua 25 de Março, 1616 <quebra-linha />\n São Paulo, SP <quebra-linha />\n Brasil\n</endereço>'
+  },
+  'envelope-texto': {
+    nomeHtml: 'span',
+    descricao: 'Estrutura utilizada da mesma finalidade que a estrutura `<divisão>`, porém sua estilização é por padrão inline, ao invés de block como no caso da estrutura `<divisão>`.',
+    documentacao: '# `envelope-texto`\n É utilizado para a marcação de um texto ou de uma parte específica de um documento, e também para uma estilização mais rápida e eficaz utilizando a estrutura `<script>` e/ou `<estilo>`.',
+    exemploCodigo: '<paragrafo> Meu carro é da cor <envelope-texto estilo="color:blue">azul</envelope-texto>'
+  },
+  'etiqueta': {
+    nomeHtml: 'label',
+    descricao: 'Estrutura que representa uma legenda para um item em uma interface de usuário. ',
+    documentacao: '# `etiqueta`\n Pode estar associado com um elemento de controle, colocando este dentro do elemento `<etiqueta>`, ou usando o atributo `para`. Um `<campo>` pode ser associado a diversas etiquetas. Verifique a documentação para ler a lista completa de estruturas que podem ser associados a uma `,`<etiqueta>`.',
+    exemploCodigo: '<formulário>\n <etiqueta para="entrada1">Entrada 1</etiqueta>\n <campo tipo="radio" id="entrada1" />\n <etiqueta para="entrada2">Entrada 2</etiqueta>\n <campo tipo="radio" id="entrada2" />\n</formulário>'
+  },
+  'excluido': {
+    nomeHtml: 'del',
+    descricao: 'Estrutura que representa uma parte do texto que foi excluída de um documento. Este elemento é (não necessariamente) renderizado pelos navegadores com uma linha entre o texto. ',
+    documentacao: '# `excluido`\n Declara um texto traçado dentro da página, indicando que o seu conteúdo fôra deletado na página e/ou substituído por outro. Ao utilizar essa estrutura, é opcional a inserção da estrutura `<inserido>` para indicar o conteúdo a ser destacado como novo.',
+    exemploCodigo: '<paragrafo> Eu gosto de <excluido> Maçã </excluido> <inserido> Banana </inserido>'
+  },
+  'excluído': {
+    nomeHtml: 'del',
+    descricao: 'Estrutura que representa uma parte do texto que foi excluída de um documento. Este elemento é (não necessariamente) renderizado pelos navegadores com uma linha entre o texto. ',
+    documentacao: '# `excluído`\n Declara um texto traçado dentro da página, indicando que o seu conteúdo fôra deletado na página e/ou substituído por outro. Ao utilizar essa estrutura, é opcional a inserção da estrutura `<inserido>` para indicar o conteúdo a ser destacado como novo.',
+    exemploCodigo: '<paragrafo> Eu gosto de <excluído> Maçã </excluído> <inserido> Banana </inserido>'
+  },
+  'exemplo': {
+    nomeHtml: 'samp',
+    descricao: 'Estrutura usada para definir a saída de um programa de computador. ',
+    documentacao: '# `exemplo`\n Declara uma representação (exemplo) de uma saída de um programa de computador ou de um sistema operacional. Seu conteúdo será renderizado para o navegador utilizando a fonte padrão de navegador (monospace).',
+    exemploCodigo: '<paragrafo> Apareceu a seguinte mensagem: </paragrafo>\n<paragrafo> <exemplo> arquivo nao encontrado </exemplo> </paragrafo>'
+  },
 };
