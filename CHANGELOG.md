@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.9.1
+
+- Correções no dialeto VisuAlg para aceitar declarações de funções dentro do bloco `var`.
+
 ## 0.9.0
 
 - Correções no dialeto VisuAlg para aceitar tanto comandos com acentos quanto sem;
