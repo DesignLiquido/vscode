@@ -269,4 +269,94 @@ export default {
     documentacao: '# `invisível`\n Você pode utilizar essa estrutura para armazenar um grupo de estruturas que você utilizará frequentemente.',
     exemploCodigo: '<invisível>\n <titulo2> Flor </titulo2>\n <imagem origem="flor.png" />\n</invisível>'
   },
+  'italico': {
+    nomeHtml: 'em',
+    descricao: 'Estrutura que renderiza um texto estilizado em itálico.',
+    documentacao: '# `italico`\n É utilizado pra dar ênfase em um conteúdo específico de um artigo e/ou texto. O nivel de enfatização é aumentado conforme a quantidade de estruturas `<italico>` são utilizadas ao redor do texto.',
+    exemploCodigo: '<paragrafo> LMHT é uma linguagem de <italico> marcação </italico> Hiper Texto </paragrafo>'
+  },
+  'itálico': {
+    nomeHtml: 'em',
+    descricao: 'Estrutura que renderiza um texto estilizado em itálico.',
+    documentacao: '# `itálico`\n É utilizado pra dar ênfase em um conteúdo específico de um artigo e/ou texto. O nivel de enfatização é aumentado conforme a quantidade de estruturas `<itálico>` são utilizadas ao redor do texto.',
+    exemploCodigo: '<paragrafo> LMHT é uma linguagem de <itálico> marcação </itálico> Hiper Texto </paragrafo>'
+  },
+  'item-lista': {
+    nomeHtml: 'li',
+    descricao: 'Estrutura que representa um item de uma lista, seja ela uma `<lista-simples>`, `<lista-numerada>` ou `<menu>`.',
+    documentacao: '# `item-lista`\n Usado para representar um item que faz parte de uma lista. Este item deve estar contido em um elemento pai: uma lista simples, uma lista numerada ou um menu e representa uma única entidade dessa lista. Em menus e listas simples a relação de itens é exibida normalmente, usando pontos de marcação. ',
+    exemploCodigo: '<lista-simples>\n <item-lista> Item 1 </item-lista>\n <item-lista> Item 2 </item-lista>\n <item-lista> Item 3 </item-lista>\n<lista-simples>'
+  },
+  'ligacao': {
+    nomeHtml: 'a',
+    descricao: 'Estrutura que define um hiperlink, que é usado para vincular uma página à outra.',
+    documentacao: '# `ligacao`\n Declara um link dinâmico, no qual é usado para referenciar ou migrar de uma página para outra, seja externa ou em uma seção dentro da própria página. O atributo mais importante desta estrutura é o destino, pois é através dele que deve ser referenciado o endereço que o usuário acessará após interagir com essa estrutura.',
+    exemploCodigo: '<ligacao destino="http://www.meusite.com"> Meu site </ligacao>'
+  },
+  'ligação': {
+    nomeHtml: 'a',
+    descricao: 'Estrutura que define um hiperlink, que é usado para vincular uma página à outra.',
+    documentacao: '# `ligação`\n Declara um link dinâmico, no qual é usado para referenciar ou migrar de uma página para outra, seja externa ou em uma seção dentro da própria página. O atributo mais importante desta estrutura é o destino, pois é através dele que deve ser referenciado o endereço que o usuário acessará após interagir com essa estrutura.',
+    exemploCodigo: '<ligação destino="http://www.meusite.com"> Meu site </ligação>'
+  },
+  'linha': {
+    nomeHtml: 'tr',
+    descricao: 'Estrutura que define uma linha dentro de uma tabela.',
+    documentacao: '# `linha`\n Representa um bloco de um ou mais linhas dentro da estrutura-pai `<corpo-tabela>`.',
+    exemploCodigo: '<tabela>\n <corpo-tabela>\n  <linha>\n  <celula> Nome </celula>\n  <celula> Idade </celula>\n <celula> Cidade </celula>\n <corpo-tabela>\n</tabela>'
+  },
+  'linha-horizontal': {
+    nomeHtml: 'hr',
+    descricao: 'Estrutura que representa uma quebra temática entre elementos de nível de parágrafo (por exemplo , uma mudança da cena de uma história, ou uma mudança de tema com uma seção). Nas versões anteriores do HTML, representava uma linha horizontal. ',
+    documentacao: '# `linha-horizontal`\n Declara uma separação de tópicos de um parágrafo da página, seja uma história fictícia ou um texto jornalístico, entre outros.',
+    exemploCodigo: '<paragrafo>\n Tópico 1\n<paragrafo>\n<linha-horizontal>\n<paragrafo>\n Tópico 2\n<paragrafo>'
+  },
+  'lista-definicoes': {
+    nomeHtml: 'dl',
+    descricao: 'Estrutura que representa uma lista associativa consistindo de zero ou mais listas descritivas.',
+    documentacao: '# `lista-definicoes`\n Cada lista representada por essa estrutura consiste de uma ou mais estruturas `<termo>` seguindo por um ou mais estruturas `<lista-definições/definicao>`. Deverá declarar somente uma estrutura `<termo>` para cada nome. Listas descritivas podem conter termos e definições, tópicos e valores, perguntas e respostas ou qualquer outro formato de lista descritiva.',
+    exemploCodigo: '<lista-definicoes>\n <lista-definicoes/definicao> Item A </lista-definicoes/definicao>\n <lista-definicoes/definicao> Item B </lista-definicoes/definicao>\n <lista-definicoes/definicao> Item C </lista-definicoes/definicao>\n</lista-definicoes>'
+  },
+  'lista-definições': {
+    nomeHtml: 'dl',
+    descricao: 'Estrutura que representa uma lista associativa consistindo de zero ou mais listas descritivas.',
+    documentacao: '# `lista-definições`\n Cada lista representada por essa estrutura consiste de uma ou mais estruturas `<termo>` seguindo por um ou mais estruturas `<lista-definições/definição>`. Deverá declarar somente uma estrutura `<termo>` para cada nome. Listas descritivas podem conter termos e definições, tópicos e valores, perguntas e respostas ou qualquer outro formato de lista descritiva.',
+    exemploCodigo: '<lista-definições>\n <lista-definições/definição> Item A </lista-definições/definição>\n <lista-definições/definição> Item B </lista-definições/definição>\n <lista-definições/definição> Item C </lista-definições/definição>\n</lista-definições>'
+  },
+  'lista-definicoes/definicao': {
+    nomeHtml: 'dd',
+    descricao: 'Estrutura que representa a descrição, definição ou valor dentro da estrutura `<lista-definicoes>`.',
+    documentacao: '# `lista-definicoes/definicao`\n Pode ser utilizado para fazer um dicionário virtual ou uma enciclopédia dentro da página LMHT',
+    exemploCodigo: '<lista-definicoes>\n <lista-definicoes/definicao> Banana </lista-definicoes/definicao>\n <lista-definicoes/definicao> Abacaxi </lista-definicoes/definicao>\n <lista-definicoes/definicao> Uva </lista-definicoes/definicao>\n</lista-definicoes>'
+  },
+  'lista-definições/definição': {
+    nomeHtml: 'dd',
+    descricao: 'Estrutura que representa a descrição, definição ou valor dentro da estrutura `<lista-definicoes>`.',
+    documentacao: '# `lista-definições/definição`\n Pode ser utilizado para fazer um dicionário virtual ou uma enciclopédia dentro da página LMHT',
+    exemploCodigo: '<lista-definicoes>\n <lista-definições/definição> Banana </lista-definições/definição>\n <lista-definições/definição> Abacaxi </lista-definições/definição>\n <lista-definições/definição> Uva </lista-definições/definição>\n</lista-definicoes>'
+  },
+  'lista-numerada': {
+    nomeHtml: 'ol',
+    descricao: 'Estrutura que representa uma lista de itens ordenados.',
+    documentacao: '# `lista-numerada`\n Declara uma lista propositalmente ordenada, de tal forma que caso sua ordem seja alterada, sua lógica seria afetada. A estrutura `<item-lista>` declara os itens da lista.',
+    exemploCodigo: '<lista-numerada>\n <item-lista> Item 1 </item-lista>\n <item-lista> Item 2 </item-lista>\n<lista-numerada>'
+  },
+  'lista-pesquisavel': {
+    nomeHtml: 'datalist',
+    descricao: 'Estrutura que especifica uma lista de opções pré-definidas para a estrutura `<entrada>`.',
+    documentacao: '# `lista-pesquisavel`\n Geralmente é utilizada para utilizar o recurso "autocompletar" para estruturas `<entrada>`. Além disso, o usuário irá visualizar uma lista suspensa contendo opções pré-definidas assim que o usuário inserir um dado. O atributo id deverá ser o mesmo valor do atributo lista da estrutura `<entrada>`.',
+    exemploCodigo: '<etiqueta for-"navegadores"> Escolha seu navegador: </etiqueta>\n<entrada lista="navegadores" nome="navegador" id="navegador">\n<lista-pesquisavel id="navegadores">\n <opcao valor="Chrome">\n <opcao valor="Firefox">\n <opcao valor="Safari">\n <opcao valor="Opera">\n</lista-pesquisavel>'
+  },
+  'lista-pesquisável': {
+    nomeHtml: 'datalist',
+    descricao: 'Estrutura que especifica uma lista de opções pré-definidas para a estrutura `<entrada>`.',
+    documentacao: '# `lista-pesquisável`\n Geralmente é utilizada para utilizar o recurso "autocompletar" para estruturas `<entrada>`. Além disso, o usuário irá visualizar uma lista suspensa contendo opções pré-definidas assim que o usuário inserir um dado. O atributo id deverá ser o mesmo valor do atributo lista da estrutura `<entrada>`.',
+    exemploCodigo: '<etiqueta for-"navegadores"> Escolha seu navegador: </etiqueta>\n<entrada lista="navegadores" nome="navegador" id="navegador">\n<lista-pesquisável id="navegadores">\n <opcao valor="Chrome">\n <opcao valor="Firefox">\n <opcao valor="Safari">\n <opcao valor="Opera">\n</lista-pesquisável>'
+  },
+  'lista-simples': {
+    nomeHtml: 'ul',
+    descricao: 'Estrutura que representa uma lista de itens sem ordem rígida, isto é, uma coleção de itens que não trazem uma ordenação numérica e as suas posições, nessa lista, são irrelevantes.',
+    documentacao: '# `lista-simples`\n Representa uma lista de forma não-ordenada. Sendo assim, a modificação do seu conteúdo não afetará o significado contextual da página.',
+    exemploCodigo: '<lista-simples>\n <item-lista> Item 1 </item-lista>\n <item-lista> Item 2 </item-lista>\n<lista-simples>'
+  },
 };
