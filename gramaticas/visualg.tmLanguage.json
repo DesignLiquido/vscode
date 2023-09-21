@@ -22,7 +22,7 @@
             "patterns": [
                 {
                     "name": "keyword.control.visualg",
-                    "match": "(?i)\\b(algoritmo|var|inicio|fimalgoritmo|se|senão|fimse|para|fazer|enquanto|escolha|caso|padrao|tente|pegue|finalmente|retorna|funcao|função|escreva|leia)\\b"
+                    "match": "(?i)\\b(ate|até|algoritmo|faca|faça|var|inicio|fimalgoritmo|se|senao|senão|fimse|para|fazer|enquanto|escolha|caso|padrao|repita|tente|pegue|finalmente|retorne|funcao|fimfuncao|função|fimfunção|escreva|leia)\\b"
                 }
             ]
         },
