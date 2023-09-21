@@ -2,7 +2,8 @@
 
 ## 0.9.2
 
-- No dialeto VisuAlg palavra `até` pode ser acentuada ou não.
+- No dialeto VisuAlg palavra `até` pode ser acentuada ou não;
+- Atualizações no reconhecimento de palavras reservadas do VisuAlg.
 
 ## 0.9.1
 
