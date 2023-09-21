@@ -215,4 +215,58 @@ export default {
     documentacao: '# `exemplo`\n Declara uma representação (exemplo) de uma saída de um programa de computador ou de um sistema operacional. Seu conteúdo será renderizado para o navegador utilizando a fonte padrão de navegador (monospace).',
     exemploCodigo: '<paragrafo> Apareceu a seguinte mensagem: </paragrafo>\n<paragrafo> <exemplo> arquivo nao encontrado </exemplo> </paragrafo>'
   },
+  'formulario': {
+    nomeHtml: 'form',
+    descricao: 'Estrutura que representa uma seção do documento contendo controles interativos para envio de informações. ',
+    documentacao: '# `formulario`\n Declara um campo pré-definido para a elaboração de um formulário, de modo com que renderize um campo mais organizado e estruturado para o usuário.',
+    exemploCodigo: '<formulario ação="/registrar.php" método="get">\n <etiqueta for="nome"> Nome Completo: </etiqueta>\n <campo tipo="texto" id="nome" />\n <etiqueta for="data-nasc"> Data de Nascimento: </etiqueta>\n <campo tipo="data" id="data" />\n <botão tipo="botão"> Registro </botão>\n</formulario>'
+  },
+  'formulário': {
+    nomeHtml: 'form',
+    descricao: 'Estrutura que representa uma seção do documento contendo controles interativos para envio de informações. ',
+    documentacao: '# `formulário`\n Declara um campo pré-definido para a elaboração de um formulário, de modo com que renderize um campo mais organizado e estruturado para o usuário.',
+    exemploCodigo: '<formulário ação="/registrar.php" método="get">\n <etiqueta for="nome"> Nome Completo: </etiqueta>\n <campo tipo="texto" id="nome" />\n <etiqueta for="data-nasc"> Data de Nascimento: </etiqueta>\n <campo tipo="data" id="data" />\n <botão tipo="botão"> Registro </botão>\n</formulário>'
+  },
+  'grupo-colunas': {
+    nomeHtml: 'colgroup',
+    descricao: 'Estrutura que agrupa um ou mais colunas de uma tabela para a formatação.',
+    documentacao: '# `grupo-colunas`\n Caso a estrutura `<grupo-colunas>` armazena nenhuma estrutura `<coluna>`, deverá ser armazenado uma estrutura `<envelope-texto>`, com o seu valor acima de zero. Ela deverá ser inserida dentro da estrutura `<tabela>` e atrás das estruturas `<corpo-tabela>` e `<linha>`.',
+    exemploCodigo: '<tabela>\n  <grupo-colunas>\n  <coluna span="2" estilo="background-color:blue">\n  <coluna estilo="background-color:white">\n </grupo-colunas>\n</tabela>'
+  },
+  'grupo-opcoes': {
+    nomeHtml: 'optgroup',
+    descricao: 'Estrutura utilizada para agrupar um grupo de estruturas `<opção>` ou `<opcao>` dentro da estrutura `<formulário>`.',
+    documentacao: '# `grupo-opcoes`\n Além de reunir estruturas, é utilizado para catalogar e organizar, para que o desenvolvedor tenha mais facilidade ao desenvolver a página, no caso de se utilizar listas longas ou opções com uma relação entre elas mesmas.',
+    exemploCodigo: '<etiqueta for="frutas"> Escolha uma fruta: </etiqueta>\n <selecao nome="frutas" id="frutas">\n  <grupo-opcoes etiqueta="Frutas Vermelhas">\n   <opcao valor="morango"> Morango </opcao>\n   <opcao valor="cereja"> Cereja </opcao>\n  </grupo-opcoes>\n</seleção>'
+  },
+  'grupo-opções': {
+    nomeHtml: 'optgroup',
+    descricao: 'Estrutura utilizada para agrupar um grupo de estruturas `<opção>` ou `<opcao>` dentro da estrutura `<formulário>`.',
+    documentacao: '# `grupo-opções`\n Além de reunir estruturas, é utilizado para catalogar e organizar, para que o desenvolvedor tenha mais facilidade ao desenvolver a página, no caso de se utilizar listas longas ou opções com uma relação entre elas mesmas.',
+    exemploCodigo: '<etiqueta for="frutas"> Escolha uma fruta: </etiqueta>\n <selecao nome="frutas" id="frutas">\n  <grupo-opções etiqueta="Frutas Vermelhas">\n   <opcao valor="morango"> Morango </opcao>\n   <opcao valor="cereja"> Cereja </opcao>\n  </grupo-opções>\n</seleção>'
+  },
+  'imagem': {
+    nomeHtml: 'img',
+    descricao: 'Estrutura que renderiza um arquivo de imagem dentro do documento LMHT. ',
+    documentacao: '# `imagem`\n As imagens não são tecnicamente inseridas em uma página da web; as imagens estão vinculadas a páginas da web. A `<imagem>` cria um espaço de retenção para a imagem referenciada.',
+    exemploCodigo: '<imagem origem="batata_cozida.png" altura="100" largura="100" />'
+  },
+  'inserido': {
+    nomeHtml: 'ins',
+    descricao: 'Estrutura que representa um intervalo de texto que foi adicionado a um documento. ',
+    documentacao: '# `inserido`\n Declara um texto com a indicação de que foi inserido a posteriori em um documento. Os navegadores geralmente aplicam o efeito de sublinhado no texto dentro dessa estrutura.',
+    exemploCodigo: '<parágrafo>\n Minha comida favorita é <excluído>almôndegas</excluído> <inserido>lasanha</inserido>\n</parágrafo>'
+  },
+  'invisivel': {
+    nomeHtml: 'template',
+    descricao: 'Estrutura que armazena um grupo de um ou mais estruturas no qual estará escondido quando a página carregar.',
+    documentacao: '# `invisivel`\n Você pode utilizar essa estrutura para armazenar um grupo de estruturas que você utilizará frequentemente.',
+    exemploCodigo: '<invisivel>\n <titulo2> Flor </titulo2>\n <imagem origem="flor.png" />\n</invisivel>'
+  },
+  'invisível': {
+    nomeHtml: 'template',
+    descricao: 'Estrutura que armazena um grupo de um ou mais estruturas no qual estará escondido quando a página carregar.',
+    documentacao: '# `invisível`\n Você pode utilizar essa estrutura para armazenar um grupo de estruturas que você utilizará frequentemente.',
+    exemploCodigo: '<invisível>\n <titulo2> Flor </titulo2>\n <imagem origem="flor.png" />\n</invisível>'
+  },
 };
