@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.9.2
+
+- No dialeto VisuAlg palavra `até` pode ser acentuada ou não.
+
 ## 0.9.1
 
 - Correções no dialeto VisuAlg para aceitar declarações de funções dentro do bloco `var`.
