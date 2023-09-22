@@ -12,7 +12,7 @@
 ## 0.9.0
 
 - Correções no dialeto VisuAlg para aceitar tanto comandos com acentos quanto sem;
-- Implementação de funcionalidade de assinatura de funções da blblioteca global e primitivas para Delégua.
+- Implementação de funcionalidade de assinatura de funções da biblioteca global e primitivas para Delégua.
 
 ## 0.8.6
 
@@ -31,7 +31,7 @@
 
 ## 0.8.3
 
-- Dialeto VisuAlg aceita tanto `=` quanto `:=` para atribuição.
+- Dialeto VisuAlg aceita tanto `<-` quanto `:=` para atribuição.
 
 ## 0.8.2
 
