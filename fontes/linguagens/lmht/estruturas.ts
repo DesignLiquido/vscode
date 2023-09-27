@@ -359,4 +359,118 @@ export default {
     documentacao: '# `lista-simples`\n Representa uma lista de forma não-ordenada. Sendo assim, a modificação do seu conteúdo não afetará o significado contextual da página.',
     exemploCodigo: '<lista-simples>\n <item-lista> Item 1 </item-lista>\n <item-lista> Item 2 </item-lista>\n<lista-simples>'
   },
+  'marca': {
+    nomeHtml: 'mark',
+    descricao: 'Estrutura que declara uma marcação ou ênfase em uma parte determinada de um texto.',
+    documentacao: '# `marca`\n Representa um trecho de destaque em um texto, por exemplo, uma sequência de texto marcado como referência, devido à sua relevância em um contexto particular.',
+    exemploCodigo: '<paragrafo>\n Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut <marca> texto marcado </marca> magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n</paragrafo'
+  },
+  'medidor': {
+    nomeHtml: 'meter',
+    descricao: 'Estrutura que renderiza uma escala de medição na página LMHT.',
+    documentacao: '# `medidor`\n Pode ser utilizada para vários ambientes ou estilos de página, devido a sua configuração livre e independente de outras estruturas para ser utilizada. É possível configurar os seus valores padrão, seja eles o alcance ou o que é considerado um valor baixo na estrutura.',
+    exemploCodigo: '<etiqueta para="medidor-altura"> Peso - Pessoa 1</etiqueta>\n<medidor valor="70" minimo="0" maximo="500">70 kg </medidor>'
+  },
+  'modal': {
+    nomeHtml: 'dialog',
+    descricao: 'Estrutura que declara uma caixa de diálogo ou subjanela.',
+    documentacao: '# `modal`\n Essa estrutura facilita a criação de pop-ups, caixas de diálogos e modais dentro da página LMHT. ',
+    exemploCodigo: '<modal abrir> Essa é uma caixa de diálogo aberta </modal>'
+  },
+  'navegacao': {
+    nomeHtml: 'nav',
+    descricao: 'Estrutura que representa uma seção de uma página que aponta para outras páginas ou para outras áreas da página, ou seja, uma seção com links de navegação.',
+    documentacao: '# `navegacao`\n Declara um conjunto agrupado de links para serem navegados na página, seja esses links internos ou de endereços externos. Pode ser utilizada como recurso de acessibilidade para leitores de tela voltados para pessoas com deficiência visual, com o intuito de filtrar o que deve ser exibido e o que não deve na renderização inicial do navegador.',
+    exemploCodigo: '<navegacao>\n <ligacao href="/html/"> HTML </ligacao>\n <ligacao href="/css/"> CSS </ligacao>\n <ligacao href="/js/"> JavaScript </ligacao>\n <ligacao href="/python/"> CSS </ligacao>\n</navegacao>'
+  },
+  'navegação': {
+    nomeHtml: 'nav',
+    descricao: 'Estrutura que representa uma seção de uma página que aponta para outras páginas ou para outras áreas da página, ou seja, uma seção com links de navegação.',
+    documentacao: '# `navegação`\n Declara um conjunto agrupado de links para serem navegados na página, seja esses links internos ou de endereços externos. Pode ser utilizada como recurso de acessibilidade para leitores de tela voltados para pessoas com deficiência visual, com o intuito de filtrar o que deve ser exibido e o que não deve na renderização inicial do navegador.',
+    exemploCodigo: '<navegação>\n <ligacao href="/html/"> HTML </ligacao>\n <ligacao href="/css/"> CSS </ligacao>\n <ligacao href="/js/"> JavaScript </ligacao>\n <ligacao href="/python/"> CSS </ligacao>\n</navegação>'
+  },
+  'negrito': {
+    nomeHtml: 'strong',
+    descricao: 'Estrutura que renderiza um texto no formato negrito.',
+    documentacao: '# `negrito`\n É utilizado para enfatizar um conteúdo específico de um texto, assim dando valor a sua importância contextual. Quanto maior a quantidade de estruturas `<negrito>`, mais importância terá o texto inserido.',
+    exemploCodigo: '<negrito> Esse texto é importante! </negrito>'
+  },
+  'objeto': {
+    nomeHtml: 'object',
+    descricao: 'Estrutura que define um contêiner para um recurso externo.',
+    documentacao: '# `objeto`\n Declara um contêiner para um recurso externo, seja ele uma página da Web, uma imagem ou uma aplicação em formato Plugin.',
+    exemploCodigo: '<objeto dado="video.mp4" altura="500" largura="600"> </objeto>\n\n<objeto dado="foto.png" altura="300" largura="200"> </objeto>\n\n<objeto dado="site.html" altura="500" largura="200"> </objeto>'
+  },
+  'opcao': {
+    nomeHtml: 'option',
+    descricao: 'Estrutura usada para criar um controle que representa um item dentro de um elemento.',
+    documentacao: '# `opcao`\n Declara um valor como opção dentro da estruturas `<lista-pesquisável>`, `<seleção>` e `<grupo-opções>`.',
+    exemploCodigo: '<título1 for="frutas"> Escolha uma fruta: </título1>\n<seleção nome="frutas" id="frutas">\n <opcao>Banana</opcao>\n <opcao>Abacaxi</opcao>\n <opcao>Morango</opcao>\n</seleção>'
+  },
+  'opção': {
+    nomeHtml: 'option',
+    descricao: 'Estrutura usada para criar um controle que representa um item dentro de um elemento.',
+    documentacao: '# `opção`\n Declara um valor como opção dentro da estruturas `<lista-pesquisável>`, `<seleção>` e `<grupo-opções>`.',
+    exemploCodigo: '<título1 for="frutas"> Escolha uma fruta: </título1>\n<seleção nome="frutas" id="frutas">\n <opção>Banana</opção>\n <opção>Abacaxi</opção>\n <opção>Morango</opção>\n</seleção>'
+  },
+  'p': {
+    nomeHtml: 'p',
+    descricao: 'Estrutura que declara e renderiza um texto em formato de um parágrafo.',
+    documentacao: '# `p`\n Em mídias visuais, parágrafos são representados como blocos indentados de texto com a primeira letra avançada e separados por linhas em branco. Já em LMHT, parágrafos são usados para agrupar conteúdos relacionados de qualquer tipo, como imagens e campos de um formulário.',
+    exemploCodigo: '<p>\n Esse é um texto em forma de parágrafo\n</p>'
+  },
+  'paragrafo': {
+    nomeHtml: 'p',
+    descricao: 'Estrutura que declara e renderiza um texto em formato de um parágrafo.',
+    documentacao: '# `paragrafo`\n Em mídias visuais, parágrafos são representados como blocos indentados de texto com a primeira letra avançada e separados por linhas em branco. Já em LMHT, parágrafos são usados para agrupar conteúdos relacionados de qualquer tipo, como imagens e campos de um formulário.',
+    exemploCodigo: '<paragrafo>\n Esse é um texto em forma de parágrafo\n</paragrafo>'
+  },
+  'parágrafo': {
+    nomeHtml: 'p',
+    descricao: 'Estrutura que declara e renderiza um texto em formato de um parágrafo.',
+    documentacao: '# `parágrafo`\n Em mídias visuais, parágrafos são representados como blocos indentados de texto com a primeira letra avançada e separados por linhas em branco. Já em LMHT, parágrafos são usados para agrupar conteúdos relacionados de qualquer tipo, como imagens e campos de um formulário.',
+    exemploCodigo: '<parágrafo>\n Esse é um texto em forma de parágrafo\n</parágrafo>'
+  },
+  'preformatado': {
+    nomeHtml: 'pre',
+    descricao: 'Estrutura que declara e renderiza um texto pré-formatado na página.',
+    documentacao: '# `preformatado`\n Por padrão, sua fonte tem a largura fixa, além de preservar espaços e quebras de linha. O texto será renderizado exatamante como é exibido no código-fonte da página LMHT. Algumas de suas finalidades de uso são: linhas de códigos de programação, textos feitos via ASCII e inclusão de e-mails, com parágrafos em branco.',
+    exemploCodigo: '<preformatado>\n Esse é um texto inserido dentro de uma estrutura chamada preformatado\n</preformatado>'
+  },
+  'principal': {
+    nomeHtml: 'main',
+    descricao: 'Estrutura que especifica o conteúdo principal do documento LMHT.',
+    documentacao: '# `principal`\n O conteúdo inserido dentro desta estrutura deverá ser único ao documento, sendo assim não deverá ser repetido e/ou replicado através de outros documentos seja eles links de navegação, Informações de Copyright, Logotipos e formulários de pesquisa. Importante notar que não pode existir mais de uma estrutura `<principal>` na página. A estrutura também não pode ser estrutura-filho das estruturas `<artigo>`, `<aparte>` ou `<navegacao>`.',
+    exemploCodigo: '<principal>\n <artigo>\n  <titulo2> Maçã </titulo2>\n  <p> A maçã é o pseudofruto pomáceo da macieira ( Malus domestica ), árvore da família Rosaceae. É um dos pseudofrutos de árvore mais cultivados, e o mais conhecido dos muitos membros do género Malus que são usados pelos seres humanos. Fonte: Wikipediqa </p>\n </artigo>\n</principal>'
+  },
+  'progresso': {
+    nomeHtml: 'progress',
+    descricao: 'Estrutura usada para visualizar o progresso de uma tarefa.',
+    documentacao: '# `progresso`\n Representa o progresso alcançado de uma tarefa, porém não especificando quanto que resta para ser concluída. Lembre-se sempre de adicionar a estrutura `<etiqueta>` para mais práticas de acessibilidade.',
+    exemploCodigo: '<etiqueta para="status"> Status de download: </etiqueta>\n<progresso id="status" valor="50" maximo="100"> 50% </progresso>'
+  },
+  'quebra-linha': {
+    nomeHtml: 'br',
+    descricao: 'Estrutura usada para aplicar uma quebra de linha no texto.',
+    documentacao: '# `quebra-linha`\n Declara uma quebra de linhas dentro de outras estruturas que envolvem produção textual, seja elas textos jornalísticos, produções literárias, etc. Além disso, não necessita de outra estrutura de fechamento. Esta estrutura é comumente utilizada para produção de poemas, citação de endereços físicos dentre outros exemplos similares.',
+    exemploCodigo: '<p> Para quebra de linhas <quebra-linha> em um texto, use a estrutura <quebra-linha> Quebra-linha </p>'
+  },
+  'quebra-linha-oportuna': {
+    nomeHtml: 'wbr',
+    descricao: 'Estrutura usada para especificar onde deve ocorrer uma quebra de linha no texto.',
+    documentacao: '# `quebra-linha-oportuna`\n Especifica em que momento e localização no texto que deverá ocorrer uma quebra de linha no texto, seja parágrafo ou outras estruturas similares. É recomendado usar palavras curtas, caso não queira que o documento faça a quebra de linha em um lugar errado. Você pode usar essa estrutura para delimitar oportunidades de quebras de linha.',
+    exemploCodigo: '<p> Para aprender Espanhol, você deverá estar familiarizado com as línguas vindas do <quebra-linha-oportuna>Latim</quebra-linha-oportuna> </p>'
+  },
+  'recurso': {
+    nomeHtml: 'link',
+    descricao: 'Estrutura que estabelece um relacionamento entre o documento atual e o conteúdo externo.',
+    documentacao: '# `recurso`\n É normalmente utilizada para adicionar a logotipo para a sua página LMHT, porém pode se utilizar de diversas maneiras, devido a sua ampla lista de atributos e sua alta compatibilidade.',
+    exemploCodigo: '<cabeca>\n <recurso rel="stylesheet" href="link1.lmht">\n</cabeca>'
+  },
+  'riscado': {
+    nomeHtml: 's',
+    descricao: 'Estrutura que renderiza um texto tachado ou uma linha cortando o texto.',
+    documentacao: '# `riscado`\n É normalmente utilizada para adicionar a logotipo para a sua página LMHT, porém pode se utilizar de diversas maneiras, devido a sua ampla lista de atributos e sua alta compatibilidade.',
+    exemploCodigo: 'Representa um elemento que não é mais relevante ou tecnicamente correto. Esta estrutura não deve ser usada para definir conteúdo deletado. Neste caso, use a estrutura `<excluido>`.'
+  },
 };
