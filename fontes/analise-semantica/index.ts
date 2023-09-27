@@ -22,11 +22,15 @@ export function analiseSemantica(
             avaliadorSintatico = new avaliadores.AvaliadorSintatico();
             analisadorSemantico = new AnalisadorSemantico(); 
 
-            const linhas = documento.getText().split('\n').map(l => l + '\0');
-            const resultadoLexador = lexador.mapear(linhas, -1);
-            const resultadoAvaliadorSintatico = avaliadorSintatico.analisar(resultadoLexador, -1);
-            const resultadoAnalisadorSemantico = analisadorSemantico.analisar(resultadoAvaliadorSintatico.declaracoes);
-            popularDiagnosticos(resultadoAnalisadorSemantico.erros, diagnosticos, documento);
+            try {
+                const linhas = documento.getText().split('\n').map(l => l + '\0');
+                const resultadoLexador = lexador.mapear(linhas, -1);
+                const resultadoAvaliadorSintatico = avaliadorSintatico.analisar(resultadoLexador, -1);
+                const resultadoAnalisadorSemantico = analisadorSemantico.analisar(resultadoAvaliadorSintatico.declaracoes);
+                popularDiagnosticos(resultadoAnalisadorSemantico.erros, diagnosticos, documento);   
+            } catch (error) {
+                // console.log(error)
+            }
     }
 }
 
