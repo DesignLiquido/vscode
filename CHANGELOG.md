@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.9.3
+
+- Melhorias na Análise Semântica;
+- Corrige problema na declaração de vetores do VisuAlg.
+- Método global `limpatela` do VisuAlg
+
 ## 0.9.2
 
 - No dialeto VisuAlg palavra `até` pode ser acentuada ou não;
