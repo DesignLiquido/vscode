@@ -29,6 +29,7 @@ import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
  * Please note: the test suite only supports 'external' mode.
  */
 const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
+let changeTimeout;
 
 export function activate(context: vscode.ExtensionContext) {
     const diagnosticosDelegua = vscode.languages.createDiagnosticCollection("delegua");
@@ -39,7 +40,16 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
     context.subscriptions.push(
-		vscode.workspace.onDidChangeTextDocument((e) => analiseSemantica(e.document, diagnosticosDelegua))
+		vscode.workspace.onDidChangeTextDocument((e) => {
+            if (changeTimeout !== null) {
+                clearTimeout(changeTimeout);
+            }
+            changeTimeout = setInterval(function () {
+                clearTimeout(changeTimeout);
+                changeTimeout = null;
+                analiseSemantica(e.document, diagnosticosDelegua);
+            }, 500);
+        })
 	);
 
 	context.subscriptions.push(
