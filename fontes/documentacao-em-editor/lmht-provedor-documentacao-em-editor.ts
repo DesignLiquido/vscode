@@ -4,6 +4,7 @@ import modificadoresLmht from '../linguagens/lmht/estruturas';
 
 /**
  * Provedor de documentação para "hover" (ponteiro do _mouse_ por cima do elemento de código.)
+ * para LMHT.
  */
 export class LmhtProvedorDocumentacaoEmEditor
     implements vscode.HoverProvider

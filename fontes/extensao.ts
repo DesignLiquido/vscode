@@ -22,6 +22,8 @@ import { VisuAlgProvedorDocumentacaoEmEditor } from './documentacao-em-editor/vi
 import { traduzir } from './traducao';
 import { analiseSemantica } from './analise-semantica';
 import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
+import { LmhtProvedorCompletude } from './completude/lmht-provedor-completude';
+import { LmhtProvedorDocumentacaoEmEditor } from './documentacao-em-editor/lmht-provedor-documentacao-em-editor';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -153,6 +155,14 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
+    // IntelliSense para LMHT
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider(
+            'lmht',
+            new LmhtProvedorCompletude()
+        )
+    );
+
     // IntelliSense para VisuAlg
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
@@ -173,6 +183,13 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerHoverProvider(
             'foles',
             new FolesProvedorDocumentacaoEmEditor()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerHoverProvider(
+            'lmht',
+            new LmhtProvedorDocumentacaoEmEditor()
         )
     );
 

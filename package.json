@@ -116,10 +116,10 @@
                 "language": "delegua"
             },
             {
-                "language": "pitugues"
+                "language": "mapler"
             },
             {
-                "language": "mapler"
+                "language": "pitugues"
             },
             {
                 "language": "portugolstudio"
@@ -216,7 +216,11 @@
                 "extensions": [
                     ".birl"
                 ],
-                "configuration": "./configuracoes/configuracao-birl.json"
+                "configuration": "./configuracoes/configuracao-birl.json",
+                "icon": {
+                    "light": "./recursos/birl-logo.svg",
+                    "dark": "./recursos/birl-logo.svg"
+                }
             },
             {
                 "id": "delegua",
@@ -227,7 +231,11 @@
                 "extensions": [
                     ".delegua"
                 ],
-                "configuration": "./configuracoes/configuracao-delegua.json"
+                "configuration": "./configuracoes/configuracao-delegua.json",
+                "icon": {
+                    "light": "./recursos/delegua-logo.svg",
+                    "dark": "./recursos/delegua-logo.svg"
+                }
             },
             {
                 "id": "egua",
@@ -238,18 +246,11 @@
                 "extensions": [
                     ".egua"
                 ],
-                "configuration": "./configuracoes/configuracao-delegua.json"
-            },
-            {
-                "id": "pitugues",
-                "aliases": [
-                    "Pituguês",
-                    "pitugues"
-                ],
-                "extensions": [
-                    ".pitugues"
-                ],
-                "configuration": "./configuracoes/configuracao-pitugues.json"
+                "configuration": "./configuracoes/configuracao-delegua.json",
+                "icon": {
+                    "light": "./recursos/egua-logo.svg",
+                    "dark": "./recursos/egua-logo.svg"
+                }
             },
             {
                 "id": "foles",
@@ -260,7 +261,11 @@
                 "extensions": [
                     ".foles"
                 ],
-                "configuration": "./configuracoes/configuracao-foles.json"
+                "configuration": "./configuracoes/configuracao-foles.json",
+                "icon": {
+                    "light": "./recursos/foles-logo.svg",
+                    "dark": "./recursos/foles-logo.svg"
+                }
             },
             {
                 "id": "lincones",
@@ -271,7 +276,11 @@
                 "extensions": [
                     ".lincones"
                 ],
-                "configuration": "./configuracoes/configuracao-lincones.json"
+                "configuration": "./configuracoes/configuracao-lincones.json",
+                "icon": {
+                    "light": "./recursos/lincones-logo.svg",
+                    "dark": "./recursos/lincones-logo.svg"
+                }
             },
             {
                 "id": "lmht",
@@ -282,7 +291,11 @@
                 "extensions": [
                     ".lmht"
                 ],
-                "configuration": "./configuracoes/configuracao-lmht.json"
+                "configuration": "./configuracoes/configuracao-lmht.json",
+                "icon": {
+                    "light": "./recursos/lmht-logo.svg",
+                    "dark": "./recursos/lmht-logo.svg"
+                }
             },
             {
                 "id": "mapler",
@@ -293,7 +306,26 @@
                 "extensions": [
                     ".mapler"
                 ],
-                "configuration": "./configuracoes/configuracao-mapler.json"
+                "configuration": "./configuracoes/configuracao-mapler.json",
+                "icon": {
+                    "light": "./recursos/mapler-logo.svg",
+                    "dark": "./recursos/mapler-logo.svg"
+                }
+            },
+            {
+                "id": "pitugues",
+                "aliases": [
+                    "Pituguês",
+                    "pitugues"
+                ],
+                "extensions": [
+                    ".pitugues"
+                ],
+                "configuration": "./configuracoes/configuracao-pitugues.json",
+                "icon": {
+                    "light": "./recursos/pitugues-logo.svg",
+                    "dark": "./recursos/pitugues-logo.svg"
+                }
             },
             {
                 "id": "portugolstudio",
@@ -305,7 +337,11 @@
                 "extensions": [
                     ".por"
                 ],
-                "configuration": "./configuracoes/configuracao-portugolstudio.json"
+                "configuration": "./configuracoes/configuracao-portugolstudio.json",
+                "icon": {
+                    "light": "./recursos/portugol-studio-logo.svg",
+                    "dark": "./recursos/portugol-studio-logo.svg"
+                }
             },
             {
                 "id": "potigol",
@@ -317,7 +353,11 @@
                     ".poti",
                     ".potigol"
                 ],
-                "configuration": "./configuracoes/configuracao-potigol.json"
+                "configuration": "./configuracoes/configuracao-potigol.json",
+                "icon": {
+                    "light": "./recursos/potigol-logo.svg",
+                    "dark": "./recursos/potigol-logo.svg"
+                }
             },
             {
                 "id": "visualg",
@@ -328,7 +368,11 @@
                 "extensions": [
                     ".alg"
                 ],
-                "configuration": "./configuracoes/configuracao-visualg.json"
+                "configuration": "./configuracoes/configuracao-visualg.json",
+                "icon": {
+                    "light": "./recursos/visualg-logo.svg",
+                    "dark": "./recursos/visualg-logo.svg"
+                }
             }
         ],
         "grammars": [
