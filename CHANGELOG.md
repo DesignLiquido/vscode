@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.9.4
+
+- Avaliação semântica ocorre apenas depois de 500ms após a última edição de arquivo.
+
 ## 0.9.3
 
 - Melhorias na Análise Semântica;
