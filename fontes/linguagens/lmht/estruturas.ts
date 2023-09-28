@@ -470,7 +470,121 @@ export default {
   'riscado': {
     nomeHtml: 's',
     descricao: 'Estrutura que renderiza um texto tachado ou uma linha cortando o texto.',
-    documentacao: '# `riscado`\n É normalmente utilizada para adicionar a logotipo para a sua página LMHT, porém pode se utilizar de diversas maneiras, devido a sua ampla lista de atributos e sua alta compatibilidade.',
-    exemploCodigo: 'Representa um elemento que não é mais relevante ou tecnicamente correto. Esta estrutura não deve ser usada para definir conteúdo deletado. Neste caso, use a estrutura `<excluido>`.'
+    documentacao: '# `riscado`\n Representa um elemento que não é mais relevante ou tecnicamente correto. Esta estrutura não deve ser usada para definir conteúdo deletado. Neste caso, use a estrutura `<excluido>`.',
+    exemploCodigo: '<p><riscado>50</riscado> 45 reais na sua conta </p>'
+  },
+  'script': {
+    nomeHtml: 'script',
+    descricao: 'Estrutura usada para incorporar um script (JavaScript) do lado do cliente.',
+    documentacao: '# `script`\n Permite ao desenvolvedor a inserção de códigos JavaScript. Em princípio, esta estrutura não renderiza conteúdo para o usuário. Quando for usado para inserir códigos, seu conteúdo pode ser embutido de forma interna, ou seja, dentro da sua própria estrutura, ou em um conteúdo externo, referenciado pelo atributo `fonte`.',
+    exemploCodigo: '<script>\n console.log("Hello World");\n</script>'
+  },
+  'secao': {
+    nomeHtml: 'section',
+    descricao: 'Estrutura que representa uma seção genérica de um documento ou aplicação.',
+    documentacao: '# `secao`\n Uma seção, neste contexto, é um agrupamento temático do conteúdo, acompanhado de um cabeçalho.',
+    exemploCodigo: '<secao>\n <paragrafo> Este é o parágrafo 1 </paragrafo>\n</secao>\n\n<secao>\n paragrafo> Este é o parágrafo 2 </paragrafo>\n</secao>'
+  },
+  'seção': {
+    nomeHtml: 'section',
+    descricao: 'Estrutura que representa uma seção genérica de um documento ou aplicação.',
+    documentacao: '# `seção`\n Uma seção, neste contexto, é um agrupamento temático do conteúdo, acompanhado de um cabeçalho.',
+    exemploCodigo: '<seção>\n <paragrafo> Este é o parágrafo 1 </paragrafo>\n</seção>\n\n<seção>\n paragrafo> Este é o parágrafo 2 </paragrafo>\n</seção>'
+  },
+  'selecao': {
+    nomeHtml: 'select',
+    descricao: 'Estrutura que declara uma lista suspensa com no máximo 4 opções.',
+    documentacao: '# `selecao`\n As opções dentro do menu são representadas pelo elemento `opção` e podem ser pré-selecionadas para o usuário. Esta estrutura é frequentemente utilizada para coletar as informações do usuário dentro da estrutura formulário.',
+    exemploCodigo: '<selecao nome="carros" id="carros">\n <opção>Gol</opção>\n <opção>Corsa</opção>\n <opção>Porsche</opção>\n</selecao>'
+  },
+  'seleção': {
+    nomeHtml: 'select',
+    descricao: 'Estrutura que declara uma lista suspensa com no máximo 4 opções.',
+    documentacao: '# `seleção`\n As opções dentro do menu são representadas pelo elemento `opção` e podem ser pré-selecionadas para o usuário. Esta estrutura é frequentemente utilizada para coletar as informações do usuário dentro da estrutura formulário.',
+    exemploCodigo: '<seleção nome="carros" id="carros">\n <opção>Gol</opção>\n <opção>Corsa</opção>\n <opção>Porsche</opção>\n</seleção>'
+  },
+  'titulo1': {
+    nomeHtml: 'h1',
+    descricao: 'Estruturas de título são utilizadas para definir os cabeçalhos da página, seguindo os seus respectivos tamanhos.',
+    documentacao: '# `titulo1`\n Uma estrutura de título é utilizada para enfatizar um texto de acordo com o seu conteúdo, utilizando o tamanho como indicativo de relevância. O tamanho vai de 1 a 6. Conforme a ordem crescente, o valor do tamanho padrão da estrutura renderizado no navegador diminui. Por padrão, todas elas já tem uma estilização padrão, no qual pode ser modificado através da estrutura `<estilo>`.',
+    exemploCodigo: '<titulo1> Cabeçalho 1 </titulo1>\n<paragrafo> "Lorem ipsum dolor sit amet, consectetur adipiscing elit. </paragrafo>'
+  },
+  'título1': {
+    nomeHtml: 'h1',
+    descricao: 'Estruturas de título são utilizadas para definir os cabeçalhos da página, seguindo os seus respectivos tamanhos.',
+    documentacao: '# `título1`\n Uma estrutura de título é utilizada para enfatizar um texto de acordo com o seu conteúdo, utilizando o tamanho como indicativo de relevância. O tamanho vai de 1 a 6. Conforme a ordem crescente, o valor do tamanho padrão da estrutura renderizado no navegador diminui. Por padrão, todas elas já tem uma estilização padrão, no qual pode ser modificado através da estrutura `<estilo>`.',
+    exemploCodigo: '<título1> Cabeçalho 1 </título1>\n<paragrafo> "Lorem ipsum dolor sit amet, consectetur adipiscing elit. </paragrafo>'
+  },
+  'titulo2': {
+    nomeHtml: 'h2',
+    descricao: 'Estruturas de título são utilizadas para definir os cabeçalhos da página, seguindo os seus respectivos tamanhos.',
+    documentacao: '# `titulo2`\n Uma estrutura de título é utilizada para enfatizar um texto de acordo com o seu conteúdo, utilizando o tamanho como indicativo de relevância. O tamanho vai de 1 a 6. Conforme a ordem crescente, o valor do tamanho padrão da estrutura renderizado no navegador diminui. Por padrão, todas elas já tem uma estilização padrão, no qual pode ser modificado através da estrutura `<estilo>`.',
+    exemploCodigo: '<titulo2> Cabeçalho 1 </titulo2>\n<paragrafo> "Lorem ipsum dolor sit amet, consectetur adipiscing elit. </paragrafo>'
+  },
+  'título2': {
+    nomeHtml: 'h2',
+    descricao: 'Estruturas de título são utilizadas para definir os cabeçalhos da página, seguindo os seus respectivos tamanhos.',
+    documentacao: '# `título2`\n Uma estrutura de título é utilizada para enfatizar um texto de acordo com o seu conteúdo, utilizando o tamanho como indicativo de relevância. O tamanho vai de 1 a 6. Conforme a ordem crescente, o valor do tamanho padrão da estrutura renderizado no navegador diminui. Por padrão, todas elas já tem uma estilização padrão, no qual pode ser modificado através da estrutura `<estilo>`.',
+    exemploCodigo: '<título2> Cabeçalho 1 </título2>\n<paragrafo> "Lorem ipsum dolor sit amet, consectetur adipiscing elit. </paragrafo>'
+  },
+  'titulo3': {
+    nomeHtml: 'h3',
+    descricao: 'Estruturas de título são utilizadas para definir os cabeçalhos da página, seguindo os seus respectivos tamanhos.',
+    documentacao: '# `titulo3`\n Uma estrutura de título é utilizada para enfatizar um texto de acordo com o seu conteúdo, utilizando o tamanho como indicativo de relevância. O tamanho vai de 1 a 6. Conforme a ordem crescente, o valor do tamanho padrão da estrutura renderizado no navegador diminui. Por padrão, todas elas já tem uma estilização padrão, no qual pode ser modificado através da estrutura `<estilo>`.',
+    exemploCodigo: '<titulo3> Cabeçalho 1 </titulo3>\n<paragrafo> "Lorem ipsum dolor sit amet, consectetur adipiscing elit. </paragrafo>'
+  },
+  'título3': {
+    nomeHtml: 'h3',
+    descricao: 'Estruturas de título são utilizadas para definir os cabeçalhos da página, seguindo os seus respectivos tamanhos.',
+    documentacao: '# `título3`\n Uma estrutura de título é utilizada para enfatizar um texto de acordo com o seu conteúdo, utilizando o tamanho como indicativo de relevância. O tamanho vai de 1 a 6. Conforme a ordem crescente, o valor do tamanho padrão da estrutura renderizado no navegador diminui. Por padrão, todas elas já tem uma estilização padrão, no qual pode ser modificado através da estrutura `<estilo>`.',
+    exemploCodigo: '<título3> Cabeçalho 1 </título3>\n<paragrafo> "Lorem ipsum dolor sit amet, consectetur adipiscing elit. </paragrafo>'
+  },
+  'titulo4': {
+    nomeHtml: 'h4',
+    descricao: 'Estruturas de título são utilizadas para definir os cabeçalhos da página, seguindo os seus respectivos tamanhos.',
+    documentacao: '# `titulo4`\n Uma estrutura de título é utilizada para enfatizar um texto de acordo com o seu conteúdo, utilizando o tamanho como indicativo de relevância. O tamanho vai de 1 a 6. Conforme a ordem crescente, o valor do tamanho padrão da estrutura renderizado no navegador diminui. Por padrão, todas elas já tem uma estilização padrão, no qual pode ser modificado através da estrutura `<estilo>`.',
+    exemploCodigo: '<titulo4> Cabeçalho 1 </titulo4>\n<paragrafo> "Lorem ipsum dolor sit amet, consectetur adipiscing elit. </paragrafo>'
+  },
+  'título4': {
+    nomeHtml: 'h4',
+    descricao: 'Estruturas de título são utilizadas para definir os cabeçalhos da página, seguindo os seus respectivos tamanhos.',
+    documentacao: '# `título4`\n Uma estrutura de título é utilizada para enfatizar um texto de acordo com o seu conteúdo, utilizando o tamanho como indicativo de relevância. O tamanho vai de 1 a 6. Conforme a ordem crescente, o valor do tamanho padrão da estrutura renderizado no navegador diminui. Por padrão, todas elas já tem uma estilização padrão, no qual pode ser modificado através da estrutura `<estilo>`.',
+    exemploCodigo: '<título4> Cabeçalho 1 </título4>\n<paragrafo> "Lorem ipsum dolor sit amet, consectetur adipiscing elit. </paragrafo>'
+  },
+  'titulo5': {
+    nomeHtml: 'h5',
+    descricao: 'Estruturas de título são utilizadas para definir os cabeçalhos da página, seguindo os seus respectivos tamanhos.',
+    documentacao: '# `titulo5`\n Uma estrutura de título é utilizada para enfatizar um texto de acordo com o seu conteúdo, utilizando o tamanho como indicativo de relevância. O tamanho vai de 1 a 6. Conforme a ordem crescente, o valor do tamanho padrão da estrutura renderizado no navegador diminui. Por padrão, todas elas já tem uma estilização padrão, no qual pode ser modificado através da estrutura `<estilo>`.',
+    exemploCodigo: '<titulo5> Cabeçalho 1 </titulo5>\n<paragrafo> "Lorem ipsum dolor sit amet, consectetur adipiscing elit. </paragrafo>'
+  },
+  'título5': {
+    nomeHtml: 'h5',
+    descricao: 'Estruturas de título são utilizadas para definir os cabeçalhos da página, seguindo os seus respectivos tamanhos.',
+    documentacao: '# `título5`\n Uma estrutura de título é utilizada para enfatizar um texto de acordo com o seu conteúdo, utilizando o tamanho como indicativo de relevância. O tamanho vai de 1 a 6. Conforme a ordem crescente, o valor do tamanho padrão da estrutura renderizado no navegador diminui. Por padrão, todas elas já tem uma estilização padrão, no qual pode ser modificado através da estrutura `<estilo>`.',
+    exemploCodigo: '<título5> Cabeçalho 1 </título5>\n<paragrafo> "Lorem ipsum dolor sit amet, consectetur adipiscing elit. </paragrafo>'
+  },
+  'titulo6': {
+    nomeHtml: 'h6',
+    descricao: 'Estruturas de título são utilizadas para definir os cabeçalhos da página, seguindo os seus respectivos tamanhos.',
+    documentacao: '# `titulo6`\n Uma estrutura de título é utilizada para enfatizar um texto de acordo com o seu conteúdo, utilizando o tamanho como indicativo de relevância. O tamanho vai de 1 a 6. Conforme a ordem crescente, o valor do tamanho padrão da estrutura renderizado no navegador diminui. Por padrão, todas elas já tem uma estilização padrão, no qual pode ser modificado através da estrutura `<estilo>`.',
+    exemploCodigo: '<titulo6> Cabeçalho 1 </titulo6>\n<paragrafo> "Lorem ipsum dolor sit amet, consectetur adipiscing elit. </paragrafo>'
+  },
+  'título6': {
+    nomeHtml: 'h6',
+    descricao: 'Estruturas de título são utilizadas para definir os cabeçalhos da página, seguindo os seus respectivos tamanhos.',
+    documentacao: '# `título6`\n Uma estrutura de título é utilizada para enfatizar um texto de acordo com o seu conteúdo, utilizando o tamanho como indicativo de relevância. O tamanho vai de 1 a 6. Conforme a ordem crescente, o valor do tamanho padrão da estrutura renderizado no navegador diminui. Por padrão, todas elas já tem uma estilização padrão, no qual pode ser modificado através da estrutura `<estilo>`.',
+    exemploCodigo: '<título6> Cabeçalho 1 </título6>\n<paragrafo> "Lorem ipsum dolor sit amet, consectetur adipiscing elit. </paragrafo>'
+  },
+  'variavel': {
+    nomeHtml: 'var',
+    descricao: 'Estrutura que representa uma variável em uma expressão matemática ou um contexto de programação.',
+    documentacao: '# `variavel`\n É utilizada para declarar uma variável dentro de uma expressão aritmética ou um algoritmo inserido dentro da página. O conteúdo dentro desta estrutura é exibido em itálico.',
+    exemploCodigo: '<parágrafo> A área do triângulo é: 1/2 x <variavel>base</variavel> x <variavel> altura </variavel></parágrafo>'
+  },
+  'variável': {
+    nomeHtml: 'var',
+    descricao: 'Estrutura que representa uma variável em uma expressão matemática ou um contexto de programação.',
+    documentacao: '# `variável`\n É utilizada para declarar uma variável dentro de uma expressão aritmética ou um algoritmo inserido dentro da página. O conteúdo dentro desta estrutura é exibido em itálico.',
+    exemploCodigo: '<parágrafo> A área do triângulo é: 1/2 x <variável>base</variável> x <variável> altura </variável></parágrafo>'
   },
 };
