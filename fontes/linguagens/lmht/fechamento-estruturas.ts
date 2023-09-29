@@ -6,12 +6,12 @@ import * as vscode from 'vscode';
  * @param event O evento de mudança de texto.
  * @returns Nada.
  */
-export function insertAutoCloseTag(event: vscode.TextDocumentChangeEvent): void {
+export function tentarFecharTagLmht(event: vscode.TextDocumentChangeEvent): void {
     if (!event.contentChanges[0]) {
         return;
     }
-    let isRightAngleBracket = CheckRightAngleBracket(event.contentChanges[0]);
-    if (!isRightAngleBracket && event.contentChanges[0].text !== "/") {
+    let éSinalMaior = verificarCaracterFechamentoTag(event.contentChanges[0]);
+    if (!éSinalMaior && event.contentChanges[0].text !== "/") {
         return;
     }
 
@@ -25,60 +25,60 @@ export function insertAutoCloseTag(event: vscode.TextDocumentChangeEvent): void 
         return;
     }
 
-    let selection = editor.selection;
-    let originalPosition = selection.start.translate(0, 1);
-    let excludedTags = config.get<string[]>("estruturasExcluidas", []);
-    let isSublimeText3Mode = config.get<boolean>("modoSublimeText3", false);
-    let enableAutoCloseSelfClosingTag = config.get<boolean>("habilitarFechamentoAutomaticoEstruturasLmht", true);
-    let isFullMode = config.get<boolean>("modoTotal");
+    let selecao = editor.selection;
+    let posicaoOriginal = selecao.start.translate(0, 1);
+    let estruturasExcluidas = config.get<string[]>("estruturasExcluidas", []);
+    let éModoSublimeText3 = config.get<boolean>("modoSublimeText3", false);
+    let habilitarFechamentoAutomaticoEstruturasLmht = config.get<boolean>("habilitarFechamentoAutomaticoEstruturasLmht", true);
+    let éModoTotal = config.get<boolean>("modoTotal");
 
-    if ((isSublimeText3Mode || isFullMode) && event.contentChanges[0].text === "/") {
-        let text = editor.document.getText(new vscode.Range(new vscode.Position(0, 0), originalPosition));
-        let last2chars = "";
-        if (text.length > 2) {
-            last2chars = text.substr(text.length - 2);
+    if ((éModoSublimeText3 || éModoTotal) && event.contentChanges[0].text === "/") {
+        let texto = editor.document.getText(new vscode.Range(new vscode.Position(0, 0), posicaoOriginal));
+        let ultimos2Caracteres = "";
+        if (texto.length > 2) {
+            ultimos2Caracteres = texto.substr(texto.length - 2);
         }
-        if (last2chars === "</") {
-            let closeTag = getCloseTag(text, excludedTags);
-            if (closeTag) {
-                let nextChar = getNextChar(editor, originalPosition);
-                if (nextChar === ">") {
-                    closeTag = closeTag.substr(0, closeTag.length - 1);
+        if (ultimos2Caracteres === "</") {
+            let estruturaFechamento = obterEstruturaFechamento(texto, estruturasExcluidas);
+            if (estruturaFechamento) {
+                let proximoCaractere = obterProximoCaracter(editor, posicaoOriginal);
+                if (proximoCaractere === ">") {
+                    estruturaFechamento = estruturaFechamento.substr(0, estruturaFechamento.length - 1);
                 }
                 editor.edit((editBuilder) => {
-                    editBuilder.insert(originalPosition, closeTag);
+                    editBuilder.insert(posicaoOriginal, estruturaFechamento);
                 }).then(() => {
-                    if (nextChar === ">") {
-                        editor.selection = moveSelectionRight(editor.selection, 1);
+                    if (proximoCaractere === ">") {
+                        editor.selection = moverSelecaoParaDireita(editor.selection, 1);
                     }
                 });
             }
         }
     }
 
-    if (((!isSublimeText3Mode || isFullMode) && isRightAngleBracket) ||
-        (enableAutoCloseSelfClosingTag && event.contentChanges[0].text === "/")) {
-        let textLine = editor.document.lineAt(selection.start);
-        let text = textLine.text.substring(0, selection.start.character + 1);
-        const result = /<([_a-zA-Z][a-zA-Z0-9:\-_.]*)(?:\s+[^<>]*?[^\s/<>=]+?)*?\s?(\/|>)$/.exec(text);
-        if (result !== null && ((occurrenceCount(result[0], "'") % 2 === 0)
-            && (occurrenceCount(result[0], "\"") % 2 === 0) && (occurrenceCount(result[0], "`") % 2 === 0))) {
-            if (result[2] === ">") {
-                if (excludedTags.indexOf(result[1].toLowerCase()) === -1) {
+    if (((!éModoSublimeText3 || éModoTotal) && éSinalMaior) ||
+        (habilitarFechamentoAutomaticoEstruturasLmht && event.contentChanges[0].text === "/")) {
+        let linhaTexto = editor.document.lineAt(selecao.start);
+        let texto = linhaTexto.text.substring(0, selecao.start.character + 1);
+        const resultado = /<([_a-zA-Z][a-zA-Z0-9:\-_.]*)(?:\s+[^<>]*?[^\s/<>=]+?)*?\s?(\/|>)$/.exec(texto);
+        if (resultado !== null && ((contagemOcorrencias(resultado[0], "'") % 2 === 0)
+            && (contagemOcorrencias(resultado[0], "\"") % 2 === 0) && (contagemOcorrencias(resultado[0], "`") % 2 === 0))) {
+            if (resultado[2] === ">") {
+                if (estruturasExcluidas.indexOf(resultado[1].toLowerCase()) === -1) {
                     editor.edit((editBuilder) => {
-                        editBuilder.insert(originalPosition, "</" + result[1] + ">");
+                        editBuilder.insert(posicaoOriginal, "</" + resultado[1] + ">");
                     }).then(() => {
-                        editor.selection = new vscode.Selection(originalPosition, originalPosition);
+                        editor.selection = new vscode.Selection(posicaoOriginal, posicaoOriginal);
                     });
                 }
             } else {
-                if (textLine.text.length <= selection.start.character + 1 || textLine.text[selection.start.character + 1] !== '>') { // if not typing "/" just before ">", add the ">" after "/"
+                if (linhaTexto.text.length <= selecao.start.character + 1 || linhaTexto.text[selecao.start.character + 1] !== '>') { // if not typing "/" just before ">", add the ">" after "/"
                     editor.edit((editBuilder) => {
                         if (config.get<boolean>("inserirEspacoAntesDeAutoFechamentoDeEstrutura")) {
-                            const spacePosition = originalPosition.translate(0, -1);
+                            const spacePosition = posicaoOriginal.translate(0, -1);
                             editBuilder.insert(spacePosition, " ");
                         }
-                        editBuilder.insert(originalPosition, ">");
+                        editBuilder.insert(posicaoOriginal, ">");
                     });
                 }
             }
@@ -86,17 +86,17 @@ export function insertAutoCloseTag(event: vscode.TextDocumentChangeEvent): void 
     }
 }
 
-function CheckRightAngleBracket(contentChange: vscode.TextDocumentContentChangeEvent): boolean {
-    return contentChange.text === ">" || CheckRightAngleBracketInVSCode_1_8(contentChange);
+function verificarCaracterFechamentoTag(eventoMudancaConteudo: vscode.TextDocumentContentChangeEvent): boolean {
+    return eventoMudancaConteudo.text === ">" || verificarCaracterFechamentoTagNoVSCode_1_8(eventoMudancaConteudo);
 }
 
-function CheckRightAngleBracketInVSCode_1_8(contentChange: vscode.TextDocumentContentChangeEvent): boolean {
-    return contentChange.text.endsWith(">") && contentChange.range.start.character === 0
-        && contentChange.range.start.line === contentChange.range.end.line
-        && !contentChange.range.end.isEqual(new vscode.Position(0, 0));
+function verificarCaracterFechamentoTagNoVSCode_1_8(eventoMudancaConteudo: vscode.TextDocumentContentChangeEvent): boolean {
+    return eventoMudancaConteudo.text.endsWith(">") && eventoMudancaConteudo.range.start.character === 0
+        && eventoMudancaConteudo.range.start.line === eventoMudancaConteudo.range.end.line
+        && !eventoMudancaConteudo.range.end.isEqual(new vscode.Position(0, 0));
 }
 
-function insertCloseTag(): void {
+function inserirFechamentoEstrutura(): void {
     let editor = vscode.window.activeTextEditor;
     if (!editor) {
         return;
@@ -108,7 +108,7 @@ function insertCloseTag(): void {
     let excludedTags = config.get<string[]>("estruturasExcluidas", []);
     let text = editor.document.getText(new vscode.Range(new vscode.Position(0, 0), originalPosition));
     if (text.length > 2) {
-        let closeTag = getCloseTag(text, excludedTags);
+        let closeTag = obterEstruturaFechamento(text, excludedTags);
         if (closeTag) {
             editor.edit((editBuilder) => {
                 editBuilder.insert(originalPosition, closeTag);
@@ -117,51 +117,53 @@ function insertCloseTag(): void {
     }
 }
 
-function getNextChar(editor: vscode.TextEditor, position: vscode.Position): string {
-    let nextPosition = position.translate(0, 1);
-    let text = editor.document.getText(new vscode.Range(position, nextPosition));
-    return text;
+function obterProximoCaracter(editor: vscode.TextEditor, posicao: vscode.Position): string {
+    let proximaPosicao = posicao.translate(0, 1);
+    let texto = editor.document.getText(new vscode.Range(posicao, proximaPosicao));
+    return texto;
 }
 
-function getCloseTag(text: string, excludedTags: string[]): string {
+function obterEstruturaFechamento(texto: string, estruturasExcluidas: string[]): string {
     let regex = /<(\/?[_a-zA-Z][a-zA-Z0-9:\-_.]*)(?:\s+[^<>]*?[^\s/<>=]+?)*?\s?>/g;
-    let result: RegExpExecArray | null = null;
-    let stack: any[] = [];
-    while ((result = regex.exec(text)) !== null) {
-        let isStartTag = result[1].substr(0, 1) !== "/";
-        const tag = isStartTag ? result[1] : result[1].substr(1);
-        if (excludedTags.indexOf(tag.toLowerCase()) === -1) {
-            if (isStartTag) {
-                stack.push(tag);
-            } else if (stack.length > 0) {
-                let lastTag = stack[stack.length - 1];
-                if (lastTag === tag) {
-                    stack.pop();
+    let resultado: RegExpExecArray | null = null;
+    let pilha: any[] = [];
+    while ((resultado = regex.exec(texto)) !== null) {
+        let éInicioEstrutura = resultado[1].substr(0, 1) !== "/";
+        const estrutura = éInicioEstrutura ? resultado[1] : resultado[1].substr(1);
+        if (estruturasExcluidas.indexOf(estrutura.toLowerCase()) === -1) {
+            if (éInicioEstrutura) {
+                pilha.push(estrutura);
+            } else if (pilha.length > 0) {
+                let lastTag = pilha[pilha.length - 1];
+                if (lastTag === estrutura) {
+                    pilha.pop();
                 }
             }
         }
     }
 
-    if (stack.length > 0) {
-        let closeTag = stack[stack.length - 1];
-        if (text.substr(text.length - 2) === "</") {
-            return closeTag + ">";
+    if (pilha.length > 0) {
+        let estruturaFechamento = pilha[pilha.length - 1];
+        if (texto.substr(texto.length - 2) === "</") {
+            return estruturaFechamento + ">";
         }
-        if (text.substr(text.length - 1) === "<") {
-            return "/" + closeTag + ">";
+
+        if (texto.substr(texto.length - 1) === "<") {
+            return "/" + estruturaFechamento + ">";
         }
-        return "</" + closeTag + ">";
+
+        return "</" + estruturaFechamento + ">";
     } 
         
     return '';
 }
 
-function moveSelectionRight(selection: vscode.Selection, shift: number): vscode.Selection {
-    let newPosition = selection.active.translate(0, shift);
-    let newSelection = new vscode.Selection(newPosition, newPosition);
-    return newSelection;
+function moverSelecaoParaDireita(selecao: vscode.Selection, shift: number): vscode.Selection {
+    let novaPosicao = selecao.active.translate(0, shift);
+    let novaSelecao = new vscode.Selection(novaPosicao, novaPosicao);
+    return novaSelecao;
 }
 
-function occurrenceCount(source: string, find: string): number {
+function contagemOcorrencias(source: string, find: string): number {
     return source.split(find).length - 1;
 }

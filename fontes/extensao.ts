@@ -24,7 +24,7 @@ import { analiseSemantica } from './analise-semantica';
 import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
 import { LmhtProvedorCompletude } from './completude/lmht-provedor-completude';
 import { LmhtProvedorDocumentacaoEmEditor } from './documentacao-em-editor/lmht-provedor-documentacao-em-editor';
-import { insertAutoCloseTag as tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
+import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
