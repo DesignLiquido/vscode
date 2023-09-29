@@ -24,6 +24,7 @@ import { analiseSemantica } from './analise-semantica';
 import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
 import { LmhtProvedorCompletude } from './completude/lmht-provedor-completude';
 import { LmhtProvedorDocumentacaoEmEditor } from './documentacao-em-editor/lmht-provedor-documentacao-em-editor';
+import { insertAutoCloseTag as tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -42,15 +43,24 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
     context.subscriptions.push(
-		vscode.workspace.onDidChangeTextDocument((e) => {
-            if (changeTimeout !== null) {
-                clearTimeout(changeTimeout);
+		vscode.workspace.onDidChangeTextDocument((evento) => {
+            switch (evento.document.languageId) {
+                case 'delegua':
+                    if (changeTimeout !== null) {
+                        clearTimeout(changeTimeout);
+                    }
+                    changeTimeout = setInterval(function () {
+                        clearTimeout(changeTimeout);
+                        changeTimeout = null;
+                        analiseSemantica(evento.document, diagnosticosDelegua);
+                    }, 500);
+                    break;
+                case 'lmht':
+                    tentarFecharTagLmht(evento);
+                    break;
+                default:
+                    break;
             }
-            changeTimeout = setInterval(function () {
-                clearTimeout(changeTimeout);
-                changeTimeout = null;
-                analiseSemantica(e.document, diagnosticosDelegua);
-            }, 500);
         })
 	);
 
