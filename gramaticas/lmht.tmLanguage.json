@@ -4,7 +4,7 @@
 		"É o descritor de HTML que foi apenas traduzido."
 	],
 	"name": "LMHT",
-	"scopeName": "text.lmht.basic",
+	"scopeName": "source.lmht",
 	"injections": {
 		"R:text.lmht - (comment.block, text.lmht meta.embedded, meta.tag.*.*.lmht, meta.tag.*.*.*.lmht, meta.tag.*.*.*.*.lmht)": {
 			"comment": "Uses R: to ensure this matches after any other injections.",
@@ -1751,7 +1751,7 @@
 		"tags-valid": {
 			"patterns": [
 				{
-					"begin": "(^[ \\t]+)?(?=<(?i:style)\\b(?!-))",
+					"begin": "(^[ \\t]+)?(?=<(?i:estilo)\\b(?!-))",
 					"beginCaptures": {
 						"1": {
 							"name": "punctuation.whitespace.embedded.leading.lmht"
@@ -1765,7 +1765,7 @@
 					},
 					"patterns": [
 						{
-							"begin": "(?i)(<)(style)(?=\\s|/?>)",
+							"begin": "(?i)(<)(estilo)(?=\\s|/?>)",
 							"beginCaptures": {
 								"0": {
 									"name": "meta.tag.metadata.style.start.lmht"
@@ -1777,7 +1777,7 @@
 									"name": "entity.name.tag.lmht"
 								}
 							},
-							"end": "(?i)((<)/)(style)\\s*(>)",
+							"end": "(?i)((<)/)(estilo)\\s*(>)",
 							"endCaptures": {
 								"0": {
 									"name": "meta.tag.metadata.style.end.lmht"
@@ -1814,7 +1814,7 @@
 								},
 								{
 									"begin": "(?!\\G)",
-									"end": "(?=</(?i:style))",
+									"end": "(?=</(?i:estilo))",
 									"name": "source.css",
 									"patterns": [
 										{
@@ -2125,7 +2125,7 @@
 					]
 				},
 				{
-					"begin": "(?i)(<)(endereço|endereco|artigo|aparte|citacao|citação|corpo|botao|botão|titulo|título|grupo-colunas|lista-pesquisavel|lista-pesquisável|lista-definições|lista-definicoes|definicao|definição|detalhes|modal|divisão|divisao|termo|campos|descrição|descricao|figura|footer|formulario|formulário|cabeca|cabeça|cabeca-tabela|cabeça-tabela|cabeçalho|cabecalho|hgroup|lmht|h[1-6]|etiqueta|legend|item-lista|principal|map|menu|medidor|navegacao|navegação|lista-numerada|grupo-opcoes|grupo-opções|opcao|opção|output|paragrafo|parágrafo|preformatado|progresso|secao|seção|selecao|seleção|slot|sumario|sumário|tabela|corpo-tabela|celula|célula|invisivel|invisível|area-texto|área-texto|rodapé|rodape|linha|lista-simples)(?=\\s|/?>)",
+					"begin": "(?i)(<)(endereço|endereco|artigo|aparte|citacao|citação|corpo|botao|botão|titulo|título|grupo-colunas|lista-pesquisavel|lista-pesquisável|lista-definições|lista-definicoes|definicao|definição|detalhes|modal|divisão|divisao|termo|campos|descrição|descricao|figura|footer|formulario|formulário|cabeca|cabeça|cabeca-tabela|cabeça-tabela|cabeçalho|cabecalho|hgroup|lmht|titulo[1-6]|título[1-6]|etiqueta|legend|item-lista|principal|map|menu|medidor|navegacao|navegação|lista-numerada|grupo-opcoes|grupo-opções|opcao|opção|output|p(ar[aá]grafo)?|preformatado|progresso|secao|seção|selecao|seleção|slot|sumario|sumário|tabela|corpo-tabela|celula|célula|invisivel|invisível|area-texto|área-texto|rodapé|rodape|linha|lista-simples)(?=\\s|/?>)",
 					"beginCaptures": {
 						"1": {
 							"name": "punctuation.definition.tag.begin.lmht"
@@ -2148,7 +2148,7 @@
 					]
 				},
 				{
-					"begin": "(?i)(</)(endereço|endereco|artigo|aparte|citacao|citação|corpo|botao|botão|titulo|título|grupo-colunas|lista-pesquisavel|lista-pesquisável|lista-definições|lista-definicoes|definicao|definição|detalhes|modal|divisão|divisao|lista-definicoes|lista-definiçoes|lista-definições|termo|campos|descrição|descricao|figura|footer|formulario|formulário|cabeca|cabeça|cabeca-tabela|cabeça-tabela|cabeçalho|cabecalho|hgroup|lmht|h[1-6]|etiqueta|legend|item-lista|principal|map|menu|medidor|navegacao|navegação|lista-numerada|grupo-opcoes|grupo-opções|opcao|opção|output|paragrafo|parágrafo|preformatado|progresso|secao|seção|selecao|seleção|slot|sumario|sumário|tabela|corpo-tabela|celula|célula|invisivel|invisível|area-texto|área-texto|rodapé|rodape|linha|lista-simples)(?=\\s|/?>)",
+					"begin": "(?i)(</)(endereço|endereco|artigo|aparte|citacao|citação|corpo|botao|botão|titulo|título|grupo-colunas|lista-pesquisavel|lista-pesquisável|lista-definições|lista-definicoes|definicao|definição|detalhes|modal|divisão|divisao|lista-definicoes|lista-definiçoes|lista-definições|termo|campos|descrição|descricao|figura|footer|formulario|formulário|cabeca|cabeça|cabeca-tabela|cabeça-tabela|cabeçalho|cabecalho|hgroup|lmht|titulo[1-6]|título[1-6]|etiqueta|legend|item-lista|principal|map|menu|medidor|navegacao|navegação|lista-numerada|grupo-opcoes|grupo-opções|opcao|opção|output|p(ar[aá]grafo)?|preformatado|progresso|secao|seção|selecao|seleção|slot|sumario|sumário|tabela|corpo-tabela|celula|célula|invisivel|invisível|area-texto|área-texto|rodapé|rodape|linha|lista-simples)(?=\\s|/?>)",
 					"beginCaptures": {
 						"1": {
 							"name": "punctuation.definition.tag.begin.lmht"
