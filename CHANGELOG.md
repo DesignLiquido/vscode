@@ -1,5 +1,12 @@
 # Histórico de Modificações
 
+## 0.9.5
+
+- Auto-fechamento de estruturas LMHT;
+- Correções na sintaxe colorida de LMHT;
+- Sintaxe colorida em `fimpara` no dialeto VisuAlg;
+- Correção de escrita de vetores no dialeto Potigol.
+
 ## 0.9.4
 
 - Avaliação semântica ocorre apenas depois de 500ms após a última edição de arquivo.
