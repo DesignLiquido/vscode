@@ -89,6 +89,18 @@ export default {
     documentacao: '# `cabeça`\n Estrutura de metadados, que são dados sobre o documento LMHT, e não são exibidos - exceto o título, que é exibido no topo da janela ou aba do navegador. Metadados normalmente definem o título do documento, conjunto de caracteres, estilos, scripts e outras informações.',
     exemploCodigo: '<lmht>\n <cabeça>\n  <titulo1> Meu Título </titulo1>\n </cabeça>\n</lmht>'
   },
+  'cabeca-tabela': {
+    nomeHtml: 'head',
+    descricao: 'Estrutura que funciona como um contêiner para metadados (dados sobre dados) e que costuma ser colocado entre as estruturas <lmht> e <corpo>.',
+    documentacao: '# `cabeca-tabela`\n Estrutura de metadados, que são dados sobre o documento LMHT, e não são exibidos - exceto o título, que é exibido no topo da janela ou aba do navegador. Metadados normalmente definem o título do documento, conjunto de caracteres, estilos, scripts e outras informações.',
+    exemploCodigo: '<lmht>\n <cabeca-tabela>\n  <titulo1> Meu Título </titulo1>\n </cabeca-tabela>\n</lmht>'
+  },
+  'cabeça-tabela': {
+    nomeHtml: 'head',
+    descricao: 'Estrutura que funciona como um contêiner para metadados (dados sobre dados) e que costuma ser colocado entre as estruturas <lmht> e <corpo>.',
+    documentacao: '# `cabeça-tabela`\n Estrutura de metadados, que são dados sobre o documento LMHT, e não são exibidos - exceto o título, que é exibido no topo da janela ou aba do navegador. Metadados normalmente definem o título do documento, conjunto de caracteres, estilos, scripts e outras informações.',
+    exemploCodigo: '<lmht>\n <cabeça-tabela>\n  <titulo1> Meu Título </titulo1>\n </cabeça-tabela>\n</lmht>'
+  },
   'campo': {
     nomeHtml: 'input',
     descricao: 'Estrutura que renderiza na página um campos de formulário, seja textos ou caracteres numéricos e especiais.',
