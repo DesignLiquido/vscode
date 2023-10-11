@@ -578,8 +578,62 @@ export default {
   'sobrescrito': {
     nomeHtml: 'sup',
     descricao: 'Estrutura que especifica o texto embutido que deve ser exibido como sobrescrito por motivos tipográficos.',
-    documentacao: '# `sobrescrito`\n Os sobrescritos geralmente são renderizados com uma linha de base elevada usando texto menor. `<sobrescrito>` deve ser usado apenas por motivos tipográficos – ou seja, para alterar a posição do texto para cumprir convenções ou padrões tipográficos, e não apenas para fins de apresentação ou aparência. Para esses últimos casos, é recomendada a estilização com CSS.',
+    documentacao: '# `sobrescrito`\n Os sobrescritos geralmente são renderizados com uma linha de base elevada usando texto menor. `<sobrescrito>` deve ser usado apenas por motivos tipográficos – ou seja, para alterar a posição do texto para cumprir convenções ou padrões tipográficos, e não apenas para fins de apresentação ou aparência. Para esses últimos casos, é recomendada a estilização com CSS ou FolEs.',
     exemploCodigo: '<paragrafo> O Brasil ficou na 1<sobrescrito>a</sobrescrito> posição na Copa do Mundo de 2002. </paragrafo>'
+  },
+  'sublinhado': {
+    nomeHtml: 'u',
+    descricao: 'Estrutura que representa uma extensão de texto embutido que deve ser renderizado de uma forma que indique que possui uma anotação não textual.',
+    documentacao: '# `sublinhado`\n É comum utilizar <sublinhado> para exibir um parágrafo que inclui um erro ortográfico. Isso é renderizado por padrão como um texto sublinhado simples, mas pode ser alterado usando CSS.',
+    exemploCodigo: '<p> Esse parágrafo possui uma palavra <sublinhado>incoreta</sublinhado> em sua estrutura. </p>'
+  },
+  'subscrito': {
+    nomeHtml: 'sub',
+    descricao: 'Estrutura que especifica o texto embutido que deve ser exibido como subscrito.',
+    documentacao: '# `subscrito`\n Os subscritos normalmente são renderizados com uma linha de base reduzida usando texto menor. `<subscrito>` deve ser usado apenas por motivos tipográficos – ou seja, para alterar a posição do texto para cumprir convenções ou padrões tipográficos, e não apenas para fins de apresentação ou aparência. Para esses últimos casos, é recomendada a estilização com CSS ou FolEs.',
+    exemploCodigo: '<p> De acordo com os cálculos de Nakamura, Johnson e Mason<subscrito>1</subscrito> isso resultará na aniquilação completa de ambas as partículas.</p>'
+  },
+  'sumario': {
+    nomeHtml: 'summary',
+    descricao: 'Estrutura utilizada como um sumário ou legenda para o conteúdo de um elemento `<detalhes>`.',
+    documentacao: '# `sumario`\n Define um cabeçalho visível cujo título pode ser clicado para visualizar/ocultar os detalhes. `<sumario>` deve ser o primeiro elemento filho de `<detalhes>`.',
+    exemploCodigo: '<detalhes>\n <sumario> Alguns detalhes </sumario>\n <paragrafo> Mais informações sobre os detalhes. </paragrafo>\n</detalhes>'
+  },
+  'sumário': {
+    nomeHtml: 'summary',
+    descricao: 'Estrutura utilizada como um sumário ou legenda para o conteúdo de um elemento `<detalhes>`.',
+    documentacao: '# `sumário`\n Define um cabeçalho visível cujo título pode ser clicado para visualizar/ocultar os detalhes. `<sumário>` deve ser o primeiro elemento filho de `<detalhes>`.',
+    exemploCodigo: '<detalhes>\n <sumário> Alguns detalhes </sumário>\n <paragrafo> Mais informações sobre os detalhes. </paragrafo>\n</detalhes>'
+  },
+  'tabela': {
+    nomeHtml: 'table',
+    descricao: 'Estrutura utilizada para representar dados tabulares em uma aplicação.',
+    documentacao: '# `tabela`\n Apresenta informações em uma tabela bidimensional composta por linhas e colunas de células contendo dados.',
+    exemploCodigo: '<tabela>\n <linha>\n  <celula> John </celula>\n  <celula> Doe </celula>\n </linha>\n <linha>\n  <celula> Jane </celula>\n  <celula> Doe </celula>\n </linha>\n</tabela>'
+  },
+  'teclado': {
+    nomeHtml: 'kbd',
+    descricao: 'Estrutura utilizada para definir a entrada do teclado.',
+    documentacao: '# `teclado`\n Representa uma extensão de texto embutido que denota a entrada textual do usuário a partir de um teclado, entrada de voz ou qualquer outro dispositivo de entrada de texto.',
+    exemploCodigo: '<p>\n Use o comando de <teclado> ajuda ao usuário </teclado> para ver a documentação.\n</p>'
+  },
+  'tempo': {
+    nomeHtml: 'time',
+    descricao: 'Estrutura que representa o tempo tanto no formato de 24 horas quanto uma data precisa no calendário Gregoriano (com informações opcionais de tempo e fuso horário).',
+    documentacao: '# `tempo`\n Esta estrutura é destinada a apresentar datas e horas no dispositivo em um formato legível. Isto pode ser útil aos agentes do usuário para, por exemplo, oferecer qualquer programação de eventos.',
+    exemploCodigo: '<paragrafo> O show dessa noite começa às <tempo> 20:00 </tempo>. </paragrafo>'
+  },
+  'termo': {
+    nomeHtml: 'dt',
+    descricao: 'Estrutura que identifica um termo contido em uma lista de definição.',
+    documentacao: '# `termo`\n Pode ser utilizada somente como um elemento filho da estrutura `<lista-definições>`. Geralmente, um termo é seguido por um elemento `<lista-definições/definição>`. Múltiplos `<termo>` na mesma linha indicam vários termos sendo definidos pelo próximo elemento `<lista-definições/definição>`.',
+    exemploCodigo: '<lista-definicoes>\n <termo> LMHT </termo>\n <lista-definicoes/definicao>\n  LMHT nada mais é do que HTML em português, usando um arquivo de transformação XSL para mudar nomes de tags e atributos.\n </lista-definicoes/definicao>\n</lista-definicoes>'
+  },
+  'texto-pequeno': {
+    nomeHtml: 'small',
+    descricao: 'Estrutura que, por padrão, renderiza o texto em um tamanho de fonte menor.',
+    documentacao: '# `texto-pequeno`\n Representa comentários laterais e letras pequenas, como direitos autorais ou um texto jurídico, independente de seu estilo de apresentação.',
+    exemploCodigo: '<paragrafo>\n Essa é a primeira frase do parágrafo.\n <texto-pequeno> Essa frase terá um tamanho de fonte menor. </texto-pequeno>\n</paragrafo>'
   },
   'titulo1': {
     nomeHtml: 'h1',
