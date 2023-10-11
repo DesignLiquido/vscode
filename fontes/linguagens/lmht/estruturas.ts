@@ -401,6 +401,12 @@ export default {
     documentacao: '# `lista-simples`\n Representa uma lista de forma não-ordenada. Sendo assim, a modificação do seu conteúdo não afetará o significado contextual da página.',
     exemploCodigo: '<lista-simples>\n <item-lista> Item 1 </item-lista>\n <item-lista> Item 2 </item-lista>\n<lista-simples>'
   },
+  'lmht': {
+    nomeHtml: 'html',
+    descricao: 'Estrutura que representa a raiz de um documento LMHT.',
+    documentacao: '# `lmht`\n Desde que o elemento `<lmht>` seja o primeiro em um documento, esse é chamado o elemento raiz. Todos os outros elementos devem ser descendentes desse elemento.',
+    exemploCodigo: '<lmht>\n <cabeca>\n  ...\n </cabeca>\n <corpo>\n  ...\n </corpo>\n</lmht>'
+  },
   'marca': {
     nomeHtml: 'mark',
     descricao: 'Estrutura que declara uma marcação ou ênfase em uma parte determinada de um texto.',
@@ -509,11 +515,29 @@ export default {
     documentacao: '# `recurso`\n É normalmente utilizada para adicionar a logotipo para a sua página LMHT, porém pode se utilizar de diversas maneiras, devido a sua ampla lista de atributos e sua alta compatibilidade.',
     exemploCodigo: '<cabeca>\n <recurso rel="stylesheet" href="link1.lmht">\n</cabeca>'
   },
+  'resultado': {
+    nomeHtml: 'output',
+    descricao: 'Estrutura para exibir um determinado resultado de uma operação.',
+    documentacao: '# `resultado`\n Funciona como um elemento de saída no qual um site ou aplicativo pode injetar os resultados de um cálculo ou o resultado de uma ação do usuário.',
+    exemploCodigo: ''
+  },
   'riscado': {
     nomeHtml: 's',
     descricao: 'Estrutura que renderiza um texto tachado ou uma linha cortando o texto.',
     documentacao: '# `riscado`\n Representa um elemento que não é mais relevante ou tecnicamente correto. Esta estrutura não deve ser usada para definir conteúdo deletado. Neste caso, use a estrutura `<excluido>`.',
     exemploCodigo: '<p><riscado>50</riscado> 45 reais na sua conta </p>'
+  },
+  'rodape': {
+    nomeHtml: 'footer',
+    descricao: 'Representa um rodapé para o seu conteúdo de seção mais próximo ou sua estrutura pai mais próxima.',
+    documentacao: '# `rodape`\n Normalmente, um rodapé contém informações sobre o autor da seção de dados, direitos autorais ou links para documentos relacionados.',
+    exemploCodigo: '<rodape>\n <p> Nome do Autor </p>\n <p> Todos os direitos reservados. </p>\n</rodape>'
+  },
+  'rodapé': {
+    nomeHtml: 'footer',
+    descricao: 'Representa um rodapé para o seu conteúdo de seção mais próximo ou sua estrutura pai mais próxima.',
+    documentacao: '# `rodapé`\n Normalmente, um rodapé contém informações sobre o autor da seção de dados, direitos autorais ou links para documentos relacionados.',
+    exemploCodigo: '<rodapé>\n <p> Nome do Autor </p>\n <p> Todos os direitos reservados. </p>\n</rodapé>'
   },
   'script': {
     nomeHtml: 'script',
@@ -544,6 +568,18 @@ export default {
     descricao: 'Estrutura que declara uma lista suspensa com no máximo 4 opções.',
     documentacao: '# `seleção`\n As opções dentro do menu são representadas pelo elemento `opção` e podem ser pré-selecionadas para o usuário. Esta estrutura é frequentemente utilizada para coletar as informações do usuário dentro da estrutura formulário.',
     exemploCodigo: '<seleção nome="carros" id="carros">\n <opção>Gol</opção>\n <opção>Corsa</opção>\n <opção>Porsche</opção>\n</seleção>'
+  },
+  'sem-script': {
+    nomeHtml: 'noscript',
+    descricao: 'Estrutura que define uma seção de lmht a ser inserida se um tipo de script não é suportado pela página ou se o script está desativado no navegador.',
+    documentacao: '# `sem-script`\n Define um conteúdo alternativo a ser exibido para usuários que possuem scripts desabilitados em seus navegadores ou possuem um navegador que não suporta scripts.',
+    exemploCodigo: '<sem-script>\n <a href="https://github.com/DesignLiquido/LMHT"> Link Externo </a>\n</sem-script>\n<paragrafo> Parágrafo seguinte </paragrafo>'
+  },
+  'sobrescrito': {
+    nomeHtml: 'sup',
+    descricao: 'Estrutura que especifica o texto embutido que deve ser exibido como sobrescrito por motivos tipográficos.',
+    documentacao: '# `sobrescrito`\n Os sobrescritos geralmente são renderizados com uma linha de base elevada usando texto menor. `<sobrescrito>` deve ser usado apenas por motivos tipográficos – ou seja, para alterar a posição do texto para cumprir convenções ou padrões tipográficos, e não apenas para fins de apresentação ou aparência. Para esses últimos casos, é recomendada a estilização com CSS.',
+    exemploCodigo: '<paragrafo> O Brasil ficou na 1<sobrescrito>a</sobrescrito> posição na Copa do Mundo de 2002. </paragrafo>'
   },
   'titulo1': {
     nomeHtml: 'h1',
