@@ -89,6 +89,18 @@ export default {
     documentacao: '# `cabeça`\n Estrutura de metadados, que são dados sobre o documento LMHT, e não são exibidos - exceto o título, que é exibido no topo da janela ou aba do navegador. Metadados normalmente definem o título do documento, conjunto de caracteres, estilos, scripts e outras informações.',
     exemploCodigo: '<lmht>\n <cabeça>\n  <titulo1> Meu Título </titulo1>\n </cabeça>\n</lmht>'
   },
+  'cabeca-tabela': {
+    nomeHtml: 'head',
+    descricao: 'Estrutura que funciona como um contêiner para metadados (dados sobre dados) e que costuma ser colocado entre as estruturas <lmht> e <corpo>.',
+    documentacao: '# `cabeca-tabela`\n Estrutura de metadados, que são dados sobre o documento LMHT, e não são exibidos - exceto o título, que é exibido no topo da janela ou aba do navegador. Metadados normalmente definem o título do documento, conjunto de caracteres, estilos, scripts e outras informações.',
+    exemploCodigo: '<lmht>\n <cabeca-tabela>\n  <titulo1> Meu Título </titulo1>\n </cabeca-tabela>\n</lmht>'
+  },
+  'cabeça-tabela': {
+    nomeHtml: 'head',
+    descricao: 'Estrutura que funciona como um contêiner para metadados (dados sobre dados) e que costuma ser colocado entre as estruturas <lmht> e <corpo>.',
+    documentacao: '# `cabeça-tabela`\n Estrutura de metadados, que são dados sobre o documento LMHT, e não são exibidos - exceto o título, que é exibido no topo da janela ou aba do navegador. Metadados normalmente definem o título do documento, conjunto de caracteres, estilos, scripts e outras informações.',
+    exemploCodigo: '<lmht>\n <cabeça-tabela>\n  <titulo1> Meu Título </titulo1>\n </cabeça-tabela>\n</lmht>'
+  },
   'campo': {
     nomeHtml: 'input',
     descricao: 'Estrutura que renderiza na página um campos de formulário, seja textos ou caracteres numéricos e especiais.',
@@ -155,6 +167,18 @@ export default {
     documentacao: '# `coluna`\n Caso esteja inserida dentro da estrutura `<grupo-colunas>`, e a mesma contenha a estrutura `<tabela>`, então a estrutura `<coluna>` representa uma ou mais colunas da estrutura `<grupo-colunas>`. Caso a estrutura `<coluna>` esteja armazenando uma estrutura `<envelope-texto>`, o valor dela não poderá ser nulo.',
     exemploCodigo: '<grupo-colunas>\n <coluna span="2" estilo="background-color:blue">\n <coluna estilo="background-color:white">\n</grupo-colunas>'
   },
+  'corpo': {
+    nomeHtml: 'body',
+    descricao: 'Estrutura que representa o conteúdo de um documento LMHT.',
+    documentacao: '# `corpo`\n Representa o conteúdo de um documento LMHT. É permitido somente uma estrutura `<corpo>` por documento.',
+    exemploCodigo: '<lmht>\n <cabeca>\n  <titulo1> Título do Documento </titulo1>\n </cabeca>\n <corpo>\n  <titulo1> Cabeçalho </titulo1>\n  <paragrafo> Primeiro parágrafo. </paragrafo>\n </corpo>\n</lmht>'
+  },
+  'corpo-tabela': {
+    nomeHtml: 'tbody',
+    descricao: 'Estrutura que agrupa um conteúdo especifico dentro de uma tabela.',
+    documentacao: '# `corpo-tabela`\n Segue os mesmos modelos da estrutura padrão `<lmht>`, assim sendo utilizado de princípío similar a estrutura `<corpo>`, porém aplicado à estrutura `<tabela>` e não à `<lmht>`. É importante a estrutura `<corpo-tabela>` armazenar uma ou mais estruturas `<linha>`.',
+    exemploCodigo: '<tabela>\n <corpo-tabela>\n  <linha>\n   <celula> Item 1 </celula>\n   <celula> Item 2 </celula>\n  </linha>\n </corpo-tabela>\n</tabela>'
+  },
   'definicao': {
     nomeHtml: 'dfn',
     descricao: 'Estrutura que representa uma instância de definição de um termo.',
@@ -173,6 +197,18 @@ export default {
     documentacao: '# `detalhes`\n Renderiza um campo em que o usuário pode tanto minimizar quanto restaurar dentro da página. Seu conteúdo deverá ser focado em detalhes ou informações adicionais.',
     exemploCodigo: '<detalhes>\n <sumario>Exemplo</sumario>\n <paragrafo>\n  Este é um texto de exemplo que será aberto quando o usuário interagir com a estrutura detalhes.\n </paragrafo>\n</detalhes>'
   },
+  'divisao': {
+    nomeHtml: 'div',
+    descricao: 'Estrutura que funciona como um contêiner genérico para um conteúdo de fluxo.',
+    documentacao: '# `divisao`\n Pode ser utilizada para agrupar elementos para fins de estilos (usando classes ou ids), ou porque eles compartilham valores de atributos. Essa estrutura deve ser utilizada somente quando não houver outro elemento de semântica.',
+    exemploCodigo: '<divisao>\n <paragrafo>\n  Qualquer tipo de conteúdo aqui.\n </paragrafo>\n</divisao>'
+  },
+  'divisão': {
+    nomeHtml: 'div',
+    descricao: 'Estrutura que funciona como um contêiner genérico para um conteúdo de fluxo.',
+    documentacao: '# `divisão`\n Pode ser utilizada para agrupar elementos para fins de estilos (usando classes ou ids), ou porque eles compartilham valores de atributos. Essa estrutura deve ser utilizada somente quando não houver outro elemento de semântica.',
+    exemploCodigo: '<divisão>\n <paragrafo>\n  Qualquer tipo de conteúdo aqui.\n </paragrafo>\n</divisão>'
+  },
   'endereco': {
     nomeHtml: 'address',
     descricao: 'Declara as informações de contato vindas do autor ou proprietário do artigo ou da página.',
@@ -190,6 +226,12 @@ export default {
     descricao: 'Estrutura utilizada da mesma finalidade que a estrutura `<divisão>`, porém sua estilização é por padrão inline, ao invés de block como no caso da estrutura `<divisão>`.',
     documentacao: '# `envelope-texto`\n É utilizado para a marcação de um texto ou de uma parte específica de um documento, e também para uma estilização mais rápida e eficaz utilizando a estrutura `<script>` e/ou `<estilo>`.',
     exemploCodigo: '<paragrafo> Meu carro é da cor <envelope-texto estilo="color:blue">azul</envelope-texto>'
+  },
+  'escatel': {
+    nomeHtml: 'slot',
+    descricao: 'Estrutura que atua como um espaço reservado da aplicação.',
+    documentacao: '# `escatel`\n É parte do conjunto de tecnologia Web Components — um espaço reservado dentro de um componente web que você pode preencher com sua própria marcação, o que permite criar árvores DOM separadas e apresentá-las juntas.',
+    exemploCodigo: '<divisao>\n <titulo4> Atributos </titulo4>\n <escatel nome="atributos"><p> Nenhum </p></slot>\n</divisao>'
   },
   'etiqueta': {
     nomeHtml: 'label',
@@ -244,6 +286,18 @@ export default {
     descricao: 'Estrutura utilizada para agrupar um grupo de estruturas `<opção>` ou `<opcao>` dentro da estrutura `<formulário>`.',
     documentacao: '# `grupo-opções`\n Além de reunir estruturas, é utilizado para catalogar e organizar, para que o desenvolvedor tenha mais facilidade ao desenvolver a página, no caso de se utilizar listas longas ou opções com uma relação entre elas mesmas.',
     exemploCodigo: '<etiqueta for="frutas"> Escolha uma fruta: </etiqueta>\n <selecao nome="frutas" id="frutas">\n  <grupo-opções etiqueta="Frutas Vermelhas">\n   <opcao valor="morango"> Morango </opcao>\n   <opcao valor="cereja"> Cereja </opcao>\n  </grupo-opções>\n</seleção>'
+  },
+  'grupo-titulos': {
+    nomeHtml: 'hgroup',
+    descricao: 'Estrutura destinada para agrupar cabeçalhos de diferentes níveis para uma seção do documento.',
+    documentacao: '# `grupo-titulos`\n Essa estrutura agrupa (ou atua como um contêiner para) um conjunto de elementos `<título1>` – `<título6>`.',
+    exemploCodigo: '<corpo>\n <grupo-titulos>\n  <titulo1> LMHT </titulo1>\n  <titulo2> Especificação da Linguagem de Marcação Hiper Texto. </titulo2>\n </grupo-titulos>\n</corpo>'
+  },
+  'grupo-títulos': {
+    nomeHtml: 'hgroup',
+    descricao: 'Estrutura destinada para agrupar cabeçalhos de diferentes níveis para uma seção do documento.',
+    documentacao: '# `grupo-títulos`\n Essa estrutura agrupa (ou atua como um contêiner para) um conjunto de elementos `<título1>` – `<título6>`.',
+    exemploCodigo: '<corpo>\n <grupo-títulos>\n  <titulo1> LMHT </titulo1>\n  <titulo2> Especificação da Linguagem de Marcação Hiper Texto. </titulo2>\n </grupo-títulos>\n</corpo>'
   },
   'imagem': {
     nomeHtml: 'img',
@@ -359,6 +413,12 @@ export default {
     documentacao: '# `lista-simples`\n Representa uma lista de forma não-ordenada. Sendo assim, a modificação do seu conteúdo não afetará o significado contextual da página.',
     exemploCodigo: '<lista-simples>\n <item-lista> Item 1 </item-lista>\n <item-lista> Item 2 </item-lista>\n<lista-simples>'
   },
+  'lmht': {
+    nomeHtml: 'html',
+    descricao: 'Estrutura que representa a raiz de um documento LMHT.',
+    documentacao: '# `lmht`\n Desde que o elemento `<lmht>` seja o primeiro em um documento, esse é chamado o elemento raiz. Todos os outros elementos devem ser descendentes desse elemento.',
+    exemploCodigo: '<lmht>\n <cabeca>\n  ...\n </cabeca>\n <corpo>\n  ...\n </corpo>\n</lmht>'
+  },
   'marca': {
     nomeHtml: 'mark',
     descricao: 'Estrutura que declara uma marcação ou ênfase em uma parte determinada de um texto.',
@@ -467,11 +527,29 @@ export default {
     documentacao: '# `recurso`\n É normalmente utilizada para adicionar a logotipo para a sua página LMHT, porém pode se utilizar de diversas maneiras, devido a sua ampla lista de atributos e sua alta compatibilidade.',
     exemploCodigo: '<cabeca>\n <recurso rel="stylesheet" href="link1.lmht">\n</cabeca>'
   },
+  'resultado': {
+    nomeHtml: 'output',
+    descricao: 'Estrutura para exibir um determinado resultado de uma operação.',
+    documentacao: '# `resultado`\n Funciona como um elemento de saída no qual um site ou aplicativo pode injetar os resultados de um cálculo ou o resultado de uma ação do usuário.',
+    exemploCodigo: ''
+  },
   'riscado': {
     nomeHtml: 's',
     descricao: 'Estrutura que renderiza um texto tachado ou uma linha cortando o texto.',
     documentacao: '# `riscado`\n Representa um elemento que não é mais relevante ou tecnicamente correto. Esta estrutura não deve ser usada para definir conteúdo deletado. Neste caso, use a estrutura `<excluido>`.',
     exemploCodigo: '<p><riscado>50</riscado> 45 reais na sua conta </p>'
+  },
+  'rodape': {
+    nomeHtml: 'footer',
+    descricao: 'Representa um rodapé para o seu conteúdo de seção mais próximo ou sua estrutura pai mais próxima.',
+    documentacao: '# `rodape`\n Normalmente, um rodapé contém informações sobre o autor da seção de dados, direitos autorais ou links para documentos relacionados.',
+    exemploCodigo: '<rodape>\n <p> Nome do Autor </p>\n <p> Todos os direitos reservados. </p>\n</rodape>'
+  },
+  'rodapé': {
+    nomeHtml: 'footer',
+    descricao: 'Representa um rodapé para o seu conteúdo de seção mais próximo ou sua estrutura pai mais próxima.',
+    documentacao: '# `rodapé`\n Normalmente, um rodapé contém informações sobre o autor da seção de dados, direitos autorais ou links para documentos relacionados.',
+    exemploCodigo: '<rodapé>\n <p> Nome do Autor </p>\n <p> Todos os direitos reservados. </p>\n</rodapé>'
   },
   'script': {
     nomeHtml: 'script',
@@ -502,6 +580,72 @@ export default {
     descricao: 'Estrutura que declara uma lista suspensa com no máximo 4 opções.',
     documentacao: '# `seleção`\n As opções dentro do menu são representadas pelo elemento `opção` e podem ser pré-selecionadas para o usuário. Esta estrutura é frequentemente utilizada para coletar as informações do usuário dentro da estrutura formulário.',
     exemploCodigo: '<seleção nome="carros" id="carros">\n <opção>Gol</opção>\n <opção>Corsa</opção>\n <opção>Porsche</opção>\n</seleção>'
+  },
+  'sem-script': {
+    nomeHtml: 'noscript',
+    descricao: 'Estrutura que define uma seção de lmht a ser inserida se um tipo de script não é suportado pela página ou se o script está desativado no navegador.',
+    documentacao: '# `sem-script`\n Define um conteúdo alternativo a ser exibido para usuários que possuem scripts desabilitados em seus navegadores ou possuem um navegador que não suporta scripts.',
+    exemploCodigo: '<sem-script>\n <a href="https://github.com/DesignLiquido/LMHT"> Link Externo </a>\n</sem-script>\n<paragrafo> Parágrafo seguinte </paragrafo>'
+  },
+  'sobrescrito': {
+    nomeHtml: 'sup',
+    descricao: 'Estrutura que especifica o texto embutido que deve ser exibido como sobrescrito por motivos tipográficos.',
+    documentacao: '# `sobrescrito`\n Os sobrescritos geralmente são renderizados com uma linha de base elevada usando texto menor. `<sobrescrito>` deve ser usado apenas por motivos tipográficos – ou seja, para alterar a posição do texto para cumprir convenções ou padrões tipográficos, e não apenas para fins de apresentação ou aparência. Para esses últimos casos, é recomendada a estilização com CSS ou FolEs.',
+    exemploCodigo: '<paragrafo> O Brasil ficou na 1<sobrescrito>a</sobrescrito> posição na Copa do Mundo de 2002. </paragrafo>'
+  },
+  'sublinhado': {
+    nomeHtml: 'u',
+    descricao: 'Estrutura que representa uma extensão de texto embutido que deve ser renderizado de uma forma que indique que possui uma anotação não textual.',
+    documentacao: '# `sublinhado`\n É comum utilizar <sublinhado> para exibir um parágrafo que inclui um erro ortográfico. Isso é renderizado por padrão como um texto sublinhado simples, mas pode ser alterado usando CSS.',
+    exemploCodigo: '<p> Esse parágrafo possui uma palavra <sublinhado>incoreta</sublinhado> em sua estrutura. </p>'
+  },
+  'subscrito': {
+    nomeHtml: 'sub',
+    descricao: 'Estrutura que especifica o texto embutido que deve ser exibido como subscrito.',
+    documentacao: '# `subscrito`\n Os subscritos normalmente são renderizados com uma linha de base reduzida usando texto menor. `<subscrito>` deve ser usado apenas por motivos tipográficos – ou seja, para alterar a posição do texto para cumprir convenções ou padrões tipográficos, e não apenas para fins de apresentação ou aparência. Para esses últimos casos, é recomendada a estilização com CSS ou FolEs.',
+    exemploCodigo: '<p> De acordo com os cálculos de Nakamura, Johnson e Mason<subscrito>1</subscrito> isso resultará na aniquilação completa de ambas as partículas.</p>'
+  },
+  'sumario': {
+    nomeHtml: 'summary',
+    descricao: 'Estrutura utilizada como um sumário ou legenda para o conteúdo de um elemento `<detalhes>`.',
+    documentacao: '# `sumario`\n Define um cabeçalho visível cujo título pode ser clicado para visualizar/ocultar os detalhes. `<sumario>` deve ser o primeiro elemento filho de `<detalhes>`.',
+    exemploCodigo: '<detalhes>\n <sumario> Alguns detalhes </sumario>\n <paragrafo> Mais informações sobre os detalhes. </paragrafo>\n</detalhes>'
+  },
+  'sumário': {
+    nomeHtml: 'summary',
+    descricao: 'Estrutura utilizada como um sumário ou legenda para o conteúdo de um elemento `<detalhes>`.',
+    documentacao: '# `sumário`\n Define um cabeçalho visível cujo título pode ser clicado para visualizar/ocultar os detalhes. `<sumário>` deve ser o primeiro elemento filho de `<detalhes>`.',
+    exemploCodigo: '<detalhes>\n <sumário> Alguns detalhes </sumário>\n <paragrafo> Mais informações sobre os detalhes. </paragrafo>\n</detalhes>'
+  },
+  'tabela': {
+    nomeHtml: 'table',
+    descricao: 'Estrutura utilizada para representar dados tabulares em uma aplicação.',
+    documentacao: '# `tabela`\n Apresenta informações em uma tabela bidimensional composta por linhas e colunas de células contendo dados.',
+    exemploCodigo: '<tabela>\n <linha>\n  <celula> John </celula>\n  <celula> Doe </celula>\n </linha>\n <linha>\n  <celula> Jane </celula>\n  <celula> Doe </celula>\n </linha>\n</tabela>'
+  },
+  'teclado': {
+    nomeHtml: 'kbd',
+    descricao: 'Estrutura utilizada para definir a entrada do teclado.',
+    documentacao: '# `teclado`\n Representa uma extensão de texto embutido que denota a entrada textual do usuário a partir de um teclado, entrada de voz ou qualquer outro dispositivo de entrada de texto.',
+    exemploCodigo: '<p>\n Use o comando de <teclado> ajuda ao usuário </teclado> para ver a documentação.\n</p>'
+  },
+  'tempo': {
+    nomeHtml: 'time',
+    descricao: 'Estrutura que representa o tempo tanto no formato de 24 horas quanto uma data precisa no calendário Gregoriano (com informações opcionais de tempo e fuso horário).',
+    documentacao: '# `tempo`\n Esta estrutura é destinada a apresentar datas e horas no dispositivo em um formato legível. Isto pode ser útil aos agentes do usuário para, por exemplo, oferecer qualquer programação de eventos.',
+    exemploCodigo: '<paragrafo> O show dessa noite começa às <tempo> 20:00 </tempo>. </paragrafo>'
+  },
+  'termo': {
+    nomeHtml: 'dt',
+    descricao: 'Estrutura que identifica um termo contido em uma lista de definição.',
+    documentacao: '# `termo`\n Pode ser utilizada somente como um elemento filho da estrutura `<lista-definições>`. Geralmente, um termo é seguido por um elemento `<lista-definições/definição>`. Múltiplos `<termo>` na mesma linha indicam vários termos sendo definidos pelo próximo elemento `<lista-definições/definição>`.',
+    exemploCodigo: '<lista-definicoes>\n <termo> LMHT </termo>\n <lista-definicoes/definicao>\n  LMHT nada mais é do que HTML em português, usando um arquivo de transformação XSL para mudar nomes de tags e atributos.\n </lista-definicoes/definicao>\n</lista-definicoes>'
+  },
+  'texto-pequeno': {
+    nomeHtml: 'small',
+    descricao: 'Estrutura que, por padrão, renderiza o texto em um tamanho de fonte menor.',
+    documentacao: '# `texto-pequeno`\n Representa comentários laterais e letras pequenas, como direitos autorais ou um texto jurídico, independente de seu estilo de apresentação.',
+    exemploCodigo: '<paragrafo>\n Essa é a primeira frase do parágrafo.\n <texto-pequeno> Essa frase terá um tamanho de fonte menor. </texto-pequeno>\n</paragrafo>'
   },
   'titulo1': {
     nomeHtml: 'h1',
