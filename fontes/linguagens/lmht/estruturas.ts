@@ -155,6 +155,18 @@ export default {
     documentacao: '# `coluna`\n Caso esteja inserida dentro da estrutura `<grupo-colunas>`, e a mesma contenha a estrutura `<tabela>`, então a estrutura `<coluna>` representa uma ou mais colunas da estrutura `<grupo-colunas>`. Caso a estrutura `<coluna>` esteja armazenando uma estrutura `<envelope-texto>`, o valor dela não poderá ser nulo.',
     exemploCodigo: '<grupo-colunas>\n <coluna span="2" estilo="background-color:blue">\n <coluna estilo="background-color:white">\n</grupo-colunas>'
   },
+  'corpo': {
+    nomeHtml: 'body',
+    descricao: 'Estrutura que representa o conteúdo de um documento LMHT.',
+    documentacao: '# `corpo`\n Representa o conteúdo de um documento LMHT. É permitido somente uma estrutura `<corpo>` por documento.',
+    exemploCodigo: '<lmht>\n <cabeca>\n  <titulo1> Título do Documento </titulo1>\n </cabeca>\n <corpo>\n  <titulo1> Cabeçalho </titulo1>\n  <paragrafo> Primeiro parágrafo. </paragrafo>\n </corpo>\n</lmht>'
+  },
+  'corpo-tabela': {
+    nomeHtml: 'tbody',
+    descricao: 'Estrutura que agrupa um conteúdo especifico dentro de uma tabela.',
+    documentacao: '# `corpo-tabela`\n Segue os mesmos modelos da estrutura padrão `<lmht>`, assim sendo utilizado de princípío similar a estrutura `<corpo>`, porém aplicado à estrutura `<tabela>` e não à `<lmht>`. É importante a estrutura `<corpo-tabela>` armazenar uma ou mais estruturas `<linha>`.',
+    exemploCodigo: '<tabela>\n <corpo-tabela>\n  <linha>\n   <celula> Item 1 </celula>\n   <celula> Item 2 </celula>\n  </linha>\n </corpo-tabela>\n</tabela>'
+  },
   'definicao': {
     nomeHtml: 'dfn',
     descricao: 'Estrutura que representa uma instância de definição de um termo.',
@@ -173,6 +185,18 @@ export default {
     documentacao: '# `detalhes`\n Renderiza um campo em que o usuário pode tanto minimizar quanto restaurar dentro da página. Seu conteúdo deverá ser focado em detalhes ou informações adicionais.',
     exemploCodigo: '<detalhes>\n <sumario>Exemplo</sumario>\n <paragrafo>\n  Este é um texto de exemplo que será aberto quando o usuário interagir com a estrutura detalhes.\n </paragrafo>\n</detalhes>'
   },
+  'divisao': {
+    nomeHtml: 'div',
+    descricao: 'Estrutura que funciona como um contêiner genérico para um conteúdo de fluxo.',
+    documentacao: '# `divisao`\n Pode ser utilizada para agrupar elementos para fins de estilos (usando classes ou ids), ou porque eles compartilham valores de atributos. Essa estrutura deve ser utilizada somente quando não houver outro elemento de semântica.',
+    exemploCodigo: '<divisao>\n <paragrafo>\n  Qualquer tipo de conteúdo aqui.\n </paragrafo>\n</divisao>'
+  },
+  'divisão': {
+    nomeHtml: 'div',
+    descricao: 'Estrutura que funciona como um contêiner genérico para um conteúdo de fluxo.',
+    documentacao: '# `divisão`\n Pode ser utilizada para agrupar elementos para fins de estilos (usando classes ou ids), ou porque eles compartilham valores de atributos. Essa estrutura deve ser utilizada somente quando não houver outro elemento de semântica.',
+    exemploCodigo: '<divisão>\n <paragrafo>\n  Qualquer tipo de conteúdo aqui.\n </paragrafo>\n</divisão>'
+  },
   'endereco': {
     nomeHtml: 'address',
     descricao: 'Declara as informações de contato vindas do autor ou proprietário do artigo ou da página.',
@@ -190,6 +214,12 @@ export default {
     descricao: 'Estrutura utilizada da mesma finalidade que a estrutura `<divisão>`, porém sua estilização é por padrão inline, ao invés de block como no caso da estrutura `<divisão>`.',
     documentacao: '# `envelope-texto`\n É utilizado para a marcação de um texto ou de uma parte específica de um documento, e também para uma estilização mais rápida e eficaz utilizando a estrutura `<script>` e/ou `<estilo>`.',
     exemploCodigo: '<paragrafo> Meu carro é da cor <envelope-texto estilo="color:blue">azul</envelope-texto>'
+  },
+  'escatel': {
+    nomeHtml: 'slot',
+    descricao: 'Estrutura que atua como um espaço reservado da aplicação.',
+    documentacao: '# `escatel`\n É parte do conjunto de tecnologia Web Components — um espaço reservado dentro de um componente web que você pode preencher com sua própria marcação, o que permite criar árvores DOM separadas e apresentá-las juntas.',
+    exemploCodigo: '<divisao>\n <titulo4> Atributos </titulo4>\n <escatel nome="atributos"><p> Nenhum </p></slot>\n</divisao>'
   },
   'etiqueta': {
     nomeHtml: 'label',
@@ -244,6 +274,18 @@ export default {
     descricao: 'Estrutura utilizada para agrupar um grupo de estruturas `<opção>` ou `<opcao>` dentro da estrutura `<formulário>`.',
     documentacao: '# `grupo-opções`\n Além de reunir estruturas, é utilizado para catalogar e organizar, para que o desenvolvedor tenha mais facilidade ao desenvolver a página, no caso de se utilizar listas longas ou opções com uma relação entre elas mesmas.',
     exemploCodigo: '<etiqueta for="frutas"> Escolha uma fruta: </etiqueta>\n <selecao nome="frutas" id="frutas">\n  <grupo-opções etiqueta="Frutas Vermelhas">\n   <opcao valor="morango"> Morango </opcao>\n   <opcao valor="cereja"> Cereja </opcao>\n  </grupo-opções>\n</seleção>'
+  },
+  'grupo-titulos': {
+    nomeHtml: 'hgroup',
+    descricao: 'Estrutura destinada para agrupar cabeçalhos de diferentes níveis para uma seção do documento.',
+    documentacao: '# `grupo-titulos`\n Essa estrutura agrupa (ou atua como um contêiner para) um conjunto de elementos `<título1>` – `<título6>`.',
+    exemploCodigo: '<corpo>\n <grupo-titulos>\n  <titulo1> LMHT </titulo1>\n  <titulo2> Especificação da Linguagem de Marcação Hiper Texto. </titulo2>\n </grupo-titulos>\n</corpo>'
+  },
+  'grupo-títulos': {
+    nomeHtml: 'hgroup',
+    descricao: 'Estrutura destinada para agrupar cabeçalhos de diferentes níveis para uma seção do documento.',
+    documentacao: '# `grupo-títulos`\n Essa estrutura agrupa (ou atua como um contêiner para) um conjunto de elementos `<título1>` – `<título6>`.',
+    exemploCodigo: '<corpo>\n <grupo-títulos>\n  <titulo1> LMHT </titulo1>\n  <titulo2> Especificação da Linguagem de Marcação Hiper Texto. </titulo2>\n </grupo-títulos>\n</corpo>'
   },
   'imagem': {
     nomeHtml: 'img',
