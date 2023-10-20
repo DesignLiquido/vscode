@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.9.6
+
+- Correções em Delégua para evitar `leia()` de ser chamado três vezes;
+- Correções na saída de variáveis de Potigol.
+
 ## 0.9.5
 
 - Auto-fechamento de estruturas LMHT;
