@@ -1,8 +1,12 @@
 # Histórico de Modificações
 
+## 0.9.8
+
+- Atualização da biblioteca FolEs para a versão 0.5.1.
+
 ## 0.9.7
 
-- Correção no Avaliador Sintático de Portugol Studio e Delégua em declarações `para`
+- Correção no Avaliador Sintático de Portugol Studio e Delégua em declarações `para`.
 
 ## 0.9.6
 
