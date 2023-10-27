@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.9.7
+
+- Correção no Avaliador Sintático de Portugol Studio e Delégua em declarações `para`
+
 ## 0.9.6
 
 - Correções em Delégua para evitar `leia()` de ser chamado três vezes;
