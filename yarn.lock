@@ -23,10 +23,10 @@
     esprima "^4.0.1"
     lodash.clonedeep "^4.5.0"
 
-"@designliquido/foles@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.5.0.tgz#58604022725ad7d1fa4f740ed1b9221473307af4"
-  integrity sha512-teowTG3cFHdHmsU9SCxkiYWrWux0020nYwI/ew0LbJPJ0mdYOz0s1BFRGJ1RhTRIRo+xFaPJEnK0uaGO5b0Rxw==
+"@designliquido/foles@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.5.1.tgz#3c92a80c17051b76b1e1be5ceb181d2dd2be23cf"
+  integrity sha512-G0i92CoTn6ijDtTuLZNd+O01HX/3NzmWEEJl/IBU2Abu7bWAxjnipXe9AVJwYmSu9hqzgjCPNkjTpvFJSCyXgQ==
   dependencies:
     commander "^9.4.1"
     vlq "^2.0.4"
