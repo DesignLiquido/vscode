@@ -120,11 +120,17 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
             }
         );
 
-        this.tempoExecucao.on('saida', (texto: string, mesmaLinha = false, caminhoArquivo = '', linha = 0) => {
-            const e: DebugProtocol.OutputEvent = new OutputEvent(`${texto}${mesmaLinha ? '' : '\n'}`);
-            e.body.source = this.criarReferenciaSource(caminhoArquivo);
-            e.body.line = this.convertDebuggerLineToClient(linha);
-            this.sendEvent(e);
+        this.tempoExecucao.on('saida', (textoOuExcecao: Error | string, mesmaLinha = false, caminhoArquivo = '', linha = 0) => {
+            let eventoSaida: DebugProtocol.OutputEvent; 
+            if (textoOuExcecao instanceof Error) {
+                eventoSaida = new OutputEvent(`${textoOuExcecao.stack}`);
+            } else {
+                eventoSaida = new OutputEvent(`${textoOuExcecao}${mesmaLinha ? '' : '\n'}`);
+            }
+            
+            eventoSaida.body.source = this.criarReferenciaSource(caminhoArquivo);
+            eventoSaida.body.line = this.convertDebuggerLineToClient(linha);
+            this.sendEvent(eventoSaida);
         });
     }
 
