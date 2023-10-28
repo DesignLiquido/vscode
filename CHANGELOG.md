@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.9.9
+
+- Permite uso de expressão regular em Delégua `||expressao-aqui||`.
+
 ## 0.9.8
 
 - Atualização da biblioteca FolEs para a versão 0.5.1.
