@@ -1,8 +1,13 @@
 # Histórico de Modificações
 
+## 0.9.10
+
+- Implementação do método `qual_tipo` para objetos em Potigol;
+- Melhoramentos no analisador semântico de Delégua.
+
 ## 0.9.9
 
-- Permite uso de expressão regular em Delégua `||expressao-aqui||`.
+- Permite uso de expressão regular em Delégua: `||expressao-aqui||`. Os símbolos são os mesmos de JavaScript.
 
 ## 0.9.8
 
