@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.9.11
+
+- Ampliação do analisador semântico para casos envolvendo condição em `enquanto`.
+
 ## 0.9.10
 
 - Implementação do método `qual_tipo` para objetos em Potigol;

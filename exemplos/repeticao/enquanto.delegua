@@ -1,5 +1,4 @@
-var a = 1
-enquanto (a != 5) {
+enquanto a != 5 {
     escreva(a)
     a++
 }

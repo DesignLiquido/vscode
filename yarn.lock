@@ -2,21 +2,21 @@
 # yarn lockfile v1
 
 
-"@designliquido/delegua-node@^0.26.1":
-  version "0.26.1"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-0.26.1.tgz#80ea4eb43fc28ad53e5401a5c9576a2da3379f89"
-  integrity sha512-i7vkG/32wl6gHvBCJP8dqOTC/UgAOH99AvE8Lpuk8IzxSTdHvK0+si6/n1HEZOlrdfs9neT/ib4B71zzCt2WRg==
+"@designliquido/delegua-node@^0.26.2":
+  version "0.26.2"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-0.26.2.tgz#53041caa02d6c2f6e4c338b5fab44341c569ec9d"
+  integrity sha512-p0o7F/rwkU2/NCpfrlvy/YjH+OwuvDmbchMgKqYG4+vbNqygN2MQOO0G8y9hdfBmzS7bgghlHcDpqowZ9FqJhQ==
   dependencies:
-    "@designliquido/delegua" "0.26.1"
+    "@designliquido/delegua" "0.26.2"
     chalk "4.1.2"
     commander "^9.4.1"
     json-colorizer "^2.2.2"
     lodash.clonedeep "^4.5.0"
 
-"@designliquido/delegua@0.26.1":
-  version "0.26.1"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.26.1.tgz#9db8aebcee3d532e2a15ecc16159afd160b69252"
-  integrity sha512-WBlJYYsrhzy8gfZdqKbpKhylfKeAwXDn2i0ofM8N3nqLwSFvMFKXmuLiB09bFREF/GAa2KMfb1TMk5XeAykJrg==
+"@designliquido/delegua@0.26.2":
+  version "0.26.2"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.26.2.tgz#bdf30f23cf8bac9788d9eac8a64365ec18e0db44"
+  integrity sha512-TwRu8UOd1UaBEb3J0j64uPEDNGDAKV/OsrQXN42g32y9Mv2Sv8CiOgD5LABYhjPCKbOhPp9p2du3IMmogkZvYQ==
   dependencies:
     antlr4ts "^0.5.0-alpha.4"
     browser-process-hrtime "^1.0.0"
