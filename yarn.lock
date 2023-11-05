@@ -31,13 +31,13 @@
     commander "^9.4.1"
     vlq "^2.0.4"
 
-"@designliquido/lmht-js@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@designliquido/lmht-js/-/lmht-js-0.3.2.tgz#f674e43c7ef49c6eb4852dcac62d035cdb8b3841"
-  integrity sha512-LnLndipPaW914ZBWIMMrbjadfQ4tG/HjA+fe5WCEdf3gZ3kQFBWP1Qd1UAgUK/k8GA0oIZV70oj4245S1ctB7A==
+"@designliquido/lmht-js@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/lmht-js/-/lmht-js-0.4.1.tgz#412959ef8a75883a2dde93c36412ef5764134000"
+  integrity sha512-x9hq/yYhHnrt99Q8+LU2TnLT70fSZ7GWC6OS5XckA3urfVjwnJfd4XEQsrKS8LbXuD67g6Vuz4B8aS4ivAasGg==
   dependencies:
     jsdom "^21.1.1"
-    xslt-processor "^1.2.8"
+    xslt-processor "^2.1.0"
 
 "@discoveryjs/json-ext@^0.5.0":
   version "0.5.7"
@@ -2202,10 +2202,10 @@ xmlchars@^2.2.0:
   resolved "https://registry.yarnpkg.com/xmlchars/-/xmlchars-2.2.0.tgz#060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb"
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
 
-xslt-processor@^1.2.8:
-  version "1.2.8"
-  resolved "https://registry.yarnpkg.com/xslt-processor/-/xslt-processor-1.2.8.tgz#8e6c6f69d06af1eb791b55218fee29f690603694"
-  integrity sha512-DtIZdGwfL07PZXBD17q5UMyHPntzTadIZpITCKvLwIn/tfsRlHYHcBSonrubXry/1SSs7+UeeX4VlMALYQw3mA==
+xslt-processor@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/xslt-processor/-/xslt-processor-2.1.0.tgz#206a02feb3ed7488992b0b33bd35775ec847c1f7"
+  integrity sha512-hbaAsg8ZGwgCsPbOeeLWGJvgIaMOdUfUWWVtbQUl8xmiqk8LNExQgVhdK454acyZJB6KLi5igyWA2oZ+Qme5hQ==
   dependencies:
     he "^1.2.0"
 

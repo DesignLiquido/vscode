@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.9.12
+
+- Atualização da biblioteca `lmht-js` para a versão 0.4.1.
+
 ## 0.9.11
 
 - Ampliação do analisador semântico para casos envolvendo condição em `enquanto`.
