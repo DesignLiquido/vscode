@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.9.13
+
+- Atualização da biblioteca `delegua-node` para a versão 0.26.3.
+
 ## 0.9.12
 
 - Atualização da biblioteca `lmht-js` para a versão 0.4.1.
