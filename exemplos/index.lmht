@@ -3,6 +3,6 @@
         <titulo>Meu primeiro site em LMHT</titulo>
     </cabeça>
     <corpo>
-        <titulo1>Meu teste</titulo1>
+        <titulo1 classe="teste">Meu teste</titulo1>
     </corpo>
 </lmht>

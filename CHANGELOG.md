@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.9.14
+
+- Atualização da biblioteca `delegua-node` para a versão 0.27.0;
+- Atualização da biblioteca `lmht-js` para a versão 0.4.2;
+- Análise semântica com avisos e erros.
+
 ## 0.9.13
 
 - Atualização da biblioteca `delegua-node` para a versão 0.26.3.

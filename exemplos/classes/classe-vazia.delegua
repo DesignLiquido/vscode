@@ -1,0 +1,3 @@
+classe Teste {}
+var teste: Teste;
+escreva(teste); 

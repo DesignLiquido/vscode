@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.9.13",
+    "version": "0.9.14",
     "engines": {
         "vscode": "^1.68.0"
     },
@@ -51,7 +51,7 @@
         "esbuild-web": "esbuild ./fontes/extensao-web.ts --bundle --tsconfig=./tsconfig.json --external:vscode --format=cjs --platform=browser --outfile=dist/extensao-web.js",
         "watch-web": "npm run -S esbuild-web -- --sourcemap --sources-content=false --watch",
         "montar": "npm run -S esbuild-base -- --sourcemap --sources-content=false && npm run -S esbuild-web -- --sourcemap --sources-content=false",
-        "empacotar": "yarn esbuild-base && vsce package --yarn",
+        "empacotar": "yarn esbuild-base && yarn copy-files-from-to && vsce package --yarn",
         "publicar": "vsce publish",
         "publicar-pre-lancamento": "vsce publish --pre-release",
         "vscode:pre-publicar": "rimraf dist && npm run -S esbuild-base -- --minify && npm run -S esbuild-web -- --minify",
@@ -450,6 +450,7 @@
         "@vscode/debugprotocol": "^1.53.0",
         "await-notify": "^1.0.1",
         "base64-js": "^1.5.1",
+        "copy-files-from-to": "^3.9.0",
         "esbuild": "^0.14.45",
         "eslint": "^8.18.0",
         "ts-loader": "^9.4.2",
@@ -458,10 +459,28 @@
         "webpack-cli": "^5.0.1"
     },
     "dependencies": {
-        "@designliquido/delegua-node": "^0.26.3",
+        "@designliquido/delegua-node": "^0.27.0",
         "@designliquido/foles": "^0.5.1",
-        "@designliquido/lmht-js": "^0.4.1",
+        "@designliquido/lmht-js": "^0.4.2",
         "lodash": "^4.17.21",
         "real-executable-path": "^3.0.0"
-    }
+    },
+    "copyFiles": [
+        {
+            "from": "node_modules/@designliquido/lmht-js/especificacao/lmht-reverso-xml10.xslt",
+            "to": "dist/especificacao/lmht-reverso-xml10.xslt"
+        },
+        {
+            "from": "node_modules/@designliquido/lmht-js/especificacao/lmht-reverso.xslt",
+            "to": "dist/especificacao/lmht-reverso.xslt"
+        },
+        {
+            "from": "node_modules/@designliquido/lmht-js/especificacao/lmht.xslt",
+            "to": "dist/especificacao/lmht.xslt"
+        },
+        {
+            "from": "node_modules/@designliquido/lmht-js/especificacao/lmht10.xslt",
+            "to": "dist/especificacao/lmht10.xslt"
+        }
+    ]
 }
