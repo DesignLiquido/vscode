@@ -1,8 +1,14 @@
 <lmht>
     <cabeça>
-        <titulo>Meu primeiro site em LMHT</titulo>
+        <meta nome="description" conteúdo="LMHT"/>
+        <meta nome="keywords" conteúdo="HTML, LMHT, Desenvolvimento, Web"/>
+        <meta nome="author" conteúdo="Leonel Sanches da Silva"/>
+        <meta nome="viewport" conteúdo="width=device-width, initial-scale=1.0"/>
+        <título>About - Simple Blog Template</título>
+        <recurso destino="css/bootstrap.min.css" tipo="stylesheet"/>
+        <recurso destino="css/simple-blog-template.css" tipo="stylesheet"/>
     </cabeça>
     <corpo>
-        <titulo1 classe="teste">Meu teste</titulo1>
+        <parágrafo classe="anything">This is a paragraph with a class</parágrafo>
     </corpo>
 </lmht>
