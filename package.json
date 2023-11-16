@@ -438,6 +438,37 @@
                 "language": "visualg",
                 "path": "./snippets/visualg.code-snippets"
             }
+        ],
+        "walkthroughs": [
+            {
+                "id": "delegua",
+                "title": "Iniciando com programação em português",
+                "description": "Um tutorial sobre como utilizar esta extensão para programar em português",
+                "steps": [
+                    {
+                        "id": "runcommand",
+                        "title": "Run Command",
+                        "description": "This step will run a command and check off once it has been run.\n[Run Command](command:getting-started-sample.runCommand)",
+                        "media": {
+                            "markdown": "recursos/markdown/inicio.md"
+                        },
+                        "completionEvents": [
+                            "onCommand:getting-started-sample.runCommand"
+                        ]
+                    },
+                    {
+                        "id": "changesetting",
+                        "title": "Change Setting",
+                        "description": "This step will change a setting and check off when the setting has changed\n[Change Setting](command:getting-started-sample.changeSetting)",
+                        "media": {
+                            "markdown": "media/markdown.md"
+                        },
+                        "completionEvents": [
+                            "onSettingChanged:getting-started-sample.sampleSetting"
+                        ]
+                    }
+                ]
+            }
         ]
     },
     "devDependencies": {
