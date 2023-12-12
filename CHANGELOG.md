@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.9.16
+
+- Delégua com suporte a destruturação de objetos.
+
 ## 0.9.15
 
 - Atualização da biblioteca `lmht-js` para a versão 0.4.3.
