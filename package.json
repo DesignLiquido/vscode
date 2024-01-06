@@ -460,8 +460,8 @@
     },
     "dependencies": {
         "@designliquido/delegua-node": "^0.28.0",
-        "@designliquido/foles": "^0.5.1",
-        "@designliquido/lmht-js": "^0.4.3",
+        "@designliquido/foles": "^0.6.0",
+        "@designliquido/lmht-js": "^0.4.4",
         "lodash": "^4.17.21",
         "real-executable-path": "^3.0.0"
     },

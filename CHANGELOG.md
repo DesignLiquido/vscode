@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.9.17
+
+- Atualização das bibliotecas `lmht-js` e `foles` para as versões 0.4.4 e 0.6.0, respectivamente.
+
 ## 0.9.16
 
 - Delégua com suporte a destruturação de objetos.
