@@ -34,6 +34,15 @@ import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
 const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
 let changeTimeout;
 
+/**
+ * O ponto de entrada da extensão. Aqui registramos tudo:
+ * - Ponto de entrada de todas as análises semânticas;
+ * - Comandos de tradução;
+ * - Provedores de completude (também chamado de _IntelliSense_);
+ * - Provedores de documentação em editor (vulgo, "documentação quando coloca-se o ponteiro do mouse em cima do símbolo");
+ * - Depuradores.
+ * @param context O contexto da extensão.
+ */
 export function activate(context: vscode.ExtensionContext) {
     const diagnosticosDelegua = vscode.languages.createDiagnosticCollection("delegua");
 	context.subscriptions.push(diagnosticosDelegua);
@@ -68,15 +77,14 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.workspace.onDidCloseTextDocument(doc => diagnosticosDelegua.delete(doc.uri))
 	);
 
-    // TODO: Remover bug da traducão reversa.
-    /* context.subscriptions.push(
+    // Traduções
+
+    context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.css.para.foles',
             () => traduzir('css', 'foles')
         )
-    ); */
-
-    // Traduções
+    );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(

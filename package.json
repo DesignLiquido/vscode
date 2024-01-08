@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.9.17",
+    "version": "0.9.18",
     "engines": {
         "vscode": "^1.68.0"
     },
@@ -75,6 +75,10 @@
     },
     "contributes": {
         "commands": [
+            {
+                "command": "extension.designliquido.traduzir.css.para.foles",
+                "title": "Tradução: Traduzir fonte CSS para FolEs"
+            },
             {
                 "command": "extension.designliquido.traduzir.delegua.para.assemblyscript",
                 "title": "Tradução: Traduzir fonte Delégua para AssemblyScript"
@@ -460,7 +464,7 @@
     },
     "dependencies": {
         "@designliquido/delegua-node": "^0.28.0",
-        "@designliquido/foles": "^0.6.0",
+        "@designliquido/foles": "^0.6.1",
         "@designliquido/lmht-js": "^0.4.4",
         "lodash": "^4.17.21",
         "real-executable-path": "^3.0.0"

@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.9.18
+
+- Correção de _bug_ na tradução de CSS para FolEs.
+
 ## 0.9.17
 
 - Atualização das bibliotecas `lmht-js` e `foles` para as versões 0.4.4 e 0.6.0, respectivamente.
