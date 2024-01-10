@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.9.19
+
+- Correção de _bug_ no dialeto VisuAlg quanto a impressão de valores com casas decimais.
+
 ## 0.9.18
 
 - Correção de _bug_ na tradução de CSS para FolEs.
