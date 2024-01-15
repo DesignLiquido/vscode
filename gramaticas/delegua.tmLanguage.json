@@ -47,8 +47,8 @@
 		},
 		"types": {
 			"patterns": [{
-				"name": "storage.type.primitive.scala",
-				"match": ""
+				"name": "storage.type.primitive.delegua",
+				"match": "\\b(dicion[aá]rio|l[oó]gico|longo|m[oó]dulo|n[uú]mero|objeto|vetor|texto)\\b"
 			}]
 		},
 		"comments": {
