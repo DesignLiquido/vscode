@@ -6,6 +6,13 @@ import { AvaliadorSintaticoInterface, LexadorInterface, SimboloInterface } from 
 import { DiagnosticoAnalisadorSemantico } from '@designliquido/delegua/fontes/interfaces/erros';
 import { Declaracao } from '@designliquido/delegua/fontes/declaracoes';
 
+import { LexadorBirl, LexadorMapler } from '@designliquido/delegua/fontes/lexador/dialetos';
+import { AvaliadorSintaticoBirl, AvaliadorSintaticoMapler } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos';
+import { AnalisadorSemanticoBirl, AnalisadorSemanticoMapler } from '@designliquido/delegua/fontes/analisador-semantico/dialetos';
+import { AnalisadorSemanticoInterface } from '@designliquido/delegua/fontes/interfaces/analisador-semantico-interface';
+import { RetornoAvaliadorSintatico, RetornoLexador } from '@designliquido/delegua/fontes/interfaces/retornos';
+import { RetornoAnalisadorSemantico } from '@designliquido/delegua/fontes/interfaces/retornos/retorno-analisador-semantico';
+
 const diagnosticSeverityMap = {
     0: vscode.DiagnosticSeverity.Error,
     1: vscode.DiagnosticSeverity.Warning,
@@ -21,20 +28,40 @@ export function analiseSemantica(
     const extensaoArquivo = documento.fileName.split('.')[1];
     let lexador: LexadorInterface<SimboloInterface>;
     let avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>;
-    let analisadorSemantico: AnalisadorSemantico;
+    let analisadorSemantico: AnalisadorSemanticoInterface;
+    let linhas: string[];
+    let resultadoLexador: RetornoLexador<SimboloInterface>;
+    let resultadoAvaliadorSintatico: RetornoAvaliadorSintatico<Declaracao>;
+    let resultadoAnalisadorSemantico: RetornoAnalisadorSemantico;
     
     switch (extensaoArquivo) {
+        case "birl": 
+            lexador = new LexadorBirl();
+            avaliadorSintatico = new AvaliadorSintaticoBirl();
+            analisadorSemantico = new AnalisadorSemanticoBirl();             
+            break;        
+            
+        case "mapler": 
+            lexador = new LexadorMapler();
+            avaliadorSintatico = new AvaliadorSintaticoMapler();
+            analisadorSemantico = new AnalisadorSemanticoMapler();
+            break;
+
         case "delegua":
             lexador = new lexadores.Lexador();
             avaliadorSintatico = new avaliadores.AvaliadorSintatico();
             analisadorSemantico = new AnalisadorSemantico(); 
+            break;
 
-            const linhas = documento.getText().split('\n').map(l => l + '\0');
-            const resultadoLexador = lexador.mapear(linhas, -1);
-            const resultadoAvaliadorSintatico = avaliadorSintatico.analisar(resultadoLexador, -1);
-            const resultadoAnalisadorSemantico = analisadorSemantico.analisar(resultadoAvaliadorSintatico.declaracoes);
-            popularDiagnosticos(resultadoAnalisadorSemantico.diagnosticos, diagnosticos, documento);   
+        default:
+            return;
     }
+
+    linhas = documento.getText().split('\n').map(l => l + '\0');
+    resultadoLexador = lexador.mapear(linhas, -1);
+    resultadoAvaliadorSintatico = avaliadorSintatico.analisar(resultadoLexador, -1);
+    resultadoAnalisadorSemantico = analisadorSemantico.analisar(resultadoAvaliadorSintatico.declaracoes);
+    popularDiagnosticos(resultadoAnalisadorSemantico.diagnosticos, diagnosticos, documento);
 }
 
 function popularDiagnosticos(
