@@ -1,8 +1,14 @@
 # Histórico de Modificações
 
+## 0.9.20
+
+- Correção de _bug_ no dialeto VisuAlg quanto a ler e definir valores em matrizes: https://github.com/DesignLiquido/delegua/pull/575;
+- Correção de _bug_ em Delégua quanto a aglutinação de argumentos de funções: https://github.com/DesignLiquido/delegua/pull/570;
+- Ajustes na gramática de Delégua para reconhecer tipos de estruturas de dados com acentos.
+
 ## 0.9.19
 
-- Correção de _bug_ no dialeto VisuAlg quanto a impressão de valores com casas decimais.
+- Correção de _bug_ no dialeto VisuAlg quanto a impressão de valores com casas decimais: https://github.com/DesignLiquido/delegua/pull/568
 
 ## 0.9.18
 
