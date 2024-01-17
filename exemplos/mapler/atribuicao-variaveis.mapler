@@ -1,0 +1,7 @@
+variaveis
+    idade: numero;
+inicio
+    idade <- 1;
+    // Mude para a linha abaixo para ver um erro de avaliação semântica.
+    // idade <- "abc";
+fim

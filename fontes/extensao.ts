@@ -54,7 +54,9 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
 		vscode.workspace.onDidChangeTextDocument((evento) => {
             switch (evento.document.languageId) {
+                case 'birl':
                 case 'delegua':
+                case 'mapler':
                     if (changeTimeout !== null) {
                         clearTimeout(changeTimeout);
                     }
