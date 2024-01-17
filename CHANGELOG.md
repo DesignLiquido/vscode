@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.9.21
+
+- Atualização da biblioteca `delegua-node` para a versão 0.27.4;
+- Atualização da documentação de declaração de vetor para o VisuAlg.
+
 ## 0.9.20
 
 - Correção de _bug_ no dialeto VisuAlg quanto a ler e definir valores em matrizes: https://github.com/DesignLiquido/delegua/pull/575;
