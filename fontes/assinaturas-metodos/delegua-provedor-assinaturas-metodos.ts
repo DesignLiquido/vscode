@@ -7,10 +7,15 @@ import { PrimitivaOuMetodo } from '../primitivas/tipos';
  * Provedor de assinatura de métodos de Delégua.
  */
 export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpProvider {
-    provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.SignatureHelpContext): vscode.ProviderResult<vscode.SignatureHelp> {
-        const intervalo = document.getWordRangeAtPosition(position);
-        const palavra = document.getText(intervalo);
+    provideSignatureHelp(
+        document: vscode.TextDocument, 
+        position: vscode.Position, 
+        token: vscode.CancellationToken, 
+        context: vscode.SignatureHelpContext
+    ): vscode.ProviderResult<vscode.SignatureHelp> {
         const regexMetodo = /([a-zA-Z_0-9]+)\(/gi;
+        const intervalo = document.getWordRangeAtPosition(position, regexMetodo);
+        const palavra = document.getText(intervalo);
         const resultadoRegex = regexMetodo.exec(palavra);
 
         if (!resultadoRegex) {
