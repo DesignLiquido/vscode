@@ -6,9 +6,9 @@ import { AvaliadorSintaticoInterface, LexadorInterface, SimboloInterface } from 
 import { DiagnosticoAnalisadorSemantico } from '@designliquido/delegua/fontes/interfaces/erros';
 import { Declaracao } from '@designliquido/delegua/fontes/declaracoes';
 
-import { LexadorBirl, LexadorMapler } from '@designliquido/delegua/fontes/lexador/dialetos';
-import { AvaliadorSintaticoBirl, AvaliadorSintaticoMapler } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos';
-import { AnalisadorSemanticoBirl, AnalisadorSemanticoMapler } from '@designliquido/delegua/fontes/analisador-semantico/dialetos';
+import { LexadorBirl, LexadorMapler, LexadorVisuAlg } from '@designliquido/delegua/fontes/lexador/dialetos';
+import { AvaliadorSintaticoBirl, AvaliadorSintaticoMapler, AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos';
+import { AnalisadorSemanticoBirl, AnalisadorSemanticoMapler, AnalisadorSemanticoVisualg } from '@designliquido/delegua/fontes/analisador-semantico/dialetos';
 import { AnalisadorSemanticoInterface } from '@designliquido/delegua/fontes/interfaces/analisador-semantico-interface';
 import { RetornoAvaliadorSintatico, RetornoLexador } from '@designliquido/delegua/fontes/interfaces/retornos';
 import { RetornoAnalisadorSemantico } from '@designliquido/delegua/fontes/interfaces/retornos/retorno-analisador-semantico';
@@ -22,7 +22,7 @@ const diagnosticSeverityMap = {
 
 
 export function analiseSemantica(
-    documento: vscode.TextDocument, 
+    documento: vscode.TextDocument,
     diagnosticos: vscode.DiagnosticCollection
 ): void {
     const extensaoArquivo = documento.fileName.split('.')[1];
@@ -33,15 +33,15 @@ export function analiseSemantica(
     let resultadoLexador: RetornoLexador<SimboloInterface>;
     let resultadoAvaliadorSintatico: RetornoAvaliadorSintatico<Declaracao>;
     let resultadoAnalisadorSemantico: RetornoAnalisadorSemantico;
-    
+
     switch (extensaoArquivo) {
-        case "birl": 
+        case "birl":
             lexador = new LexadorBirl();
             avaliadorSintatico = new AvaliadorSintaticoBirl();
-            analisadorSemantico = new AnalisadorSemanticoBirl();             
-            break;        
-            
-        case "mapler": 
+            analisadorSemantico = new AnalisadorSemanticoBirl();
+            break;
+
+        case "mapler":
             lexador = new LexadorMapler();
             avaliadorSintatico = new AvaliadorSintaticoMapler();
             analisadorSemantico = new AnalisadorSemanticoMapler();
@@ -50,7 +50,12 @@ export function analiseSemantica(
         case "delegua":
             lexador = new lexadores.Lexador();
             avaliadorSintatico = new avaliadores.AvaliadorSintatico();
-            analisadorSemantico = new AnalisadorSemantico(); 
+            analisadorSemantico = new AnalisadorSemantico();
+            break;
+        case "visualg":
+            lexador = new LexadorVisuAlg();
+            avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
+            analisadorSemantico = new AnalisadorSemanticoVisualg();
             break;
 
         default:
@@ -66,7 +71,7 @@ export function analiseSemantica(
 
 function popularDiagnosticos(
     diagnosticosAnaliseSemantica: DiagnosticoAnalisadorSemantico[],
-    diagnosticos: vscode.DiagnosticCollection, 
+    diagnosticos: vscode.DiagnosticCollection,
     documento: vscode.TextDocument
 ) {
     const listaOcorrenciasSemanticas: vscode.Diagnostic[] = diagnosticosAnaliseSemantica.map(diagnostico => {
