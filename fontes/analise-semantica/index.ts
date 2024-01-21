@@ -8,7 +8,7 @@ import { Declaracao } from '@designliquido/delegua/fontes/declaracoes';
 
 import { LexadorBirl, LexadorMapler, LexadorVisuAlg } from '@designliquido/delegua/fontes/lexador/dialetos';
 import { AvaliadorSintaticoBirl, AvaliadorSintaticoMapler, AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos';
-import { AnalisadorSemanticoBirl, AnalisadorSemanticoMapler, AnalisadorSemanticoVisualg } from '@designliquido/delegua/fontes/analisador-semantico/dialetos';
+import { AnalisadorSemanticoBirl, AnalisadorSemanticoMapler, AnalisadorSemanticoVisuAlg } from '@designliquido/delegua/fontes/analisador-semantico/dialetos';
 import { AnalisadorSemanticoInterface } from '@designliquido/delegua/fontes/interfaces/analisador-semantico-interface';
 import { RetornoAvaliadorSintatico, RetornoLexador } from '@designliquido/delegua/fontes/interfaces/retornos';
 import { RetornoAnalisadorSemantico } from '@designliquido/delegua/fontes/interfaces/retornos/retorno-analisador-semantico';
@@ -56,6 +56,12 @@ export function analiseSemantica(
             lexador = new LexadorVisuAlg();
             avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
             analisadorSemantico = new AnalisadorSemanticoVisualg();
+            break;
+
+        case "alg":
+            lexador = new LexadorVisuAlg();
+            avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
+            analisadorSemantico = new AnalisadorSemanticoVisuAlg(); 
             break;
 
         default:

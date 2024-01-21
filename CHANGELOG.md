@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.10.0
+
+- Avaliação semântica para o VisuAlg;
+- Novo formatador de código para Delégua (`Alt`/`Option` + `Shift` + `F`).
+
 ## 0.9.21
 
 - Atualização da biblioteca `delegua-node` para a versão 0.27.4;
