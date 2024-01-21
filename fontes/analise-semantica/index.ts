@@ -22,7 +22,7 @@ const diagnosticSeverityMap = {
 
 
 export function analiseSemantica(
-    documento: vscode.TextDocument, 
+    documento: vscode.TextDocument,
     diagnosticos: vscode.DiagnosticCollection
 ): void {
     const extensaoArquivo = documento.fileName.split('.')[1];
@@ -33,15 +33,15 @@ export function analiseSemantica(
     let resultadoLexador: RetornoLexador<SimboloInterface>;
     let resultadoAvaliadorSintatico: RetornoAvaliadorSintatico<Declaracao>;
     let resultadoAnalisadorSemantico: RetornoAnalisadorSemantico;
-    
+
     switch (extensaoArquivo) {
-        case "birl": 
+        case "birl":
             lexador = new LexadorBirl();
             avaliadorSintatico = new AvaliadorSintaticoBirl();
-            analisadorSemantico = new AnalisadorSemanticoBirl();             
-            break;        
-            
-        case "mapler": 
+            analisadorSemantico = new AnalisadorSemanticoBirl();
+            break;
+
+        case "mapler":
             lexador = new LexadorMapler();
             avaliadorSintatico = new AvaliadorSintaticoMapler();
             analisadorSemantico = new AnalisadorSemanticoMapler();
@@ -50,7 +50,12 @@ export function analiseSemantica(
         case "delegua":
             lexador = new lexadores.Lexador();
             avaliadorSintatico = new avaliadores.AvaliadorSintatico();
-            analisadorSemantico = new AnalisadorSemantico(); 
+            analisadorSemantico = new AnalisadorSemantico();
+            break;
+        case "visualg":
+            lexador = new LexadorVisuAlg();
+            avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
+            analisadorSemantico = new AnalisadorSemanticoVisualg();
             break;
 
         case "alg":
@@ -72,7 +77,7 @@ export function analiseSemantica(
 
 function popularDiagnosticos(
     diagnosticosAnaliseSemantica: DiagnosticoAnalisadorSemantico[],
-    diagnosticos: vscode.DiagnosticCollection, 
+    diagnosticos: vscode.DiagnosticCollection,
     documento: vscode.TextDocument
 ) {
     const listaOcorrenciasSemanticas: vscode.Diagnostic[] = diagnosticosAnaliseSemantica.map(diagnostico => {
