@@ -1,0 +1,1 @@
+var a=1 enquanto a<10{a++ escreva(a)}
