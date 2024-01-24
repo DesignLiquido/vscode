@@ -465,7 +465,7 @@
     "dependencies": {
         "@designliquido/delegua-node": "^0.30.3",
         "@designliquido/foles": "^0.6.1",
-        "@designliquido/lmht-js": "^0.4.4",
+        "@designliquido/lmht-js": "^0.4.5",
         "lodash": "^4.17.21",
         "real-executable-path": "^3.0.0"
     },
