@@ -3,7 +3,8 @@
 ## 0.10.1
 
 - Correção de _bugs_ na avaliação semântica para o VisuAlg: https://github.com/DesignLiquido/delegua/pull/593;
-- Implementação dos blocos `aleatorio` para o VisuAlg: https://github.com/DesignLiquido/delegua/pull/592.
+- Implementação dos blocos `aleatorio` para o VisuAlg: https://github.com/DesignLiquido/delegua/pull/592;
+- Atualização da biblioteca `lmht-js` para a versão 0.4.5.
 
 ## 0.10.0
 
