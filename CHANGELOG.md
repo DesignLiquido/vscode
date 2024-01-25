@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.10.2
+
+- Atualização da biblioteca `delegua-node` para a versão 0.30.4;
+- Atualização da gramática de LMHT.
+
 ## 0.10.1
 
 - Correção de _bugs_ na avaliação semântica para o VisuAlg: https://github.com/DesignLiquido/delegua/pull/593;
