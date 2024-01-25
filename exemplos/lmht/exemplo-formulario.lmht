@@ -1,0 +1,17 @@
+<lmht>
+    <cabeça><título>Teste</título></cabeça>
+    <corpo>
+        <titulo1>Adicionar Artigo</titulo1>
+        <formulário método="POST" ação="">
+        <campos>
+            <etiqueta para="id">id</etiqueta>
+            <campo tipo="texto" id="{{id}}"></campo>
+            <etiqueta para="titulo">titulo</etiqueta>
+            <campo tipo="texto" id="{{titulo}}"></campo>
+            <etiqueta para="conteudo">conteudo</etiqueta>
+            <campo tipo="texto" id="{{conteudo}}"></campo>
+        </campos>
+</formulário>
+
+    </corpo>
+</lmht>
