@@ -125,7 +125,8 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
             if (textoOuExcecao instanceof Error) {
                 eventoSaida = new OutputEvent(`${textoOuExcecao.stack}`);
             } else {
-                eventoSaida = new OutputEvent(`${textoOuExcecao}${mesmaLinha ? '' : '\n'}`);
+                const textoSemEscape = textoOuExcecao.replace(/\\t/g, '\t').replace(/\\n/g, '\n');
+                eventoSaida = new OutputEvent(`${textoSemEscape}${mesmaLinha ? '' : '\n'}`, 'stdout');
             }
             
             eventoSaida.body.source = this.criarReferenciaSource(caminhoArquivo);
