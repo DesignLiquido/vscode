@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.10.3
+
+- Correção de _bug_ usando operador de negação no Portugol Studio: https://github.com/DesignLiquido/delegua/issues/595;
+- Mais atualizações da gramática de LMHT;
+- Atualização da biblioteca `lmht-js` para a versão 0.4.6.
+
 ## 0.10.2
 
 - Atualização da biblioteca `delegua-node` para a versão 0.30.4;
