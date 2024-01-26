@@ -1,4 +1,4 @@
-//https://github.com/DesignLiquido/vscode/issues/44
+https://github.com/DesignLiquido/delegua/issues/595
 programa
 {
     funcao inicio()
