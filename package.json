@@ -401,6 +401,11 @@
                 "path": "./gramaticas/foles.tmLanguage.json"
             },
             {
+                "language": "lincones",
+                "scopeName": "source.lincones",
+                "path": "./gramaticas/lincones.tmLanguage.json"
+            },
+            {
                 "language": "lmht",
                 "scopeName": "source.lmht",
                 "path": "./gramaticas/lmht.tmLanguage.json"
