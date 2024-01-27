@@ -3,7 +3,7 @@
 		"Este arquivo foi adaptado de https://github.com/microsoft/vscode/blob/main/extensions/sql/syntaxes/sql.tmLanguage.json"
 	],
 	"version": "https://github.com/microsoft/vscode/blob/main/extensions/sql/syntaxes/sql.tmLanguage.json",
-	"name": "SQL",
+	"name": "LinConEs",
 	"scopeName": "source.lincones",
 	"patterns": [
 		{
