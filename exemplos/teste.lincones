@@ -1,3 +1,38 @@
+CRIAR TABELA Pessoas (
+    IDPessoa INTEIRO CHAVE PRIMARIA AUTO INCREMENTO, 
+    Sobrenome TEXTO(255) NAO NULO,
+    Nome TEXTO(255) PADRAO "Fulano de Tal",
+    Endereco TEXTO(255),
+    Cidade TEXTO(255),
+    Idade INTEIRO,
+    Telefone INTEIRO UNICO,
+    VERIFICAR (IDADE >= 18)
+);
+
 SELECIONAR *
 DE CLIENTES
 ONDE ID = 1
+
+ALTERAR TABELA Clientes
+ADICIONAR Email TEXTO(255);
+
+ALTERAR TABELA Clientes
+EXCLUIR COLUNA Email;
+
+INSERIR EM Clientes (NomeCliente, NomeContato, Endereco, Cidade, CodigoPostal, Pais)
+VALORES
+('José Silva', 'Antônio Souza', 'Rua Bela Vista 123', 'São Paulo', '03050-100', 'Brasil'),
+('Mariana Oliveira', 'Fernando Santos', 'Avenida da Liberdade 789', 'Brasília', '70000-000', 'Brasil'),
+('Sabores Tropicais', 'Carlos Oliveira', 'Rua das Flores 456', 'Salvador', '40000-000', 'Brasil');
+
+EXCLUIR DE Clientes ONDE NomeCliente='Maria Silva';
+
+ALTERAR TABELA Clientes
+RENOMEAR COLUNA Cidade PARA Bairro;
+
+ALTERAR TABELA Pessoas
+MODIFICAR COLUNA DataNascimento ano;
+
+EXCLUIR TABELA Transportadoras;
+
+--Comentario aleatório
