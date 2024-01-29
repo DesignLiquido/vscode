@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.10.5
+
+- Correções de _bugs_ no dialeto VisuAlg quanto ao laço `para` sem `passo` definido;
+- Correção de funcionalidade do bloco `aleatorio` no dialeto VisuAlg.
+
 ## 0.10.4
 
 - Atualização da biblioteca `lmht-js` para a versão 0.4.8;
