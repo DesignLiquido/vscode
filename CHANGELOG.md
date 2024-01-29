@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.10.4
+
+- Atualização da biblioteca `lmht-js` para a versão 0.4.8;
+- Ajustes na sintaxe de LinConEs;
+- Correções em dialetos de Portugol: VisuAlg e Portugol Studio.
+
 ## 0.10.3
 
 - Correção de _bug_ usando operador de negação no Portugol Studio: https://github.com/DesignLiquido/delegua/issues/595;
