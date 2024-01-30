@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.10.6
+
+- Delégua e Pituguês receberam duas novas primitivas para números: `numero.arredondarParaCima()` e `numero.arredondarParaBaixo()`.
+
 ## 0.10.5
 
 - Correções de _bugs_ no dialeto VisuAlg quanto ao laço `para` sem `passo` definido;
