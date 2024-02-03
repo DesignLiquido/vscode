@@ -1,0 +1,5 @@
+funcao somar() {
+    retorna 2 + 2
+}
+
+escreva(tipo de somar) // função
