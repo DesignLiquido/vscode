@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.10.7
+
+- Atualizações em recursos de Delégua e Portugol Studio.
+
 ## 0.10.6
 
 - Delégua e Pituguês receberam duas novas primitivas para números: `numero.arredondarParaCima()` e `numero.arredondarParaBaixo()`.
