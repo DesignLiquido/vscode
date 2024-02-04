@@ -1,5 +1,17 @@
 # Histórico de Modificações
 
+## 0.10.8
+
+- Novas primitivas para dicionários em Delégua: `dicionario.chaves()` e `dicionario.valores()`. 
+
+## 0.10.7
+
+- Atualizações em recursos de Delégua e Portugol Studio.
+
+## 0.10.6
+
+- Delégua e Pituguês receberam duas novas primitivas para números: `numero.arredondarParaCima()` e `numero.arredondarParaBaixo()`.
+
 ## 0.10.5
 
 - Correções de _bugs_ no dialeto VisuAlg quanto ao laço `para` sem `passo` definido;
