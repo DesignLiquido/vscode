@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.10.8
+
+- Novas primitivas para dicionários em Delégua: `dicionario.chaves()` e `dicionario.valores()`. 
+
 ## 0.10.7
 
 - Atualizações em recursos de Delégua e Portugol Studio.
