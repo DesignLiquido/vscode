@@ -7,8 +7,8 @@ inicio
 
    aleatorio 1, 12
        leia(mes1)
-       leia(mes2)
    aleatorio off
+       leia(mes2)
 
    escreval("")
    escreval("Mes 1:", mes1)
