@@ -16,7 +16,7 @@ import {
     FolesProvedorCompletude,
     LiquidoProvedorCompletude,
 } from './completude';
-import { DeleguaProvedorFormatacao } from './formatadores';
+import { DeleguaProvedorFormatacao, VisualgProvedorFormatacao } from './formatadores';
 import { VisuAlgProvedorCompletude } from './completude/visualg-provedor-completude';
 import { VisuAlgProvedorDocumentacaoEmEditor } from './documentacao-em-editor/visualg-provedor-documentacao-em-editor';
 import { traduzir } from './traducao';
@@ -149,6 +149,13 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerDocumentFormattingEditProvider(
             'delegua',
             new DeleguaProvedorFormatacao()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'visualg',
+            new VisualgProvedorFormatacao()
         )
     );
 

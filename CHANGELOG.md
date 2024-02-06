@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.10.9
+
+- Funcionalidade de tuplas para Delégua: https://github.com/DesignLiquido/delegua/pull/627;
+- Funcionalidade de formatação de código para o VisuAlg: https://github.com/DesignLiquido/delegua/pull/626.
+
 ## 0.10.8
 
 - Novas primitivas para dicionários em Delégua: `dicionario.chaves()` e `dicionario.valores()`. 
