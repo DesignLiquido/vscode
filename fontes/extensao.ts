@@ -10,6 +10,7 @@ import {
 import {
     DeleguaProvedorDocumentacaoEmEditor,
     FolesProvedorDocumentacaoEmEditor,
+    LinConEsProvedorDocumentacaoEmEditor
 } from './documentacao-em-editor';
 import {
     DeleguaProvedorCompletude,
@@ -207,6 +208,12 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
+    context.subscriptions.push(
+        vscode.languages.registerHoverProvider(
+            'lincones',
+            new LinConEsProvedorDocumentacaoEmEditor()
+        )
+    )
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(
             'lmht',
