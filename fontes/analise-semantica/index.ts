@@ -1,17 +1,21 @@
 import * as vscode from 'vscode';
 
-import { AnalisadorSemantico } from '@designliquido/delegua/fontes/analisador-semantico';
-import { avaliadores, lexadores } from '@designliquido/delegua';
-import { AvaliadorSintaticoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/fontes/interfaces';
-import { DiagnosticoAnalisadorSemantico } from '@designliquido/delegua/fontes/interfaces/erros';
-import { Declaracao } from '@designliquido/delegua/fontes/declaracoes';
+import { AnalisadorSemantico } from '@designliquido/delegua/analisador-semantico';
+import { AvaliadorSintaticoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
+import { DiagnosticoAnalisadorSemantico } from '@designliquido/delegua/interfaces/erros';
+import { Declaracao } from '@designliquido/delegua/declaracoes';
 
-import { LexadorBirl, LexadorMapler, LexadorVisuAlg } from '@designliquido/delegua/fontes/lexador/dialetos';
-import { AvaliadorSintaticoBirl, AvaliadorSintaticoMapler, AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos';
-import { AnalisadorSemanticoBirl, AnalisadorSemanticoMapler, AnalisadorSemanticoVisuAlg } from '@designliquido/delegua/fontes/analisador-semantico/dialetos';
-import { AnalisadorSemanticoInterface } from '@designliquido/delegua/fontes/interfaces/analisador-semantico-interface';
-import { RetornoAvaliadorSintatico, RetornoLexador } from '@designliquido/delegua/fontes/interfaces/retornos';
-import { RetornoAnalisadorSemantico } from '@designliquido/delegua/fontes/interfaces/retornos/retorno-analisador-semantico';
+import { Lexador } from '@designliquido/delegua/lexador';
+import { LexadorBirl, LexadorMapler, LexadorVisuAlg } from '@designliquido/delegua/lexador/dialetos';
+
+import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
+import { AvaliadorSintaticoBirl, AvaliadorSintaticoMapler, AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/avaliador-sintatico/dialetos';
+
+import { AnalisadorSemanticoInterface } from '@designliquido/delegua/interfaces/analisador-semantico-interface';
+import { AnalisadorSemanticoBirl, AnalisadorSemanticoMapler, AnalisadorSemanticoVisuAlg } from '@designliquido/delegua/analisador-semantico/dialetos';
+
+import { RetornoAvaliadorSintatico, RetornoLexador } from '@designliquido/delegua/interfaces/retornos';
+import { RetornoAnalisadorSemantico } from '@designliquido/delegua/interfaces/retornos/retorno-analisador-semantico';
 
 const diagnosticSeverityMap = {
     0: vscode.DiagnosticSeverity.Error,
@@ -48,14 +52,15 @@ export function analiseSemantica(
             break;
 
         case "delegua":
-            lexador = new lexadores.Lexador();
-            avaliadorSintatico = new avaliadores.AvaliadorSintatico();
+            lexador = new Lexador();
+            avaliadorSintatico = new AvaliadorSintatico();
             analisadorSemantico = new AnalisadorSemantico();
             break;
+            
         case "visualg":
             lexador = new LexadorVisuAlg();
             avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
-            analisadorSemantico = new AnalisadorSemanticoVisualg();
+            analisadorSemantico = new AnalisadorSemanticoVisuAlg();
             break;
 
         case "alg":

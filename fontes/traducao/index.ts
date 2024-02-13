@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as caminho from 'path';
 import * as sistemaArquivos from 'fs';
 
-import { Delegua } from '@designliquido/delegua-node/fontes/delegua';
+import { Delegua } from '@designliquido/delegua-node/delegua';
 import { FolEs } from '@designliquido/foles';
 import { ConversorHtml, ConversorLmht } from '@designliquido/lmht-js';
 
@@ -91,7 +91,7 @@ function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: string, cam
  * @returns O texto com o conteúdo da tradução.
  */
 function traduzirPorMotorFolEs(deLinguagem: string, paraLinguagem: string, caminhoArquivoAbertoEditor: string): string {
-    const foles = new FolEs();
+    const foles = new FolEs(false);
     let resultadoTraducao = '';
     switch (deLinguagem.toLowerCase()) {
         case 'foles':

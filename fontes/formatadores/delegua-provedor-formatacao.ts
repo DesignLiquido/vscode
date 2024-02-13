@@ -1,13 +1,14 @@
 import * as vscode from 'vscode';
 import * as sistemaOperacional from 'node:os';
 
-import { avaliadores, lexadores } from '@designliquido/delegua';
-import { FormatadorDelegua } from '@designliquido/delegua/fontes/formatadores';
+import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
+import { FormatadorDelegua } from '@designliquido/delegua/formatadores';
+import { Lexador } from '@designliquido/delegua/lexador';
 
 export class DeleguaProvedorFormatacao implements vscode.DocumentFormattingEditProvider {
     provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
-        const lexador = new lexadores.Lexador();
-        const avaliadorSintatico = new avaliadores.AvaliadorSintatico(false);
+        const lexador = new Lexador();
+        const avaliadorSintatico = new AvaliadorSintatico(false);
         const formatador = new FormatadorDelegua(sistemaOperacional.EOL);
 
         const resultadoLexador = lexador.mapear(document.getText().split('\n'), -1);

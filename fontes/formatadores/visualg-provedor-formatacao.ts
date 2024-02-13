@@ -2,9 +2,9 @@ import * as vscode from 'vscode';
 import * as sistemaOperacional from 'node:os';
 
 
-import { FormatadorVisuAlg } from '@designliquido/delegua/fontes/formatadores';
-import { LexadorVisuAlg } from '@designliquido/delegua/fontes/lexador/dialetos';
-import { AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos';
+import { FormatadorVisuAlg } from '@designliquido/delegua/formatadores';
+import { LexadorVisuAlg } from '@designliquido/delegua/lexador/dialetos';
+import { AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/avaliador-sintatico/dialetos';
 
 export class VisualgProvedorFormatacao implements vscode.DocumentFormattingEditProvider {
     provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
