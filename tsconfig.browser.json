@@ -3,7 +3,7 @@
     "exclude": [
         "./fontes/depuracao/fabricas/remotas",
         "./fontes/depuracao/remota",
-        "../delegua/fontes/formatadores",
+        "../delegua/formatadores",
         "./node_modules/@vscode/debugadapter",
         "./node_modules/@designliquido/delegua-node"
     ]

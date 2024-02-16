@@ -1,12 +1,27 @@
 import * as vscode from 'vscode';
 
-import { Breakpoint, BreakpointEvent, Handles, InitializedEvent, Logger, logger, LoggingDebugSession, OutputEvent, Scope, Source, StackFrame, StoppedEvent, TerminatedEvent, Thread } from "@vscode/debugadapter";
-import { DebugProtocol } from "@vscode/debugprotocol";
+import {
+    Breakpoint,
+    BreakpointEvent,
+    Handles,
+    InitializedEvent,
+    Logger,
+    logger,
+    LoggingDebugSession,
+    OutputEvent,
+    Scope,
+    Source,
+    StackFrame,
+    StoppedEvent,
+    TerminatedEvent,
+    Thread,
+} from '@vscode/debugadapter';
+import { DebugProtocol } from '@vscode/debugprotocol';
 import { Subject } from 'await-notify';
 
-import { inferirTipoVariavel } from "@designliquido/delegua/fontes/interpretador/inferenciador";
+import { inferirTipoVariavel } from '@designliquido/delegua/interpretador/inferenciador';
 
-import { ArgumentosInicioDepuracao } from "../argumentos-inicio-depuracao";
+import { ArgumentosInicioDepuracao } from '../argumentos-inicio-depuracao';
 import { DeleguaTempoExecucaoLocal } from './delegua-tempo-execucao-local';
 import { DeleguaPontoParada } from '../delegua-ponto-parada';
 import { ElementoPilhaVsCode } from '../elemento-pilha';
@@ -18,7 +33,7 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
     private tempoExecucao: DeleguaTempoExecucaoLocal;
 
     private _arquivoInicial = '';
-    
+
     private _idPontoParada = 1;
     private _configuracaoFinalizada = new Subject();
     private _alocadorEscopos = new Handles<string>();
@@ -35,21 +50,21 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         this.tempoExecucao = new DeleguaTempoExecucaoLocal();
 
         this.tempoExecucao.on('mensagemInformacao', (mensagem: string) => {
-			vscode.window.showInformationMessage(mensagem);
-		});
+            vscode.window.showInformationMessage(mensagem);
+        });
 
-		this.tempoExecucao.on('mudancaStatus', (mensagem: string) => {
-			vscode.window.setStatusBarMessage(mensagem);
-		});
+        this.tempoExecucao.on('mudancaStatus', (mensagem: string) => {
+            vscode.window.setStatusBarMessage(mensagem);
+        });
 
-		this.tempoExecucao.on('mensagemAviso', (mensagem: string) => {
-			vscode.window.showWarningMessage('Depuração: ' + mensagem);
-		});
+        this.tempoExecucao.on('mensagemAviso', (mensagem: string) => {
+            vscode.window.showWarningMessage('Depuração: ' + mensagem);
+        });
 
-		this.tempoExecucao.on('mensagemErro', (mensagem: string) => {
-			vscode.window.showErrorMessage('Depuração: ' + mensagem);
-		});
-        
+        this.tempoExecucao.on('mensagemErro', (mensagem: string) => {
+            vscode.window.showErrorMessage('Depuração: ' + mensagem);
+        });
+
         this.tempoExecucao.on('finalizar', () => {
             this.sendEvent(new TerminatedEvent());
         });
@@ -86,7 +101,10 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
 
         this.tempoExecucao.on('pararEmPontoParada', () => {
             this.sendEvent(
-                new StoppedEvent('breakpoint', DeleguaSessaoDepuracaoBase.threadId)
+                new StoppedEvent(
+                    'breakpoint',
+                    DeleguaSessaoDepuracaoBase.threadId
+                )
             );
         });
 
@@ -120,19 +138,33 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
             }
         );
 
-        this.tempoExecucao.on('saida', (textoOuExcecao: Error | string, mesmaLinha = false, caminhoArquivo = '', linha = 0) => {
-            let eventoSaida: DebugProtocol.OutputEvent; 
-            if (textoOuExcecao instanceof Error) {
-                eventoSaida = new OutputEvent(`${textoOuExcecao.stack}`);
-            } else {
-                const textoSemEscape = textoOuExcecao.replace(/\\t/g, '\t').replace(/\\n/g, '\n');
-                eventoSaida = new OutputEvent(`${textoSemEscape}${mesmaLinha ? '' : '\n'}`, 'stdout');
+        this.tempoExecucao.on(
+            'saida',
+            (
+                textoOuExcecao: Error | string,
+                mesmaLinha = false,
+                caminhoArquivo = '',
+                linha = 0
+            ) => {
+                let eventoSaida: DebugProtocol.OutputEvent;
+                if (textoOuExcecao instanceof Error) {
+                    eventoSaida = new OutputEvent(`${textoOuExcecao.stack}`);
+                } else {
+                    const textoSemEscape = textoOuExcecao
+                        .replace(/\\t/g, '\t')
+                        .replace(/\\n/g, '\n');
+                    eventoSaida = new OutputEvent(
+                        `${textoSemEscape}${mesmaLinha ? '' : '\n'}`,
+                        'stdout'
+                    );
+                }
+
+                eventoSaida.body.source =
+                    this.criarReferenciaSource(caminhoArquivo);
+                eventoSaida.body.line = this.convertDebuggerLineToClient(linha);
+                this.sendEvent(eventoSaida);
             }
-            
-            eventoSaida.body.source = this.criarReferenciaSource(caminhoArquivo);
-            eventoSaida.body.line = this.convertDebuggerLineToClient(linha);
-            this.sendEvent(eventoSaida);
-        });
+        );
     }
 
     // Descomentar se precisar descobrir a sequência de requisições
@@ -181,13 +213,16 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
                 args.trace ? Logger.LogLevel.Verbose : Logger.LogLevel.Stop,
                 false
             );
-            
+
             this._arquivoInicial = args.program;
-    
+
             // Aguarda a finalização da configuração (configurationDoneRequest)
             await this._configuracaoFinalizada.wait(10000);
-    
-            this.tempoExecucao.iniciar(this._arquivoInicial, !!args.stopOnEntry);
+
+            this.tempoExecucao.iniciar(
+                this._arquivoInicial,
+                !!args.stopOnEntry
+            );
             this.sendResponse(response);
         } catch (erro: any) {
             response.success = false;
@@ -196,27 +231,27 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
             } else {
                 response.message = `${erro.message}`;
             }
-            
+
             this.sendResponse(response);
             throw erro;
         }
     }
 
     protected breakpointLocationsRequest(
-        response: DebugProtocol.BreakpointLocationsResponse, 
-        args: DebugProtocol.BreakpointLocationsArguments, 
-        request?: DebugProtocol.Request): void 
-    {
+        response: DebugProtocol.BreakpointLocationsResponse,
+        args: DebugProtocol.BreakpointLocationsArguments,
+        request?: DebugProtocol.Request
+    ): void {
         // TODO: Terminar
         // const pontosParada = this.interpretador.pontosParada;
         response.body = {
-            breakpoints: []
+            breakpoints: [],
         };
         this.sendResponse(response);
     }
 
     /**
-     * Chamado após a sequência de configuração. 
+     * Chamado após a sequência de configuração.
      * Indica que todos os pontos de parada, variáveis, etc, foram devidamente enviados e a depuração ('launch') pode iniciar.
      */
     protected configurationDoneRequest(
@@ -247,18 +282,25 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
      * Monta respostas para `evaluateRequest`.
      * @param response Resposta que a extensão espera.
      * @param respostaDelegua A resposta vinda do interpretador.
-     * @returns 
+     * @returns
      */
-    private montarEvaluateResponse(response: DebugProtocol.EvaluateResponse, respostaDelegua: any): DebugProtocol.EvaluateResponse {
+    private montarEvaluateResponse(
+        response: DebugProtocol.EvaluateResponse,
+        respostaDelegua: any
+    ): DebugProtocol.EvaluateResponse {
         try {
             const respostaEstruturada = JSON.parse(respostaDelegua);
-            response.body = { 
-                result: respostaEstruturada.hasOwnProperty('valor') ? String(respostaEstruturada.valor) : String(respostaEstruturada),
-                type: respostaEstruturada.hasOwnProperty('tipo') ? respostaEstruturada.tipo : inferirTipoVariavel(respostaEstruturada),
+            response.body = {
+                result: respostaEstruturada.hasOwnProperty('valor')
+                    ? String(respostaEstruturada.valor)
+                    : String(respostaEstruturada),
+                type: respostaEstruturada.hasOwnProperty('tipo')
+                    ? respostaEstruturada.tipo
+                    : inferirTipoVariavel(respostaEstruturada),
                 variablesReference: 0,
                 presentationHint: {
-                    kind: 'data'
-                }
+                    kind: 'data',
+                },
             };
             return response;
         } catch (erro: any) {
@@ -277,9 +319,14 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         response: DebugProtocol.EvaluateResponse,
         args: DebugProtocol.EvaluateArguments
     ): void {
-        const resposta = this.tempoExecucao.obterVariavel(args.expression.toLowerCase());
+        const resposta = this.tempoExecucao.obterVariavel(
+            args.expression.toLowerCase()
+        );
         if (resposta !== undefined) {
-            const responseModificada = this.montarEvaluateResponse(response, JSON.stringify(resposta));
+            const responseModificada = this.montarEvaluateResponse(
+                response,
+                JSON.stringify(resposta)
+            );
             this.sendResponse(responseModificada);
             return;
         }
@@ -311,7 +358,7 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
     } */
 
     /**
-     * Aparentemente necessário para exibir as variáveis no painel de 
+     * Aparentemente necessário para exibir as variáveis no painel de
      * variáveis da depuração.
      * Por enquanto trabalhando apenas com escopo global.
      * @param response A resposta a ser devolvida para o VSCode.
@@ -333,7 +380,9 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         escopos.push(
             new Scope(
                 'Global',
-                this._alocadorEscopos.create('global_' + referenciaElementoPilha),
+                this._alocadorEscopos.create(
+                    'global_' + referenciaElementoPilha
+                ),
                 false // `true` para iniciar fechado.
             )
         );
@@ -359,11 +408,10 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
     ): void {
         const linhas = args.lines || [];
 
-        const pontosParada = linhas.map(linha => {
-            const pontoParada = <PontoParadaExtensao>(new Breakpoint(
-                true, 
-                this.convertDebuggerLineToClient(linha)
-            ));
+        const pontosParada = linhas.map((linha) => {
+            const pontoParada = <PontoParadaExtensao>(
+                new Breakpoint(true, this.convertDebuggerLineToClient(linha))
+            );
             pontoParada.id = this._idPontoParada++;
             pontoParada.source = args.source;
             return pontoParada;
@@ -423,22 +471,24 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
     /**
      * Fundamental para o funcionamento da depuração, senão o VSCode não sabe
      * se o código está executando ou não, e onde.
-     * 
-     * Como Delégua e dialetos são baseados em Node, e Node tem uma _thread_ só, 
+     *
+     * Como Delégua e dialetos são baseados em Node, e Node tem uma _thread_ só,
      * basta enviar um registro fixo de _thread_ para fazer o restante das inspeções
-     * funcionarem adequadamente. 
+     * funcionarem adequadamente.
      * @param response Uma `ThreadsResponse`.
      */
     protected threadsRequest(response: DebugProtocol.ThreadsResponse): void {
         response.body = {
-            threads: [new Thread(DeleguaSessaoDepuracaoBase.threadId, 'thread 1')],
+            threads: [
+                new Thread(DeleguaSessaoDepuracaoBase.threadId, 'thread 1'),
+            ],
         };
         this.sendResponse(response);
     }
 
     /**
-     * Devolve todas as variáveis em tempo de execução. Normalmente é a informação 
-     * apresentada no painel "Variables" do VSCode enquanto depurando o código. 
+     * Devolve todas as variáveis em tempo de execução. Normalmente é a informação
+     * apresentada no painel "Variables" do VSCode enquanto depurando o código.
      * @param response Uma `VariablesResponse`
      * @param args Normalmente a referência da variável, mas não usamos até então (ver comentário abaixo)
      */
@@ -449,23 +499,26 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         const variaveis = this.tempoExecucao.variaveis();
 
         response.body = {
-            variables: variaveis.map(variavel => ({
-                name: variavel.nome,
-                type: variavel.tipo,
-                value: String(variavel.valor),
-                // TODO: Essa `variablesReference` deve ser maior que zero quando o objeto é composto.
-                // Por exemplo, formado por outras variáveis. 
-                // Por enquanto todas as referências são definidas como zero porque até então
-                // as linguagens não fazem referência de outras variáveis. 
-                // variablesReference: this._referenciaEscopoGlobal,
-                variablesReference: 0,
-                namedVariables: 0,
-                indexedVariables: 0,
-                presentationHint: {
-                    kind: 'data',
-                    attributes: ['rawString']
-                } as DebugProtocol.VariablePresentationHint
-            } as DebugProtocol.Variable)),
+            variables: variaveis.map(
+                (variavel) =>
+                    ({
+                        name: variavel.nome,
+                        type: variavel.tipo,
+                        value: String(variavel.valor),
+                        // TODO: Essa `variablesReference` deve ser maior que zero quando o objeto é composto.
+                        // Por exemplo, formado por outras variáveis.
+                        // Por enquanto todas as referências são definidas como zero porque até então
+                        // as linguagens não fazem referência de outras variáveis.
+                        // variablesReference: this._referenciaEscopoGlobal,
+                        variablesReference: 0,
+                        namedVariables: 0,
+                        indexedVariables: 0,
+                        presentationHint: {
+                            kind: 'data',
+                            attributes: ['rawString'],
+                        } as DebugProtocol.VariablePresentationHint,
+                    } as DebugProtocol.Variable)
+            ),
         };
         this.sendResponse(response);
     }

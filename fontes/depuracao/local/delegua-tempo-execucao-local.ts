@@ -5,28 +5,28 @@ import { DebugProtocol } from '@vscode/debugprotocol';
 
 import { cyrb53, PontoParada } from '@designliquido/delegua';
 
-import { ElementoPilhaVsCode } from '../elemento-pilha';
-import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/fontes/interfaces';
-import { LexadorPortugolStudio } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-portugol-studio';
-import { LexadorVisuAlg } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-visualg';
-import { AvaliadorSintaticoPortugolStudio } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-portugol-studio';
-import { LexadorPitugues } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-pitugues';
-import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-pitugues';
-import { LexadorMapler } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-mapler';
-import { AvaliadorSintaticoMapler } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-mapler';
-import { Importador } from '@designliquido/delegua-node/fontes/importador';
-import { ImportadorInterface } from '@designliquido/delegua-node/fontes/interfaces';
-import { InterpretadorComDepuracaoImportacao } from '@designliquido/delegua-node/fontes/interpretador/interpretador-com-depuracao-importacao';
-import { InterpretadorVisuAlgComDepuracaoImportacao } from '@designliquido/delegua-node/fontes/interpretador/dialetos/interpretador-visualg-com-depuracao-importacao';
+import { InterpretadorVisuAlgComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/dialetos/interpretador-visualg-com-depuracao-importacao';
 
-import { palavrasReservadas } from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
-import { InterpretadorPortugolStudioComDepuracao } from '@designliquido/delegua/fontes/interpretador/dialetos';
-import { InterpretadorPotigolComDepuracao } from '@designliquido/delegua/fontes/interpretador/dialetos/potigol/interpretador-potigol-com-depuracao';
-import { LexadorBirl, LexadorPotigol } from '@designliquido/delegua/fontes/lexador/dialetos';
-import { AvaliadorSintaticoBirl, AvaliadorSintaticoPotigol, AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos';
-import { Declaracao } from '@designliquido/delegua/fontes/declaracoes';
-import { Lexador } from '@designliquido/delegua/fontes/lexador';
-import { AvaliadorSintatico } from '@designliquido/delegua/fontes/avaliador-sintatico';
+import { ElementoPilhaVsCode } from '../elemento-pilha';
+import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
+import { LexadorPortugolStudio } from '@designliquido/delegua/lexador/dialetos/lexador-portugol-studio';
+
+import { AvaliadorSintaticoPortugolStudio } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-portugol-studio';
+import { LexadorPitugues } from '@designliquido/delegua/lexador/dialetos/lexador-pitugues';
+import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-pitugues';
+import { AvaliadorSintaticoMapler } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-mapler';
+import { Importador } from '@designliquido/delegua-node/importador';
+import { ImportadorInterface } from '@designliquido/delegua-node/interfaces';
+import { InterpretadorComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/interpretador-com-depuracao-importacao';
+
+import { palavrasReservadas } from '@designliquido/delegua/lexador/palavras-reservadas';
+import { InterpretadorPortugolStudioComDepuracao } from '@designliquido/delegua/interpretador/dialetos';
+import { InterpretadorPotigolComDepuracao } from '@designliquido/delegua/interpretador/dialetos/potigol/interpretador-potigol-com-depuracao';
+import { LexadorBirl, LexadorMapler, LexadorPotigol, LexadorVisuAlg } from '@designliquido/delegua/lexador/dialetos';
+import { AvaliadorSintaticoBirl, AvaliadorSintaticoPotigol, AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/avaliador-sintatico/dialetos';
+import { Declaracao } from '@designliquido/delegua/declaracoes';
+import { Lexador } from '@designliquido/delegua/lexador';
+import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
 
 /**
  * Em teoria não precisaria uma classe de tempo de execução local, mas,

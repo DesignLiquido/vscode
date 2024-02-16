@@ -1,5 +1,13 @@
 # Histórico de Modificações
 
+## 0.10.11
+
+- Diversos ajustes em Delégua e dialetos quanto a forma de escrita de certas variáveis, e organização arquitetural dos pacotes.
+
+## 0.10.10
+
+- Declaração `tendo ... como` para Delégua: https://github.com/DesignLiquido/delegua/pull/639.
+
 ## 0.10.9
 
 - Funcionalidade de tuplas para Delégua: https://github.com/DesignLiquido/delegua/pull/627;
