@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.10.12
+
+- Ajustes em Delégua quanto à escrita de primitivas como texto.
+
 ## 0.10.11
 
 - Diversos ajustes em Delégua e dialetos quanto a forma de escrita de certas variáveis, e organização arquitetural dos pacotes.
