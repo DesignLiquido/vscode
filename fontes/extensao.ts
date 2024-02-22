@@ -213,7 +213,7 @@ export function activate(context: vscode.ExtensionContext) {
             'lincones',
             new LinConEsProvedorDocumentacaoEmEditor()
         )
-    )
+    );
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(
             'lmht',
