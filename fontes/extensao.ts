@@ -159,7 +159,13 @@ export function activate(context: vscode.ExtensionContext) {
             new VisualgProvedorFormatacao()
         )
     );
-
+    
+    context.subscriptions.push(
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'potigol',
+            new PotigolProvedorFormatacao()
+        )
+    );
     // IntelliSense para Delégua e Liquido.
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
@@ -175,13 +181,6 @@ export function activate(context: vscode.ExtensionContext) {
             new DeleguaProvedorCompletude()
         )
     );
-
-    context.subscriptions.push(
-        vscode.languages.registerDocumentFormattingEditProvider(
-          "potigol",
-          new PotigolProvedorFormatacao()
-        )
-      );
 
     // IntelliSense para FolEs
     context.subscriptions.push(
