@@ -25,6 +25,7 @@ import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
 import { LmhtProvedorCompletude } from './completude/lmht-provedor-completude';
 import { LmhtProvedorDocumentacaoEmEditor } from './documentacao-em-editor/lmht-provedor-documentacao-em-editor';
 import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
+import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -158,7 +159,13 @@ export function activate(context: vscode.ExtensionContext) {
             new VisualgProvedorFormatacao()
         )
     );
-
+    
+    context.subscriptions.push(
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'potigol',
+            new PotigolProvedorFormatacao()
+        )
+    );
     // IntelliSense para Delégua e Liquido.
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
