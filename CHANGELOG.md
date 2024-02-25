@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.10.13
+
+- Formatador de código em Potigol (extensão `.poti`): https://github.com/DesignLiquido/delegua/pull/660
+- Correções de _bugs_ e ajustes em dialetos do VisuAlg e Delégua.
+
 ## 0.10.12
 
 - Ajustes em Delégua quanto à escrita de primitivas como texto.
