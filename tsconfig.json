@@ -1,5 +1,20 @@
 {
 	"compilerOptions": {
+		"baseUrl": ".",
+        "paths": {
+            "@designliquido/birl": ["node_modules/@designliquido/birl/dist"],
+            "@designliquido/birl/*": ["node_modules/@designliquido/birl/dist/*"],
+            "@designliquido/delegua": ["node_modules/@designliquido/delegua/dist"],
+            "@designliquido/delegua/*": ["node_modules/@designliquido/delegua/dist/*"],
+			"@designliquido/delegua-node": ["node_modules/@designliquido/delegua-node/dist"],
+            "@designliquido/delegua-node/*": ["node_modules/@designliquido/delegua-node/dist/*"],
+            "@designliquido/portugol-studio": ["node_modules/@designliquido/portugol-studio/dist"],
+            "@designliquido/portugol-studio/*": ["node_modules/@designliquido/portugol-studio/dist/*"],
+            "@designliquido/potigol": ["node_modules/@designliquido/potigol/dist"],
+            "@designliquido/potigol/*": ["node_modules/@designliquido/potigol/dist/*"],
+            "@designliquido/visualg": ["node_modules/@designliquido/visualg/dist"],
+            "@designliquido/visualg/*": ["node_modules/@designliquido/visualg/dist/*"]
+        },
 		"module": "commonjs",
 		"target": "ES2020",
 		"outDir": "dist",
