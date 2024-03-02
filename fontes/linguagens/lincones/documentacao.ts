@@ -1,12 +1,3 @@
-/* Template:
-    "SELECIONAR":{   	
-        nomeSQL:"SELECT",
-        descricao:"Insira descrição aqui",
-        documentacao:"Insira um enxerto da documentação aqui",
-        exemploCodigo:"Insira um exemplo aqui"
-    }
-*/
-
 export default {
     SELECIONAR: {
         nomeSQL: 'SELECT',
@@ -85,7 +76,8 @@ export default {
             'O termo `TABELA` é utilizado para especificar que a operação envolve uma tabela no banco de dados.',
         documentacao:
             '# `TABELA` \n É utilizado para especificar que a operação envolve uma tabela no banco de dados.',
-        exemploCodigo: 'CRIAR tabela clientes (id INT AUTO INCREMENTO CHAVE PRIMARIA, nome TEXTO(255), email TEXTO(255))',
+        exemploCodigo:
+            'CRIAR tabela clientes (id INT AUTO INCREMENTO CHAVE PRIMARIA, nome TEXTO(255), email TEXTO(255))',
     },
     ADICIONAR: {
         nomeSQL: 'ADD',
@@ -128,5 +120,21 @@ export default {
         documentacao:
             '# `ONDE` \n É utilizado para impor condições em operações de seleção ou modificação de dados em uma tabela.',
         exemploCodigo: 'SELECIONAR * DE Clientes ONDE ID = 1;',
+    },
+    DE: {
+        nomeSQL: 'FROM',
+        descricao:
+            'A cláusula `DE` é utilizada para especificar a tabela da qual deseja-se selecionar ou modificar os dados.',
+        documentacao:
+            '# `DE` \n É utilizada para especificar a tabela da qual deseja-se selecionar ou modificar os dados.',
+        exemploCodigo: 'SELECIONAR * DE Clientes ONDE ID = 1;',
+    },
+    PARA: {
+        nomeSQL: 'TO',
+        descricao:
+            'A palavra-chave `PARA` é utilizada em operações de alteração de tabela, como adicionar ou renomear colunas.',
+        documentacao:
+            '# `PARA` \n É utilizado em operações de alteração de tabela, como adicionar ou renomear colunas.',
+        exemploCodigo: 'ALTERAR TABELA Clientes RENOMEAR COLUNA Cidade PARA Bairro;',
     },
 };
