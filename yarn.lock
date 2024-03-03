@@ -9,13 +9,13 @@
   dependencies:
     "@designliquido/delegua" "^0.33.6"
 
-"@designliquido/delegua-node@^0.33.8":
-  version "0.33.8"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-0.33.8.tgz#d16d34e3d1089d4b2418a49e3b76282418165aa2"
-  integrity sha512-TuBO2EjT/0Hj9ULs/xQ2uSX1ALri3x7bV/hY1MmM+MfcG9DyNnd9PNwhSzjx7o3ViwVbRbG7Akgz4UhBQGp8NQ==
+"@designliquido/delegua-node@^0.33.9":
+  version "0.33.9"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-0.33.9.tgz#410fa252febaefab16ded99767d364d54d6a431f"
+  integrity sha512-701H1Kv24ljI6Nk5GTKWEz0kEzBLVfxW5bpTFVjMbR62fDTjM84hnjDXa6ZAnCSz0vyUCj4l+bo3N5Q2wX4N/Q==
   dependencies:
     "@designliquido/birl" "0.0.0"
-    "@designliquido/delegua" "0.33.7"
+    "@designliquido/delegua" "0.33.9"
     "@designliquido/portugol-studio" "^0.0.1"
     "@designliquido/potigol" "0.0.1"
     "@designliquido/visualg" "^0.0.3"
@@ -23,10 +23,10 @@
     commander "^9.4.1"
     json-colorizer "^2.2.2"
 
-"@designliquido/delegua@0.33.7", "@designliquido/delegua@^0.33.6":
-  version "0.33.7"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.33.7.tgz#5d466159a726c4742c3e12123206c5d4976401f5"
-  integrity sha512-qdMr68nodMdduw3iEx+lqrD2uP3uqclYBR+iUgRmbqph6Diwon7Gnv6+IC49Nj6QFAoskydzGGl7DEMEyNxeeQ==
+"@designliquido/delegua@0.33.9":
+  version "0.33.9"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.33.9.tgz#f5f25899640ee04c41dd3dc0a342cef56f5e1a4f"
+  integrity sha512-qCtsOydnTC+Ape39/8yI4p3M2fA7y+LwPWXB51a0wHUpludRYT6Z8KYsBv63512S0nlea3zkBXqPNTvNeDNciQ==
   dependencies:
     antlr4ts "^0.5.0-alpha.4"
     browser-process-hrtime "^1.0.0"
@@ -37,6 +37,16 @@
   version "0.33.0"
   resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.33.0.tgz#9d9df531fe21724d15c416b56b55641528675e6c"
   integrity sha512-NmCsYQcNeKKT3pn9jqPnmw3pYep52rIxXDgYMIVsfdNtkM2xEttzFNUPbU1BLm/laneYKj6Pf1fAXRtPUuIxFA==
+  dependencies:
+    antlr4ts "^0.5.0-alpha.4"
+    browser-process-hrtime "^1.0.0"
+    esprima "^4.0.1"
+    lodash.clonedeep "^4.5.0"
+
+"@designliquido/delegua@^0.33.6":
+  version "0.33.7"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.33.7.tgz#5d466159a726c4742c3e12123206c5d4976401f5"
+  integrity sha512-qdMr68nodMdduw3iEx+lqrD2uP3uqclYBR+iUgRmbqph6Diwon7Gnv6+IC49Nj6QFAoskydzGGl7DEMEyNxeeQ==
   dependencies:
     antlr4ts "^0.5.0-alpha.4"
     browser-process-hrtime "^1.0.0"
