@@ -9,16 +9,16 @@
   dependencies:
     "@designliquido/delegua" "^0.33.6"
 
-"@designliquido/delegua-node@^0.33.7":
-  version "0.33.7"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-0.33.7.tgz#7b2d050d1b6bcfe94b0db94814630a0cd847fa3a"
-  integrity sha512-hxs8yB3QgnoXtNXFyMDIUvMs3x6yL4aD6C0Kpy+aVBgb60UtnSg5IT4/CE75O/e8UpSBJ1jzS76PYzHWv2jChQ==
+"@designliquido/delegua-node@^0.33.8":
+  version "0.33.8"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-0.33.8.tgz#d16d34e3d1089d4b2418a49e3b76282418165aa2"
+  integrity sha512-TuBO2EjT/0Hj9ULs/xQ2uSX1ALri3x7bV/hY1MmM+MfcG9DyNnd9PNwhSzjx7o3ViwVbRbG7Akgz4UhBQGp8NQ==
   dependencies:
     "@designliquido/birl" "0.0.0"
     "@designliquido/delegua" "0.33.7"
     "@designliquido/portugol-studio" "^0.0.1"
-    "@designliquido/potigol" "0.0.0"
-    "@designliquido/visualg" "^0.0.2"
+    "@designliquido/potigol" "0.0.1"
+    "@designliquido/visualg" "^0.0.3"
     chalk "4.1.2"
     commander "^9.4.1"
     json-colorizer "^2.2.2"
@@ -66,17 +66,17 @@
   dependencies:
     "@designliquido/delegua" "^0.33.0"
 
-"@designliquido/potigol@0.0.0":
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/potigol/-/potigol-0.0.0.tgz#4082e13b946eb598e58af57d5e7239d8b27c3366"
-  integrity sha512-YciTv+e7I1InIY9Xl4vLNBi9Sak0Rh4zTWgexriniYON743g3rruS9lD8pvlC5Ne8ZQDkC/bEv5H6N+EBGYeQg==
+"@designliquido/potigol@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/potigol/-/potigol-0.0.1.tgz#745e5ae8c72bbe083cf6886bd6145ae125b76078"
+  integrity sha512-SDvibQAU/0ncAIJ9jcqMW5+5YGELKJ6xBipJHmYz3cnr6PmdBBjiGHuSxcOxfvfLvyVLjtUxE2925F+etlhxTw==
   dependencies:
     "@designliquido/delegua" "^0.33.6"
 
-"@designliquido/visualg@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@designliquido/visualg/-/visualg-0.0.2.tgz#b6e5715fcc1bd4b9bb06f7097815808b7ef02125"
-  integrity sha512-j8JPe6/8KzARSb+LF2QB44nceXSjTiTf/H5ILjvGCWeCYuTM8MwUXKU8LhoSc5zs61a43ST6WMLVqqe8pPaOAw==
+"@designliquido/visualg@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@designliquido/visualg/-/visualg-0.0.3.tgz#b8587c2ee25abcdc9e0ce52df495f1f6bffcd8ff"
+  integrity sha512-uRCw1T0UPRt5aherziuS2w3uVzhDpgUGRBG3HCFKxxme1+1+uNCX644fjDdPTytAkV9MqLFajh+f4vRQ3UK3Pw==
   dependencies:
     "@designliquido/delegua" "^0.33.6"
     lodash "^4.17.21"

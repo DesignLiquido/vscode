@@ -5,8 +5,6 @@ import { DebugProtocol } from '@vscode/debugprotocol';
 
 import { cyrb53, PontoParada } from '@designliquido/delegua';
 
-import { InterpretadorVisuAlgComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/dialetos/interpretador-visualg-com-depuracao-importacao';
-
 import { ElementoPilhaVsCode } from '../elemento-pilha';
 import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
 import { LexadorPortugolStudio } from '@designliquido/delegua/lexador/dialetos/lexador-portugol-studio';
@@ -21,12 +19,18 @@ import { InterpretadorComDepuracaoImportacao } from '@designliquido/delegua-node
 
 import { palavrasReservadas } from '@designliquido/delegua/lexador/palavras-reservadas';
 import { InterpretadorPortugolStudioComDepuracao } from '@designliquido/delegua/interpretador/dialetos';
-import { InterpretadorPotigolComDepuracao } from '@designliquido/delegua/interpretador/dialetos/potigol/interpretador-potigol-com-depuracao';
-import { LexadorBirl, LexadorMapler, LexadorPotigol, LexadorVisuAlg } from '@designliquido/delegua/lexador/dialetos';
-import { AvaliadorSintaticoBirl, AvaliadorSintaticoPotigol, AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/avaliador-sintatico/dialetos';
+import { LexadorBirl, LexadorMapler } from '@designliquido/delegua/lexador/dialetos';
+import { AvaliadorSintaticoBirl } from '@designliquido/delegua/avaliador-sintatico/dialetos';
 import { Declaracao } from '@designliquido/delegua/declaracoes';
 import { Lexador } from '@designliquido/delegua/lexador';
 import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
+
+import { LexadorPotigol } from '@designliquido/potigol/lexador';
+import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sintatico';
+import { InterpretadorPotigolComDepuracao } from '@designliquido/potigol/interpretador';
+
+import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg } from '@designliquido/visualg';
+import { InterpretadorVisuAlgComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/dialetos/interpretador-visualg-com-depuracao-importacao';
 
 /**
  * Em teoria não precisaria uma classe de tempo de execução local, mas,
@@ -177,12 +181,15 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         );
 
         this.interpretador.interfaceEntradaSaida = {
-            question: (mensagem: string, callback: Function) => {
-                vscode.window.showInputBox({
-                    prompt: mensagem,
-                    title: mensagem
-                }).then((resposta: any) => {
-                    callback(resposta);
+            question: async (mensagem: string, callback: Function) => {
+                return new Promise<any>((resolve, reject) => {
+                    vscode.window.showInputBox({
+                        prompt: mensagem,
+                        title: mensagem
+                    }).then((resposta: any) => {
+                        callback(resposta);
+                        resolve(0);
+                    });
                 });
             }
         };

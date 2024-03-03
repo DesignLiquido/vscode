@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.10.14
+
+- Correções de _bugs_ e ajustes em dialetos do VisuAlg e Potigol.
+
 ## 0.10.13
 
 - Formatador de código em Potigol (extensão `.poti`): https://github.com/DesignLiquido/delegua/pull/660
