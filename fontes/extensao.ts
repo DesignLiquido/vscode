@@ -25,7 +25,8 @@ import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
 import { LmhtProvedorCompletude } from './completude/lmht-provedor-completude';
 import { LmhtProvedorDocumentacaoEmEditor } from './documentacao-em-editor/lmht-provedor-documentacao-em-editor';
 import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
-import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao';
+import { PortugolProvedorFormatacao } from './formatadores/portugol-provedor-formatacao';
+import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao copy';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -157,6 +158,12 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerDocumentFormattingEditProvider(
             'visualg',
             new VisualgProvedorFormatacao()
+        )
+    );
+    context.subscriptions.push(
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'portugolstudio',
+            new PortugolProvedorFormatacao()
         )
     );
     
