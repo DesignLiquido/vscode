@@ -1,0 +1,61 @@
+{
+    "Selecionar": {
+        "prefix": "SELECIONAR",
+        "body": [
+            "SELECIONAR ${1:campo}",
+            "DE ${2:tabela}",
+            "ONDE ${3:condição};"
+        ],
+        "description": "Cria uma função LinConEs de Selecionar basica"
+    },
+    "Inserir": {
+        "prefix": "INSERIR",
+        "body": [
+            "INSERIR EM ${1:tabela} (${2:coluna1},${3:coluna2},${4:coluna3})",
+            "VALORES (${5:valor1,valor2,valor3});"
+        ],
+        "description": "Cria uma função LinConEs de Inserir basica"
+    },
+    "Atualizar": {
+        "prefix": "ATUALIZAR",
+        "body": [
+            "ATUALIZAR ${1:tabela}",
+            "DEFINIR ${2:coluna1} = ${3:valor1}, ${4:coluna2} = ${5:valor2}",
+            "ONDE ${6:condição};"
+        ],
+        "description": "Cria uma função LinConEs de Atualizar basica"
+    },
+    "Excluir": {
+        "prefix": "EXCLUIR",
+        "body": [
+            "EXCLUIR DE ${1:tabela}",
+            "ONDE ${2:condição};"
+        ],
+        "description": "Cria uma função LinConEs de Excluir basica"
+    },
+    "Criar Tabela": {
+        "prefix": "CRIAR TABELA",
+        "body": [
+            "CRIAR TABELA ${1:tabela} (",
+            "\t${2:coluna1} ${3:tipo_de_dado} ${4:restrições},",
+            "\t${5:coluna2} ${6:tipo_de_dado} ${7:restrições}",
+            ");"
+        ],
+        "description": "Cria uma função LinConEs de Criar Tabelas basica"
+    },
+    "Excluir tabela": {
+        "prefix": "EXCLUIR TABELA",
+        "body": [
+            "EXCLUIR TABELA ${1:tabela};"
+        ],
+        "description": "Cria uma função LinConEs de Excluir Tabelas basica"
+    },
+    "Alterar tabela": {
+        "prefix": "ALTERAR TABELA",
+        "body": [
+            "ALTERAR TABELA ${1:tabela}",
+            "ADICIONAR ${2:coluna} ${3:tipo_de_dado}${4:restrições};"
+        ],
+        "description": "Cria uma função LinConEs de Alterar tabela para adicionar uma"
+    }
+}

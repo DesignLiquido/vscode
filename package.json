@@ -446,6 +446,10 @@
             {
                 "language": "visualg",
                 "path": "./snippets/visualg.code-snippets"
+            },
+            {
+                "language": "lincones",
+                "path": "./snippets/lincones.code-snippets"
             }
         ]
     },
