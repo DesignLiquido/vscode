@@ -12,7 +12,7 @@
         "prefix": "INSERIR",
         "body": [
             "INSERIR EM ${1:tabela} (${2:coluna1},${3:coluna2},${4:coluna3})",
-            "VALORES (${5:valor1,valor2,valor3});"
+            "VALORES (${5:valor1},${6:valor2},${7:valor3});"
         ],
         "description": "Cria uma função LinConEs de Inserir basica"
     },
