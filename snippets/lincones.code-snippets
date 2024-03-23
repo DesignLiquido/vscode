@@ -56,6 +56,6 @@
             "ALTERAR TABELA ${1:tabela}",
             "ADICIONAR ${2:coluna} ${3:tipo_de_dado}${4:restrições};"
         ],
-        "description": "Cria uma função LinConEs de Alterar tabela para adicionar uma"
+        "description": "Cria uma função LinConEs de Alterar tabela para adicionar uma nova coluna"
     }
 }
