@@ -1,12 +1,11 @@
 import * as vscode from 'vscode';
 import * as sistemaOperacional from 'node:os';
-import { LexadorPortugolStudio } from '@designliquido/delegua/dist/lexador/dialetos';
-import { AvaliadorSintaticoPortugolStudio, FormatadorPortugolStudio } from '@designliquido/delegua/dist';
+
+import { LexadorPortugolStudio, AvaliadorSintaticoPortugolStudio } from '@designliquido/portugol-studio';
+import { FormatadorPortugolStudio } from '@designliquido/portugol-studio/formatador/formatador-portugol-studio';
 
 
-
-
-export class PortugolProvedorFormatacao implements vscode.DocumentFormattingEditProvider {
+export class PortugolStudioProvedorFormatacao implements vscode.DocumentFormattingEditProvider {
     provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
         const lexador = new LexadorPortugolStudio();
         const avaliadorSintatico = new AvaliadorSintaticoPortugolStudio();

@@ -7,9 +7,7 @@ import { cyrb53, PontoParada } from '@designliquido/delegua';
 
 import { ElementoPilhaVsCode } from '../elemento-pilha';
 import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
-import { LexadorPortugolStudio } from '@designliquido/delegua/lexador/dialetos/lexador-portugol-studio';
 
-import { AvaliadorSintaticoPortugolStudio } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-portugol-studio';
 import { LexadorPitugues } from '@designliquido/delegua/lexador/dialetos/lexador-pitugues';
 import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-pitugues';
 import { AvaliadorSintaticoMapler } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-mapler';
@@ -18,12 +16,17 @@ import { ImportadorInterface } from '@designliquido/delegua-node/interfaces';
 import { InterpretadorComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/interpretador-com-depuracao-importacao';
 
 import { palavrasReservadas } from '@designliquido/delegua/lexador/palavras-reservadas';
-import { InterpretadorPortugolStudioComDepuracao } from '@designliquido/delegua/interpretador/dialetos';
-import { LexadorBirl, LexadorMapler } from '@designliquido/delegua/lexador/dialetos';
-import { AvaliadorSintaticoBirl } from '@designliquido/delegua/avaliador-sintatico/dialetos';
+import { LexadorMapler } from '@designliquido/delegua/lexador/dialetos';
 import { Declaracao } from '@designliquido/delegua/declaracoes';
 import { Lexador } from '@designliquido/delegua/lexador';
 import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
+
+import { LexadorBirl } from '@designliquido/birl/lexador';
+import { AvaliadorSintaticoBirl } from '@designliquido/birl/avaliador-sintatico';
+
+import { LexadorPortugolStudio } from '@designliquido/portugol-studio/lexador';
+import { AvaliadorSintaticoPortugolStudio } from '@designliquido/portugol-studio/avaliador-sintatico';
+import { InterpretadorPortugolStudioComDepuracao } from '@designliquido/portugol-studio/interpretador';
 
 import { LexadorPotigol } from '@designliquido/potigol/lexador';
 import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sintatico';
