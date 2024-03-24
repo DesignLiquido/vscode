@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.10.15
+
+- Correções de _bugs_ e ajustes em dialeto do VisuAlg;
+- Diversas atualizações de pacotes e estrutura interna do projeto.
+
 ## 0.10.14
 
 - Correções de _bugs_ e ajustes em dialetos do VisuAlg e Potigol.

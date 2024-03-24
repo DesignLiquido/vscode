@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.10.14",
+    "version": "0.10.15",
     "engines": {
         "vscode": "^1.68.0"
     },
