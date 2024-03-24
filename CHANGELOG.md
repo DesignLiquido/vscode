@@ -3,6 +3,7 @@
 ## 0.10.15
 
 - Correções de _bugs_ e ajustes em dialeto do VisuAlg;
+- Fragmentos de código (_snippets_) para LinConEs;
 - Diversas atualizações de pacotes e estrutura interna do projeto.
 
 ## 0.10.14
