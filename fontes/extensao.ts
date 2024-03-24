@@ -161,12 +161,14 @@ export function activate(context: vscode.ExtensionContext) {
             new VisualgProvedorFormatacao()
         )
     );
-    context.subscriptions.push(
+
+    // TODO: Testar antes de habilitar.
+    /* context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
             'portugolstudio',
             new PortugolStudioProvedorFormatacao()
         )
-    );
+    ); */
     
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
