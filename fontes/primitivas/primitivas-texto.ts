@@ -94,6 +94,21 @@ export const primitivasTexto: PrimitivaOuMetodo[] = [
     },
     {
         nome: 'fatiar',
+        assinaturas: [
+            {
+                formato: 'fatiar(inicio: número, fim?: número)',
+                parametros: [
+                    {
+                        nome: 'inicio',
+                        documentacao: 'A posição inicial da fatia.'
+                    },
+                    {
+                        nome: 'fim',
+                        documentacao: 'A posição final da fatia. Opcional, se não fornecido, seleciona até o final do texto.'
+                    }
+                ]
+            }
+        ],
         documentacao: '### Descrição \n \n' +
             'Extrai uma fatia do texto, dadas posições de início e fim.' +
             '\n\n ### Exemplo de Código ' +
