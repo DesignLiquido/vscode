@@ -104,7 +104,7 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
                     },
                     {
                         nome: 'maximo',
-                        documentacao: 'O valor máximo do intervalo (não incluído no resultado).'
+                        documentacao: 'O valor máximo do intervalo.'
                     }
                 ]
             }
@@ -122,11 +122,11 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
         nome: 'inteiro',
         assinaturas: [
             {
-                formato: 'inteiro(numero: número ou texto)',
+                formato: 'inteiro(valor: flutuante ou texto)',
                 parametros: [
                     {
-                        nome: 'numero',
-                        documentacao: 'O número flutuante ou texto a ser convertido em um número inteiro.'
+                        nome: 'valor',
+                        documentacao: 'O valor a ser convertido em número inteiro.'
                     }
                 ]
             }
@@ -144,11 +144,11 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
         nome: 'real',
         assinaturas: [
             {
-                formato: 'real(texto: texto ou número)',
+                formato: 'real(valor: inteiro ou texto)',
                 parametros: [
                     {
-                        nome: 'texto',
-                        documentacao: 'O texto ou número inteiro a ser convertido em um número flutuante.'
+                        nome: 'valor',
+                        documentacao: 'O valor a ser convertido em número flutuante.'
                     }
                 ]
             }
