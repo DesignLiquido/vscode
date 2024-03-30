@@ -27,6 +27,21 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
     },
     {
         nome: 'filtrarPor',
+        assinaturas: [
+            {
+                formato: 'filtrarPor(meuVetor: vetor, minhaFuncaoParaValidar: função)',
+                parametros: [
+                    {
+                        nome: 'meuVetor',
+                        documentacao: 'O vetor a ser filtrado.'
+                    },
+                    {
+                        nome: 'minhaFuncaoParaValidar',
+                        documentacao: 'A função de validação que retorna verdadeiro ou falso.'
+                    }
+                ]
+            }
+        ],
         documentacao:
             '### Descrição \n \n' +
             'Retorna uma lista de elementos filtrados de um vetor.' +
@@ -40,16 +55,34 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
     },
     {
         nome: 'texto',
+        assinaturas: [
+            {
+                formato: 'texto(numero: número)',
+                parametros: [
+                    {
+                        nome: 'numero',
+                        documentacao: 'O número a ser convertido em texto.'
+                    }
+                ]
+            }
+        ],
         documentacao:
-            '### Descrição \n \n' +
+            '# Descrição \n \n' +
             'Transforma números flutuantes ou inteiros em texto.' +
             '\n\n ### Exemplo de Código ' +
             '\n\n```delegua\ntexto(7)\n```' +
             '\n \n ### Formas de uso  \n',
-        exemploCodigo: 'função texto(1234)',
+        exemploCodigo: 'função texto(1234)'
+
     },
     {
         nome: 'aleatorio',
+        assinaturas: [
+            {
+                formato: 'aleatorio()',
+                parametros: []
+            }
+        ],
         documentacao:
             '### Descrição \n \n' +
             'Retorna um número aleatório entre 0 e 1.' +
@@ -61,6 +94,21 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
     },
     {
         nome: 'aleatorioEntre',
+        assinaturas: [
+            {
+                formato: 'aleatorioEntre(minimo: número, maximo: número)',
+                parametros: [
+                    {
+                        nome: 'minimo',
+                        documentacao: 'O valor mínimo do intervalo.'
+                    },
+                    {
+                        nome: 'maximo',
+                        documentacao: 'O valor máximo do intervalo (não incluído no resultado).'
+                    }
+                ]
+            }
+        ],
         documentacao:
             '### Descrição \n \n' +
             'Retorna um número inteiro aleatório entre os valores passados para a função.' +
@@ -72,6 +120,17 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
     },
     {
         nome: 'inteiro',
+        assinaturas: [
+            {
+                formato: 'inteiro(numero: número ou texto)',
+                parametros: [
+                    {
+                        nome: 'numero',
+                        documentacao: 'O número flutuante ou texto a ser convertido em um número inteiro.'
+                    }
+                ]
+            }
+        ],
         documentacao:
             '### Descrição \n \n' +
             'Converte um número flutuante ou texto, que não apresente letras, em um número inteiro.' +
@@ -83,6 +142,17 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
     },
     {
         nome: 'real',
+        assinaturas: [
+            {
+                formato: 'real(texto: texto ou número)',
+                parametros: [
+                    {
+                        nome: 'texto',
+                        documentacao: 'O texto ou número inteiro a ser convertido em um número flutuante.'
+                    }
+                ]
+            }
+        ],
         documentacao:
             '### Descrição \n \n' +
             'Converte um número inteiro ou texto, que não apresente letras, em um número flutuante.' +
