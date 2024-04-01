@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.10.16
+
+- Atualizado catálogo de métodos da biblioteca global: https://github.com/DesignLiquido/vscode/pull/56
+
 ## 0.10.15
 
 - Correções de _bugs_ e ajustes em dialeto do VisuAlg;
