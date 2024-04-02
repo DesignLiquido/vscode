@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.10.17
+
+- Correção de inferência de variáveis no Portugol Studio: https://github.com/DesignLiquido/portugol-studio/pull/6
+
 ## 0.10.16
 
 - Atualizado catálogo de métodos da biblioteca global: https://github.com/DesignLiquido/vscode/pull/56
