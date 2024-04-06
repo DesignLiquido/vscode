@@ -473,7 +473,7 @@
         "webpack-cli": "^5.0.1"
     },
     "dependencies": {
-        "@designliquido/delegua-node": "^1.1.1",
+        "@designliquido/delegua-node": "^1.1.2",
         "@designliquido/foles": "^0.6.3",
         "@designliquido/lmht-js": "^0.4.9",
         "lodash": "^4.17.21",

@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.10.19
+
+- Permitindo uso de nome da biblioteca sem um nome de constante para Portugol Studio: https://github.com/DesignLiquido/portugol-studio/pull/12
+- Anotações para tipos de primitivas em Delégua: https://github.com/DesignLiquido/delegua/pull/674
+
 ## 0.10.18
 
 - Inclusão de quatro bibliotecas no Portugol Studio: Matemática, Texto, Calendário e Útil.
