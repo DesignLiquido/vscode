@@ -9,14 +9,14 @@
   dependencies:
     "@designliquido/delegua" "^0.33.12"
 
-"@designliquido/delegua-node@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-1.0.0.tgz#a963220b59cef38d7366598bc04728157e2ded33"
-  integrity sha512-L2W/+UpkQPNjn8j2aQVxJ1hlAZ0wELTegsdO4RPichISZ7QkPR0w4f3Vna5V2doCRp8rYLNK5P5rr3AiVhWYYA==
+"@designliquido/delegua-node@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-1.1.1.tgz#8087a7b53f3578fb484afd6fe47d666aba2a4c17"
+  integrity sha512-K0cYjGVz3vKsME/wSpjPSOg5C/A7pNynq+nbTblOTB+GECCpYgPGmsldBRx8x7e/Tmotddc+BcH1VuPh34F88g==
   dependencies:
     "@designliquido/birl" "^0.0.1"
     "@designliquido/delegua" "0.33.15"
-    "@designliquido/portugol-studio" "^0.0.3"
+    "@designliquido/portugol-studio" "^0.1.1"
     "@designliquido/potigol" "^0.0.3"
     "@designliquido/visualg" "^0.0.4"
     chalk "4.1.2"
@@ -63,10 +63,10 @@
     esprima "^4.0.1"
     lodash.clonedeep "^4.5.0"
 
-"@designliquido/foles@^0.6.2":
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.6.2.tgz#00182b65e3285341c40b886270750eddee3a07b2"
-  integrity sha512-vuvMxRyUgUKiP1J1uDGmPc9SPt8TKCdYOpNPTzcqt0+AjUrTXqV2XtGuRn/8TZ/WcrHjV6ko0LoYg9ep3B4gQQ==
+"@designliquido/foles@^0.6.3":
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.6.3.tgz#8e860e7f8bf8700d72b846b0c3e7809977336c19"
+  integrity sha512-nuZmh/eIbQTBRTJqu22X2CLiYO7ckXIsoAmFqA0PRxhfH2cTavPaqK9n0I8V1JZqdCiy7Y7T4yaGyy5Zzv9/7A==
   dependencies:
     commander "^9.4.1"
     vlq "^2.0.4"
@@ -79,10 +79,10 @@
     jsdom "^21.1.1"
     xslt-processor "^2.3.1"
 
-"@designliquido/portugol-studio@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.0.3.tgz#fc2b9dbbb8f8a0976749b54aaf8d52319c6e3230"
-  integrity sha512-ifWcCNkzrsPr/EMkn0w9eqMv+arNNsAFvgqHr0OCpgLLlNdULcVU7kEcwWtiE4yT6JEe7pYF/FPHKx2w4NWqGQ==
+"@designliquido/portugol-studio@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.1.1.tgz#8985f440ed423cf656b79c92a66be887b15a440e"
+  integrity sha512-9F3TVeKFVeFkIgbzbo+EUPRjcyAp3dFT9An7KTPSHVKvjntSj9JC3G/3QtZF9v+KE2J8AGkpJL3ndyv+LluWcQ==
   dependencies:
     "@designliquido/delegua" "^0.33.15"
 

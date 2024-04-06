@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.10.18
+
+- Inclusão de quatro bibliotecas no Portugol Studio: Matemática, Texto, Calendário e Útil.
+
 ## 0.10.17
 
 - Correção de inferência de variáveis no Portugol Studio: https://github.com/DesignLiquido/portugol-studio/pull/6
