@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.10.20
+
+- Correção de problema com detecção de matrizes no Portugol Studio: https://github.com/DesignLiquido/portugol-studio/pull/14
+
 ## 0.10.19
 
 - Permitindo uso de nome da biblioteca sem um nome de constante para Portugol Studio: https://github.com/DesignLiquido/portugol-studio/pull/12

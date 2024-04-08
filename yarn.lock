@@ -9,14 +9,14 @@
   dependencies:
     "@designliquido/delegua" "^0.33.12"
 
-"@designliquido/delegua-node@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-1.1.2.tgz#8f8941774ed2f2359a3cbcc20333c1cf2a79bf6a"
-  integrity sha512-JV4yDwyDE8BsDbGmm9Y+KL8IZ961mKusFgoLqJUhc00zRo9rj0kC7jdqu/VTZBghJiKVYrk6h5luQ4p4ADe+zw==
+"@designliquido/delegua-node@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-1.1.3.tgz#200a2d33bc92250099198a44ec9407e1dba210fa"
+  integrity sha512-QDBMP83Y0DjCFqDNcTUytukwf7f/WFDP6itUM/bGVqJ7DPrNhneYJP0gPUsUhmuTeORc+Di+X0Po/P5fAWfHKw==
   dependencies:
     "@designliquido/birl" "^0.0.1"
     "@designliquido/delegua" "0.33.16"
-    "@designliquido/portugol-studio" "^0.1.2"
+    "@designliquido/portugol-studio" "^0.1.3"
     "@designliquido/potigol" "^0.0.3"
     "@designliquido/visualg" "^0.0.4"
     chalk "4.1.2"
@@ -89,10 +89,10 @@
     jsdom "^21.1.1"
     xslt-processor "^2.3.1"
 
-"@designliquido/portugol-studio@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.1.2.tgz#2c023be3e9e2c0e30e2fec4a11958aeb32a493f5"
-  integrity sha512-jIR+hp18W1LJkHd+H4MskX8LNicn2jKdMFGiMvxu6zb2AICBDOA7iuMjRDU4SdHD75IXLta7T+pnSXJaLGQSsw==
+"@designliquido/portugol-studio@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.1.3.tgz#9412b431420ebcea3800069b60cdfdbf5d2f09ee"
+  integrity sha512-FGWDmSh3/YGwn+fMnlf0FMD2Gzw7dugPdw1sE/D7db0R4os7yr195q9RDd3X5P+jYIXytfBCfthiQaK12/qMEg==
   dependencies:
     "@designliquido/delegua" "^0.33.15"
 
