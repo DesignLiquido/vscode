@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.10.21
+
+- Novas funções e cores para FolEs (versão 0.7.0);
+- Correções em dialeto VisuAlg quanto a comportamentos de escrita e laços de repetição em modo de depuração.
+
 ## 0.10.20
 
 - Correção de problema com detecção de matrizes no Portugol Studio: https://github.com/DesignLiquido/portugol-studio/pull/14
