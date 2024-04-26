@@ -461,7 +461,7 @@
         "@vscode/debugadapter": "^1.53.0",
         "@vscode/debugadapter-testsupport": "^1.55.1",
         "@vscode/debugprotocol": "^1.53.0",
-        "@vscode/vsce": "^2.24.0",
+        "@vscode/vsce": "^2.26.0",
         "await-notify": "^1.0.1",
         "base64-js": "^1.5.1",
         "copy-files-from-to": "^3.9.0",
