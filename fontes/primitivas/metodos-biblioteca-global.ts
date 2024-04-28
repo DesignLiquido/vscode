@@ -19,10 +19,10 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
             '# `escreva()`\n' +
             'Escreve um ou mais argumentos na saída padrão da aplicação.\n' +
             '## Interpolação \n' +
-            'Delégua suporta interpolação de variáveis: \n \n' +
+            'Delégua suporta interpolação de variáveis: \n\n' +
             "```delegua\nvar comidaFavorita = 'strogonoff'\n" +
             'escreva("Minha comida favorita é ${comidaFavorita}")\n```' +
-            '\n \n ### Formas de uso  \n',
+            '\n\n ### Formas de uso \n',
         exemploCodigo: 'função escreva(...argumentos)',
     },
     {
@@ -45,12 +45,12 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
         documentacao:
             '### Descrição \n \n' +
             'Retorna uma lista de elementos filtrados de um vetor.' +
-            '\n\n ### Exemplo de Código ' +
+            '\n\n ### Exemplo de Código\n' +
             '\n\n```delegua\nvar listaDeIdades = [91, 32, 15, 44, 12, 18, 101];' +
             '\n funcao checarIdade(idade) { retorna(idade >= 18); }' +
             '\n escreva(filtrarPor(listaDeIdades, checarIdade)); // [91, 32, 44, 18, 101]' +
-            +'\n\n ```' +
-            '\n \n ### Formas de uso  \n',
+            '\n\n ```' +
+            '\n\n ### Formas de uso  \n',
         exemploCodigo: 'função filtrarPor(meuVetor, minhaFuncaoParaValidar)',
     },
     {
@@ -69,7 +69,7 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
         documentacao:
             '# Descrição \n \n' +
             'Transforma números flutuantes ou inteiros em texto.' +
-            '\n\n ### Exemplo de Código ' +
+            '\n\n ### Exemplo de Código\n' +
             '\n\n```delegua\ntexto(7)\n```' +
             '\n \n ### Formas de uso  \n',
         exemploCodigo: 'função texto(1234)'
@@ -86,7 +86,7 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
         documentacao:
             '### Descrição \n \n' +
             'Retorna um número aleatório entre 0 e 1.' +
-            '\n\n ### Exemplo de Código ' +
+            '\n\n ### Exemplo de Código\n' +
             '\n\n```delegua\nvar numeroAleatorio = aleatorio();' +
             '\n\nescreva(numeroAleatorio); // 0.8540051495195808\n```' +
             '\n \n ### Formas de uso  \n',
@@ -112,7 +112,7 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
         documentacao:
             '### Descrição \n \n' +
             'Retorna um número inteiro aleatório entre os valores passados para a função.' +
-            '\n\n ### Exemplo de Código ' +
+            '\n\n ### Exemplo de Código\n' +
             '\n\n```delegua\nvar numeroAleatorio = aleatorioEntre(1, 9);' +
             '\n\nescreva(numeroAleatorio); // Retornará um valor entre 1 e 8.\n```' +
             '\n \n ### Formas de uso  \n',
@@ -134,7 +134,7 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
         documentacao:
             '### Descrição \n \n' +
             'Converte um número flutuante ou texto, que não apresente letras, em um número inteiro.' +
-            '\n\n ### Exemplo de Código ' +
+            '\n\n ### Exemplo de Código\n' +
             '\n\n```delegua\nvar testeTexto = "111";' +
             '\n\nescreva(111 + inteiro(testeTexto)); // 222\n```' +
             '\n \n ### Formas de uso  \n',
@@ -156,7 +156,7 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
         documentacao:
             '### Descrição \n \n' +
             'Converte um número inteiro ou texto, que não apresente letras, em um número flutuante.' +
-            '\n\n ### Exemplo de Código ' +
+            '\n\n ### Exemplo de Código\n' +
             '\n\n```delegua\nvar testeTexto = "504.69";' +
             '\n\nescreva(0.01 + real(testeTexto)); // 504.7\n```' +
             '\n \n ### Formas de uso  \n',

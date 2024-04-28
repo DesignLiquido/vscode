@@ -1,8 +1,14 @@
 export const estruturasDados: {nome: string, descricao?: string, documentacao: string, exemploCodigo?: string}[] = [
     {
+        nome: 'inteiro',
+        descricao: 'Variável cujo valor é um número, positivo ou negativo, sem casas decimais.',
+        documentacao: '# Declaração de `inteiro`\nVariável cujo valor é um número, positivo ou negativo, sem casas decimais.',
+        exemploCodigo: 'var meuInteiro: inteiro'
+    },
+    {
         nome: 'vetor',
         descricao: 'Variável que pode ter uma ou duas dimensões. Um vetor de duas dimensões também é chamado de matriz.',
-        documentacao: '# Declaração `vetor`\nVariável que pode ter uma ou duas dimensões. Um vetor de duas dimensões também é chamado de matriz.',
+        documentacao: '# Declaração de `vetor`\nVariável que pode ter uma ou duas dimensões. Um vetor de duas dimensões também é chamado de matriz.',
         exemploCodigo: 'var meuVetor: vetor[1..5] de inteiro'
     }
 ];
