@@ -49,6 +49,36 @@ Após clonar o repositório, é preciso avisar ao Yarn que queremos criar um lin
 
 De volta a este repositório, use o comando `yarn link "@designliquido/delegua"` para substituir o pacote do `node_modules` pelo pacote linkado. O link simbólico deve aparecer no diretório do pacote dentro de `node_modules`.
 
+Por fim, comente as linhas que apontam para o diretório `dist` no `tsconfig.json`. No nosso exemplo, as linhas abaixo devem ser descomentadas:
+
+```jsonc
+{
+    // ...
+    paths: {
+        // ...
+        // "@designliquido/delegua": ["node_modules/@designliquido/delegua/dist"],
+        // "@designliquido/delegua/*": ["node_modules/@designliquido/delegua/dist/*"],
+        // ...
+    }
+    // ...
+}
+```
+
+E descomente as linhas que apontam para o diretório `fontes`:
+
+```jsonc
+{
+    // ...
+    paths: {
+        // ...
+        "@designliquido/delegua": ["node_modules/@designliquido/delegua/fontes"],
+        "@designliquido/delegua/*": ["node_modules/@designliquido/delegua/fontes/*"],
+        // ...
+    }
+    // ...
+}
+```
+
 ### Dicas de pontos de parada
 
 Abaixo temos algumas dicas de onde colocar pontos de parada para a inspeção de funcionalidades.
