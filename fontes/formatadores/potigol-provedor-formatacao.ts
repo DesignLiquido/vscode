@@ -2,9 +2,9 @@ import * as vscode from 'vscode';
 import * as sistemaOperacional from 'node:os';
 
 
-import { FormatadorPotigol } from '@designliquido/delegua/formatadores';
-import { LexadorPotigol } from '@designliquido/delegua/lexador/dialetos';
-import { AvaliadorSintaticoPotigol } from '@designliquido/delegua/avaliador-sintatico/dialetos';
+import { FormatadorPotigol } from '@designliquido/potigol/formatador';
+import { LexadorPotigol } from '@designliquido/potigol/lexador';
+import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sintatico';
 
 export class PotigolProvedorFormatacao implements vscode.DocumentFormattingEditProvider {
     provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {

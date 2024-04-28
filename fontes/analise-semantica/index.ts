@@ -17,7 +17,7 @@ import { AnalisadorSemanticoMapler } from '@designliquido/delegua/analisador-sem
 import { RetornoAvaliadorSintatico, RetornoLexador } from '@designliquido/delegua/interfaces/retornos';
 import { RetornoAnalisadorSemantico } from '@designliquido/delegua/interfaces/retornos/retorno-analisador-semantico';
 
-import { LexadorBirl, AvaliadorSintaticoBirl, AnalisadorSemanticoBirl } from '@designliquido/birl';
+// import { LexadorBirl, AvaliadorSintaticoBirl, AnalisadorSemanticoBirl } from '@designliquido/birl';
 import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg, AnalisadorSemanticoVisuAlg } from '@designliquido/visualg';
 
 const diagnosticSeverityMap = {
@@ -42,11 +42,11 @@ export function analiseSemantica(
     let resultadoAnalisadorSemantico: RetornoAnalisadorSemantico;
 
     switch (extensaoArquivo) {
-        case "birl":
+        /* case "birl":
             lexador = new LexadorBirl();
             avaliadorSintatico = new AvaliadorSintaticoBirl();
             analisadorSemantico = new AnalisadorSemanticoBirl();
-            break;
+            break; */
 
         case "mapler":
             lexador = new LexadorMapler();

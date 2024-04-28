@@ -43,11 +43,11 @@ Para depurar a extensão, especialmente para acompanhar a execução de código 
 
 Os pacotes que podem ser linkados estão em `tsconfig.json`, no diretório raiz.
 
-Primeiro é preciso clonar o repositório correspondente. Por exemplo, se queremos inspecionar o núcleo de Delégua, devemos clonar [`@designliquido/delegua`](https://github.com/DesignLiquido/delegua).
+Primeiro é preciso clonar o repositório correspondente. Por exemplo, se queremos inspecionar o núcleo de Delégua, devemos clonar [`@designliquido/delegua`](https://github.com/DesignLiquido/delegua). Além disso, é preciso clonar também o pacote Node de Delégua, já que todas as linguagens que esta extensão interpreta são dependentes dele: [`@designliquido/delegua-node`](https://github.com/DesignLiquido/delegua-node). Se isso não for feito, o VSCode se perde na hora de encontrar os mapas de fontes, e o resultado será um arquivo JS (que não é o que queremos).
 
-Após clonar o repositório, é preciso avisar ao Yarn que queremos criar um link simbólico. Isso é feito pelo comando `yarn link`.
+Após clonar os repositórios, é preciso avisar ao Yarn que queremos criar um link simbólico para cada um deles. Isso é feito pelo comando `yarn link` na raiz de cada repositório.
 
-De volta a este repositório, use o comando `yarn link "@designliquido/delegua"` para substituir o pacote do `node_modules` pelo pacote linkado. O link simbólico deve aparecer no diretório do pacote dentro de `node_modules`.
+De volta a este repositório, use os comandos `yarn link "@designliquido/delegua"` e `yarn link "@designliquido/delegua-node"` no diretório raiz deste projeto para substituir os pacotes do `node_modules` pelos pacotes linkados. Os links simbólicos deve aparecer nos diretórios correspondentes dos pacotes dentro de `node_modules` (normalmente com uma setinha ao lado do diretório para indicar que é um link simbólico).
 
 Por fim, comente as linhas que apontam para o diretório `dist` no `tsconfig.json`. No nosso exemplo, as linhas abaixo devem ser descomentadas:
 
@@ -58,6 +58,8 @@ Por fim, comente as linhas que apontam para o diretório `dist` no `tsconfig.jso
         // ...
         // "@designliquido/delegua": ["node_modules/@designliquido/delegua/dist"],
         // "@designliquido/delegua/*": ["node_modules/@designliquido/delegua/dist/*"],
+        // "@designliquido/delegua-node": ["node_modules/@designliquido/delegua-node/dist"],
+        // "@designliquido/delegua-node/*": ["node_modules/@designliquido/delegua-node/dist/*"],
         // ...
     }
     // ...
@@ -73,6 +75,8 @@ E descomente as linhas que apontam para o diretório `fontes`:
         // ...
         "@designliquido/delegua": ["node_modules/@designliquido/delegua/fontes"],
         "@designliquido/delegua/*": ["node_modules/@designliquido/delegua/fontes/*"],
+        "@designliquido/delegua-node": ["node_modules/@designliquido/delegua-node/fontes"],
+        "@designliquido/delegua-node/*": ["node_modules/@designliquido/delegua-node/fontes/*"],
         // ...
     }
     // ...
