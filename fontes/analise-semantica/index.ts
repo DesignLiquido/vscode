@@ -6,17 +6,18 @@ import { DiagnosticoAnalisadorSemantico } from '@designliquido/delegua/interface
 import { Declaracao } from '@designliquido/delegua/declaracoes';
 
 import { Lexador } from '@designliquido/delegua/lexador';
-import { LexadorBirl, LexadorMapler } from '@designliquido/delegua/lexador/dialetos';
+import { LexadorMapler } from '@designliquido/delegua/lexador/dialetos';
 
 import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
-import { AvaliadorSintaticoBirl, AvaliadorSintaticoMapler } from '@designliquido/delegua/avaliador-sintatico/dialetos';
+import { AvaliadorSintaticoMapler } from '@designliquido/delegua/avaliador-sintatico/dialetos';
 
 import { AnalisadorSemanticoInterface } from '@designliquido/delegua/interfaces/analisador-semantico-interface';
-import { AnalisadorSemanticoBirl, AnalisadorSemanticoMapler } from '@designliquido/delegua/analisador-semantico/dialetos';
+import { AnalisadorSemanticoMapler } from '@designliquido/delegua/analisador-semantico/dialetos';
 
 import { RetornoAvaliadorSintatico, RetornoLexador } from '@designliquido/delegua/interfaces/retornos';
 import { RetornoAnalisadorSemantico } from '@designliquido/delegua/interfaces/retornos/retorno-analisador-semantico';
 
+import { LexadorBirl, AvaliadorSintaticoBirl, AnalisadorSemanticoBirl } from '@designliquido/birl';
 import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg, AnalisadorSemanticoVisuAlg } from '@designliquido/visualg';
 
 const diagnosticSeverityMap = {

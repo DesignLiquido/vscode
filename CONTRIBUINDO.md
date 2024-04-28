@@ -33,6 +33,42 @@
 
 * Para adicionar funcionalidades tipo IntelliSense, _hovers_ e validadores, veja a documentação do VS Code em https://code.visualstudio.com/docs (inglês).
 
-## Instalar sua extensão
+## Instalar a extensão (modo manual)
 
-* Para usar sua extensão, com o Visual Studio Code, copie todos os arquivos para `<seu diretório home>/.vscode/extensions` e reinicie o VSCode.
+* Para usar a extensão de modo manual, com o Visual Studio Code, copie todos os arquivos para `<seu diretório home>/.vscode/extensions` e reinicie o VSCode.
+
+## Depuração
+
+Para depurar a extensão, especialmente para acompanhar a execução de código por linguagem, é recomendado ligar (linkar) pacotes.
+
+Os pacotes que podem ser linkados estão em `tsconfig.json`, no diretório raiz.
+
+Primeiro é preciso clonar o repositório correspondente. Por exemplo, se queremos inspecionar o núcleo de Delégua, devemos clonar [`@designliquido/delegua`](https://github.com/DesignLiquido/delegua).
+
+Após clonar o repositório, é preciso avisar ao Yarn que queremos criar um link simbólico. Isso é feito pelo comando `yarn link`.
+
+De volta a este repositório, use o comando `yarn link "@designliquido/delegua"` para substituir o pacote do `node_modules` pelo pacote linkado. O link simbólico deve aparecer no diretório do pacote dentro de `node_modules`.
+
+### Dicas de pontos de parada
+
+Abaixo temos algumas dicas de onde colocar pontos de parada para a inspeção de funcionalidades.
+
+- Execução de código, qualquer linguagem: `fontes\depuracao\local\delegua-tempo-execucao-local.ts`, linha 212, ou seja:
+
+```ts
+            this.interpretador.instrucaoContinuarInterpretacao().then(_ => {
+                // Pós-execução
+                for (let erro of this.interpretador.erros) {
+                    this.enviarEvento('saida', erro);
+                }
+            });
+```
+
+- Análise semântica: `fontes\analise-semantica\index.ts`, linhas 80 a 83:
+
+```ts
+    resultadoLexador = lexador.mapear(linhas, -1);
+    resultadoAvaliadorSintatico = avaliadorSintatico.analisar(resultadoLexador, -1);
+    resultadoAnalisadorSemantico = analisadorSemantico.analisar(resultadoAvaliadorSintatico.declaracoes);
+    popularDiagnosticos(resultadoAnalisadorSemantico.diagnosticos, diagnosticos, documento);
+```
