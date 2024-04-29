@@ -1,0 +1,18 @@
+var numeros = []
+
+funcao adicionarNumeros(numero, quantidadeDeVezes) {
+    para (var i = 0; i < quantidadeDeVezes; i = i + 1) {
+        numeros.adicionar(numero)
+    }
+}
+
+adicionarNumeros(10, 5)
+adicionarNumeros(2, 5)
+// adicionarNumeros(0, 5)
+// adicionarNumeros(14, 5)
+// adicionarNumeros(15, 5)
+// adicionarNumeros(20, 5)
+
+escreva(numeros)
+escreva(numeros.ordenar())
+escreva(numeros.filtrarPor)
