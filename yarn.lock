@@ -115,61 +115,32 @@
     jsonwebtoken "^9.0.0"
     uuid "^8.3.0"
 
-"@designliquido/birl@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@designliquido/birl/-/birl-0.0.1.tgz#64d8073b07ae449201c154ff8b47949e4ab27c40"
-  integrity sha512-40Gk9lNvwnp90T+5tHW7DVWdIjbUMPxtiarRYXgPOEcL/idpb/zzXkKsOv+wneOIlGCewJMJa4nFk+a0eZD1rg==
+"@designliquido/birl@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@designliquido/birl/-/birl-0.1.0.tgz#40d9c150a9447100b8dfb3dda1e3d80019fcfca7"
+  integrity sha512-FBQD5QTfS1oksxMdyoAvp/usNqNNGf3bcrIfp4TUYwl4O9IYD1so6msJ++aEKKs+eAFDQo+h/Iage06J94oyIQ==
   dependencies:
-    "@designliquido/delegua" "^0.33.12"
+    "@designliquido/delegua" "^0.34.0"
+    lodash "^4.17.21"
 
-"@designliquido/delegua-node@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-1.1.5.tgz#098ec6de314941e550e609c8e6857913e56b625c"
-  integrity sha512-NDs4JjWrcmFopKNwPJUNecALmFAqvq/+8GA03kAibGtpeO6YyqDS6FGYefNxfWhQsoLpDEsH/5TOBmi20FrSEg==
+"@designliquido/delegua-node@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-1.2.1.tgz#525c8899f090552e856f70df92b31f3c5cfc93ea"
+  integrity sha512-bRRf9HgUN431yD+O+k3pCmBkt7dUd1PrJ1f465vvee5L0Vlaxmo9bRlDWptjoE2wpaL/0tlVSocEbfSHtTDtcQ==
   dependencies:
-    "@designliquido/birl" "^0.0.1"
-    "@designliquido/delegua" "0.33.16"
-    "@designliquido/portugol-studio" "^0.1.4"
-    "@designliquido/potigol" "^0.0.3"
-    "@designliquido/visualg" "^0.0.5"
+    "@designliquido/birl" "^0.1.0"
+    "@designliquido/delegua" "0.34.0"
+    "@designliquido/portugol-studio" "^0.2.0"
+    "@designliquido/potigol" "^0.1.0"
+    "@designliquido/visualg" "^0.1.1"
     chalk "4.1.2"
     commander "^9.4.1"
     json-colorizer "^2.2.2"
 
-"@designliquido/delegua@0.33.16", "@designliquido/delegua@^0.33.16":
-  version "0.33.16"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.33.16.tgz#64ddcd836eb1ee8b5b5807b9b842a99b5da3e919"
-  integrity sha512-/roqa8CJikOPPSLTcOLjEA1BqK1ON6V7gv6s8lEn8/p/bGhxm6DKYbNkgrfkN/WSvJaunCZkzdKMGLlmXJ37Ew==
-  dependencies:
-    antlr4ts "^0.5.0-alpha.4"
-    browser-process-hrtime "^1.0.0"
-    esprima "^4.0.1"
-    lodash.clonedeep "^4.5.0"
-
-"@designliquido/delegua@^0.33.12":
-  version "0.33.13"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.33.13.tgz#963ae910fe3f46c89a78c6b7065937eb3bb6c8c4"
-  integrity sha512-V1MTdUyUr0zFw0cgA3d97hll0Wl+UStpIk0oMwCuZYTXlGoLj4mklPgdtyx/V5W28dyYxduIwyJ8iCiJt7/jRg==
-  dependencies:
-    antlr4ts "^0.5.0-alpha.4"
-    browser-process-hrtime "^1.0.0"
-    esprima "^4.0.1"
-    lodash.clonedeep "^4.5.0"
-
-"@designliquido/delegua@^0.33.13":
-  version "0.33.14"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.33.14.tgz#fe3cc411ca35c3034a3190f7eb7e1f1eb2558dba"
-  integrity sha512-D962aaGGn1Cxyd/d3xy3XLEIclHDeDXDC0RiRqPdPASO1HuFthfVVJvUaN295R2GzVWxkVlPst7OMLTZO1FAyQ==
-  dependencies:
-    antlr4ts "^0.5.0-alpha.4"
-    browser-process-hrtime "^1.0.0"
-    esprima "^4.0.1"
-    lodash.clonedeep "^4.5.0"
-
-"@designliquido/delegua@^0.33.15":
-  version "0.33.15"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.33.15.tgz#c7ab793e4931fbaea51ab671e47e1924078914d7"
-  integrity sha512-5Tv8qxVcnYOPA+MZ8Y7HyobxZOsWM1/bOkwcbdgrGenL4iUMucRmwx3DILbIrg5uPWVtNibWUlMxrEGYf3+jTQ==
+"@designliquido/delegua@0.34.0", "@designliquido/delegua@^0.34.0":
+  version "0.34.0"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-0.34.0.tgz#6a24460194eac7caf411c65115bb065b1c9d8960"
+  integrity sha512-5vF/5x2jLaDN8NrX/xZ2PRaDbD4JhulmjtUeKBUUM1P15V9GAiF7D51+dEufM9i/OZtX32IJV7zDVexM/9NuwA==
   dependencies:
     antlr4ts "^0.5.0-alpha.4"
     browser-process-hrtime "^1.0.0"
@@ -192,26 +163,28 @@
     jsdom "^21.1.1"
     xslt-processor "^2.3.1"
 
-"@designliquido/portugol-studio@^0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.1.4.tgz#060003b5f07093f25611ae80179a355e671f5f40"
-  integrity sha512-YJFXm4HreJh+ojfo/EAhXKLY1a9GLp/dqrdg1YRVGI2F64t+YdGaxax+mzgcxEUMvYe9au5hXsRylV8jDLR4ng==
+"@designliquido/portugol-studio@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.2.0.tgz#ba57ed8b9894d36d78f5bc73a2c6f219ff6598b9"
+  integrity sha512-soNn/eOQuBa6qzf4iIVCItyg2C5qEcjUFob/RcVZQh9Q2ylralcUUF7P1LS36TX4No8/a34PWcaQLewvjlmSMQ==
   dependencies:
-    "@designliquido/delegua" "^0.33.15"
+    "@designliquido/delegua" "^0.34.0"
+    lodash "^4.17.21"
 
-"@designliquido/potigol@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@designliquido/potigol/-/potigol-0.0.3.tgz#b5e5b68568afb92ec282d428e1f3c3035f44235e"
-  integrity sha512-drGum3ICa6MH/cucKAXAYP00IzmlkT3R3xeUfpMh0a2Vwab1R6T3siozOnIRDEBQaroc7SU4RSwdFoZ0Ab3vnQ==
+"@designliquido/potigol@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@designliquido/potigol/-/potigol-0.1.0.tgz#42fa9707f67ec4875cccdd6f6250d5d04907878c"
+  integrity sha512-k3c8Iwig7bG7oQgF2gTGNsRIIGt3uo8X7ha2bSEXHoRpvY28BsMh6DWW/ONRi6ml6xWs4zzjkQHcOndsFm2bfQ==
   dependencies:
-    "@designliquido/delegua" "^0.33.13"
+    "@designliquido/delegua" "^0.34.0"
+    lodash "^4.17.21"
 
-"@designliquido/visualg@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@designliquido/visualg/-/visualg-0.0.5.tgz#c0ac2b5e726c37e82186180c0236df2c18d59ed1"
-  integrity sha512-CAPo7thWk9FIPYCjh5SHAyr5esH8NldIYoI/i4OA4C8+SdZSCJnR55uyRPJR/wMkLZcszYIVYCKl50zUCitACA==
+"@designliquido/visualg@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/visualg/-/visualg-0.1.1.tgz#c140cef1a7d6cf27d2f2e009b53b298323f3db89"
+  integrity sha512-0i7s5O7LX3eDF6gJMjxXPRbr+ZQExsY8+k8Y12WPJVVWeyOWPl0gJkFz82gitUTTjBe/4GKZ0AJKc6C8KoizTQ==
   dependencies:
-    "@designliquido/delegua" "^0.33.16"
+    "@designliquido/delegua" "^0.34.0"
     lodash "^4.17.21"
 
 "@discoveryjs/json-ext@^0.5.0":

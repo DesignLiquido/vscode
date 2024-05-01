@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as sistemaOperacional from 'node:os';
+import * as sistemaOperacional from 'os';
 
 import { FormatadorVisuAlg } from '@designliquido/visualg/formatador';
 import { LexadorVisuAlg } from '@designliquido/visualg/lexador';
@@ -10,11 +10,12 @@ export class VisualgProvedorFormatacao implements vscode.DocumentFormattingEditP
         const lexador = new LexadorVisuAlg();
         const avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
         const formatador = new FormatadorVisuAlg(sistemaOperacional.EOL);
-
-        const resultadoLexador = lexador.mapear(document.getText().split('\n'), -1);
-        const resultadoAvaliacaoSintatica = avaliadorSintatico.analisar(resultadoLexador, -1);
+        
         let codigoFormatado: string = document.getText();
         try {
+            const resultadoLexador = lexador.mapear(document.getText().split('\n'), -1);
+            const resultadoAvaliacaoSintatica = avaliadorSintatico.analisar(resultadoLexador, -1);
+            
             codigoFormatado = formatador.formatar(resultadoAvaliacaoSintatica.declaracoes);
         } catch (erro) {
             console.error(erro);
