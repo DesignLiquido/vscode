@@ -123,16 +123,16 @@
     "@designliquido/delegua" "^0.34.0"
     lodash "^4.17.21"
 
-"@designliquido/delegua-node@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-1.2.1.tgz#525c8899f090552e856f70df92b31f3c5cfc93ea"
-  integrity sha512-bRRf9HgUN431yD+O+k3pCmBkt7dUd1PrJ1f465vvee5L0Vlaxmo9bRlDWptjoE2wpaL/0tlVSocEbfSHtTDtcQ==
+"@designliquido/delegua-node@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-1.2.2.tgz#c23512ade5d71f5228d2cfb428ffe88a2e93216e"
+  integrity sha512-oHoCPAgHEhRfs+uhIzK8si6uCYeeJfAqOqVlSwkow6+9KJ5odsHlTAVm/nCA3ewVEFAse0XCJS98QwLp1+sAIg==
   dependencies:
     "@designliquido/birl" "^0.1.0"
     "@designliquido/delegua" "0.34.0"
-    "@designliquido/portugol-studio" "^0.2.0"
+    "@designliquido/portugol-studio" "^0.2.1"
     "@designliquido/potigol" "^0.1.0"
-    "@designliquido/visualg" "^0.1.1"
+    "@designliquido/visualg" "^0.1.4"
     chalk "4.1.2"
     commander "^9.4.1"
     json-colorizer "^2.2.2"
@@ -163,10 +163,10 @@
     jsdom "^21.1.1"
     xslt-processor "^2.3.1"
 
-"@designliquido/portugol-studio@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.2.0.tgz#ba57ed8b9894d36d78f5bc73a2c6f219ff6598b9"
-  integrity sha512-soNn/eOQuBa6qzf4iIVCItyg2C5qEcjUFob/RcVZQh9Q2ylralcUUF7P1LS36TX4No8/a34PWcaQLewvjlmSMQ==
+"@designliquido/portugol-studio@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.2.1.tgz#46f7daa77a7848875fcfdae8d607062dc7ffeab5"
+  integrity sha512-D5Z0L6b7/wbK1yiVgWBkKT2Q365zrWiwOc/CmWbD0vxc0UDA9DVcuhF/JaQw02MImtBF0e5vo2l0eI+RQsVhNQ==
   dependencies:
     "@designliquido/delegua" "^0.34.0"
     lodash "^4.17.21"
@@ -179,10 +179,10 @@
     "@designliquido/delegua" "^0.34.0"
     lodash "^4.17.21"
 
-"@designliquido/visualg@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@designliquido/visualg/-/visualg-0.1.1.tgz#c140cef1a7d6cf27d2f2e009b53b298323f3db89"
-  integrity sha512-0i7s5O7LX3eDF6gJMjxXPRbr+ZQExsY8+k8Y12WPJVVWeyOWPl0gJkFz82gitUTTjBe/4GKZ0AJKc6C8KoizTQ==
+"@designliquido/visualg@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@designliquido/visualg/-/visualg-0.1.4.tgz#cc48858dbc5a0f4477b32d33224f62d8fbb637d4"
+  integrity sha512-CwUmCDhAugDTxFzyGNSiVhqCdG8sFxJQ/gEXDXnV+czqmRo42oRnVCXKtGS53Lqhgm7cHOchF0SIOJYmyVlZOg==
   dependencies:
     "@designliquido/delegua" "^0.34.0"
     lodash "^4.17.21"

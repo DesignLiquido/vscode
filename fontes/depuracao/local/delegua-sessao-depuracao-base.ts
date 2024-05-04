@@ -69,6 +69,12 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
             this.sendEvent(new TerminatedEvent());
         });
 
+        this.tempoExecucao.on('limparTela', () => {
+            // Funciona bem se houver um ponto de parada. 
+            // Simplesmente não funciona no modo "continuar".
+            vscode.commands.executeCommand('workbench.debug.panel.action.clearReplAction');
+        });
+
         this.tempoExecucao.on('pararEmEntrada', () => {
             this.sendEvent(
                 new StoppedEvent('entry', DeleguaSessaoDepuracaoBase.threadId)

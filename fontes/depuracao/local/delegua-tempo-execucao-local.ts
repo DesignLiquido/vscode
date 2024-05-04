@@ -70,6 +70,10 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         });
     }
 
+    private limparTela() {
+        this.enviarEvento('limparTela');
+    }
+
     private selecionarDialetoPorExtensao(extensao: string) {
         switch (extensao.toLowerCase()) {
             case "alg":
@@ -82,7 +86,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     {},
                     true);
                 this.interpretador = new InterpretadorVisuAlgComDepuracaoImportacao(this.importador, process.cwd(), 
-                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
+                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this), this.limparTela.bind(this));
                 break;
             case "birl":
                 this.lexador = new LexadorBirl();
@@ -130,7 +134,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     {},
                     true);
                 this.interpretador = new InterpretadorPortugolStudioComDepuracao(process.cwd(), 
-                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
+                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this), this.limparTela.bind(this));
                 break;
             case "poti":
             case "potigol":

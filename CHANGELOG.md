@@ -1,8 +1,14 @@
 # Histórico de Modificações
 
+## 0.11.1
+
+- Função `limpa()` no Portugol Studio funcional para execução com pontos de parada;
+- Função `limpatela` no VisuAlg funcional para execução com pontos de parada;
+- Ajustes nas gramáticas de Delégua e Portugol Studio para entender comentários multilinha.
+
 ## 0.11.0
 
-- Atualização geral em todos os dialetos, agora que comentários são considerados na avaliação sintáatica;
+- Atualização geral em todos os dialetos, agora que comentários são considerados na avaliação sintática;
 - Atualizações no formatador de código do VisuAlg.
 
 ## 0.10.22
