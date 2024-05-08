@@ -451,7 +451,25 @@
                 "language": "lincones",
                 "path": "./snippets/lincones.code-snippets"
             }
-        ]
+        ],
+        "viewsContainers": {
+            "panel": [
+                {
+                    "id": "entradaESaida",
+                    "title": "Entrada e Saída",
+                    "icon": "recursos/delegua-logo.svg"
+                }
+            ]
+        },
+        "views": {
+            "entradaESaida": [
+                {
+                    "type": "webview",
+                    "id": "designliquido.entradaESaida",
+                    "name": "Entrada e Saída"
+                }
+            ]
+        }
     },
     "devDependencies": {
         "@types/node": "^17.0.18",
@@ -476,6 +494,8 @@
         "@designliquido/delegua-node": "^1.2.2",
         "@designliquido/foles": "^0.7.0",
         "@designliquido/lmht-js": "^0.4.9",
+        "@xterm/addon-fit": "^0.10.0",
+        "@xterm/xterm": "^5.5.0",
         "lodash": "^4.17.21",
         "real-executable-path": "^3.0.0"
     },

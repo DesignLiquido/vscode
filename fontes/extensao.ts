@@ -18,16 +18,21 @@ import {
     LiquidoProvedorCompletude,
 } from './completude';
 import { DeleguaProvedorFormatacao, VisualgProvedorFormatacao } from './formatadores';
+
+import { LmhtProvedorCompletude } from './completude/lmht-provedor-completude';
 import { VisuAlgProvedorCompletude } from './completude/visualg-provedor-completude';
 import { VisuAlgProvedorDocumentacaoEmEditor } from './documentacao-em-editor/visualg-provedor-documentacao-em-editor';
 import { traduzir } from './traducao';
 import { analiseSemantica } from './analise-semantica';
 import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
-import { LmhtProvedorCompletude } from './completude/lmht-provedor-completude';
+
 import { LmhtProvedorDocumentacaoEmEditor } from './documentacao-em-editor/lmht-provedor-documentacao-em-editor';
 import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
+
 import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio-provedor-formatacao';
 import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao';
+
+import { ProvedorVisaoEntradaSaida } from './visoes';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -257,6 +262,12 @@ export function activate(context: vscode.ExtensionContext) {
             'delegua',
             new DeleguaProvedorAssinaturaMetodos()
         )
+    );
+
+    // Visão de Entrada e Saída
+    const provedorEntradaSaida = new ProvedorVisaoEntradaSaida(context.extensionUri);
+    context.subscriptions.push(
+		vscode.window.registerWebviewViewProvider(ProvedorVisaoEntradaSaida.viewType, provedorEntradaSaida)
     );
 
     // debug adapters can be run in different ways by using a vscode.DebugAdapterDescriptorFactory:
