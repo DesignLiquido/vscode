@@ -301,7 +301,7 @@ export function activate(context: vscode.ExtensionContext) {
             // run the debug adapter inside the extension and directly talk to it
             configurarDepuracao(
                 context,
-                new FabricaAdaptadorDepuracaoEmbutido()
+                new FabricaAdaptadorDepuracaoEmbutido(provedorEntradaSaida)
             );
             break;
     }

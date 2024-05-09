@@ -465,7 +465,7 @@
             "entradaESaida": [
                 {
                     "type": "webview",
-                    "id": "designliquido.entradaESaida",
+                    "id": "extension.designliquido.entradaESaida",
                     "name": "Entrada e Saída"
                 }
             ]

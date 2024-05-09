@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 
-    public static readonly viewType = 'designliquido.entradaESaida';
+    public static readonly viewType = 'extension.designliquido.entradaESaida';
 
     private _view?: vscode.WebviewView;
 
@@ -33,7 +33,6 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 					}
                 case 'keyTyped':
                     {
-                        // vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(`#${data.value}`));
                         console.log("Comando", data);
                         break;
                     }
@@ -41,17 +40,23 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 		});
     }
 
-    public exemploAcaoExterna() {
+    public escreverNoTerminal(conteudo: string) {
 		if (this._view) {
-			this._view.show?.(true); // `show` is not implemented in 1.49 but is for 1.50 insiders
-			this._view.webview.postMessage({ type: 'addColor' });
+			this._view.show?.(true);
+			this._view.webview.postMessage({ type: 'writeToOutput', content: conteudo });
+		}
+	}
+
+    public limparTerminal() {
+		if (this._view) {
+			this._view.show?.(true);
+			this._view.webview.postMessage({ type: 'limparTerminal' });
 		}
 	}
 
     private _getHtmlForWebview(webview: vscode.Webview) {
 		// Get the local path to main script run in the webview, then convert it to a uri we can use in the webview.
 		const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@xterm', 'xterm', 'lib', 'xterm.js'));
-		// const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@xterm', 'xterm', 'lib', 'xterm.js'));
 		const addonFitUrl = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@xterm', 'addon-fit', 'lib', 'addon-fit.js'));
 
 		// Do the same for the stylesheet.
@@ -86,13 +91,11 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
                     terminal.open(document.getElementById("terminal"));
                     fitAddon.fit();
 
-                    terminal.writeln("Painel de Entrada e Saída");
-                    terminal.writeln("Execute seu programa para interagir com este painel.");
-
                     terminal.onData((e) => {
                         switch (e) {
                             case "\\r": // Enter
                                 vscode.postMessage({ type: 'commandSent', value: e });
+                                terminal.writeln("");
                                 break;
                             default:
                                 vscode.postMessage({ type: 'keyTyped', value: e });
@@ -101,9 +104,22 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
                         }
                     });
 
-                    function onKeyTyped(key) {
-                        vscode.postMessage({ type: 'colorSelected', value: color });
-                    }
+                    // Handle messages sent from the extension to the webview
+                    window.addEventListener('message', event => {
+                        const message = event.data; // The json data that the extension sent
+                        switch (message.type) {
+                            case 'writeToOutput':
+                                {
+                                    terminal.write(message.content);
+                                    break;
+                                }
+                            case 'limparTerminal':
+                                {
+                                    terminal.reset();
+                                    break;
+                                }
+                        }
+                    });
                 </script>
             </body>
         </html>`;

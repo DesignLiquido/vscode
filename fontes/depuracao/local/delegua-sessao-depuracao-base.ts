@@ -26,6 +26,7 @@ import { DeleguaTempoExecucaoLocal } from './delegua-tempo-execucao-local';
 import { DeleguaPontoParada } from '../delegua-ponto-parada';
 import { ElementoPilhaVsCode } from '../elemento-pilha';
 import { PontoParadaExtensao } from '../ponto-parada-extensao';
+import { ProvedorVisaoEntradaSaida } from 'fontes/visoes';
 
 export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
     private static threadId = 1;
@@ -40,7 +41,7 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
     // private _referenciaEscopoLocal = 0;
     private _referenciaEscopoGlobal = 0;
 
-    constructor() {
+    constructor(private readonly provedorVisaoEntradaSaida: ProvedorVisaoEntradaSaida) {
         super();
 
         // Linhas e colunas em Delégua começam em 1.
@@ -152,7 +153,7 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
                 caminhoArquivo = '',
                 linha = 0
             ) => {
-                let eventoSaida: DebugProtocol.OutputEvent;
+                /* let eventoSaida: DebugProtocol.OutputEvent;
                 if (textoOuExcecao instanceof Error) {
                     eventoSaida = new OutputEvent(`${textoOuExcecao.stack}`);
                 } else {
@@ -168,7 +169,8 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
                 eventoSaida.body.source =
                     this.criarReferenciaSource(caminhoArquivo);
                 eventoSaida.body.line = this.convertDebuggerLineToClient(linha);
-                this.sendEvent(eventoSaida);
+                this.sendEvent(eventoSaida); */
+                this.provedorVisaoEntradaSaida.escreverNoTerminal(textoOuExcecao as string);
             }
         );
     }
