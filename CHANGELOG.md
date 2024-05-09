@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.12.0
+
+- Implementação de novo painel de entrada e saída, em substituição ao console de depuração, que não funciona direito com comandos de limpeza;
+- Atualização em tradutores de Delégua para outras linguagens de forma a entender comentários.
+
 ## 0.11.1
 
 - Função `limpa()` no Portugol Studio funcional para execução com pontos de parada;
