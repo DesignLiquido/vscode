@@ -22,11 +22,12 @@ Essa extensão também oferece suporte parcial a outras linguagens que são dial
 - [Pituguês](https://github.com/DesignLiquido/delegua/wiki/Dialetos#pitugues);
 - [Portugol Mapler](https://portugol.sourceforge.io/);
 - [Portugol Studio](http://lite.acad.univali.br/portugol/);
-- [Portugol VisuAlg](https://visualg3.com.br/).
+- [Portugol VisuAlg](https://visualg3.com.br/);
+- [Potigol](https://potigol.github.io).
 
 ## Instalação
 
-Você pode instalar pesquisando nas extensões do Visual Studio Code [ou por este link](https://marketplace.visualstudio.com/items?itemName=designliquido.designliquido-vscode).
+Você pode instalar pesquisando nas extensões do Visual Studio Code [ou por este link](https://marketplace.visualstudio.com/items?itemName=designliquido.designliquido-vscode) (Windows e Mac), ou ainda [por este outro link](https://open-vsx.org/extension/designliquido/designliquido-vscode) (Linux, VSCodium, etc).
 
 ## Funcionalidades até então
 
@@ -52,10 +53,19 @@ Pressione `Ctrl` + `Shift` + `p` (`Cmd` + `Shift` + `p` no Mac) e digite "tradu�
 
 ## Depuração
 
-Delégua possui um protocolo próprio de comunicação entre depurador e cliente de depuração, [conforme especificado aqui](https://github.com/DesignLiquido/delegua/wiki/Suporte-%C3%A0-depura%C3%A7%C3%A3o). A ideia é que seja possível escrever interações entre diferentes clientes de depuração, como outros editores que tenham suporte a depuração, por exemplo. 
+As linguagens que podem ser depuradas por esta extensão são:
 
-O Visual Studio Code também possui [um protocolo de comunicação detalhado aqui](https://microsoft.github.io/debug-adapter-protocol/overview). Para que Delégua e Visual Studio Code se entendam, é preciso um intermediador entre eles, implementado pela classe `DeleguaTempoExecucaoLocal`. 
+- [Delégua](https://github.com/DesignLiquido/delegua);
+- [Pituguês](https://github.com/DesignLiquido/delegua/wiki/Dialetos#pitugues);
+- [Portugol Mapler](https://portugol.sourceforge.io/);
+- [Portugol Studio](http://lite.acad.univali.br/portugol/);
+- [Portugol VisuAlg](https://visualg3.com.br/);
+- [Potigol](https://potigol.github.io).
 
-Segundo a documentação do Visual Studio Code, linguagens podem usar ou um executável que faça a tradução das mensagens entre linguagem e Visual Studio Code, um servidor _Socket_ implementado dentro da extensão, ou ainda, uma implementação customizada. Aqui optamos pela opção do servidor _Socket_ até a versão 0.1.1 (ver classes `DeleguaTempoExecucaoRemota` e `DeleguaSessaoDepuracaoRemota`), que abre em uma porta aleatória disponível. Esta forma comanda a execução de Delégua com a opção `--depurador` definida, que abre o servidor de depuração na porta 7777 e espera uma instrução de pronto para liberar os comandos de depuração para a interface do VSCode. A implementação ainda existe, mas não é habilitada por padrão. Poderá voltar no futuro.
+Para depurar seu código, siga os passos de qualquer um dos vídeos abaixo:
 
-Atualmente a extensão usa o núcleo da linguagem Delégua como uma dependência NPM e instancia e controla os elementos da linguagem. 
+- [Depurando Fibonacci em Delégua](https://www.youtube.com/watch?v=TQxLekzvBv8)
+- [Depuração com VisuAlg no Visual Studio Code](https://www.youtube.com/watch?v=-L70aVOMduc)
+- [Executando Portugol Studio e Portugol Webstudio no Visual Studio Code](https://www.youtube.com/watch?v=joLJo875hMs)
+
+O resultado da execução aparecerá no painel "Entrada e Saída", que fica juntamente com o console de depuração e o terminal.
