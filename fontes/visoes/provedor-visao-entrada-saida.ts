@@ -23,6 +23,22 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 		};
 
 		webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+
+        webviewView.webview.onDidReceiveMessage(data => {
+			switch (data.type) {
+				case 'commandSent':
+					{
+                        console.log("Comando enviado");
+						break;
+					}
+                case 'keyTyped':
+                    {
+                        // vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(`#${data.value}`));
+                        console.log("Comando", data);
+                        break;
+                    }
+			}
+		});
     }
 
     public exemploAcaoExterna() {
@@ -41,42 +57,57 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 		// Do the same for the stylesheet.
 		const estilosTerminal = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@xterm', 'xterm', 'css', 'xterm.css'));
 
-		// Use a nonce to only allow a specific script to be run.
-		const nonce = this.getNonce();
-
         const htmlFinal = `<!DOCTYPE html>
         <html lang="en">
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <script nonce="${nonce}" src="${scriptUri}"></script>
+                <script src="${scriptUri}"></script>
+                <script src="${addonFitUrl}"></script>
                 <link href="${estilosTerminal}" rel="stylesheet">
             </head>
             <body>
                 <div id="terminal"></div>
 
                 <script>
-                    var terminal = new Terminal({
+                    const vscode = acquireVsCodeApi();
+
+                    const oldState = vscode.getState() || {};
+
+                    const terminal = new Terminal({
                         fontFamily: '"Cascadia Code", Menlo, monospace',
                         allowProposedApi: true
                     });
+                    let resultadoLeia = "";
+
+                    const fitAddon = new FitAddon.FitAddon();
+                    terminal.loadAddon(fitAddon);
 
                     terminal.open(document.getElementById("terminal"));
+                    fitAddon.fit();
+
                     terminal.writeln("Painel de Entrada e Saída");
                     terminal.writeln("Execute seu programa para interagir com este painel.");
+
+                    terminal.onData((e) => {
+                        switch (e) {
+                            case "\\r": // Enter
+                                vscode.postMessage({ type: 'commandSent', value: e });
+                                break;
+                            default:
+                                vscode.postMessage({ type: 'keyTyped', value: e });
+                                terminal.write(e);
+                                break;
+                        }
+                    });
+
+                    function onKeyTyped(key) {
+                        vscode.postMessage({ type: 'colorSelected', value: color });
+                    }
                 </script>
             </body>
         </html>`;
 
 		return htmlFinal;
 	}
-
-    private getNonce() {
-        let text = '';
-        const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (let i = 0; i < 32; i++) {
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-        }
-        return text;
-    }
 }
