@@ -26,7 +26,7 @@ import { DeleguaTempoExecucaoLocal } from './delegua-tempo-execucao-local';
 import { DeleguaPontoParada } from '../delegua-ponto-parada';
 import { ElementoPilhaVsCode } from '../elemento-pilha';
 import { PontoParadaExtensao } from '../ponto-parada-extensao';
-import { ProvedorVisaoEntradaSaida } from 'fontes/visoes';
+import { ProvedorVisaoEntradaSaida } from '../../visoes';
 
 export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
     private static threadId = 1;
@@ -48,7 +48,7 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         this.setDebuggerLinesStartAt1(true);
         this.setDebuggerColumnsStartAt1(true);
 
-        this.tempoExecucao = new DeleguaTempoExecucaoLocal();
+        this.tempoExecucao = new DeleguaTempoExecucaoLocal(provedorVisaoEntradaSaida);
 
         this.tempoExecucao.on('mensagemInformacao', (mensagem: string) => {
             vscode.window.showInformationMessage(mensagem);
@@ -67,13 +67,12 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         });
 
         this.tempoExecucao.on('finalizar', () => {
+            this.provedorVisaoEntradaSaida.escreverEmSaida("Fim da execução.");
             this.sendEvent(new TerminatedEvent());
         });
 
         this.tempoExecucao.on('limparTela', () => {
-            // Funciona bem se houver um ponto de parada. 
-            // Simplesmente não funciona no modo "continuar".
-            vscode.commands.executeCommand('workbench.debug.panel.action.clearReplAction');
+            this.provedorVisaoEntradaSaida.limparTerminal();
         });
 
         this.tempoExecucao.on('pararEmEntrada', () => {
@@ -170,7 +169,7 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
                     this.criarReferenciaSource(caminhoArquivo);
                 eventoSaida.body.line = this.convertDebuggerLineToClient(linha);
                 this.sendEvent(eventoSaida); */
-                this.provedorVisaoEntradaSaida.escreverNoTerminal(textoOuExcecao as string);
+                this.provedorVisaoEntradaSaida.escreverEmSaida(textoOuExcecao as string);
             }
         );
     }

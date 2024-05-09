@@ -1,16 +1,38 @@
 import * as vscode from 'vscode';
+import { Subject } from 'await-notify';
 
+/**
+ * O provedor de visão de entrada e saída. Esta visão é aberta na mesma seção do 
+ * terminal e do console de depuração.
+ */
 export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 
     public static readonly viewType = 'extension.designliquido.entradaESaida';
+
+    promessaLeitura: { 
+        wait: () => Promise<any>,
+        notify: () => void,
+        notifyAll: () => void
+    };
+
+    private entrada: string;
+    copiaEntrada: string;
 
     private _view?: vscode.WebviewView;
 
     constructor(
 		private readonly _extensionUri: vscode.Uri,
-	) { }
+	) { 
+        this.promessaLeitura = new Subject();
+        this.entrada = "";
+        this.copiaEntrada = "";
+    }
 
-    resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext<unknown>, token: vscode.CancellationToken): void | Thenable<void> {
+    resolveWebviewView(
+        webviewView: vscode.WebviewView, 
+        context: vscode.WebviewViewResolveContext<unknown>, 
+        token: vscode.CancellationToken
+    ): void | Thenable<void> {
         this._view = webviewView;
 
 		webviewView.webview.options = {
@@ -28,22 +50,31 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 			switch (data.type) {
 				case 'commandSent':
 					{
-                        console.log("Comando enviado");
+                        this.copiaEntrada = this.entrada;
+                        this.entrada = "";
+                        this.promessaLeitura.notify();
 						break;
 					}
                 case 'keyTyped':
                     {
-                        console.log("Comando", data);
+                        this.entrada += data.value;
                         break;
                     }
 			}
 		});
     }
 
-    public escreverNoTerminal(conteudo: string) {
+    public escreverEmSaida(conteudo: string) {
 		if (this._view) {
 			this._view.show?.(true);
-			this._view.webview.postMessage({ type: 'writeToOutput', content: conteudo });
+			this._view.webview.postMessage({ type: 'escreverEmSaida', content: conteudo });
+		}
+	}
+
+    public escreverEmSaidaMesmaLinha(conteudo: string) {
+		if (this._view) {
+			this._view.show?.(true);
+			this._view.webview.postMessage({ type: 'escreverEmSaidaMesmaLinha', content: conteudo });
 		}
 	}
 
@@ -108,7 +139,12 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
                     window.addEventListener('message', event => {
                         const message = event.data; // The json data that the extension sent
                         switch (message.type) {
-                            case 'writeToOutput':
+                            case 'escreverEmSaida':
+                                {
+                                    terminal.writeln(message.content);
+                                    break;
+                                }
+                            case 'escreverEmSaidaMesmaLinha':
                                 {
                                     terminal.write(message.content);
                                     break;

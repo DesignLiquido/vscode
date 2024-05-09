@@ -5,7 +5,6 @@ import { DebugProtocol } from '@vscode/debugprotocol';
 
 import { cyrb53, PontoParada } from '@designliquido/delegua';
 
-import { ElementoPilhaVsCode } from '../elemento-pilha';
 import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
 
 import { LexadorPitugues } from '@designliquido/delegua/lexador/dialetos/lexador-pitugues';
@@ -35,6 +34,9 @@ import { InterpretadorPotigolComDepuracao } from '@designliquido/potigol/interpr
 import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg } from '@designliquido/visualg';
 import { InterpretadorVisuAlgComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/dialetos/interpretador-visualg-com-depuracao-importacao';
 
+import { ElementoPilhaVsCode } from '../elemento-pilha';
+import { ProvedorVisaoEntradaSaida } from '../../visoes';
+
 /**
  * Em teoria não precisaria uma classe de tempo de execução local, mas,
  * aparentemente, a sessão de depuração precisa trabalhar com um EventEmitter
@@ -55,7 +57,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
     private _hashArquivoInicial = -1;
     private _pontosParada: PontoParada[] = [];
     
-    constructor() {
+    constructor(private readonly provedorVisaoEntradaSaida: ProvedorVisaoEntradaSaida) {
         super();
     }
 
@@ -187,14 +189,26 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
             retornoImportador.retornoAvaliadorSintatico.declaracoes,
         );
 
+        this.provedorVisaoEntradaSaida.limparTerminal();
         this.interpretador.interfaceEntradaSaida = {
-            question: async (mensagem: string, callback: Function) => {
+            /* question: async (mensagem: string, callback: Function) => {
                 return new Promise<any>((resolve, reject) => {
                     vscode.window.showInputBox({
                         prompt: mensagem,
                         title: mensagem
                     }).then((resposta: any) => {
                         callback(resposta);
+                        resolve(0);
+                    });
+                });
+            } */
+            question: async (mensagem: string, callback: Function) => {
+                return new Promise<any>((resolve) => {
+                    this.provedorVisaoEntradaSaida.escreverEmSaidaMesmaLinha(mensagem);
+                    this.provedorVisaoEntradaSaida.promessaLeitura.wait().then(_ => {
+                        const copiaResultadoLeia = this.provedorVisaoEntradaSaida.copiaEntrada;
+                        this.provedorVisaoEntradaSaida.copiaEntrada = "";
+                        callback(copiaResultadoLeia);
                         resolve(0);
                     });
                 });
