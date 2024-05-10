@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.12.1
+
+- Resolvendo problema com impressões que apareciam com um `\n` no Portugol Studio: https://github.com/DesignLiquido/vscode/issues/61.
+
 ## 0.12.0
 
 - Implementação de novo painel de entrada e saída, em substituição ao console de depuração, que não funciona direito com comandos de limpeza;
