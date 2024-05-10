@@ -67,7 +67,7 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         });
 
         this.tempoExecucao.on('finalizar', () => {
-            this.provedorVisaoEntradaSaida.escreverEmSaida("Fim da execução.");
+            this.provedorVisaoEntradaSaida.escreverEmSaida("\r\nFim da execução.");
             this.sendEvent(new TerminatedEvent());
         });
 
@@ -152,24 +152,27 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
                 caminhoArquivo = '',
                 linha = 0
             ) => {
-                /* let eventoSaida: DebugProtocol.OutputEvent;
+                let eventoSaida: DebugProtocol.OutputEvent;
                 if (textoOuExcecao instanceof Error) {
                     eventoSaida = new OutputEvent(`${textoOuExcecao.stack}`);
+                    eventoSaida.body.source =
+                        this.criarReferenciaSource(caminhoArquivo);
+                    eventoSaida.body.line = this.convertDebuggerLineToClient(linha);
+                    this.sendEvent(eventoSaida);
                 } else {
                     const textoSemEscape = textoOuExcecao
                         .replace(/\\t/g, '\t')
-                        .replace(/\\n/g, '\n');
-                    eventoSaida = new OutputEvent(
+                        .replace(/\\n/g, '\r\n');
+                    /* eventoSaida = new OutputEvent(
                         `${textoSemEscape}${mesmaLinha ? '' : '\n'}`,
                         'stdout'
-                    );
+                    ); */
+                    if (mesmaLinha) {
+                        this.provedorVisaoEntradaSaida.escreverEmSaidaMesmaLinha(textoSemEscape);
+                    } else {
+                        this.provedorVisaoEntradaSaida.escreverEmSaida(textoSemEscape);
+                    }
                 }
-
-                eventoSaida.body.source =
-                    this.criarReferenciaSource(caminhoArquivo);
-                eventoSaida.body.line = this.convertDebuggerLineToClient(linha);
-                this.sendEvent(eventoSaida); */
-                this.provedorVisaoEntradaSaida.escreverEmSaida(textoOuExcecao as string);
             }
         );
     }
