@@ -1,0 +1,31 @@
+variaveis
+    a, b:inteiro;
+    somar: modulo;
+    dividir: modulo;
+    subtrair: modulo;
+    multiplicar: modulo;
+inicio
+    a<-10;
+    b<-5;
+
+    somar;
+    subtrair;
+    multiplicar;
+    dividir;
+fim
+
+modulo somar
+    escrever a, "+", b, "=", a+b;
+fim modulo;
+
+modulo multiplicar
+    escrever a, "*", b, "=", a*b;
+fim modulo;
+
+modulo subtrair
+    escrever a, "-", b, "=", a-b;
+fim modulo;
+
+modulo dividir
+    escrever a, "/", b, "=", a/b;
+fim modulo;
