@@ -229,7 +229,7 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
             // Aguarda a finalização da configuração (configurationDoneRequest)
             await this._configuracaoFinalizada.wait(10000);
 
-            this.tempoExecucao.iniciar(
+            await this.tempoExecucao.iniciar(
                 this._arquivoInicial,
                 !!args.stopOnEntry
             );

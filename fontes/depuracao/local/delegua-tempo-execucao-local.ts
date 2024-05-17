@@ -1,5 +1,3 @@
-import * as vscode from 'vscode';
-
 import { EventEmitter } from 'events';
 import { DebugProtocol } from '@vscode/debugprotocol';
 
@@ -7,21 +5,25 @@ import { cyrb53, PontoParada } from '@designliquido/delegua';
 
 import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
 
-import { LexadorPitugues } from '@designliquido/delegua/lexador/dialetos/lexador-pitugues';
-import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-pitugues';
-import { AvaliadorSintaticoMapler } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-mapler';
 import { Importador } from '@designliquido/delegua-node/importador';
 import { ImportadorInterface } from '@designliquido/delegua-node/interfaces';
 import { InterpretadorComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/interpretador-com-depuracao-importacao';
 
+import { LexadorPitugues } from '@designliquido/delegua/lexador/dialetos/lexador-pitugues';
+import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-pitugues';
+
 import { palavrasReservadas } from '@designliquido/delegua/lexador/palavras-reservadas';
-import { LexadorMapler } from '@designliquido/delegua/lexador/dialetos';
+
 import { Declaracao } from '@designliquido/delegua/declaracoes';
 import { Lexador } from '@designliquido/delegua/lexador';
 import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
 
 import { LexadorBirl } from '@designliquido/birl/lexador';
 import { AvaliadorSintaticoBirl } from '@designliquido/birl/avaliador-sintatico';
+
+import { LexadorMapler } from '@designliquido/mapler/lexador';
+import { AvaliadorSintaticoMapler } from '@designliquido/mapler/avaliador-sintatico';
+import { ResolvedorMapler } from '@designliquido/mapler/resolvedor';
 
 import { LexadorPortugolStudio } from '@designliquido/portugol-studio/lexador';
 import { AvaliadorSintaticoPortugolStudio } from '@designliquido/portugol-studio/avaliador-sintatico';
@@ -51,6 +53,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
     private avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>;
     private importador: ImportadorInterface<SimboloInterface, Declaracao>;
     private interpretador: InterpretadorComDepuracaoInterface;
+    private resolvedor: { resolver(declaracoes: Declaracao[]): Promise<Declaracao[]> };
 
     private _arquivoInicial: string = '';
     private _conteudoArquivo: string[];
@@ -123,6 +126,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     {},
                     {},
                     true);
+                this.resolvedor = new ResolvedorMapler();
                 this.interpretador = new InterpretadorComDepuracaoImportacao(this.importador, process.cwd(), 
                     this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
                 break;
@@ -171,7 +175,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
      * @param arquivoInicial 
      * @param pararNaEntrada 
      */
-    iniciar(arquivoInicial: string, pararNaEntrada: boolean) {
+    async iniciar(arquivoInicial: string, pararNaEntrada: boolean) {
         const partesNomeArquivo = arquivoInicial.split('.');
         this.selecionarDialetoPorExtensao(partesNomeArquivo.pop() || '.delegua');
 
@@ -185,8 +189,13 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         this._hashArquivoInicial = retornoImportador.hashArquivo;
         this._conteudoArquivo = this.importador.conteudoArquivosAbertos[this._hashArquivoInicial];
 
+        let declaracoes = retornoImportador.retornoAvaliadorSintatico.declaracoes;
+        if (this.resolvedor) {
+            declaracoes = await this.resolvedor.resolver(declaracoes);
+        }
+
         this.interpretador.prepararParaDepuracao(
-            retornoImportador.retornoAvaliadorSintatico.declaracoes,
+            declaracoes
         );
 
         this.provedorVisaoEntradaSaida.limparTerminal();

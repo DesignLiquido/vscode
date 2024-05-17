@@ -6,13 +6,12 @@ import { DiagnosticoAnalisadorSemantico } from '@designliquido/delegua/interface
 import { Declaracao } from '@designliquido/delegua/declaracoes';
 
 import { Lexador } from '@designliquido/delegua/lexador';
-import { LexadorMapler } from '@designliquido/delegua/lexador/dialetos';
-
 import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
-import { AvaliadorSintaticoMapler } from '@designliquido/delegua/avaliador-sintatico/dialetos';
-
 import { AnalisadorSemanticoInterface } from '@designliquido/delegua/interfaces/analisador-semantico-interface';
-import { AnalisadorSemanticoMapler } from '@designliquido/delegua/analisador-semantico/dialetos';
+
+// import { LexadorMapler } from '@designliquido/mapler/lexador';
+// import { AvaliadorSintaticoMapler } from '@designliquido/mapler/avaliador-sintatico';
+// import { AnalisadorSemanticoMapler } from '@designliquido/mapler/analisador-semantico';
 
 import { RetornoAvaliadorSintatico, RetornoLexador } from '@designliquido/delegua/interfaces/retornos';
 import { RetornoAnalisadorSemantico } from '@designliquido/delegua/interfaces/retornos/retorno-analisador-semantico';
@@ -48,11 +47,11 @@ export function analiseSemantica(
             analisadorSemantico = new AnalisadorSemanticoBirl();
             break; */
 
-        case "mapler":
+        /* case "mapler":
             lexador = new LexadorMapler();
             avaliadorSintatico = new AvaliadorSintaticoMapler();
             analisadorSemantico = new AnalisadorSemanticoMapler();
-            break;
+            break; */
 
         case "delegua":
             lexador = new Lexador();

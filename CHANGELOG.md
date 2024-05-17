@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.12.2
+
+- Aprimoramento do suporte a Mapler, agora suportando módulos (funções);
+- Resolução de problema no formatador do VisuAlg que transformava `escreval()` em `escreva()`.
+
 ## 0.12.1
 
 - Resolvendo problema com impressões que apareciam com um `\n` no Portugol Studio: https://github.com/DesignLiquido/vscode/issues/61.
