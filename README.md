@@ -34,11 +34,11 @@ Você pode instalar pesquisando nas extensões do Visual Studio Code [ou por est
 - Sintaxe colorida
 - Formatação de arquivos em Delégua
 - Análise semântica para Delégua
-- Reconhecimento de expressões comuns das linguagens Delégua, Égua, Pituguês e dialetos de Portugol, como VisuAlg e Portugol Studio/Webstudio
-- Ícones para arquivos `.delegua`, `.egua`, `.pitugues`, `.foles`, `.lincones` e `.lmht`
+- Reconhecimento de expressões comuns das linguagens Delégua, Égua, Pituguês e dialetos de Portugol, como VisuAlg, Portugol Studio/Webstudio e Mapler
+- Ícones para arquivos `.delegua`, `.egua`, `.pitugues`, `.foles`, `.lincones` e `.lmht`, `.alg` (VisuAlg), `.por` (Portugol Studio/Webstudio), `.mapler` (Mapler)
 - Trechos de códigos para facilitar desenvolvimento em Delégua
 - Mecanismo de completude de funções da biblioteca global para Delégua
-- Suporte a depuração para Delégua, Pituguês, Portugol VisuAlg e Portugol Studio/Webstudio
+- Suporte a depuração para Delégua, Pituguês, Portugol VisuAlg, Portugol Studio/Webstudio e Mapler
 
 ## Tradução entre linguagens
 

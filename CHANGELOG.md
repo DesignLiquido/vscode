@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.12.3
+
+- Novo suporte a bibliotecas globais pelo núcleo de Delégua;
+- Novas bibliotecas para Portugol Studio: Tipos e Internet.
+
 ## 0.12.2
 
 - Aprimoramento do suporte a Mapler, agora suportando módulos (funções);

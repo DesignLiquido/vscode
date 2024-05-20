@@ -24,6 +24,7 @@ import { AvaliadorSintaticoBirl } from '@designliquido/birl/avaliador-sintatico'
 import { LexadorMapler } from '@designliquido/mapler/lexador';
 import { AvaliadorSintaticoMapler } from '@designliquido/mapler/avaliador-sintatico';
 import { ResolvedorMapler } from '@designliquido/mapler/resolvedor';
+import { InterpretadorMaplerComDepuracao } from '@designliquido/mapler/interpretador';
 
 import { LexadorPortugolStudio } from '@designliquido/portugol-studio/lexador';
 import { AvaliadorSintaticoPortugolStudio } from '@designliquido/portugol-studio/avaliador-sintatico';
@@ -127,8 +128,10 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     {},
                     true);
                 this.resolvedor = new ResolvedorMapler();
-                this.interpretador = new InterpretadorComDepuracaoImportacao(this.importador, process.cwd(), 
-                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
+                this.interpretador = new InterpretadorMaplerComDepuracao(
+                    process.cwd(), 
+                    this.escreverEmSaida.bind(this)
+                );
                 break;
             case "por":
                 this.lexador = new LexadorPortugolStudio();

@@ -34,7 +34,7 @@ inicio
         se escolha = 0 entao
             escrever "Saindo...";
         fim se;
-    ate (escolha > 0 e escolha < 4);
+    ate (escolha > 0 e escolha <= 4);
 fim
 modulo criarConta
     saldo <- 0.0;
