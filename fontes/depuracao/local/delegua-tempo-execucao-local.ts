@@ -35,7 +35,6 @@ import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sint
 import { InterpretadorPotigolComDepuracao } from '@designliquido/potigol/interpretador';
 
 import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg } from '@designliquido/visualg';
-import { InterpretadorVisuAlgComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/dialetos/interpretador-visualg-com-depuracao-importacao';
 
 import { ElementoPilhaVsCode } from '../elemento-pilha';
 import { ProvedorVisaoEntradaSaida } from '../../visoes';
@@ -91,8 +90,11 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     {},
                     {},
                     true);
-                this.interpretador = new InterpretadorVisuAlgComDepuracaoImportacao(this.importador, process.cwd(), 
-                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this), this.limparTela.bind(this));
+                this.interpretador = new InterpretadorMaplerComDepuracao(
+                    process.cwd(), 
+                    this.escreverEmSaida.bind(this), 
+                    this.limparTela.bind(this)
+                );
                 break;
             case "birl":
                 this.lexador = new LexadorBirl();

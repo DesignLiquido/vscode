@@ -55,6 +55,13 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
                         this.promessaLeitura.notify();
 						break;
 					}
+                case 'deleteChar':
+                    {
+                        if (this.entrada.length > 0) {
+                            this.entrada = this.entrada.substr(0, this.entrada.length - 1);
+                        }
+                        break;
+                    }
                 case 'keyTyped':
                     {
                         this.entrada += data.value;
@@ -115,6 +122,7 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
                         allowProposedApi: true
                     });
                     let resultadoLeia = "";
+                    let ultimoBuffer = 0;
 
                     const fitAddon = new FitAddon.FitAddon();
                     terminal.loadAddon(fitAddon);
@@ -127,6 +135,14 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
                             case "\\r": // Enter
                                 vscode.postMessage({ type: 'commandSent', value: e });
                                 terminal.writeln("");
+                                ultimoBuffer = 0;
+                                break;
+                            case "\\u007F": // Backspace (DEL)
+                                // Não excluir o prompt
+                                if (terminal._core.buffer.x > ultimoBuffer) {
+                                    terminal.write("\b \b");
+                                    vscode.postMessage({ type: 'deleteChar', value: e });
+                                }
                                 break;
                             default:
                                 vscode.postMessage({ type: 'keyTyped', value: e });

@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.12.4
+
+- Correção no painel de Entrada e Saída em que não estava sendo possível usar o `backspace`;
+- Correções no dialeto do Portugol Studio quanto a atribuição de valores em vetores (https://github.com/DesignLiquido/portugol-studio/issues/26 e https://github.com/DesignLiquido/portugol-studio/issues/23). 
+
 ## 0.12.3
 
 - Novo suporte a bibliotecas globais pelo núcleo de Delégua;
