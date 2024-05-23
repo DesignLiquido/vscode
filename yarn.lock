@@ -123,15 +123,15 @@
     "@designliquido/delegua" "^0.35.0"
     lodash "^4.17.21"
 
-"@designliquido/delegua-node@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-1.3.1.tgz#4f6bc08500f444bc0b995c03241803078a074918"
-  integrity sha512-JriaNP0f+yyJYhLFiCzWM3neOuaRpjqY10suVt96hbtjSTkZN/0UR6Wb2cJXa5Yr6SAfm7Ng4AChdE0Iubkqsw==
+"@designliquido/delegua-node@^1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-1.3.2.tgz#79c938fcbebe402984e5560919bc04c25e31f26c"
+  integrity sha512-3ZofpYn6nvB0UVl5Toa58Gut1k6xnMwhdbcSckBOyOt+hpei7lD/RuoA4LZfXs0BcWekk5sX0X0r8r2namlh+g==
   dependencies:
     "@designliquido/birl" "^0.1.1"
     "@designliquido/delegua" "0.35.1"
-    "@designliquido/mapler" "^0.1.2"
-    "@designliquido/portugol-studio" "^0.2.6"
+    "@designliquido/mapler" "^0.1.3"
+    "@designliquido/portugol-studio" "^0.2.7"
     "@designliquido/potigol" "^0.1.1"
     "@designliquido/visualg" "^0.2.0"
     chalk "4.1.2"
@@ -164,19 +164,19 @@
     jsdom "^21.1.1"
     xslt-processor "^2.3.1"
 
-"@designliquido/mapler@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@designliquido/mapler/-/mapler-0.1.2.tgz#49321e997e14e7bf8db73019fc57bd7b4a1a3555"
-  integrity sha512-taR34AtcSO759W/LGVbN7TRXyR8ZX9BEH5K8ES49OSfbH13fVTm6+FIRkEmuHuuTXbGsLnlgi3IcZrr47PqpLg==
+"@designliquido/mapler@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@designliquido/mapler/-/mapler-0.1.3.tgz#cfd3ad36106930aac32887e6ccc528464764a509"
+  integrity sha512-Yi5jEeSg8b9yXtcYtkLD08xc0pcOmNKpvCssFt/D9GP7kJWNeaNx7tEW8w3KtxI0MSAfI60KlozNc9U/BsygDw==
   dependencies:
-    "@designliquido/delegua" "^0.35.0"
+    "@designliquido/delegua" "^0.35.1"
     lodash "^4.17.21"
     node-fetch "2"
 
-"@designliquido/portugol-studio@^0.2.6":
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.2.6.tgz#8807f8f539e17444a4aaa58234886f8e52ec5853"
-  integrity sha512-YzBtXJkn5FT0hUj4UoILyOUr2BQT6GA2ES+8drHKrRRAlxIW9q/hwWg3062GGEr7MEwrzcV5S5LYiqvAUPyvoA==
+"@designliquido/portugol-studio@^0.2.7":
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.2.7.tgz#5471d3d09859e2f430cc30bd5976497bc35adedf"
+  integrity sha512-xbSrSmLFG/hZv0xqYB3gtCN+bl3VIcP0Xifmuv5rzqNvjTv2K/Ed5mpMtNYlIrPQy2RKHWuMO9zEXYYCKhKlsQ==
   dependencies:
     "@designliquido/delegua" "^0.35.1"
     lodash "^4.17.21"
@@ -890,9 +890,9 @@ callsites@^3.0.0:
   integrity sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==
 
 caniuse-lite@^1.0.30001587:
-  version "1.0.30001620"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001620.tgz#78bb6f35b8fe315b96b8590597094145d0b146b4"
-  integrity sha512-WJvYsOjd1/BYUY6SNGUosK9DUidBPDTnOARHp3fSmFO1ekdxaY6nKRttEVrfMmYi80ctS0kz1wiWmm14fVc3ew==
+  version "1.0.30001621"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001621.tgz#4adcb443c8b9c8303e04498318f987616b8fea2e"
+  integrity sha512-+NLXZiviFFKX0fk8Piwv3PfLPGtRqJeq2TiNoUff/qB5KJgwecJTvCXDpmlyP/eCI/GUEmp/h/y5j0yckiiZrA==
 
 chalk@4.1.2, chalk@=4.1.2, chalk@^4.0.0, chalk@^4.1.0:
   version "4.1.2"
@@ -1221,9 +1221,9 @@ ecdsa-sig-formatter@1.0.11:
     safe-buffer "^5.0.1"
 
 electron-to-chromium@^1.4.668:
-  version "1.4.777"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.777.tgz#f846fbba23fd11b3c6f97848cdda94896fdb8baf"
-  integrity sha512-n02NCwLJ3wexLfK/yQeqfywCblZqLcXphzmid5e8yVPdtEcida7li0A5WQKghHNG0FeOMCzeFOzEbtAh5riXFw==
+  version "1.4.778"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.778.tgz#1e429f3f9cf572936693a898c0527adf6123ef76"
+  integrity sha512-C6q/xcUJf/2yODRxAVCfIk4j3y3LMsD0ehiE2RQNV2cxc8XU62gR6vvYh3+etSUzlgTfil+qDHI1vubpdf0TOA==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -2306,12 +2306,12 @@ merge2@^1.3.0, merge2@^1.4.1:
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
 
 micromatch@^4.0.0, micromatch@^4.0.4:
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-4.0.6.tgz#ab4e37c42726b9cd788181ba4a2a4fead8e394a3"
-  integrity sha512-Y4Ypn3oujJYxJcMacVgcs92wofTHxp9FzfDpQON4msDefoC0lb3ETvQLOdLcbhSwU1bz8HrL/1sygfBIHudrkQ==
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-4.0.7.tgz#33e8190d9fe474a9895525f5618eee136d46c2e5"
+  integrity sha512-LPP/3KorzCwBxfeUuZmaR6bG2kdeHSbe0P2tY3FLRU4vYrjYz5hI4QZwV0njUx3jeuKe67YukQ1LSPZBKDqO/Q==
   dependencies:
     braces "^3.0.3"
-    picomatch "^4.0.2"
+    picomatch "^2.3.1"
 
 mime-db@1.52.0:
   version "1.52.0"
@@ -2572,10 +2572,10 @@ picocolors@^1.0.1:
   resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.1.tgz#a8ad579b571952f0e5d25892de5445bcfe25aaa1"
   integrity sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==
 
-picomatch@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.2.tgz#77c742931e8f3b8820946c76cd0c1f13730d1dab"
-  integrity sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==
+picomatch@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.1.tgz#3ba3833733646d9d3e4995946c1365a67fb07a42"
+  integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
 
 pkg-dir@^4.2.0:
   version "4.2.0"
