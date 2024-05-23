@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.12.6
+
+- Correção de bug no Portugol Studio na inicialização de matrizes vazias com valores por variáveis: https://github.com/DesignLiquido/portugol-studio/issues/17.
+
 ## 0.12.5
 
 - Correção de bug no Portugol Studio na inicialização de matrizes vazias: https://github.com/DesignLiquido/portugol-studio/issues/18.
