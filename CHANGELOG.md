@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.12.7
+
+- Correção de condição de corrida no painel de entrada e saída quando há uma instrução de escrita antes de uma instrução de leitura: https://github.com/DesignLiquido/vscode/issues/62
+- Correções em dialeto Potigol, que estava lendo o tipo do retorno de função incorretamente;
+- Novos métodos de lista em Potigol: `descarte_enquanto`, `divida_quando`, `pegue_enquanto`.
+
 ## 0.12.6
 
 - Correção de bug no Portugol Studio na inicialização de matrizes vazias com valores por variáveis: https://github.com/DesignLiquido/portugol-studio/issues/17.

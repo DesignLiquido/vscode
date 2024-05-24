@@ -123,16 +123,16 @@
     "@designliquido/delegua" "^0.35.1"
     lodash "^4.17.21"
 
-"@designliquido/delegua-node@^1.3.3":
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-1.3.3.tgz#551734dbd0206192e7eb3e1744f087d6fd862660"
-  integrity sha512-y03ujoRd0CAgX5C9nZM4B6UdV9l24Y1PDmQFuJgmCr7TMcCfE7dXRqwhu9MG4qMXfUArwCvMdA2JsJ4eAFHwWA==
+"@designliquido/delegua-node@^1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-1.3.4.tgz#9e8f59c7d007f83526a7f92792abc9cfe653b826"
+  integrity sha512-RBfk4V6zEeMsnoYZfMKFThpHn7FX6myWtxX8Ot39soG16Oj4cOq91QgjWBs99m3rgUzevi0jbvGqXg3nCw7i5w==
   dependencies:
     "@designliquido/birl" "^0.1.2"
     "@designliquido/delegua" "0.35.1"
     "@designliquido/mapler" "^0.1.3"
     "@designliquido/portugol-studio" "^0.2.8"
-    "@designliquido/potigol" "^0.1.2"
+    "@designliquido/potigol" "^0.1.3"
     "@designliquido/visualg" "^0.2.0"
     chalk "4.1.2"
     commander "^9.4.1"
@@ -182,10 +182,10 @@
     lodash "^4.17.21"
     node-fetch "2"
 
-"@designliquido/potigol@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@designliquido/potigol/-/potigol-0.1.2.tgz#4955d892ecad04592b9d6158c1e98405ae41d770"
-  integrity sha512-/SkJkvs2Oi7+jnnAbxS7Z/wBHeBQWON2wRm0jblD0i5h1GZiWRiADdpnz7kCOPy6TpBTQ9JFXFMO3u3RnEjiaQ==
+"@designliquido/potigol@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@designliquido/potigol/-/potigol-0.1.3.tgz#822651e6ff3679ca82fe2ef9faeebf826cd663f4"
+  integrity sha512-fq1OzWrBvMfSYSXaoyPsQlUswvRuM5Xg5wPiR95YQKdyNU2c8tRRU1Fk478XrweqyGul4aGGgQnt7jLf+Ma0mQ==
   dependencies:
     "@designliquido/delegua" "^0.35.1"
     lodash "^4.17.21"
@@ -1221,9 +1221,9 @@ ecdsa-sig-formatter@1.0.11:
     safe-buffer "^5.0.1"
 
 electron-to-chromium@^1.4.668:
-  version "1.4.780"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.780.tgz#8c6d7ff82b56b4219f2ae7918ee271ae25654f07"
-  integrity sha512-NPtACGFe7vunRYzvYqVRhQvsDrTevxpgDKxG/Vcbe0BTNOY+5+/2mOXSw2ls7ToNbE5Bf/+uQbjTxcmwMozpCw==
+  version "1.4.783"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.783.tgz#933887165b8b6025a81663d2d97cf4b85cde27b2"
+  integrity sha512-bT0jEz/Xz1fahQpbZ1D7LgmPYZ3iHVY39NcWWro1+hA2IvjiPeaXtfSqrQ+nXjApMvQRE2ASt1itSLRrebHMRQ==
 
 emoji-regex@^8.0.0:
   version "8.0.0"

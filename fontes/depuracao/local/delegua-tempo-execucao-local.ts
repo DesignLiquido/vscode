@@ -70,6 +70,8 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
      * @param argumentos Vetor de argumentos adicionais.
      */
     private enviarEvento(evento: string, ...argumentos: any[]) {
+        // `setImmediate` libera o _event loop_, permitindo ao VSCode atualizar
+        // todos os componentes da tela.
         setImmediate((_) => {
             this.emit(evento, ...argumentos);
         });
@@ -205,6 +207,8 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
 
         this.provedorVisaoEntradaSaida.limparTerminal();
         this.interpretador.interfaceEntradaSaida = {
+            // TODO: Isso só está aqui ainda para servir como referência para
+            // funcionalidades futuras da extensão.
             /* question: async (mensagem: string, callback: Function) => {
                 return new Promise<any>((resolve, reject) => {
                     vscode.window.showInputBox({
@@ -218,12 +222,16 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
             } */
             question: async (mensagem: string, callback: Function) => {
                 return new Promise<any>((resolve) => {
-                    this.provedorVisaoEntradaSaida.escreverEmSaidaMesmaLinha(mensagem);
-                    this.provedorVisaoEntradaSaida.promessaLeitura.wait().then(_ => {
-                        const copiaResultadoLeia = this.provedorVisaoEntradaSaida.copiaEntrada;
-                        this.provedorVisaoEntradaSaida.copiaEntrada = "";
-                        callback(copiaResultadoLeia);
-                        resolve(0);
+                    // `setImmediate` libera o _event loop_, permitindo ao VSCode atualizar
+                    // todos os componentes da tela.
+                    setImmediate((_) => {
+                        this.provedorVisaoEntradaSaida.escreverEmSaidaMesmaLinha(mensagem);
+                        this.provedorVisaoEntradaSaida.promessaLeitura.wait().then(_ => {
+                            const copiaResultadoLeia = this.provedorVisaoEntradaSaida.copiaEntrada;
+                            this.provedorVisaoEntradaSaida.copiaEntrada = "";
+                            callback(copiaResultadoLeia);
+                            resolve(0);
+                        });
                     });
                 });
             }
