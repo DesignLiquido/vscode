@@ -298,7 +298,7 @@ export function activate(context: vscode.ExtensionContext) {
             break;
 
         case 'inline':
-            // run the debug adapter inside the extension and directly talk to it
+            // Roda o adaptador dentro da extensão e fala diretamente com ele.
             configurarDepuracao(
                 context,
                 new FabricaAdaptadorDepuracaoEmbutido(provedorEntradaSaida)

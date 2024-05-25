@@ -59,16 +59,11 @@ export function analiseSemantica(
             analisadorSemantico = new AnalisadorSemantico();
             break;
             
+        case "alg":
         case "visualg":
             lexador = new LexadorVisuAlg();
             avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
             analisadorSemantico = new AnalisadorSemanticoVisuAlg();
-            break;
-
-        case "alg":
-            lexador = new LexadorVisuAlg();
-            avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
-            analisadorSemantico = new AnalisadorSemanticoVisuAlg(); 
             break;
 
         default:

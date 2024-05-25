@@ -48,7 +48,9 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         this.setDebuggerLinesStartAt1(true);
         this.setDebuggerColumnsStartAt1(true);
 
-        this.tempoExecucao = new DeleguaTempoExecucaoLocal(provedorVisaoEntradaSaida);
+        this.tempoExecucao = new DeleguaTempoExecucaoLocal(
+            provedorVisaoEntradaSaida
+        );
 
         this.tempoExecucao.on('mensagemInformacao', (mensagem: string) => {
             vscode.window.showInformationMessage(mensagem);
@@ -163,10 +165,7 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
                     const textoSemEscape = textoOuExcecao
                         .replace(/\\t/g, '\t')
                         .replace(/\\n/g, '\r\n');
-                    /* eventoSaida = new OutputEvent(
-                        `${textoSemEscape}${mesmaLinha ? '' : '\n'}`,
-                        'stdout'
-                    ); */
+
                     if (mesmaLinha) {
                         this.provedorVisaoEntradaSaida.escreverEmSaidaMesmaLinha(textoSemEscape);
                     } else {
@@ -214,6 +213,12 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         this.sendEvent(new InitializedEvent());
     }
 
+    /**
+     * Requisição de execução do código.
+     * @param response A resposta ao comando. Normalmente apenas devolvemos 
+     *                 a resposta original sem alterações.
+     * @param args Argumentos de início da depuração.
+     */
     protected async launchRequest(
         response: DebugProtocol.LaunchResponse,
         args: ArgumentosInicioDepuracao
@@ -230,6 +235,7 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
             await this._configuracaoFinalizada.wait(10000);
 
             await this.tempoExecucao.iniciar(
+                vscode.window.activeTextEditor?.document,
                 this._arquivoInicial,
                 !!args.stopOnEntry
             );
@@ -271,6 +277,8 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         super.configurationDoneRequest(response, args);
 
         // Notificar a requisição de início que a configuração finalizou.
+        // Isso faz com que a execução que espera a resolução de `this._configuracaoFinalizada`
+        // pode continuar.
         this._configuracaoFinalizada.notify();
     }
 
@@ -332,6 +340,7 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         const resposta = this.tempoExecucao.obterVariavel(
             args.expression.toLowerCase()
         );
+
         if (resposta !== undefined) {
             const responseModificada = this.montarEvaluateResponse(
                 response,

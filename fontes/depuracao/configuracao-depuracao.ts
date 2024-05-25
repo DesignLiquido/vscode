@@ -4,11 +4,13 @@ import * as vscode from 'vscode';
 
 import { AcessorArquivos } from './acessor-arquivos';
 import { ProvedorConfiguracaoDelegua } from './provedores';
-import { FabricaAdaptadorDepuracaoEmbutido } from './fabricas';
 
-export function configurarDepuracao(context: vscode.ExtensionContext, factory?: vscode.DebugAdapterDescriptorFactory) {
+export function configurarDepuracao(
+	contexto: vscode.ExtensionContext, 
+	fabricaAdaptadorDepuracao: vscode.DebugAdapterDescriptorFactory
+) {
 
-	context.subscriptions.push(
+	contexto.subscriptions.push(
 		vscode.commands.registerCommand('extension.designliquido.runEditorContents', (resource: vscode.Uri) => {
 			let targetResource = resource;
 			if (!targetResource && vscode.window.activeTextEditor) {
@@ -25,6 +27,7 @@ export function configurarDepuracao(context: vscode.ExtensionContext, factory?: 
 				);
 			}
 		}),
+
 		vscode.commands.registerCommand('extension.designliquido.debugEditorContents', (resource: vscode.Uri) => {
 			let targetResource = resource;
 			if (!targetResource && vscode.window.activeTextEditor) {
@@ -40,27 +43,29 @@ export function configurarDepuracao(context: vscode.ExtensionContext, factory?: 
 				});
 			}
 		}),
+
 		vscode.commands.registerCommand('extension.designliquido.toggleFormatting', (variable) => {
-			const ds = vscode.debug.activeDebugSession;
-			if (ds) {
-				ds.customRequest('toggleFormatting');
+			const sessaoDepuracao = vscode.debug.activeDebugSession;
+			if (sessaoDepuracao) {
+				sessaoDepuracao.customRequest('toggleFormatting');
 			}
 		})
 	);
 
-	context.subscriptions.push(vscode.commands.registerCommand('extension.designliquido.getProgramName', config => {
+	contexto.subscriptions.push(vscode.commands.registerCommand('extension.designliquido.getProgramName', config => {
 		return vscode.window.showInputBox({
 			placeHolder: "Por favor, forneça o nome de um arquivo Delégua no diretório de trabalho",
 			value: "index.delegua"
 		});
 	}));
 
-	// register a configuration provider for 'delegua' debug type
-	const provider = new ProvedorConfiguracaoDelegua();
-	context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('delegua', provider));
+	// Registra um provedor de configuração de tipo de depuração 'delegua' 
+	// (que inclui também todos os dialetos derivados).
+	const provedorConfiguracaoDelegua = new ProvedorConfiguracaoDelegua();
+	contexto.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('delegua', provedorConfiguracaoDelegua));
 
 	// Configurações dinâmicas de inicialização da depuração.
-	context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('delegua', {
+	contexto.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('delegua', {
 		provideDebugConfigurations(folder: vscode.WorkspaceFolder | undefined): vscode.ProviderResult<vscode.DebugConfiguration[]> {
 			return [
 				{
@@ -73,28 +78,26 @@ export function configurarDepuracao(context: vscode.ExtensionContext, factory?: 
 		}
 	}, vscode.DebugConfigurationProviderTriggerKind.Dynamic));
 
-	if (!factory) {
-		factory = new FabricaAdaptadorDepuracaoEmbutido();
-	}
-	context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('delegua', factory));
-	if ('dispose' in factory) {
-		context.subscriptions.push(factory as any);
+	contexto.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('delegua', fabricaAdaptadorDepuracao));
+	if ('dispose' in fabricaAdaptadorDepuracao) {
+		contexto.subscriptions.push(fabricaAdaptadorDepuracao as any);
 	}
 }
 
 export const workspaceFileAccessor: AcessorArquivos = {
-	async lerArquivo(path: string): Promise<Uint8Array> {
+	async lerArquivo(caminho: string): Promise<Uint8Array> {
 		let uri: vscode.Uri;
 		try {
-			uri = pathToUri(path);
+			uri = pathToUri(caminho);
 		} catch (e) {
-			return new TextEncoder().encode(`cannot read '${path}'`);
+			return new TextEncoder().encode(`Não foi possível ler '${caminho}'`);
 		}
 
 		return await vscode.workspace.fs.readFile(uri);
 	},
-	async escreverArquivo(path: string, contents: Uint8Array) {
-		await vscode.workspace.fs.writeFile(pathToUri(path), contents);
+	
+	async escreverArquivo(caminho: string, conteudo: Uint8Array) {
+		await vscode.workspace.fs.writeFile(pathToUri(caminho), conteudo);
 	}
 };
 
