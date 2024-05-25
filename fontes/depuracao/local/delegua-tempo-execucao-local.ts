@@ -102,6 +102,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                 this.interpretador = new InterpretadorVisuAlgComDepuracao(
                     process.cwd(), 
                     this.escreverEmSaida.bind(this), 
+                    this.escreverEmSaidaMesmaLinha.bind(this),
                     this.limparTela.bind(this)
                 );
                 break;
