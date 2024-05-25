@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.12.8
+
+- Correção em dialeto do Portugol Studio para operadores `+=` e `-=`: https://github.com/DesignLiquido/portugol-studio/issues/27.
+
 ## 0.12.7
 
 - Correção de condição de corrida no painel de entrada e saída quando há uma instrução de escrita antes de uma instrução de leitura: https://github.com/DesignLiquido/vscode/issues/62

@@ -118,6 +118,7 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
                     const oldState = vscode.getState() || {};
 
                     const terminal = new Terminal({
+                        rows: 20,
                         fontFamily: '"Cascadia Code", Menlo, monospace',
                         allowProposedApi: true
                     });

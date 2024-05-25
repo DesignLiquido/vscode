@@ -123,15 +123,15 @@
     "@designliquido/delegua" "^0.35.1"
     lodash "^4.17.21"
 
-"@designliquido/delegua-node@^1.3.4":
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-1.3.4.tgz#9e8f59c7d007f83526a7f92792abc9cfe653b826"
-  integrity sha512-RBfk4V6zEeMsnoYZfMKFThpHn7FX6myWtxX8Ot39soG16Oj4cOq91QgjWBs99m3rgUzevi0jbvGqXg3nCw7i5w==
+"@designliquido/delegua-node@^1.3.5":
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-node/-/delegua-node-1.3.5.tgz#008bea17aada4a42a5a50f4dcdef0cdbbf79dfc7"
+  integrity sha512-p+tPs8IaJ8axeGM0epOZ3gb7jjZcBiGPNobWUw6E55xPuHTfXcz5jwcr/q969BW2bGGVUciRrzUCyiABnjDylQ==
   dependencies:
     "@designliquido/birl" "^0.1.2"
     "@designliquido/delegua" "0.35.1"
     "@designliquido/mapler" "^0.1.3"
-    "@designliquido/portugol-studio" "^0.2.8"
+    "@designliquido/portugol-studio" "^0.2.9"
     "@designliquido/potigol" "^0.1.3"
     "@designliquido/visualg" "^0.2.0"
     chalk "4.1.2"
@@ -173,10 +173,10 @@
     lodash "^4.17.21"
     node-fetch "2"
 
-"@designliquido/portugol-studio@^0.2.8":
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.2.8.tgz#ac6b3930638efa7c315d8e6b3ee82139f796817c"
-  integrity sha512-UX2dasfWqCN779crSLu3tmuThmPOO3yvkwKOUCzgBTMmUwaeDsolVbnMivmHLEm1dt1WX+ccYp7idEQOf+fu8Q==
+"@designliquido/portugol-studio@^0.2.9":
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.2.9.tgz#fb8ee1653c9ce6a131a265a1d8d7ffd50c9eb831"
+  integrity sha512-fUEBYIhqoaElW3xfMVJUTRGKYhsU2S6R8vLdWFMT/F3RE8MQZj2ibsDAyhz7etnMOnMgojQOC1rawG4V8oACNg==
   dependencies:
     "@designliquido/delegua" "^0.35.1"
     lodash "^4.17.21"
