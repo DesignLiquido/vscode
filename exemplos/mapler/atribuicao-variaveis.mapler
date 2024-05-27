@@ -1,7 +1,10 @@
 variaveis
-    idade: numero;
+    // Mude abaixo para um tipo que não existe em Mapler 
+    // (por exemplo, "numero")
+    // para ver um erro de avaliação sintática.
+    idade: inteiro;
 inicio
     idade <- 1;
-    // Mude para a linha abaixo para ver um erro de avaliação semântica.
+    // Descomente a linha abaixo para ver um erro de avaliação semântica.
     // idade <- "abc";
 fim
