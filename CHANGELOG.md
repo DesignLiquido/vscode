@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.12.9
+
+- Dialetos que não possuem suporte à importação de arquivos agora usam um importador que trabalha com a API do Visual Studio Code.
+
 ## 0.12.8
 
 - Correção em dialeto do Portugol Studio para operadores `+=` e `-=`: https://github.com/DesignLiquido/portugol-studio/issues/27.
