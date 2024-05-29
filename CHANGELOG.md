@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.12.10
+
+- Correção de _bug_ ao trazer pilha de escopos de execução em depuração com Delégua: https://github.com/DesignLiquido/vscode/issues/64;
+- Ao executar código, trazendo a visão de entrada e saída mesmo que ela não esteja selecionada;
+- Formatação de código para VisuAlg usando `Ctrl`/`Cmd` + `Shift` + `F`.
+
 ## 0.12.9
 
 - Dialetos que não possuem suporte à importação de arquivos agora usam um importador que trabalha com a API do Visual Studio Code.
