@@ -29,10 +29,11 @@ import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
 import { LmhtProvedorDocumentacaoEmEditor } from './documentacao-em-editor/lmht-provedor-documentacao-em-editor';
 import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
 
-import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio-provedor-formatacao';
+// import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio-provedor-formatacao';
 import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao';
 
 import { ProvedorVisaoEntradaSaida } from './visoes';
+// import { MaplerProvedorFormatacao } from './formatadores/mapler-provedor-formatacao';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -160,12 +161,13 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
-    context.subscriptions.push(
+    // TODO: Testar antes de habilitar.
+    /* context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
-            'visualg',
-            new VisualgProvedorFormatacao()
+            'mapler',
+            new MaplerProvedorFormatacao()
         )
-    );
+    ); */
 
     // TODO: Testar antes de habilitar.
     /* context.subscriptions.push(
@@ -181,6 +183,14 @@ export function activate(context: vscode.ExtensionContext) {
             new PotigolProvedorFormatacao()
         )
     );
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'visualg',
+            new VisualgProvedorFormatacao()
+        )
+    );
+
     // IntelliSense para Delégua e Liquido.
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(

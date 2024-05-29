@@ -71,6 +71,12 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 		});
     }
 
+    public ativarVisao(): void {
+        if (this._view) {
+			this._view.show?.(true);
+        }
+    }
+
     public escreverEmSaida(conteudo: string) {
 		if (this._view) {
 			this._view.show?.(true);

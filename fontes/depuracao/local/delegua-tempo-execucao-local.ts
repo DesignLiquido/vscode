@@ -215,6 +215,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
             throw new Error('Por favor, abra um arquivo antes de iniciar uma execução.');
         }
 
+        this.provedorVisaoEntradaSaida.ativarVisao();
         this._documento = documento;
         const partesNomeArquivo = arquivoInicial.split('.');
         this.selecionarDialetoPorExtensao(partesNomeArquivo.pop() || '.delegua');
@@ -230,6 +231,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         if (['delegua', 'pitugues'].includes(this._dialetoSelecionado)) {
             const importador = (this.importador as ImportadorInterface<SimboloInterface, Declaracao>);
             retornoImportador = importador.importar(arquivoInicial, true);
+            this._hashArquivoInicial = retornoImportador.hashArquivo;
             this._conteudoArquivo = (importador as any).conteudoArquivosAbertos[this._hashArquivoInicial];
         } else {
             const importador = (this.importador as ImportadorExtensao);
@@ -237,11 +239,9 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                 this._documento.getText, 
                 this._documento.fileName
             );
+            this._hashArquivoInicial = retornoImportador.hashArquivo;
             this._conteudoArquivo = retornoImportador.conteudoArquivo;
         }
-
-        this._hashArquivoInicial = retornoImportador.hashArquivo;
-        
 
         let declaracoes = retornoImportador.retornoAvaliadorSintatico.declaracoes;
         if (this.resolvedor) {
