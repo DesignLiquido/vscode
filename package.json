@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.12.10",
+    "version": "0.12.11",
     "engines": {
         "vscode": "^1.68.0"
     },
@@ -491,7 +491,7 @@
         "webpack-cli": "^5.0.1"
     },
     "dependencies": {
-        "@designliquido/delegua-node": "^1.3.5",
+        "@designliquido/delegua-node": "^1.3.6",
         "@designliquido/foles": "^0.7.0",
         "@designliquido/lmht-js": "^0.4.9",
         "@xterm/addon-fit": "^0.10.0",

@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.12.11
+
+- Correções de _bugs_ no dialeto BIRL;
+- Correção de _bug_ na análise semântica do VisuAlg ao considerar que um procedimento deve retornar valor.
+
 ## 0.12.10
 
 - Correção de _bug_ ao trazer pilha de escopos de execução em depuração com Delégua: https://github.com/DesignLiquido/vscode/issues/64;
