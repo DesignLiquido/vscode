@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.12.12
+
+- Correção de verificação de parâmetros na análise semântica do VisuAlg;
+- Inclusão de chamadas de funções do VisuAlg quando nenhum parâmetro é passado.
+
 ## 0.12.11
 
 - Correções de _bugs_ no dialeto BIRL;
