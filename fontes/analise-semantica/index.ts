@@ -9,6 +9,10 @@ import { Lexador } from '@designliquido/delegua/lexador';
 import { AvaliadorSintatico, ErroAvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
 import { AnalisadorSemanticoInterface } from '@designliquido/delegua/interfaces/analisador-semantico-interface';
 
+import { LexadorBirl } from '@designliquido/birl/lexador';
+import { AvaliadorSintaticoBirl } from '@designliquido/birl/avaliador-sintatico';
+import { AnalisadorSemanticoBirl } from '@designliquido/birl/analisador-semantico';
+
 import { LexadorMapler } from '@designliquido/mapler/lexador';
 import { AvaliadorSintaticoMapler } from '@designliquido/mapler/avaliador-sintatico';
 import { AnalisadorSemanticoMapler } from '@designliquido/mapler/analisador-semantico';
@@ -16,9 +20,9 @@ import { AnalisadorSemanticoMapler } from '@designliquido/mapler/analisador-sema
 import { RetornoAvaliadorSintatico, RetornoLexador } from '@designliquido/delegua/interfaces/retornos';
 import { RetornoAnalisadorSemantico } from '@designliquido/delegua/interfaces/retornos/retorno-analisador-semantico';
 
-import { LexadorBirl } from '@designliquido/birl/lexador';
-import { AvaliadorSintaticoBirl } from '@designliquido/birl/avaliador-sintatico';
-import { AnalisadorSemanticoBirl } from '@designliquido/birl/analisador-semantico';
+import { LexadorPotigol } from '@designliquido/potigol/lexador';
+import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sintatico';
+import { AnalisadorSemanticoPotigol } from '@designliquido/potigol/analisador-semantico';
 
 import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg, AnalisadorSemanticoVisuAlg } from '@designliquido/visualg';
 
@@ -70,6 +74,13 @@ export function analiseSemantica(
             lexador = new Lexador();
             avaliadorSintatico = new AvaliadorSintatico();
             analisadorSemantico = new AnalisadorSemantico();
+            break;
+
+        case "poti":
+        case "potigol":
+            lexador = new LexadorPotigol();
+            avaliadorSintatico = new AvaliadorSintaticoPotigol();
+            analisadorSemantico = new AnalisadorSemanticoPotigol();
             break;
             
         case "alg":

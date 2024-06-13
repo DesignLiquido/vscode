@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.12.13
+
+- Diversas correções no dialeto Potigol.
+
 ## 0.12.12
 
 - Correção de verificação de parâmetros na análise semântica do VisuAlg;
