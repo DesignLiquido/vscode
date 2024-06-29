@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.12.14
+
+- Implementação de suporte a registros no VisuAlg: https://github.com/DesignLiquido/visualg/issues/12. 
+
 ## 0.12.13
 
 - Diversas correções no dialeto Potigol.
