@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.12.15
+
+- Atualização na biblioteca `lmht-js` para resolver um _bug_ relacionado a certas estruturas que não aparecem corretamente: https://github.com/DesignLiquido/lmht-js/issues/2 e https://github.com/DesignLiquido/lmht-js/issues/3;
+- Implementação da biblioteca Objetos no dialeto Portugol Studio: https://github.com/DesignLiquido/portugol-studio/pull/30
+- Correção de _bug_ no VisuAlg em laço `para` aninhado: https://github.com/DesignLiquido/visualg/issues/13
+
 ## 0.12.14
 
 - Implementação de suporte a registros no VisuAlg: https://github.com/DesignLiquido/visualg/issues/12. 

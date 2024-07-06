@@ -12,7 +12,7 @@ import { ConversorHtml, ConversorLmht } from '@designliquido/lmht-js';
  * @param paraLinguagem Linguagem de destino.
  * @returns Normalmente `void`, mas pode retornar mensagens de erro.
  */
-export function traduzir(deLinguagem: string, paraLinguagem: string): any {
+export async function traduzir(deLinguagem: string, paraLinguagem: string): Promise<any> {
     try {
         let caminhoArquivoAbertoEditor =
             vscode.window.activeTextEditor?.document?.fileName ?? '';
@@ -28,7 +28,7 @@ export function traduzir(deLinguagem: string, paraLinguagem: string): any {
         switch (deLinguagem.toLowerCase()) {
             case 'lmht':
             case 'html':
-                resultadoTraducao = traduzirPorMotorLmht(deLinguagem, paraLinguagem, caminhoArquivoAbertoEditor);
+                resultadoTraducao = await traduzirPorMotorLmht(deLinguagem, paraLinguagem, caminhoArquivoAbertoEditor);
                 break;
             case 'css':
             case 'foles':
@@ -113,16 +113,16 @@ function traduzirPorMotorFolEs(deLinguagem: string, paraLinguagem: string, camin
  * @param caminhoArquivoAbertoEditor O arquivo a ser traduzido.
  * @returns O texto com o conteúdo da tradução.
  */
-function traduzirPorMotorLmht(deLinguagem: string, paraLinguagem: string, caminhoArquivoAbertoEditor: string): string {
+async function traduzirPorMotorLmht(deLinguagem: string, paraLinguagem: string, caminhoArquivoAbertoEditor: string): Promise<string> {
     let resultadoTraducao = '';
     switch (deLinguagem.toLowerCase()) {
         case 'html':
             const conversorHtml = new ConversorHtml();
-            resultadoTraducao = conversorHtml.converterPorArquivo(caminhoArquivoAbertoEditor);
+            resultadoTraducao = await conversorHtml.converterPorArquivo(caminhoArquivoAbertoEditor);
             break;
         case 'lmht':
             const conversorLmht = new ConversorLmht();
-            resultadoTraducao = conversorLmht.converterPorArquivo(caminhoArquivoAbertoEditor);
+            resultadoTraducao = await conversorLmht.converterPorArquivo(caminhoArquivoAbertoEditor);
             break;
     }
 

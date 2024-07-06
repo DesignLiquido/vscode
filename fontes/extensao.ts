@@ -94,63 +94,63 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.css.para.foles',
-            () => traduzir('css', 'foles')
+            async () => await traduzir('css', 'foles')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.delegua.para.assemblyscript',
-            () => traduzir('delegua', 'assemblyscript')
+            async () => await traduzir('delegua', 'assemblyscript')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.delegua.para.javascript',
-            () => traduzir('delegua', 'js')
+            async () => await traduzir('delegua', 'js')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.delegua.para.python',
-            () => traduzir('delegua', 'py')
+            async () => await traduzir('delegua', 'py')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.foles.para.css',
-            () => traduzir('foles', 'css')
+            async () => await traduzir('foles', 'css')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.html.para.lmht',
-            () => traduzir('html', 'lmht')
+            async () => await traduzir('html', 'lmht')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.javascript.para.delegua',
-            () => traduzir('js', 'delegua')
+            async () => await traduzir('js', 'delegua')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.lmht.para.html',
-            () => traduzir('lmht', 'html')
+            async () => await traduzir('lmht', 'html')
         )
     );
     
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.visualg.para.delegua',
-            () => traduzir('alg', 'delegua')
+            async () => await traduzir('alg', 'delegua')
         )
     );    
 
