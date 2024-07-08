@@ -25,6 +25,7 @@ import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sint
 import { AnalisadorSemanticoPotigol } from '@designliquido/potigol/analisador-semantico';
 
 import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg, AnalisadorSemanticoVisuAlg } from '@designliquido/visualg';
+import { AnalisadorSemanticoPortugolStudio, AvaliadorSintaticoPortugolStudio, LexadorPortugolStudio } from "@designliquido/portugol-studio"
 
 const mapaSeveridadeDiagnosticos = {
     0: vscode.DiagnosticSeverity.Error,
@@ -88,6 +89,11 @@ export function analiseSemantica(
             lexador = new LexadorVisuAlg();
             avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
             analisadorSemantico = new AnalisadorSemanticoVisuAlg();
+            break;
+        case "por":
+            lexador = new LexadorPortugolStudio();
+            avaliadorSintatico = new AvaliadorSintaticoPortugolStudio();
+            analisadorSemantico = new AnalisadorSemanticoPortugolStudio();
             break;
 
         default:
