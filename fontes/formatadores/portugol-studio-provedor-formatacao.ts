@@ -1,14 +1,14 @@
 import * as vscode from 'vscode';
 import * as sistemaOperacional from 'node:os';
 
-import { LexadorMapler, AvaliadorSintaticoMapler } from '@designliquido/mapler';
-import { FormatadorMapler } from '@designliquido/mapler/formatador';
+import { LexadorPortugolStudio, AvaliadorSintaticoPortugolStudio } from '@designliquido/portugol-studio';
+import { FormatadorPortugolStudio } from '@designliquido/portugol-studio/formatador/formatador-portugol-studio';
 
-export class MaplerProvedorFormatacao implements vscode.DocumentFormattingEditProvider {
+export class PortugolStudioProvedorFormatacao implements vscode.DocumentFormattingEditProvider {
     provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
-        const lexador = new LexadorMapler();
-        const avaliadorSintatico = new AvaliadorSintaticoMapler();
-        const formatador = new FormatadorMapler(sistemaOperacional.EOL);
+        const lexador = new LexadorPortugolStudio();
+        const avaliadorSintatico = new AvaliadorSintaticoPortugolStudio();
+        const formatador = new FormatadorPortugolStudio(sistemaOperacional.EOL);
 
         const resultadoLexador = lexador.mapear(document.getText().split('\n'), -1);
         const resultadoAvaliacaoSintatica = avaliadorSintatico.analisar(resultadoLexador, -1);
