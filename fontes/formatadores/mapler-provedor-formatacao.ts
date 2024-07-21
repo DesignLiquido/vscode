@@ -4,7 +4,6 @@ import * as sistemaOperacional from 'node:os';
 import { LexadorMapler, AvaliadorSintaticoMapler } from '@designliquido/mapler';
 import { FormatadorMapler } from '@designliquido/mapler/formatador';
 
-
 export class MaplerProvedorFormatacao implements vscode.DocumentFormattingEditProvider {
     provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
         const lexador = new LexadorMapler();

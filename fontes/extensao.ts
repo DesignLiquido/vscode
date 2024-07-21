@@ -33,7 +33,7 @@ import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
 import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao';
 
 import { ProvedorVisaoEntradaSaida } from './visoes';
-// import { MaplerProvedorFormatacao } from './formatadores/mapler-provedor-formatacao';
+import { MaplerProvedorFormatacao } from './formatadores/mapler-provedor-formatacao';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -161,13 +161,12 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
-    // TODO: Testar antes de habilitar.
-    /* context.subscriptions.push(
+    context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
             'mapler',
             new MaplerProvedorFormatacao()
         )
-    ); */
+    );
 
     // TODO: Testar antes de habilitar.
     /* context.subscriptions.push(
