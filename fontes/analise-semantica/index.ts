@@ -25,7 +25,9 @@ import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sint
 import { AnalisadorSemanticoPotigol } from '@designliquido/potigol/analisador-semantico';
 
 import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg, AnalisadorSemanticoVisuAlg } from '@designliquido/visualg';
-import { AnalisadorSemanticoPortugolStudio, AvaliadorSintaticoPortugolStudio, LexadorPortugolStudio } from "@designliquido/portugol-studio"
+// import { LexadorPortugolStudio } from "@designliquido/portugol-studio/lexador";
+// import { AvaliadorSintaticoPortugolStudio } from "@designliquido/portugol-studio/avaliador-sintatico";
+// import { AnalisadorSemanticoPortugolStudio } from "@designliquido/portugol-studio/analisador-semantico";
 
 const mapaSeveridadeDiagnosticos = {
     0: vscode.DiagnosticSeverity.Error,
@@ -90,11 +92,11 @@ export function analiseSemantica(
             avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
             analisadorSemantico = new AnalisadorSemanticoVisuAlg();
             break;
-        case "por":
+        /* case "por":
             lexador = new LexadorPortugolStudio();
             avaliadorSintatico = new AvaliadorSintaticoPortugolStudio();
             analisadorSemantico = new AnalisadorSemanticoPortugolStudio();
-            break;
+            break; */
 
         default:
             return;
