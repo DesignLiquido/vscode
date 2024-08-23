@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.12.17
+
+- Remoção de _bug_ no VisuAlg que imprimia casas decimais a mais para `escreva()` contendo informação de casas decimais a serem impressas: https://github.com/DesignLiquido/visualg/issues/16.
+
 ## 0.12.16
 
 - Remoção de _bug_ no VisuAlg que não imprimia elementos de matriz: https://github.com/DesignLiquido/visualg/issues/15.
