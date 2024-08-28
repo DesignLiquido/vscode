@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.12.18
+
+- Remoção de _bug_ no VisuAlg na análise sintática de `faça ... enquanto`: https://github.com/DesignLiquido/portugol-studio/issues/33.
+
 ## 0.12.17
 
 - Remoção de _bug_ no VisuAlg que imprimia casas decimais a mais para `escreva()` contendo informação de casas decimais a serem impressas: https://github.com/DesignLiquido/visualg/issues/16.
