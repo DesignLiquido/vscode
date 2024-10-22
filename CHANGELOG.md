@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.12.19
+
+- Atualização do analisador semântico do Portugol Studio: https://github.com/DesignLiquido/portugol-studio/issues/31. 
+
 ## 0.12.18
 
 - Remoção de _bug_ no VisuAlg na análise sintática de `faça ... enquanto`: https://github.com/DesignLiquido/portugol-studio/issues/33.
