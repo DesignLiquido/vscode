@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.12.20
+
+- Corrigido erros no Portugol Studio : Erro se passar comentário no inicio do código ([#36](https://github.com/DesignLiquido/portugol-studio/issues/36)) e erro ao usar variáveis no `para` ([#35](https://github.com/DesignLiquido/portugol-studio/issues/35)).
+
 ## 0.12.19
 
 - Atualização do analisador semântico do Portugol Studio: https://github.com/DesignLiquido/portugol-studio/issues/31. 
