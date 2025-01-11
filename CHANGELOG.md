@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.12.21
+
+- Corrigindo problema com operador `mod` no VisuAlg: https://github.com/DesignLiquido/visualg/issues/17;
+- Melhoramentos no analisador semântico de Portugol Studio: https://github.com/DesignLiquido/portugol-studio/pull/39.
+
 ## 0.12.20
 
 - Corrigido erros no Portugol Studio : Erro se passar comentário no inicio do código ([#36](https://github.com/DesignLiquido/portugol-studio/issues/36)) e erro ao usar variáveis no `para` ([#35](https://github.com/DesignLiquido/portugol-studio/issues/35)).
