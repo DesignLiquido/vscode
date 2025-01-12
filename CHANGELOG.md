@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.12.22
+
+- Funções `escreva` e `escreval` do VisuAlg passam a trabalhar sem a obrigatoriedade de parênteses;
+- Ajuste no analisador semântico do Portugol Studio para reconhecer variáveis declaradas em escopos diferentes.
+
 ## 0.12.21
 
 - Corrigindo problema com operador `mod` no VisuAlg: https://github.com/DesignLiquido/visualg/issues/17;
@@ -71,11 +76,11 @@
 
 ## 0.12.6
 
-- Correção de bug no Portugol Studio na inicialização de matrizes vazias com valores por variáveis: https://github.com/DesignLiquido/portugol-studio/issues/17.
+- Correção de _bug_ no Portugol Studio na inicialização de matrizes vazias com valores por variáveis: https://github.com/DesignLiquido/portugol-studio/issues/17.
 
 ## 0.12.5
 
-- Correção de bug no Portugol Studio na inicialização de matrizes vazias: https://github.com/DesignLiquido/portugol-studio/issues/18.
+- Correção de _bug_ no Portugol Studio na inicialização de matrizes vazias: https://github.com/DesignLiquido/portugol-studio/issues/18.
 
 ## 0.12.4
 
@@ -335,7 +340,7 @@
 
 ## 0.8.4
 
-- Correções de bugs em diferentes dialetos (VisuAlg e Potigol).
+- Correções de _bugs_ em diferentes dialetos (VisuAlg e Potigol).
 
 ## 0.8.3
 
@@ -450,7 +455,7 @@
 
 - Novos métodos para vetores em Delégua: `aparar`, `apararInicio`, `apararFim`;
 - Novo método para textos em Delégua: `concatenar`;
-- Correção de bug no passo dinâmico para instrução `para`, no VisuAlg.
+- Correção de _bug_ no passo dinâmico para instrução `para`, no VisuAlg.
 
 ## 0.7.2
 
@@ -476,11 +481,11 @@
 
 ## 0.6.2
 
-- Correção de bug em blocos de repetição com `sustar` em Delégua.
+- Correção de _bug_ em blocos de repetição com `sustar` em Delégua.
 
 ## 0.6.1
 
-- Correção de bug em blocos de repetição com `retorna` em Delégua.
+- Correção de _bug_ em blocos de repetição com `retorna` em Delégua.
 
 ## 0.6.0
 
@@ -492,7 +497,7 @@
 
 ## 0.5.7
 
-- Correção de bug no método `filtrarPor()` em Delégua.
+- Correção de _bug_ no método `filtrarPor()` em Delégua.
 
 ## 0.5.6
 
@@ -526,11 +531,11 @@
 
 ## 0.4.7
 
-- Corrigindo bugs no dialeto VisuAlg em que funções e procedimentos que vinham antes de `var` não eram reconhecidos corretamente.
+- Corrigindo _bugs_ no dialeto VisuAlg em que funções e procedimentos que vinham antes de `var` não eram reconhecidos corretamente.
 
 ## 0.4.6
 
-- Remoção de bugs de atribuição para variáveis indexadas em vários dialetos.
+- Remoção de _bugs_ de atribuição para variáveis indexadas em vários dialetos.
 
 ## 0.4.5
 
@@ -543,11 +548,11 @@
 
 ## 0.4.3
 
-- Correção de bug ao intercalar comandos "próximo" e "continuar" na mesma depuração com VisuAlg.
+- Correção de _bug_ ao intercalar comandos "próximo" e "continuar" na mesma depuração com VisuAlg.
 
 ## 0.4.2
 
-- Correções de bugs em instruções `enquanto` e `escolha` do VisuAlg.
+- Correções de _bugs_ em instruções `enquanto` e `escolha` do VisuAlg.
 
 ## 0.4.1
 
@@ -562,28 +567,28 @@
 
 ## 0.3.11
 
-- Resolvido bug: avaliação sintática de comparação igual no VisuAlg devolvendo símbolo errado pro interpretador.
+- Resolvido _bug_: avaliação sintática de comparação igual no VisuAlg devolvendo símbolo errado pro interpretador.
 
 ## 0.3.10
 
-- Resolvido bug: reatribuição de variáveis causando valores `NaN` em depuração.
+- Resolvido _bug_: reatribuição de variáveis causando valores `NaN` em depuração.
 
 ## 0.3.9
 
-- Resolvido bug: `enquanto (verdadeiro)` em Delégua causa loop infinito: https://github.com/DesignLiquido/vscode/issues/6
-- Resolvido bug: `inteiro(leia())` chama o prompt três vezes: https://github.com/DesignLiquido/vscode/issues/7
-- Resolvido bug: reatribuição de variáveis causando valores `NaN`.
+- Resolvido _bug_: `enquanto (verdadeiro)` em Delégua causa loop infinito: https://github.com/DesignLiquido/vscode/issues/6
+- Resolvido _bug_: `inteiro(leia())` chama o prompt três vezes: https://github.com/DesignLiquido/vscode/issues/7
+- Resolvido _bug_: reatribuição de variáveis causando valores `NaN`.
 
 ## 0.3.8
 
 - Registrando funções de entrada e saída do VisuAlg nos provedores de completude e documentação-em-código;
-- Correção de bug na chamada do formatador Delégua;
-- Correção de bug na depuração que não mostrava as variáveis atuais.
+- Correção de _bug_ na chamada do formatador Delégua;
+- Correção de _bug_ na depuração que não mostrava as variáveis atuais.
 
 ## 0.3.7
 
 - Ajustes para VisuAlg no núcleo da linguagem;
-- Documentação-em-código para VisuAlg (colocar o mouse em cima do nome da função, mostra o que ela faz).
+- Documentação-em-código para VisuAlg (colocar o ponteiro do _mouse_ em cima do nome da função, mostra o que ela faz).
 
 ## 0.3.6
 
@@ -592,7 +597,7 @@
 
 ## 0.3.5
 
-- Corrigindo bug que não escrevia em console quando o método de saída é de escrita na mesma linha.
+- Corrigindo _bug_ que não escrevia em console quando o método de saída é de escrita na mesma linha.
 
 ## 0.3.4
 
@@ -608,7 +613,7 @@
 
 ## 0.3.1
 
-- Correção de bugs no dialeto VisuAlg;
+- Correção de _bugs_ no dialeto VisuAlg;
 - Atualização de ícone de LinCones.
 
 ## 0.3.0
@@ -620,7 +625,7 @@
 ## 0.2.8
 
 - Mudança de lógica no descarte de escopos de execução durante depuração, o que corrige alguns comportamentos quanto depurando código em todas as linguagens suportadas;
-- Ajuste na inspeção "hover" de variável, que não estava funcionando para variáveis com caracteres maiúsculos.
+- Ajuste na inspeção `hover` (passar o ponteiro do _mouse_ em cima) de variável, que não estava funcionando para variáveis com caracteres maiúsculos.
 
 ## 0.2.7
 
