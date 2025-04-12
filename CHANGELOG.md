@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.12.23
+
+- Atualizações gerais em Delégua e todos os dialetos desta extensão;
+- Suporte a variáveis em FolEs.
+
 ## 0.12.22
 
 - Funções `escreva` e `escreval` do VisuAlg passam a trabalhar sem a obrigatoriedade de parênteses;

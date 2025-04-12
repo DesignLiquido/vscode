@@ -19,7 +19,7 @@ import {
 import { DebugProtocol } from '@vscode/debugprotocol';
 import { Subject } from 'await-notify';
 
-import { inferirTipoVariavel } from '@designliquido/delegua/interpretador/inferenciador';
+import { inferirTipoVariavel } from '@designliquido/delegua/inferenciador';
 
 import { ArgumentosInicioDepuracao } from '../argumentos-inicio-depuracao';
 import { DeleguaTempoExecucaoLocal } from './delegua-tempo-execucao-local';
