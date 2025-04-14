@@ -1,4 +1,4 @@
-# Linguagens em Português para Visual Studio Code
+# Linguagens em Português para Visual Studio Code e derivados
 
 <p align="center">
   <a href="https://marketplace.visualstudio.com/items?itemName=designliquido.designliquido-vscode" title="Extensão no Visual Studio Marketplace">
@@ -28,6 +28,12 @@ Essa extensão também oferece suporte parcial a outras linguagens que são dial
 ## Instalação
 
 Você pode instalar pesquisando nas extensões do Visual Studio Code [ou por este link](https://marketplace.visualstudio.com/items?itemName=designliquido.designliquido-vscode) (Windows e Mac), ou ainda [por este outro link](https://open-vsx.org/extension/designliquido/designliquido-vscode) (Linux, VSCodium, etc).
+
+Editores suportados:
+
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [VSCodium](https://vscodium.com/)
+- [Cursor](https://www.cursor.com/)
 
 ## Funcionalidades até então
 
