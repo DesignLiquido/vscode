@@ -6,8 +6,9 @@ import { cyrb53, PontoParada } from '@designliquido/delegua';
 
 import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
 
-import { Importador } from '@designliquido/delegua-node/importador';
+import { Importador, RetornoImportador } from '@designliquido/delegua-node/importador';
 import { InterpretadorComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/interpretador-com-depuracao-importacao';
+import { ImportadorInterface } from '@designliquido/delegua-node/interfaces';
 
 import { LexadorPitugues } from '@designliquido/delegua/lexador/dialetos/lexador-pitugues';
 import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-pitugues';
@@ -38,10 +39,9 @@ import { InterpretadorPotigolComDepuracao } from '@designliquido/potigol/interpr
 import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg } from '@designliquido/visualg';
 import { InterpretadorVisuAlgComDepuracao } from '@designliquido/visualg/interpretador';
 
-import { ImportadorInterface, RetornoImportador } from '../../interfaces';
 import { ElementoPilhaVsCode } from '../elemento-pilha';
 import { ProvedorVisaoEntradaSaida } from '../../visoes';
-import { ImportadorExtensao } from 'fontes/importador';
+import { ImportadorExtensao } from '../../importador';
 
 /**
  * Em teoria não precisaria uma classe de tempo de execução local, mas,
@@ -55,7 +55,8 @@ import { ImportadorExtensao } from 'fontes/importador';
 export class DeleguaTempoExecucaoLocal extends EventEmitter {
     private lexador: LexadorInterface<SimboloInterface>;
     private avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>;
-    private importador: ImportadorExtensao | ImportadorInterface<SimboloInterface, Declaracao>;
+    private importador: ImportadorInterface<SimboloInterface>;
+    private importadorExtensao: ImportadorExtensao;
     private interpretador: InterpretadorComDepuracaoInterface;
     private resolvedor: { resolver(declaracoes: Declaracao[]): Promise<Declaracao[]> };
 
@@ -95,9 +96,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                 this._dialetoSelecionado = 'visualg';
                 this.lexador = new LexadorVisuAlg();
                 this.avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
-                this.importador = new ImportadorExtensao(
-                    this.lexador, 
-                    this.avaliadorSintatico);
+                this.importadorExtensao = new ImportadorExtensao(this.lexador);
 
                 this.interpretador = new InterpretadorVisuAlgComDepuracao(
                     process.cwd(), 
@@ -110,9 +109,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                 this._dialetoSelecionado = 'birl';
                 this.lexador = new LexadorBirl();
                 this.avaliadorSintatico = new AvaliadorSintaticoBirl();
-                this.importador = new ImportadorExtensao(
-                    this.lexador, 
-                    this.avaliadorSintatico);
+                this.importadorExtensao = new ImportadorExtensao(this.lexador);
 
                 this.interpretador = new InterpretadorBirlComDepuracao(
                     process.cwd(), 
@@ -125,8 +122,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                 this.lexador = new LexadorPitugues();
                 this.avaliadorSintatico = new AvaliadorSintaticoPitugues();
                 this.importador = new Importador(
-                    this.lexador, 
-                    this.avaliadorSintatico, 
+                    this.lexador,
                     {},
                     {},
                     true);
@@ -141,9 +137,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                 this._dialetoSelecionado = 'mapler';
                 this.lexador = new LexadorMapler();
                 this.avaliadorSintatico = new AvaliadorSintaticoMapler();
-                this.importador = new ImportadorExtensao(
-                    this.lexador, 
-                    this.avaliadorSintatico);
+                this.importadorExtensao = new ImportadorExtensao(this.lexador);
                 this.resolvedor = new ResolvedorMapler();
 
                 this.interpretador = new InterpretadorMaplerComDepuracao(
@@ -155,9 +149,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                 this._dialetoSelecionado = 'portugol-studio';
                 this.lexador = new LexadorPortugolStudio();
                 this.avaliadorSintatico = new AvaliadorSintaticoPortugolStudio();
-                this.importador = new ImportadorExtensao(
-                    this.lexador, 
-                    this.avaliadorSintatico);
+                this.importadorExtensao = new ImportadorExtensao(this.lexador);
 
                 this.interpretador = new InterpretadorPortugolStudioComDepuracao(
                     process.cwd(), 
@@ -171,9 +163,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                 this._dialetoSelecionado = 'potigol';
                 this.lexador = new LexadorPotigol();
                 this.avaliadorSintatico = new AvaliadorSintaticoPotigol();
-                this.importador = new ImportadorExtensao(
-                    this.lexador, 
-                    this.avaliadorSintatico);
+                this.importadorExtensao = new ImportadorExtensao(this.lexador);
                 
                 this.interpretador = new InterpretadorPotigolComDepuracao(
                     process.cwd(), 
@@ -187,7 +177,6 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                 this.avaliadorSintatico = new AvaliadorSintatico();
                 this.importador = new Importador(
                     this.lexador, 
-                    this.avaliadorSintatico, 
                     {},
                     {},
                     true);
@@ -226,16 +215,14 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         this.interpretador.avisoPontoParadaAtivado = this.avisoPontoParadaAtivado.bind(this);
         
         this._arquivoInicial = arquivoInicial;
-        let retornoImportador: RetornoImportador<SimboloInterface, Declaracao>;
+        let retornoImportador: RetornoImportador<SimboloInterface>;
 
         if (['delegua', 'pitugues'].includes(this._dialetoSelecionado)) {
-            const importador = (this.importador as ImportadorInterface<SimboloInterface, Declaracao>);
-            retornoImportador = importador.importar(arquivoInicial, true);
+            retornoImportador = this.importador.importar(arquivoInicial, true);
             this._hashArquivoInicial = retornoImportador.hashArquivo;
-            this._conteudoArquivo = (importador as any).conteudoArquivosAbertos[this._hashArquivoInicial];
+            this._conteudoArquivo = this.importador.conteudoArquivosAbertos[this._hashArquivoInicial];
         } else {
-            const importador = (this.importador as ImportadorExtensao);
-            retornoImportador = importador.importar(
+            retornoImportador = this.importadorExtensao.importarViaExtensao(
                 this._documento.getText, 
                 this._documento.fileName
             );
@@ -243,7 +230,8 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
             this._conteudoArquivo = retornoImportador.conteudoArquivo;
         }
 
-        let declaracoes = retornoImportador.retornoAvaliadorSintatico.declaracoes;
+        const retornoAvaliadorSintatico = this.avaliadorSintatico.analisar(retornoImportador.retornoLexador, retornoImportador.hashArquivo);
+        let declaracoes = retornoAvaliadorSintatico.declaracoes;
         if (this.resolvedor) {
             declaracoes = await this.resolvedor.resolver(declaracoes);
         }

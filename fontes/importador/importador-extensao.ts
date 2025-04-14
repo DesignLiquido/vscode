@@ -1,10 +1,7 @@
-import * as vscode from 'vscode';
-
-import { Declaracao } from "@designliquido/delegua/declaracoes";
-import { AvaliadorSintaticoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
-
+import { LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
 import { cyrb53 } from '@designliquido/delegua/depuracao';
-import { RetornoImportador } from '../interfaces';
+
+import { RetornoImportador } from "@designliquido/delegua-node/importador";
 
 /**
  * Diferentemente do importador de `delegua-node`, este importador
@@ -14,32 +11,27 @@ import { RetornoImportador } from '../interfaces';
  */
 export class ImportadorExtensao {
     lexador: LexadorInterface<SimboloInterface>;
-    avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>;
 
     constructor(
         lexador: LexadorInterface<SimboloInterface>,
-        avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>
     ) {
         this.lexador = lexador;
-        this.avaliadorSintatico = avaliadorSintatico;
     }
 
-    importar(
+    importarViaExtensao(
         funcaoObtencaoConteudoDocumento: () => string,
         nomeArquivo: string
-    ): RetornoImportador<SimboloInterface, Declaracao> {
+    ): RetornoImportador<SimboloInterface> {
         const hashArquivo = cyrb53(nomeArquivo.toLowerCase());
         const conteudoDoArquivo: string[] = funcaoObtencaoConteudoDocumento().split('\n').map(linha => linha + '\0');
 
         const retornoLexador = this.lexador.mapear(conteudoDoArquivo, hashArquivo);
-        const retornoAvaliadorSintatico = this.avaliadorSintatico.analisar(retornoLexador, hashArquivo);
 
         return {
             conteudoArquivo: conteudoDoArquivo,
             nomeArquivo,
             hashArquivo,
-            retornoLexador,
-            retornoAvaliadorSintatico,
-        } as RetornoImportador<SimboloInterface, Declaracao>;
+            retornoLexador
+        } as RetornoImportador<SimboloInterface>;
     }
 }

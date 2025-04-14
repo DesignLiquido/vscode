@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.12.24
+
+- Correção de lógica do importador em execução de Delégua.
+
 ## 0.12.23
 
 - Atualizações gerais em Delégua e todos os dialetos desta extensão;
