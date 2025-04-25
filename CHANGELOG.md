@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.12.25
+
+- Delégua passa a suportar função que devolve outra função, e operações de _currying_.
+
 ## 0.12.24
 
 - Correção de lógica do importador em execução de Delégua.
