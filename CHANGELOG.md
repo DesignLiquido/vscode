@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.12.26
+
+- Correção no dialeto VisuAlg para emitir erro de sintaxe em caso de `se` sem o `fimse` correspondente;
+- Correções no dialeto Pituguês para trabalhar com a devida influência de variáveis elementares;
+- Atualizações na sintaxe colorida de Pituguês.
+
 ## 0.12.25
 
 - Delégua passa a suportar função que devolve outra função, e operações de _currying_.
