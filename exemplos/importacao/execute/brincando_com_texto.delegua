@@ -1,0 +1,42 @@
+var cl = importar('../util/contagem_letras.delegua');
+var ip = importar('../util/inverter_palavras.delegua');
+var sl = importar('../util/substituir_letra.delegua');
+var ch = importar('../util/checar_letra.delegua');
+
+
+//Função para execução do programa com as funções desenvolvidas no pacote util
+funcao brincando_com_texto() {
+    var texto = leia("Digite uma frase/palavra: ");
+
+    escreva("=================================================");
+    escreva("Opção 1: Total de palavras e letras"); 
+    escreva("Opção 2: Inverter frase"); 
+    escreva("Opção 3: Inverter palavras"); 
+    escreva("Opção 4: Alterar uma letra");
+    var opcao = leia("O que deseja fazer a seguir? ");
+
+
+    escreva("=================================================");
+    escolha opcao{
+        caso '1': 
+            var contar_palavras = (texto.dividir(' ')).tamanho();
+            var total_letras = cl.contagem_letras(texto);
+            escreva("O texto informado possui ${contar_palavras} palavras e ${total_letras} de letras");
+        caso '2':
+            var invertendo_texto = texto.inverter();
+            escreva("Texto invertido: ${invertendo_texto}");
+        caso '3':
+            var palavras_invertidas = ip.inverter_palavras(texto);
+            escreva("Texto com palavras invertidas: ${palavras_invertidas}");
+        caso '4':
+            var letra_original = leia("Letra a ser alterada: ");
+            letra_original = ch.checar_letra(texto, letra_original);
+            var letra_substituta = leia("Letra substituta: ");
+            var texto_alterado = sl.substituir_letra(texto, letra_original, letra_substituta);
+            escreva("Letra ${letra_original} substituída por ${letra_substituta}: ${texto_alterado}");
+        padrao:
+            escreva("Opção inválida");
+    }
+    escreva("=================================================");
+}
+

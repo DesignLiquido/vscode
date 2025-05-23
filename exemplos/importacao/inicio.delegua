@@ -1,0 +1,3 @@
+var execute = importar('./execute/brincando_com_texto.delegua');
+
+execute.brincando_com_texto();

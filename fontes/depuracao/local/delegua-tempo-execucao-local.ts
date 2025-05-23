@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+
 import { EventEmitter } from 'events';
 import { DebugProtocol } from '@vscode/debugprotocol';
 
@@ -71,6 +72,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         private readonly provedorVisaoEntradaSaida: ProvedorVisaoEntradaSaida
     ) {
         super();
+        
     }
 
     /**
@@ -223,7 +225,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
             this._hashArquivoInicial = retornoImportador.hashArquivo;
             this._conteudoArquivo = this.importador.conteudoArquivosAbertos[this._hashArquivoInicial];
         } else {
-            retornoImportador = this.importadorExtensao.importarViaExtensao(
+            retornoImportador = this.importadorExtensao.importarViaFuncaoConteudoDocumento(
                 this._documento.getText, 
                 this._documento.fileName
             );

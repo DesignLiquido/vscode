@@ -1,0 +1,10 @@
+//Função desenvolvida para substituição das letras informadas pelo usuário
+funcao substituir_letra(texto, original, substituta) {
+    var texto_reformulado = "";
+
+    para var i = 0; i < texto.tamanho(); i = i + 1 {
+        texto_reformulado = texto_reformulado + (texto[i].substituir(original, substituta));
+    }
+
+    retorna texto_reformulado;
+}

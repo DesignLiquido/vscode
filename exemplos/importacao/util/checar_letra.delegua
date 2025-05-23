@@ -1,0 +1,9 @@
+//Função para verificar se um caractere existe no texto informado
+//Caso não exista, a função de entrada será repetida até ser informado
+//Um caractere válido
+funcao checar_letra(texto, letra_original) {
+    enquanto (!(texto.inclui(letra_original))) {
+        letra_original = leia("Letra a ser alterada: ");
+    }
+    retorna letra_original;
+}
