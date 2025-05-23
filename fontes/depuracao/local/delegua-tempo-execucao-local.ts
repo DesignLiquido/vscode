@@ -117,6 +117,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     this.escreverEmSaidaMesmaLinha.bind(this)
                 );
                 break;
+            case "pitu":
             case "pitugues":
                 this._dialetoSelecionado = 'pitugues';
                 this.lexador = new LexadorPitugues();
