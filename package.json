@@ -329,6 +329,7 @@
                     "pitugues"
                 ],
                 "extensions": [
+                    ".pitu",
                     ".pitugues"
                 ],
                 "configuration": "./configuracoes/configuracao-pitugues.json",
