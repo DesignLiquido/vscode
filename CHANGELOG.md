@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.12.27
+
+- Correção no formatador de código do VisuAlg para procedimentos e funções;
+- Expansão na sintaxe de FolEs: https://github.com/DesignLiquido/FolEs/releases/tag/0.9.2.
+
 ## 0.12.26
 
 - Correção no dialeto VisuAlg para emitir erro de sintaxe em caso de `se` sem o `fimse` correspondente;
