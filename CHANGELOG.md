@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.12.28
+
+- Correção na importação de fontes em Delégua por caminho relativo.
+
 ## 0.12.27
 
 - Correção no formatador de código do VisuAlg para procedimentos e funções;

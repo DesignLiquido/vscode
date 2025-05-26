@@ -10,6 +10,7 @@ import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, Lexado
 import { Importador, RetornoImportador } from '@designliquido/delegua-node/importador';
 import { InterpretadorComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/interpretador-com-depuracao-importacao';
 import { ImportadorInterface } from '@designliquido/delegua-node/interfaces';
+import { AvaliadorSintaticoComImportacao } from '@designliquido/delegua-node/avaliador-sintatico';
 
 import { LexadorPitugues } from '@designliquido/delegua/lexador/dialetos/lexador-pitugues';
 import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-pitugues';
@@ -18,7 +19,6 @@ import { palavrasReservadas } from '@designliquido/delegua/lexador/palavras-rese
 
 import { Declaracao } from '@designliquido/delegua/declaracoes';
 import { Lexador } from '@designliquido/delegua/lexador';
-import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
 
 import { LexadorBirl } from '@designliquido/birl/lexador';
 import { AvaliadorSintaticoBirl } from '@designliquido/birl/avaliador-sintatico';
@@ -177,12 +177,12 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
             default:
                 this._dialetoSelecionado = 'delegua';
                 this.lexador = new Lexador();
-                this.avaliadorSintatico = new AvaliadorSintatico();
                 this.importador = new Importador(
                     this.lexador, 
                     {},
                     {},
                     true);
+                this.avaliadorSintatico = new AvaliadorSintaticoComImportacao(this.importador);
                 this.interpretador = new InterpretadorComDepuracaoImportacao(
                     this.importador as any, 
                     process.cwd(), 
@@ -221,7 +221,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         let retornoImportador: RetornoImportador<SimboloInterface>;
 
         if (['delegua', 'pitugues'].includes(this._dialetoSelecionado)) {
-            retornoImportador = this.importador.importar(arquivoInicial, true);
+            retornoImportador = this.importador.importar(arquivoInicial, -1);
             this._hashArquivoInicial = retornoImportador.hashArquivo;
             this._conteudoArquivo = this.importador.conteudoArquivosAbertos[this._hashArquivoInicial];
         } else {
