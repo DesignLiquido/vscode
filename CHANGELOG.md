@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.12.29
+
+- Atualização de Delégua para entender `numero()` e `número()` como funções de conversão para os respectivos tipos;
+- Alguma atualização na gramática de LMHT.
+
 ## 0.12.28
 
 - Correção na importação de fontes em Delégua por caminho relativo.
