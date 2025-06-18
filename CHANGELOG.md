@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.12.30
+
+- Correções no formatador do VisuAlg, conforme reportado pelo Discord;
+- Atualizações na gramática de Delégua;
+- Validação de tipos de argumentos para funções da biblioteca global e primitivas de Delégua.
+
 ## 0.12.29
 
 - Atualização de Delégua para entender `numero()` e `número()` como funções de conversão para os respectivos tipos;
