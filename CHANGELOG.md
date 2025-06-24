@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.12.31
+
+- Diversas atualizações de pacotes do ecossistema de todos os dialetos;
+- Nova primitiva em Delégua: `numero.absoluto()`;
+- Correções na análise semântica de Delégua.
+
 ## 0.12.30
 
 - Correções no formatador do VisuAlg, conforme reportado pelo Discord;

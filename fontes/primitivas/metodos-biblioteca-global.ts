@@ -133,12 +133,56 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
         ],
         documentacao:
             '### Descrição \n \n' +
-            'Converte um número flutuante ou texto, que não apresente letras, em um número inteiro.' +
+            'Converte um número flutuante, ou texto, que não apresente letras, em um número inteiro.' +
             '\n\n ### Exemplo de Código\n' +
             '\n\n```delegua\nvar testeTexto = "111";' +
             '\n\nescreva(111 + inteiro(testeTexto)); // 222\n```' +
             '\n \n ### Formas de uso  \n',
         exemploCodigo: 'função inteiro("123")',
+    },
+    {
+        nome: 'numero',
+        assinaturas: [
+            {
+                formato: 'numero(valor: inteiro ou texto)',
+                parametros: [
+                    {
+                        nome: 'valor',
+                        documentacao: 'O valor a ser convertido em número (real, ou com porção decimal).'
+                    }
+                ]
+            }
+        ],
+        documentacao:
+            '### Descrição \n \n' +
+            'Converte um número inteiro, ou texto, que não apresente letras, em um número com porção decimal.' +
+            '\n\n ### Exemplo de Código\n' +
+            '\n\n```delegua\nvar testeTexto = "111.11";' +
+            '\n\nescreva(111 + numero(testeTexto)); // 222.11\n```' +
+            '\n \n ### Formas de uso  \n',
+        exemploCodigo: 'função numero("123.45")',
+    },
+    {
+        nome: 'número',
+        assinaturas: [
+            {
+                formato: 'número(valor: inteiro ou texto)',
+                parametros: [
+                    {
+                        nome: 'valor',
+                        documentacao: 'O valor a ser convertido em número (real, ou com porção decimal).'
+                    }
+                ]
+            }
+        ],
+        documentacao:
+            '### Descrição \n \n' +
+            'Converte um número inteiro, ou texto, que não apresente letras, em um número com porção decimal.' +
+            '\n\n ### Exemplo de Código\n' +
+            '\n\n```delegua\nvar testeTexto = "111.11";' +
+            '\n\nescreva(111 + número(testeTexto)); // 222.11\n```' +
+            '\n \n ### Formas de uso  \n',
+        exemploCodigo: 'função número("123.45")',
     },
     {
         nome: 'real',
@@ -161,5 +205,27 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
             '\n\nescreva(0.01 + real(testeTexto)); // 504.7\n```' +
             '\n \n ### Formas de uso  \n',
         exemploCodigo: 'função real(texto)',
+    },
+    {
+        nome: 'texto',
+        assinaturas: [
+            {
+                formato: 'texto(valor: qualquer)',
+                parametros: [
+                    {
+                        nome: 'valor',
+                        documentacao: 'O valor a ser convertido em texto.'
+                    }
+                ]
+            }
+        ],
+        documentacao:
+            '### Descrição \n \n' +
+            'Converte qualquer valor em um texto.' +
+            '\n\n ### Exemplo de Código\n' +
+            '\n\n```delegua\nvar testeNumero = 504.69;' +
+            '\n\nescreva(texto(testeTexto)); // 504.69\n```' +
+            '\n \n ### Formas de uso  \n',
+        exemploCodigo: 'função texto(qualquer)',
     },
 ];

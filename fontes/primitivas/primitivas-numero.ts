@@ -2,6 +2,23 @@ import { PrimitivaOuMetodo } from "./tipos";
 
 export const primitivasNumero: PrimitivaOuMetodo[] = [
     {
+        nome: 'absoluto',
+        assinaturas: [
+            {
+                formato: 'absoluto()',
+                parametros: []
+            }
+        ],
+        documentacao: '# `absoluto()`\n\n' +
+            'Retorna a versão absoluta de um número, ou seja, seu valor sem sinal.' +
+            '\n\n ## Exemplo de Código\n' +
+            '\n\n```delegua\n' +
+            'var n = -5\n' +
+            'escreva(n.absoluto()) // 5\n```' +
+            '\n\n## Formas de uso\n',
+        exemploCodigo: 'numero.absoluto()'
+    },
+    {
         nome: 'arredondarParaBaixo',
         assinaturas: [
             {
