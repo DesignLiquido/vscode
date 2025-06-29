@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.12.32
+
+- Aferição de erros de avaliação sintática durante a execução de código para todas as linguagens suportadas por esta extensão;
+- Diversas correções de _bugs_ e erros de Pituguês.
+
 ## 0.12.31
 
 - Diversas atualizações de pacotes do ecossistema de todos os dialetos;

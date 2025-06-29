@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { EventEmitter } from 'events';
 import { DebugProtocol } from '@vscode/debugprotocol';
 
-import { cyrb53, PontoParada } from '@designliquido/delegua';
+import { cyrb53, ErroAvaliadorSintatico, PontoParada } from '@designliquido/delegua';
 
 import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
 
@@ -43,6 +43,7 @@ import { InterpretadorVisuAlgComDepuracao } from '@designliquido/visualg/interpr
 import { ElementoPilhaVsCode } from '../elemento-pilha';
 import { ProvedorVisaoEntradaSaida } from '../../visoes';
 import { ImportadorExtensao } from '../../importador';
+import { formatarDiagnosticosAvaliacaoSintatica } from 'fontes/avaliacao-sintatica';
 
 /**
  * Em teoria não precisaria uma classe de tempo de execução local, mas,
@@ -69,10 +70,10 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
     private _pontosParada: PontoParada[] = [];
     
     constructor(
-        private readonly provedorVisaoEntradaSaida: ProvedorVisaoEntradaSaida
+        private readonly provedorVisaoEntradaSaida: ProvedorVisaoEntradaSaida,
+        private readonly diagnosticos: vscode.DiagnosticCollection
     ) {
         super();
-        
     }
 
     /**
@@ -203,6 +204,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         arquivoInicial: string, 
         pararNaEntrada: boolean
     ) {
+        this.diagnosticos.clear();
         if (!documento) {
             throw new Error('Por favor, abra um arquivo antes de iniciar uma execução.');
         }
@@ -234,6 +236,16 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         }
 
         const retornoAvaliadorSintatico = this.avaliadorSintatico.analisar(retornoImportador.retornoLexador, retornoImportador.hashArquivo);
+        if (retornoAvaliadorSintatico.erros.length > 0) {
+            const documentoAtivo = vscode.window.activeTextEditor?.document as vscode.TextDocument;
+            this.diagnosticos.set(
+                documentoAtivo?.uri as vscode.Uri, 
+                formatarDiagnosticosAvaliacaoSintatica(retornoAvaliadorSintatico.erros, documentoAtivo)
+            );
+
+            throw new Error("Há erros de avaliação sintática no código. Favor verificar o painel de problemas para uma descrição detalhada dos erros.");
+        }
+
         let declaracoes = retornoAvaliadorSintatico.declaracoes;
         if (this.resolvedor) {
             declaracoes = await this.resolvedor.resolver(declaracoes);

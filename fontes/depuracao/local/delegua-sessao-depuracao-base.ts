@@ -41,7 +41,10 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
     // private _referenciaEscopoLocal = 0;
     private _referenciaEscopoGlobal = 0;
 
-    constructor(private readonly provedorVisaoEntradaSaida: ProvedorVisaoEntradaSaida) {
+    constructor(
+        private readonly provedorVisaoEntradaSaida: ProvedorVisaoEntradaSaida,
+        private readonly diagnosticos: vscode.DiagnosticCollection
+    ) {
         super();
 
         // Linhas e colunas em Delégua começam em 1.
@@ -49,7 +52,8 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         this.setDebuggerColumnsStartAt1(true);
 
         this.tempoExecucao = new DeleguaTempoExecucaoLocal(
-            provedorVisaoEntradaSaida
+            provedorVisaoEntradaSaida,
+            diagnosticos
         );
 
         this.tempoExecucao.on('mensagemInformacao', (mensagem: string) => {

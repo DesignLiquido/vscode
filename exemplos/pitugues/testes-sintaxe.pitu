@@ -1,0 +1,5 @@
+imprima("abre")
+
+imprima('a' != 1)
+
+imprima("fecha")

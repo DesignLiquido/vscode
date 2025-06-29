@@ -6,7 +6,7 @@ import { DiagnosticoAnalisadorSemantico } from '@designliquido/delegua/interface
 import { Declaracao } from '@designliquido/delegua/declaracoes';
 
 import { Lexador } from '@designliquido/delegua/lexador';
-import { AvaliadorSintatico, ErroAvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
+import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
 import { AnalisadorSemanticoInterface } from '@designliquido/delegua/interfaces/analisador-semantico-interface';
 
 import { LexadorBirl } from '@designliquido/birl/lexador';
@@ -29,6 +29,8 @@ import { AvaliadorSintaticoPortugolStudio } from "@designliquido/portugol-studio
 import { AnalisadorSemanticoPortugolStudio } from "@designliquido/portugol-studio/analisador-semantico";
 
 import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg, AnalisadorSemanticoVisuAlg } from '@designliquido/visualg';
+
+import { formatarDiagnosticosAvaliacaoSintatica } from '../avaliacao-sintatica';
 
 const mapaSeveridadeDiagnosticos = {
     0: vscode.DiagnosticSeverity.Error,
@@ -132,27 +134,6 @@ export function analiseSemantica(
     } catch (erro: any) {
         console.error(`Erro ao executar análise semântica para arquivo de extensão ${extensaoArquivo}`, erro);
     }
-}
-
-function formatarDiagnosticosAvaliacaoSintatica(
-    errosAvaliacaoSintatica: ErroAvaliadorSintatico[],
-    documento: vscode.TextDocument
-): vscode.Diagnostic[] {
-    const listaOcorrenciasSintaticas: vscode.Diagnostic[] = [];
-    for (let erro of errosAvaliacaoSintatica) {
-        const numeroLinha = Number(erro.simbolo.linha) - 1;
-        const linha: vscode.TextLine = documento.lineAt(numeroLinha);
-        const textoLinha = linha.text;
-        const intervaloTexto = new vscode.Range(numeroLinha, 0, numeroLinha, textoLinha.length);
-
-        listaOcorrenciasSintaticas.push(new vscode.Diagnostic(
-            intervaloTexto,
-            String(erro.message),
-            vscode.DiagnosticSeverity.Error
-        ));
-    }
-
-    return listaOcorrenciasSintaticas;
 }
 
 function formatarDiagnosticosAnaliseSemantica(

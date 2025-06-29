@@ -310,7 +310,7 @@ export function activate(context: vscode.ExtensionContext) {
             // Roda o adaptador dentro da extensão e fala diretamente com ele.
             configurarDepuracao(
                 context,
-                new FabricaAdaptadorDepuracaoEmbutido(provedorEntradaSaida)
+                new FabricaAdaptadorDepuracaoEmbutido(provedorEntradaSaida, diagnosticosDelegua)
             );
             break;
     }
