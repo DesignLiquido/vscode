@@ -1,5 +1,6 @@
 imprima("abre")
 
-imprima('a' != 1)
+var teste = leia("Insira algo:")
+imprima(teste)
 
 imprima("fecha")

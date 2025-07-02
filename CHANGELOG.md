@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.12.33
+
+- Correções em Pituguês para alguns comandos, pós testes na extensão.
+
 ## 0.12.32
 
 - Aferição de erros de avaliação sintática durante a execução de código para todas as linguagens suportadas por esta extensão;
