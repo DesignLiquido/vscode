@@ -1,6 +1,8 @@
 imprima("abre")
 
-var teste = leia("Insira algo:")
-imprima(teste)
+funcao teste():
+    imprima("Teste")
+
+teste()
 
 imprima("fecha")

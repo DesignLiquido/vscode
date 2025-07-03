@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.12.34
+
+- Ajustes na tipagem para declaração e chamadas de funções em Pituguês.
+
 ## 0.12.33
 
 - Correções em Pituguês para alguns comandos, pós testes na extensão.
