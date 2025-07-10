@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.12.36
+
+- Separação dos interpretadores com e sem mecanismo de depuração de todos os dialetos, corrigindo uma série de _bugs_ entre eles;
+- Reintrodução do formatador de código do Portugol Studio.
+
 ## 0.12.35
 
 - Suporte a funções da biblioteca global de Delégua em Pituguês.

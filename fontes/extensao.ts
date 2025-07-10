@@ -29,7 +29,7 @@ import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
 import { LmhtProvedorDocumentacaoEmEditor } from './documentacao-em-editor/lmht-provedor-documentacao-em-editor';
 import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
 
-// import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio-provedor-formatacao';
+import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio-provedor-formatacao';
 import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao';
 
 import { ProvedorVisaoEntradaSaida } from './visoes';
@@ -169,12 +169,12 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     // TODO: Testar antes de habilitar.
-    /* context.subscriptions.push(
+    context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
             'portugolstudio',
             new PortugolStudioProvedorFormatacao()
         )
-    ); */
+    );
     
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
