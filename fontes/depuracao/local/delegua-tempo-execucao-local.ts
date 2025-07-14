@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { EventEmitter } from 'events';
 import { DebugProtocol } from '@vscode/debugprotocol';
 
-import { cyrb53, ErroAvaliadorSintatico, PontoParada } from '@designliquido/delegua';
+import { cyrb53, PontoParada } from '@designliquido/delegua';
 
 import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
 

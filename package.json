@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.12.36",
+    "version": "0.13.0",
     "engines": {
         "vscode": "^1.68.0"
     },
@@ -501,8 +501,14 @@
         "webpack-cli": "^6.0.1"
     },
     "dependencies": {
-        "@designliquido/delegua-node": "^1.5.14",
-        "@designliquido/foles": "^0.9.2",
+        "@designliquido/delegua-estatistica": "^0.1.0",
+        "@designliquido/delegua-fisica": "^0.1.0",
+        "@designliquido/delegua-http": "^0.1.2",
+        "@designliquido/delegua-json": "^0.1.0",
+        "@designliquido/delegua-matematica": "^0.3.0",
+        "@designliquido/delegua-node": "^1.5.15",
+        "@designliquido/delegua-tempo": "^1.0.1",
+        "@designliquido/foles": "^0.9.3",
         "@designliquido/lmht-js": "^0.5.0",
         "@xterm/addon-fit": "^0.10.0",
         "@xterm/xterm": "^5.5.0",

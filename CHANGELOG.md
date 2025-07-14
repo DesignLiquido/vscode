@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.13.0
+
+- Início da transição desta extensão sem `delegua-node`, possibilitando uma execução 100% web de qualquer linguagem ou dialeto;
+- Atualização de FolEs para a versão 0.9.3.
+
 ## 0.12.36
 
 - Separação dos interpretadores com e sem mecanismo de depuração de todos os dialetos, corrigindo uma série de _bugs_ entre eles;
