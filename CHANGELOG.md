@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.13.1
+
+- Atualização da versão de FolEs;
+- Correção de problema com inferência de funções anônimas para `mapear()` em Delégua e Pituguês.
+
 ## 0.13.0
 
 - Início da transição desta extensão sem `delegua-node`, possibilitando uma execução 100% web de qualquer linguagem ou dialeto;
