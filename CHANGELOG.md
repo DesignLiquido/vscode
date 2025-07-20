@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.13.2
+
+- Flexibilizando verificação de tipos para quando `qualquer` é usado em Delégua;
+- Modificações para mecanismo de importação de bibliotecas específicas de Delégua, que agora aceitam um manifesto.
+
 ## 0.13.1
 
 - Atualização da versão de FolEs;
