@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.13.3
+
+- Implementação de mecanismo de resolução de tipos para bibliotecas na etapa de avaliação sintática;
+- Ajustes na análise semântica de Delégua ao analisar comandos `leia()`;
+- Correção de problema de inferência de tipo de função em Delégua.
+
 ## 0.13.2
 
 - Flexibilizando verificação de tipos para quando `qualquer` é usado em Delégua;
