@@ -1,0 +1,6 @@
+const json = importar('json')
+const jsonFuncionarios = json.importarArquivoJson("funcionarios.json")
+
+para cada funcionario em jsonFuncionarios.funcionarios {
+    escreva(funcionario["nome"])
+}

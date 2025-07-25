@@ -213,7 +213,10 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         this._documento = documento;
         const partesNomeArquivo = arquivoInicial.split('.');
         const partesDiretorio = documento.uri.path.split('/').slice(0, -1);
-        const diretorioBase = partesDiretorio.reduce((anterior, parte) => anterior + `/${parte}`);
+        let diretorioBase = partesDiretorio.reduce((anterior, parte) => anterior + `/${parte}`);
+        if (diretorioBase.length > 1) {
+            diretorioBase = diretorioBase.slice(1);
+        }
         this.selecionarDialetoPorExtensao(partesNomeArquivo.pop() || '.delegua');
 
         // Inicialização do interpretador pós escolha de dialeto.

@@ -168,10 +168,10 @@
   dependencies:
     axios "^1.8.4"
 
-"@designliquido/delegua-json@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-json/-/delegua-json-0.2.0.tgz#6626dfe5b28904799ac93c8b3df98f2e17625dcf"
-  integrity sha512-6qOI3dLyImCnjVoMlFcqU6pOJTUpnPMja/krtviDRFUiIPpOrE1e66SfPDQO80QRnpqeOl4VYEFTl+JdciR56Q==
+"@designliquido/delegua-json@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-json/-/delegua-json-0.2.1.tgz#57c2e9dc45525ebdf1b4ee6038b11b6a18d3181c"
+  integrity sha512-Ym+Tw98Pll84TNSrEnQrFZC0PcKos66qnrEqwUDDxP/6cdnbu2bvTW05wVLXWBZPVUutCld8Qt1RhzJWLr1kVQ==
 
 "@designliquido/delegua-matematica@^0.3.0":
   version "0.3.0"
