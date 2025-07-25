@@ -212,9 +212,12 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
         this.provedorVisaoEntradaSaida.ativarVisao();
         this._documento = documento;
         const partesNomeArquivo = arquivoInicial.split('.');
+        const partesDiretorio = documento.uri.path.split('/').slice(0, -1);
+        const diretorioBase = partesDiretorio.reduce((anterior, parte) => anterior + `/${parte}`);
         this.selecionarDialetoPorExtensao(partesNomeArquivo.pop() || '.delegua');
 
         // Inicialização do interpretador pós escolha de dialeto.
+        this.interpretador.diretorioBase = diretorioBase;
         this.interpretador.pontosParada = this._pontosParada;
         this.interpretador.finalizacaoDaExecucao = this.finalizacao.bind(this);
         this.interpretador.avisoPontoParadaAtivado = this.avisoPontoParadaAtivado.bind(this);
