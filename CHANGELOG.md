@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.13.4
+
+- `delegua-json` passa a trabalhar com o diretório base do arquivo em execução;
+- Inclusão de duas novas primitivas de dicionário em Delégua: `contém()` e `remover()`;
+- Registro de primitivas de dicionário de Delégua no editor (completude e documentação em código).
+
 ## 0.13.3
 
 - Implementação de mecanismo de resolução de tipos para bibliotecas na etapa de avaliação sintática;
