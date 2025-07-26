@@ -1,0 +1,16 @@
+const json = importar('json')
+const jsonFuncionarios = json.importarArquivoJson('./funcionarios.json')
+
+var analiticosAreas = {}
+
+para cada area em jsonFuncionarios.areas {
+    analiticosAreas[area['codigo']] = {
+        'codigo': area['codigo'],
+        'nome': area['nome'],
+        'pessoaSalarioMaximo': nulo,
+        'pessoaSalarioMinimo': nulo,
+        'mediaSalarial': 0
+    }
+}
+
+escreva(analiticosAreas)
