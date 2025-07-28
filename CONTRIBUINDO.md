@@ -43,13 +43,17 @@ Delégua possui um protocolo próprio de comunicação entre depurador e cliente
 
 O Visual Studio Code também possui [um protocolo de comunicação detalhado aqui](https://microsoft.github.io/debug-adapter-protocol/overview). Para que Delégua e Visual Studio Code se entendam, é preciso um intermediador entre eles, implementado pela classe `DeleguaTempoExecucaoLocal`. 
 
-Segundo a documentação do Visual Studio Code, linguagens podem usar ou um executável que faça a tradução das mensagens entre linguagem e Visual Studio Code, um servidor _Socket_ implementado dentro da extensão, ou ainda, uma implementação customizada. Aqui optamos pela opção do servidor _Socket_ até a versão 0.1.1 (ver classes `DeleguaTempoExecucaoRemota` e `DeleguaSessaoDepuracaoRemota`), que abre em uma porta aleatória disponível. Esta forma comanda a execução de Delégua com a opção `--depurador` definida, que abre o servidor de depuração na porta 7777 e espera uma instrução de pronto para liberar os comandos de depuração para a interface do VSCode. A implementação ainda existe, mas não é habilitada por padrão. Poderá voltar no futuro.
+Segundo a documentação do Visual Studio Code, linguagens podem usar ou um executável que faça a tradução das mensagens entre linguagem e Visual Studio Code, um servidor _Socket_ implementado dentro da extensão, ou ainda, uma implementação customizada. Até a versão 0.1.1 desta extensão, usávamos um servidor _Socket_  (ver classes `DeleguaTempoExecucaoRemota` e `DeleguaSessaoDepuracaoRemota`), que abre em uma porta aleatória disponível. Esta forma comanda a execução de Delégua com a opção `--depurador` definida, que abre o servidor de depuração na porta 7777 e espera uma instrução de pronto para liberar os comandos de depuração para a interface do VSCode. A implementação ainda existe, mas não é habilitada por padrão. Poderá voltar no futuro.
 
-Atualmente a extensão usa o núcleo da linguagem Delégua como uma dependência NPM e instancia e controla os elementos da linguagem. 
+Atualmente, a extensão usa o núcleo da linguagem Delégua como uma dependência NPM e instancia e controla os elementos da linguagem. 
 
 ### Depurando a extensão
 
-Para depurar a extensão, especialmente para acompanhar a execução de código por linguagem, é recomendado ligar (linkar) pacotes.
+Basta executar o comando "Extensão", na opção "Executar e Depurar" do VSCode. Isso deve acionar o procedimento de construção e abrir a janela de testes da extensão.
+
+#### Antiga forma de depuração usando pacotes _linkados_
+
+Antigamente, para acompanhar a execução de código por linguagem, era recomendado ligar (_linkar_) pacotes. Isso deixou de funcionar bem especialmente para o ESBuild, que passou a dar muitos erros com referências de Delégua e seus dialetos quando se usa pacotes _linkados_. Este roteiro é mantido aqui por razões históricas.
 
 Os pacotes que podem ser linkados estão em `tsconfig.json`, no diretório raiz.
 
@@ -57,7 +61,7 @@ Primeiro é preciso clonar o repositório correspondente. Por exemplo, se querem
 
 Após clonar os repositórios, é preciso avisar ao Yarn que queremos criar um link simbólico para cada um deles. Isso é feito pelo comando `yarn link` na raiz de cada repositório.
 
-De volta a este repositório, use os comandos `yarn link "@designliquido/delegua"` e `yarn link "@designliquido/delegua-node"` no diretório raiz deste projeto para substituir os pacotes do `node_modules` pelos pacotes linkados. Os links simbólicos deve aparecer nos diretórios correspondentes dos pacotes dentro de `node_modules` (normalmente com uma setinha ao lado do diretório para indicar que é um link simbólico).
+De volta a este repositório, use os comandos `yarn link "@designliquido/delegua"` e `yarn link "@designliquido/delegua-node"` no diretório raiz deste projeto para substituir os pacotes do `node_modules` pelos pacotes linkados. Os links simbólicos deve aparecer nos diretórios correspondentes dos pacotes dentro de `node_modules` (normalmente com uma setinha ao lado do diretório para indicar que é um _link_ simbólico).
 
 Por fim, comente as linhas que apontam para o diretório `dist` no `tsconfig.json`. No nosso exemplo, as linhas abaixo devem ser descomentadas:
 

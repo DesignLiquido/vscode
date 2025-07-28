@@ -5,8 +5,10 @@ import { DeleguaProvedorDocumentacaoEmEditor } from './documentacao-em-editor';
 import { DeleguaProvedorCompletude, LiquidoProvedorCompletude } from './completude';
 import { DeleguaProvedorFormatacao } from './formatadores';
 import { FabricaAdaptadorDepuracaoWeb } from './depuracao/fabricas/fabrica-adaptador-depuracao-web';
+import { ProvedorVisaoEntradaSaida } from './visoes';
 
 export function activate(context: vscode.ExtensionContext) {
+    const diagnosticosDelegua = vscode.languages.createDiagnosticCollection("delegua");
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider('delegua', 
             new DeleguaProvedorFormatacao()
@@ -37,9 +39,15 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
+    // Visão de Entrada e Saída
+    const provedorEntradaSaida = new ProvedorVisaoEntradaSaida(context.extensionUri);
+    context.subscriptions.push(
+        vscode.window.registerWebviewViewProvider(ProvedorVisaoEntradaSaida.viewType, provedorEntradaSaida)
+    );
+
     configurarDepuracao(
         context,
-        new FabricaAdaptadorDepuracaoWeb()
+        new FabricaAdaptadorDepuracaoWeb(provedorEntradaSaida, diagnosticosDelegua)
     );
 }
 
