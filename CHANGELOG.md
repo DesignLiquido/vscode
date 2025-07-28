@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.14.0
+
+- Mudança em construção da extensão, deixando o tamanho dela muito menor, de Mb para Kb;
+- Correção de problema em dicionários de Delégua trabalhando com valores nulos.
+
 ## 0.13.4
 
 - `delegua-json` passa a trabalhar com o diretório base do arquivo em execução;
