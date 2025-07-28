@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.14.1
+
+- Relançando versão com opção de pacotes externos revertida.
+
 ## 0.14.0
 
 - Mudança em construção da extensão, deixando o tamanho dela muito menor, de Mb para Kb;
