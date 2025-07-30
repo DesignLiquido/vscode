@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.14.2
+
+- Inclusão de suporte a referências para dicionários em Delégua e Pituguês.
+
 ## 0.14.1
 
 - Relançando versão com opção de pacotes externos revertida.
