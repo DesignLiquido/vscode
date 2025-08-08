@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.14.3
+
+- Ajustes em primitivas de Delégua, Pituguês e Potigol, para atualizar referências em escopo de execução em caso de modificação de vetores.
+
 ## 0.14.2
 
 - Inclusão de suporte a referências para dicionários em Delégua e Pituguês.
