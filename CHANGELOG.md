@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.14.4
+
+- Correções no formatador de código de Delégua;
+- Melhorando o suporte de primitivas de dicionários na extensão para Delégua.
+
 ## 0.14.3
 
 - Ajustes em primitivas de Delégua, Pituguês e Potigol, para atualizar referências em escopo de execução em caso de modificação de vetores.

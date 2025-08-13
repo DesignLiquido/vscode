@@ -29,11 +29,11 @@ for (const [nome, primitiva] of Object.entries(primitivasDicionario)) {
             formato: `${nome}()`,
             parametros: primitiva.argumentos.map(p => ({
                 nome: p.nome,
-                documentacao: '' // TODO: Colocar `documentacao` em primitivas.
+                documentacao: p.documentacao
             } as ParametroAssinaturaMetodo))
         }],
-        documentacao: '', // TODO: Colocar `documentacao` em primitivas.
-        exemploCodigo: '' // TODO: Colocar `exemploCodigo` em primitivas.
+        documentacao: primitiva.documentacao,
+        exemploCodigo: primitiva.exemploCodigo
     } as PrimitivaOuMetodo);
 }
 
