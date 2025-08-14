@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.14.5
+
+- Formatador passa a reportar erros de avaliação sintática quando houverem, em Delégua.
+
 ## 0.14.4
 
 - Correções no formatador de código de Delégua;

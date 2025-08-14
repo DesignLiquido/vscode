@@ -157,7 +157,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
             'delegua',
-            new DeleguaProvedorFormatacao()
+            new DeleguaProvedorFormatacao(diagnosticosDelegua)
         )
     );
 
