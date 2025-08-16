@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.14.6
+
+- Correção no formatador quanto a declarações com tipos explícitos, e separação de argumentos de `escreva()` por vírgula.
+
 ## 0.14.5
 
 - Formatador passa a reportar erros de avaliação sintática quando houverem, em Delégua.
