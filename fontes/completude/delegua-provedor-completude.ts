@@ -14,7 +14,7 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
         
         return primitivas.map(funcaoNativa => {
             let completionItem = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function);
-            completionItem.documentation = funcaoNativa.documentacao;
+            completionItem.documentation = new vscode.MarkdownString(funcaoNativa.documentacao);
             return completionItem;
         });
     }

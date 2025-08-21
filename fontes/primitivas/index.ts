@@ -1,10 +1,11 @@
 import primitivasDicionario from '@designliquido/delegua/bibliotecas/primitivas-dicionario';
+import primitivasNumero from '@designliquido/delegua/bibliotecas/primitivas-numero';
 
-import { primitivasNumero } from './primitivas-numero';
 import { primitivasTexto } from './primitivas-texto';
 import { primitivasVetor } from './primitivas-vetor';
 import { metodosBibliotecaGlobal } from './metodos-biblioteca-global';
 import { PrimitivaOuMetodo, ParametroAssinaturaMetodo } from './tipos';
+import { PrimitivaInterface } from '@designliquido/delegua/interfaces';
 
 const ordenar = (a: any, b: any) => {
     const nome1 = a['nome'].toUpperCase();
@@ -21,25 +22,32 @@ const ordenar = (a: any, b: any) => {
     return 0;
 };
 
-const primitivasDicionarioFormatadas: PrimitivaOuMetodo[] = [];
-for (const [nome, primitiva] of Object.entries(primitivasDicionario)) {
-    primitivasDicionarioFormatadas.push({
-        nome: nome,
-        assinaturas: [{
-            formato: `${nome}()`,
-            parametros: primitiva.argumentos.map(p => ({
-                nome: p.nome,
-                documentacao: p.documentacao
-            } as ParametroAssinaturaMetodo))
-        }],
-        documentacao: primitiva.documentacao,
-        exemploCodigo: primitiva.exemploCodigo
-    } as PrimitivaOuMetodo);
+function formatarPrimitivas(moduloPrimitivas: {[nome: string]: PrimitivaInterface}) {
+    const primitivasFormatadas: PrimitivaOuMetodo[] = [];
+    for (const [nome, primitiva] of Object.entries(moduloPrimitivas)) {
+        primitivasFormatadas.push({
+            nome: nome,
+            assinaturas: [{
+                formato: `${nome}()`,
+                parametros: primitiva.argumentos.map(p => ({
+                    nome: p.nome,
+                    documentacao: p.documentacao
+                } as ParametroAssinaturaMetodo))
+            }],
+            documentacao: primitiva.documentacao,
+            exemploCodigo: primitiva.exemploCodigo
+        } as PrimitivaOuMetodo);
+    }
+
+    return primitivasFormatadas;
 }
+
+const primitivasDicionarioFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasDicionario);
+const primitivasNumeroFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasNumero);
 
 const primitivas: PrimitivaOuMetodo[] = [
     ...primitivasDicionarioFormatadas,
-    ...primitivasNumero, 
+    ...primitivasNumeroFormatadas, 
     ...primitivasTexto, 
     ...primitivasVetor,
     ...metodosBibliotecaGlobal

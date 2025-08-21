@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.14.7
+
+- Inclusão do método `formatar()` para primitivas de número em Delégua: https://github.com/DesignLiquido/delegua/pull/835;
+- Melhoramentos no provedor de completude de Delégua;
+- Correção no método `copia` do VisuAlg: https://github.com/DesignLiquido/visualg/issues/33.
+
 ## 0.14.6
 
 - Correção no formatador quanto a declarações com tipos explícitos, e separação de argumentos de `escreva()` por vírgula.
