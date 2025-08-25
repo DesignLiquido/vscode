@@ -1,6 +1,6 @@
 # Histórico de Modificações
 
-## 0.14.8
+## 0.15.0
 
 - Inclusão de primitivas de Liquido;
 - Comentários permitidos entre elementos de vetor em Delégua.

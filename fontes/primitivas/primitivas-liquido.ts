@@ -68,5 +68,23 @@ export const objetosEmRotaLiquido: PrimitivaOuMetodo[] = [
             '}\n```' +
             '\n\n## Formas de uso\n',
         exemploCodigo: 'requisicao.parametros\nrequisicao.corpo'
+    },
+    {
+        nome: 'resposta',
+        assinaturas: [
+            {
+                formato: 'resposta',
+                parametros: parametrosTodasPrimitivas
+            }
+        ],
+        documentacao: '# Objeto `resposta`\n\n' +
+            'Representa todos os dados a serem usados para responder à requisição, que podem ser modificados por lógicas dentro do processamento da rota.' +
+            '\n\n ## Exemplo de Código\n' +
+            '\n\n```delegua\n' +
+            'liquido.rotaPost(requisicao, resposta) {\n' +
+            '    resposta.enviar("${requisicao.corpo}").status(200)\n' +
+            '}\n```' +
+            '\n\n## Formas de uso\n',
+        exemploCodigo: 'resposta.enviar("Esta é uma resposta por texto")\nresposta.status(200)'
     }
 ];
