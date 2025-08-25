@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.14.8
+
+- Inclusão de primitivas de Liquido;
+- Comentários permitidos entre elementos de vetor em Delégua.
+
 ## 0.14.7
 
 - Inclusão do método `formatar()` para primitivas de número em Delégua: https://github.com/DesignLiquido/delegua/pull/835;

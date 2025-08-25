@@ -1,11 +1,12 @@
+import { PrimitivaInterface } from '@designliquido/delegua/interfaces';
+
 import primitivasDicionario from '@designliquido/delegua/bibliotecas/primitivas-dicionario';
 import primitivasNumero from '@designliquido/delegua/bibliotecas/primitivas-numero';
+import primitivasTexto from '@designliquido/delegua/bibliotecas/primitivas-texto';
 
-import { primitivasTexto } from './primitivas-texto';
 import { primitivasVetor } from './primitivas-vetor';
 import { metodosBibliotecaGlobal } from './metodos-biblioteca-global';
 import { PrimitivaOuMetodo, ParametroAssinaturaMetodo } from './tipos';
-import { PrimitivaInterface } from '@designliquido/delegua/interfaces';
 
 const ordenar = (a: any, b: any) => {
     const nome1 = a['nome'].toUpperCase();
@@ -44,11 +45,12 @@ function formatarPrimitivas(moduloPrimitivas: {[nome: string]: PrimitivaInterfac
 
 const primitivasDicionarioFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasDicionario);
 const primitivasNumeroFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasNumero);
+const primitivasTextoFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasTexto);
 
 const primitivas: PrimitivaOuMetodo[] = [
     ...primitivasDicionarioFormatadas,
     ...primitivasNumeroFormatadas, 
-    ...primitivasTexto, 
+    ...primitivasTextoFormatadas, 
     ...primitivasVetor,
     ...metodosBibliotecaGlobal
 ].sort(ordenar);

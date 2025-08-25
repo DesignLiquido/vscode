@@ -8,12 +8,12 @@ import primitivas from '../primitivas';
 export class DeleguaProvedorDocumentacaoEmEditor
     implements vscode.HoverProvider {
     provideHover(
-        document: vscode.TextDocument,
-        position: vscode.Position,
+        documento: vscode.TextDocument,
+        posicao: vscode.Position,
         token: vscode.CancellationToken
     ): vscode.ProviderResult<vscode.Hover> {
-        const intervalo = document.getWordRangeAtPosition(position);
-        const palavra = document.getText(intervalo);
+        const intervalo = documento.getWordRangeAtPosition(posicao);
+        const palavra = documento.getText(intervalo);
 
         let mapa = {};
 
@@ -24,7 +24,7 @@ export class DeleguaProvedorDocumentacaoEmEditor
         if (primitiva) {
             const documentacaoElemento = new vscode.MarkdownString(primitiva.documentacao);
 
-            documentacaoElemento.appendCodeblock((primitiva as any).exemploCodigo,
+            documentacaoElemento.appendCodeblock(primitiva.exemploCodigo,
                 'delegua'
             );
             mapa[primitiva.nome] = documentacaoElemento;

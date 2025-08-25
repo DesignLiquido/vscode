@@ -4,6 +4,7 @@ import * as sistemaOperacional from 'node:os';
 import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
 import { FormatadorDelegua } from '@designliquido/delegua/formatadores';
 import { Lexador } from '@designliquido/delegua/lexador';
+
 import { formatarDiagnosticosAvaliacaoSintatica } from '../avaliacao-sintatica';
 
 export class DeleguaProvedorFormatacao implements vscode.DocumentFormattingEditProvider {
