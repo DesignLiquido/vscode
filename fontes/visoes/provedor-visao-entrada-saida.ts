@@ -38,6 +38,7 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 		webviewView.webview.options = {
 			// Allow scripts in the webview
 			enableScripts: true,
+            // retainContextWhenHidden: true,
 
 			localResourceRoots: [
 				this._extensionUri
@@ -136,6 +137,10 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 
                     terminal.open(document.getElementById("terminal"));
                     fitAddon.fit();
+
+                    if (oldState) {
+                        terminal.write(oldState);
+                    }
 
                     terminal.onData((e) => {
                         switch (e) {

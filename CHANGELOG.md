@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.15.1
+
+- Painel de entrada e saída não some mais com o que havia no prompt em caso de troca de painéis;
+- Reconfiguração da sessão de depuração para não mostrar o console de depuração na primeira execução;
+- Ao finalizar execução pelo botão de parada do VSCode, avisa o usuário no painel de entrada e saída da finalização mais apropriadamente.
+
 ## 0.15.0
 
 - Inclusão de primitivas de Liquido;

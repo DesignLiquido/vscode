@@ -546,5 +546,16 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         this.sendResponse(response);
     }
 
+    /**
+     * Quando usuário pede para finalizar a execução antes do final do programa.
+     * @param response Dados para finalização da execução.
+     * @param args Argumentos adicionais, normalmente `restart` como `true` ou `false`.
+     * @param request A requisição.
+     */
+    protected terminateRequest(response: DebugProtocol.TerminateResponse, args: DebugProtocol.TerminateArguments, request?: DebugProtocol.Request): void {
+        this.tempoExecucao.finalizacao();
+        this.sendResponse(response);
+    }
+
     protected abstract criarReferenciaSource(caminho: string): Source;
 }

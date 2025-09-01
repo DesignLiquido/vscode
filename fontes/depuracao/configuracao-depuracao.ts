@@ -16,15 +16,15 @@ export function configurarDepuracao(
 			if (!targetResource && vscode.window.activeTextEditor) {
 				targetResource = vscode.window.activeTextEditor.document.uri;
 			}
+
 			if (targetResource) {
 				vscode.debug.startDebugging(undefined, {
 					type: 'delegua',
 					name: 'Executar Arquivo',
 					request: 'launch',
-					program: targetResource.fsPath
-				},
-					{ noDebug: true }
-				);
+					program: targetResource.fsPath,
+					debugConsole: 'none'
+				});
 			}
 		}),
 
@@ -39,7 +39,8 @@ export function configurarDepuracao(
 					name: 'Depurar Arquivo',
 					request: 'launch',
 					program: targetResource.fsPath,
-					stopOnEntry: false
+					stopOnEntry: false,
+					debugConsole: 'none'
 				});
 			}
 		}),

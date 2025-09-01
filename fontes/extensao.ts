@@ -276,7 +276,15 @@ export function activate(context: vscode.ExtensionContext) {
     // Visão de Entrada e Saída
     const provedorEntradaSaida = new ProvedorVisaoEntradaSaida(context.extensionUri);
     context.subscriptions.push(
-		vscode.window.registerWebviewViewProvider(ProvedorVisaoEntradaSaida.viewType, provedorEntradaSaida)
+		vscode.window.registerWebviewViewProvider(
+            ProvedorVisaoEntradaSaida.viewType, 
+            provedorEntradaSaida, 
+            {
+                webviewOptions: {
+                    retainContextWhenHidden: true
+                }
+            }
+        )
     );
 
     // debug adapters can be run in different ways by using a vscode.DebugAdapterDescriptorFactory:
