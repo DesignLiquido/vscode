@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.15.2
+
+- Correção em Pituguês para detectar corretamente classes com herança;
+- Delégua passa a suportar laços de repetição com `retorna`, acumulando o resultado a cada repetição;
+- Ajustes gerais em gramáticas e bibliotecas.
+
 ## 0.15.1
 
 - Painel de entrada e saída não some mais com o que havia no prompt em caso de troca de painéis;

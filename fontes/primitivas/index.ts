@@ -3,8 +3,8 @@ import { PrimitivaInterface } from '@designliquido/delegua/interfaces';
 import primitivasDicionario from '@designliquido/delegua/bibliotecas/primitivas-dicionario';
 import primitivasNumero from '@designliquido/delegua/bibliotecas/primitivas-numero';
 import primitivasTexto from '@designliquido/delegua/bibliotecas/primitivas-texto';
+import primitivasVetor from '@designliquido/delegua/bibliotecas/primitivas-vetor';
 
-import { primitivasVetor } from './primitivas-vetor';
 import { metodosBibliotecaGlobal } from './metodos-biblioteca-global';
 import { PrimitivaOuMetodo, ParametroAssinaturaMetodo } from './tipos';
 
@@ -46,12 +46,13 @@ function formatarPrimitivas(moduloPrimitivas: {[nome: string]: PrimitivaInterfac
 const primitivasDicionarioFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasDicionario);
 const primitivasNumeroFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasNumero);
 const primitivasTextoFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasTexto);
+const primitivasVetorFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasVetor);
 
 const primitivas: PrimitivaOuMetodo[] = [
     ...primitivasDicionarioFormatadas,
     ...primitivasNumeroFormatadas, 
     ...primitivasTextoFormatadas, 
-    ...primitivasVetor,
+    ...primitivasVetorFormatadas,
     ...metodosBibliotecaGlobal
 ].sort(ordenar);
 
