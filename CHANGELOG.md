@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.15.3
+
+- Herança em Pituguês passa a ser mais próxima de Python: `classe Cachorro(Animal)`: https://github.com/DesignLiquido/delegua/issues/855;
+- Pituguês não aceita mais constantes: https://github.com/DesignLiquido/delegua/issues/854;
+- Correção em mecanismo para execução em modo de depuração, que avaliava incorretamente funções.
+
 ## 0.15.2
 
 - Correção em Pituguês para detectar corretamente classes com herança;
