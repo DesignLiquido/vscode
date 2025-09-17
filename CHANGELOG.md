@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.15.4
+
+- Correção em problema de buscar referência de vetor em dicionários de Delégua.
+
 ## 0.15.3
 
 - Herança em Pituguês passa a ser mais próxima de Python: `classe Cachorro(Animal)`: https://github.com/DesignLiquido/delegua/issues/855;
