@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.15.5
+
+- Ajustes na forma de resolver valores de primitivas, e determinados tipos específicos de bibliotecas como Liquido;
+- Atualização de FolEs.
+
 ## 0.15.4
 
 - Correção em problema de buscar referência de vetor em dicionários de Delégua.
