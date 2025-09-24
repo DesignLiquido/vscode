@@ -2,9 +2,9 @@ import * as vscode from 'vscode';
 import { posix } from 'path';
 
 import { LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
-import { cyrb53 } from '@designliquido/delegua/depuracao';
 
 import { RetornoImportador } from "@designliquido/delegua-node/importador";
+import { cyrb53 } from '@designliquido/delegua/geracao-identificadores';
 
 /**
  * Diferentemente do importador de `delegua-node`, este importador

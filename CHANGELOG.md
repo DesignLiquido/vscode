@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.15.6
+
+- Colateral pós atualização de versão de `delegua-node`: https://github.com/DesignLiquido/vscode/issues/71.
+
 ## 0.15.5
 
 - Ajustes na forma de resolver valores de primitivas, e determinados tipos específicos de bibliotecas como Liquido;
