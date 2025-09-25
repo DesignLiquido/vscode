@@ -1,14 +1,4 @@
 {
-    "Declaração chamar Lincones":{
-        "prefix": "chamarlincones",
-        "body": "chamarlicones(${1:Consulta})",
-        "description": "Declaração do comando \"chamarlincones\""
-    },
-    "Declaração liquido":{
-        "prefix": "liquido",
-        "body": "liquido.",
-        "description": "Declaração do comando \"liquido\""
-    },
   "Declaração de rota Get": {
     "prefix": "rotaGet",
     "body": [
