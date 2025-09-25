@@ -450,15 +450,19 @@
         "snippets": [
             {
                 "language": "delegua",
-                "path": "./snippets/delegua.code-snippets"
-            },
-            {
-                "language": "visualg",
-                "path": "./snippets/visualg.code-snippets"
+                "path": "./snippets/delegua.code-snippets.json"
             },
             {
                 "language": "lincones",
-                "path": "./snippets/lincones.code-snippets"
+                "path": "./snippets/lincones.code-snippets.json"
+            },
+            {
+                "language": "delegua",
+                "path": "./snippets/liquido.code-snippets.json"
+            },
+            {
+                "language": "visualg",
+                "path": "./snippets/visualg.code-snippets.json"
             }
         ],
         "viewsContainers": {
