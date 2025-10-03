@@ -75,3 +75,9 @@ Para depurar seu código, siga os passos de qualquer um dos vídeos abaixo:
 - [Executando Portugol Studio e Portugol Webstudio no Visual Studio Code](https://www.youtube.com/watch?v=joLJo875hMs)
 
 O resultado da execução aparecerá no painel "Entrada e Saída", que fica juntamente com o console de depuração e o terminal.
+
+## Quem já Contribuiu
+
+<a href="https://github.com/DesignLiquido/vscode/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=DesignLiquido/vscode" />
+</a>
