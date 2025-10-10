@@ -1,5 +1,423 @@
 # Histórico de Modificações
 
+## 0.15.6
+
+- Colateral pós atualização de versão de `delegua-node`: https://github.com/DesignLiquido/vscode/issues/71.
+
+## 0.15.5
+
+- Ajustes na forma de resolver valores de primitivas, e determinados tipos específicos de bibliotecas como Liquido;
+- Atualização de FolEs.
+
+## 0.15.4
+
+- Correção em problema de buscar referência de vetor em dicionários de Delégua.
+
+## 0.15.3
+
+- Herança em Pituguês passa a ser mais próxima de Python: `classe Cachorro(Animal)`: https://github.com/DesignLiquido/delegua/issues/855;
+- Pituguês não aceita mais constantes: https://github.com/DesignLiquido/delegua/issues/854;
+- Correção em mecanismo para execução em modo de depuração, que avaliava incorretamente funções.
+
+## 0.15.2
+
+- Correção em Pituguês para detectar corretamente classes com herança;
+- Delégua passa a suportar laços de repetição com `retorna`, acumulando o resultado a cada repetição;
+- Ajustes gerais em gramáticas e bibliotecas.
+
+## 0.15.1
+
+- Painel de entrada e saída não some mais com o que havia no prompt em caso de troca de painéis;
+- Reconfiguração da sessão de depuração para não mostrar o console de depuração na primeira execução;
+- Ao finalizar execução pelo botão de parada do VSCode, avisa o usuário no painel de entrada e saída da finalização mais apropriadamente.
+
+## 0.15.0
+
+- Inclusão de primitivas de Liquido;
+- Comentários permitidos entre elementos de vetor em Delégua.
+
+## 0.14.7
+
+- Inclusão do método `formatar()` para primitivas de número em Delégua: https://github.com/DesignLiquido/delegua/pull/835;
+- Melhoramentos no provedor de completude de Delégua;
+- Correção no método `copia` do VisuAlg: https://github.com/DesignLiquido/visualg/issues/33.
+
+## 0.14.6
+
+- Correção no formatador quanto a declarações com tipos explícitos, e separação de argumentos de `escreva()` por vírgula.
+
+## 0.14.5
+
+- Formatador passa a reportar erros de avaliação sintática quando houverem, em Delégua.
+
+## 0.14.4
+
+- Correções no formatador de código de Delégua;
+- Melhorando o suporte de primitivas de dicionários na extensão para Delégua.
+
+## 0.14.3
+
+- Ajustes em primitivas de Delégua, Pituguês e Potigol, para atualizar referências em escopo de execução em caso de modificação de vetores.
+
+## 0.14.2
+
+- Inclusão de suporte a referências para dicionários em Delégua e Pituguês.
+
+## 0.14.1
+
+- Relançando versão com opção de pacotes externos revertida.
+
+## 0.14.0
+
+- Mudança em construção da extensão, deixando o tamanho dela muito menor, de Mb para Kb;
+- Correção de problema em dicionários de Delégua trabalhando com valores nulos.
+
+## 0.13.4
+
+- `delegua-json` passa a trabalhar com o diretório base do arquivo em execução;
+- Inclusão de duas novas primitivas de dicionário em Delégua: `contém()` e `remover()`;
+- Registro de primitivas de dicionário de Delégua no editor (completude e documentação em código).
+
+## 0.13.3
+
+- Implementação de mecanismo de resolução de tipos para bibliotecas na etapa de avaliação sintática;
+- Ajustes na análise semântica de Delégua ao analisar comandos `leia()`;
+- Correção de problema de inferência de tipo de função em Delégua.
+
+## 0.13.2
+
+- Flexibilizando verificação de tipos para quando `qualquer` é usado em Delégua;
+- Modificações para mecanismo de importação de bibliotecas específicas de Delégua, que agora aceitam um manifesto.
+
+## 0.13.1
+
+- Atualização da versão de FolEs;
+- Correção de problema com inferência de funções anônimas para `mapear()` em Delégua e Pituguês.
+
+## 0.13.0
+
+- Início da transição desta extensão sem `delegua-node`, possibilitando uma execução 100% web de qualquer linguagem ou dialeto;
+- Atualização de FolEs para a versão 0.9.3.
+
+## 0.12.36
+
+- Separação dos interpretadores com e sem mecanismo de depuração de todos os dialetos, corrigindo uma série de _bugs_ entre eles;
+- Reintrodução do formatador de código do Portugol Studio.
+
+## 0.12.35
+
+- Suporte a funções da biblioteca global de Delégua em Pituguês.
+
+## 0.12.34
+
+- Ajustes na tipagem para declaração e chamadas de funções em Pituguês.
+
+## 0.12.33
+
+- Correções em Pituguês para alguns comandos, pós testes na extensão.
+
+## 0.12.32
+
+- Aferição de erros de avaliação sintática durante a execução de código para todas as linguagens suportadas por esta extensão;
+- Diversas correções de _bugs_ e erros de Pituguês.
+
+## 0.12.31
+
+- Diversas atualizações de pacotes do ecossistema de todos os dialetos;
+- Nova primitiva em Delégua: `numero.absoluto()`;
+- Correções na análise semântica de Delégua.
+
+## 0.12.30
+
+- Correções no formatador do VisuAlg, conforme reportado pelo Discord;
+- Atualizações na gramática de Delégua;
+- Validação de tipos de argumentos para funções da biblioteca global e primitivas de Delégua.
+
+## 0.12.29
+
+- Atualização de Delégua para entender `numero()` e `número()` como funções de conversão para os respectivos tipos;
+- Alguma atualização na gramática de LMHT.
+
+## 0.12.28
+
+- Correção na importação de fontes em Delégua por caminho relativo.
+
+## 0.12.27
+
+- Correção no formatador de código do VisuAlg para procedimentos e funções;
+- Expansão na sintaxe de FolEs: https://github.com/DesignLiquido/FolEs/releases/tag/0.9.2.
+
+## 0.12.26
+
+- Correção no dialeto VisuAlg para emitir erro de sintaxe em caso de `se` sem o `fimse` correspondente;
+- Correções no dialeto Pituguês para trabalhar com a devida influência de variáveis elementares;
+- Atualizações na sintaxe colorida de Pituguês.
+
+## 0.12.25
+
+- Delégua passa a suportar função que devolve outra função, e operações de _currying_.
+
+## 0.12.24
+
+- Correção de lógica do importador em execução de Delégua.
+
+## 0.12.23
+
+- Atualizações gerais em Delégua e todos os dialetos desta extensão;
+- Suporte a variáveis em FolEs.
+
+## 0.12.22
+
+- Funções `escreva` e `escreval` do VisuAlg passam a trabalhar sem a obrigatoriedade de parênteses;
+- Ajuste no analisador semântico do Portugol Studio para reconhecer variáveis declaradas em escopos diferentes.
+
+## 0.12.21
+
+- Corrigindo problema com operador `mod` no VisuAlg: https://github.com/DesignLiquido/visualg/issues/17;
+- Melhoramentos no analisador semântico de Portugol Studio: https://github.com/DesignLiquido/portugol-studio/pull/39.
+
+## 0.12.20
+
+- Corrigido erros no Portugol Studio : Erro se passar comentário no inicio do código ([#36](https://github.com/DesignLiquido/portugol-studio/issues/36)) e erro ao usar variáveis no `para` ([#35](https://github.com/DesignLiquido/portugol-studio/issues/35)).
+
+## 0.12.19
+
+- Atualização do analisador semântico do Portugol Studio: https://github.com/DesignLiquido/portugol-studio/issues/31. 
+
+## 0.12.18
+
+- Remoção de _bug_ no VisuAlg na análise sintática de `faça ... enquanto`: https://github.com/DesignLiquido/portugol-studio/issues/33.
+
+## 0.12.17
+
+- Remoção de _bug_ no VisuAlg que imprimia casas decimais a mais para `escreva()` contendo informação de casas decimais a serem impressas: https://github.com/DesignLiquido/visualg/issues/16.
+
+## 0.12.16
+
+- Remoção de _bug_ no VisuAlg que não imprimia elementos de matriz: https://github.com/DesignLiquido/visualg/issues/15.
+
+## 0.12.15
+
+- Atualização na biblioteca `lmht-js` para resolver um _bug_ relacionado a certas estruturas que não aparecem corretamente: https://github.com/DesignLiquido/lmht-js/issues/2 e https://github.com/DesignLiquido/lmht-js/issues/3;
+- Implementação da biblioteca Objetos no dialeto Portugol Studio: https://github.com/DesignLiquido/portugol-studio/pull/30;
+- Correção de _bug_ no VisuAlg em laço `para` aninhado: https://github.com/DesignLiquido/visualg/issues/13.
+
+## 0.12.14
+
+- Implementação de suporte a registros no VisuAlg: https://github.com/DesignLiquido/visualg/issues/12. 
+
+## 0.12.13
+
+- Diversas correções no dialeto Potigol.
+
+## 0.12.12
+
+- Correção de verificação de parâmetros na análise semântica do VisuAlg;
+- Inclusão de chamadas de funções do VisuAlg quando nenhum parâmetro é passado.
+
+## 0.12.11
+
+- Correções de _bugs_ no dialeto BIRL;
+- Correção de _bug_ na análise semântica do VisuAlg ao considerar que um procedimento deve retornar valor.
+
+## 0.12.10
+
+- Correção de _bug_ ao trazer pilha de escopos de execução em depuração com Delégua: https://github.com/DesignLiquido/vscode/issues/64;
+- Ao executar código, trazendo a visão de entrada e saída mesmo que ela não esteja selecionada;
+- Formatação de código para VisuAlg usando `Ctrl`/`Cmd` + `Shift` + `F`.
+
+## 0.12.9
+
+- Dialetos que não possuem suporte à importação de arquivos agora usam um importador que trabalha com a API do Visual Studio Code.
+
+## 0.12.8
+
+- Correção em dialeto do Portugol Studio para operadores `+=` e `-=`: https://github.com/DesignLiquido/portugol-studio/issues/27.
+
+## 0.12.7
+
+- Correção de condição de corrida no painel de entrada e saída quando há uma instrução de escrita antes de uma instrução de leitura: https://github.com/DesignLiquido/vscode/issues/62
+- Correções em dialeto Potigol, que estava lendo o tipo do retorno de função incorretamente;
+- Novos métodos de lista em Potigol: `descarte_enquanto`, `divida_quando`, `pegue_enquanto`.
+
+## 0.12.6
+
+- Correção de _bug_ no Portugol Studio na inicialização de matrizes vazias com valores por variáveis: https://github.com/DesignLiquido/portugol-studio/issues/17.
+
+## 0.12.5
+
+- Correção de _bug_ no Portugol Studio na inicialização de matrizes vazias: https://github.com/DesignLiquido/portugol-studio/issues/18.
+
+## 0.12.4
+
+- Correção no painel de Entrada e Saída em que não estava sendo possível usar o `backspace`;
+- Correções no dialeto do Portugol Studio quanto a atribuição de valores em vetores (https://github.com/DesignLiquido/portugol-studio/issues/26 e https://github.com/DesignLiquido/portugol-studio/issues/23). 
+
+## 0.12.3
+
+- Novo suporte a bibliotecas globais pelo núcleo de Delégua;
+- Novas bibliotecas para Portugol Studio: Tipos e Internet.
+
+## 0.12.2
+
+- Aprimoramento do suporte a Mapler, agora suportando módulos (funções);
+- Resolução de problema no formatador do VisuAlg que transformava `escreval()` em `escreva()`.
+
+## 0.12.1
+
+- Resolvendo problema com impressões que apareciam com um `\n` no Portugol Studio: https://github.com/DesignLiquido/vscode/issues/61.
+
+## 0.12.0
+
+- Implementação de novo painel de entrada e saída, em substituição ao console de depuração, que não funciona direito com comandos de limpeza;
+- Atualização em tradutores de Delégua para outras linguagens de forma a entender comentários.
+
+## 0.11.1
+
+- Função `limpa()` no Portugol Studio funcional para execução com pontos de parada;
+- Função `limpatela` no VisuAlg funcional para execução com pontos de parada;
+- Ajustes nas gramáticas de Delégua e Portugol Studio para entender comentários multilinha.
+
+## 0.11.0
+
+- Atualização geral em todos os dialetos, agora que comentários são considerados na avaliação sintática;
+- Atualizações no formatador de código do VisuAlg.
+
+## 0.10.22
+
+- Correções no dialeto Portugol Studio quanto a vetores de cadeias de caracteres, e impressão de elementos usando `\n`.
+
+## 0.10.21
+
+- Novas funções e cores para FolEs (versão 0.7.0);
+- Correções em dialeto VisuAlg quanto a comportamentos de escrita e laços de repetição em modo de depuração.
+
+## 0.10.20
+
+- Correção de problema com detecção de matrizes no Portugol Studio: https://github.com/DesignLiquido/portugol-studio/pull/14
+
+## 0.10.19
+
+- Permitindo uso de nome da biblioteca sem um nome de constante para Portugol Studio: https://github.com/DesignLiquido/portugol-studio/pull/12
+- Anotações para tipos de primitivas em Delégua: https://github.com/DesignLiquido/delegua/pull/674
+
+## 0.10.18
+
+- Inclusão de quatro bibliotecas no Portugol Studio: Matemática, Texto, Calendário e Útil.
+
+## 0.10.17
+
+- Correção de inferência de variáveis no Portugol Studio: https://github.com/DesignLiquido/portugol-studio/pull/6
+
+## 0.10.16
+
+- Atualizado catálogo de métodos da biblioteca global: https://github.com/DesignLiquido/vscode/pull/56
+
+## 0.10.15
+
+- Correções de _bugs_ e ajustes em dialeto do VisuAlg;
+- Fragmentos de código (_snippets_) para LinConEs;
+- Diversas atualizações de pacotes e estrutura interna do projeto.
+
+## 0.10.14
+
+- Correções de _bugs_ e ajustes em dialetos do VisuAlg e Potigol.
+
+## 0.10.13
+
+- Formatador de código em Potigol (extensão `.poti`): https://github.com/DesignLiquido/delegua/pull/660
+- Correções de _bugs_ e ajustes em dialetos do VisuAlg e Delégua.
+
+## 0.10.12
+
+- Ajustes em Delégua quanto à escrita de primitivas como texto.
+
+## 0.10.11
+
+- Diversos ajustes em Delégua e dialetos quanto a forma de escrita de certas variáveis, e organização arquitetural dos pacotes.
+
+## 0.10.10
+
+- Declaração `tendo ... como` para Delégua: https://github.com/DesignLiquido/delegua/pull/639.
+
+## 0.10.9
+
+- Funcionalidade de tuplas para Delégua: https://github.com/DesignLiquido/delegua/pull/627;
+- Funcionalidade de formatação de código para o VisuAlg: https://github.com/DesignLiquido/delegua/pull/626.
+
+## 0.10.8
+
+- Novas primitivas para dicionários em Delégua: `dicionario.chaves()` e `dicionario.valores()`. 
+
+## 0.10.7
+
+- Atualizações em recursos de Delégua e Portugol Studio.
+
+## 0.10.6
+
+- Delégua e Pituguês receberam duas novas primitivas para números: `numero.arredondarParaCima()` e `numero.arredondarParaBaixo()`.
+
+## 0.10.5
+
+- Correções de _bugs_ no dialeto VisuAlg quanto ao laço `para` sem `passo` definido;
+- Correção de funcionalidade do bloco `aleatorio` no dialeto VisuAlg.
+
+## 0.10.4
+
+- Atualização da biblioteca `lmht-js` para a versão 0.4.8;
+- Ajustes na sintaxe de LinConEs;
+- Correções em dialetos de Portugol: VisuAlg e Portugol Studio.
+
+## 0.10.3
+
+- Correção de _bug_ usando operador de negação no Portugol Studio: https://github.com/DesignLiquido/delegua/issues/595;
+- Mais atualizações da gramática de LMHT;
+- Atualização da biblioteca `lmht-js` para a versão 0.4.6.
+
+## 0.10.2
+
+- Atualização da biblioteca `delegua-node` para a versão 0.30.4;
+- Atualização da gramática de LMHT.
+
+## 0.10.1
+
+- Correção de _bugs_ na avaliação semântica para o VisuAlg: https://github.com/DesignLiquido/delegua/pull/593;
+- Implementação dos blocos `aleatorio` para o VisuAlg: https://github.com/DesignLiquido/delegua/pull/592;
+- Atualização da biblioteca `lmht-js` para a versão 0.4.5.
+
+## 0.10.0
+
+- Avaliação semântica para o VisuAlg;
+- Novo formatador de código para Delégua (`Alt`/`Option` + `Shift` + `F`).
+
+## 0.9.21
+
+- Atualização da biblioteca `delegua-node` para a versão 0.27.4;
+- Atualização da documentação de declaração de vetor para o VisuAlg.
+
+## 0.9.20
+
+- Correção de _bug_ no dialeto VisuAlg quanto a ler e definir valores em matrizes: https://github.com/DesignLiquido/delegua/pull/575;
+- Correção de _bug_ em Delégua quanto a aglutinação de argumentos de funções: https://github.com/DesignLiquido/delegua/pull/570;
+- Novo analisador semântico: Mapler: https://github.com/DesignLiquido/delegua/pull/572;
+- Ajustes na gramática de Delégua para reconhecer tipos de estruturas de dados com acentos.
+
+## 0.9.19
+
+- Correção de _bug_ no dialeto VisuAlg quanto a impressão de valores com casas decimais: https://github.com/DesignLiquido/delegua/pull/568
+
+## 0.9.18
+
+- Correção de _bug_ na tradução de CSS para FolEs.
+
+## 0.9.17
+
+- Atualização das bibliotecas `lmht-js` e `foles` para as versões 0.4.4 e 0.6.0, respectivamente.
+
+## 0.9.16
+
+- Delégua com suporte a destruturação de objetos.
+
 ## 0.9.15
 
 - Atualização da biblioteca `lmht-js` para a versão 0.4.3.
@@ -88,7 +506,7 @@
 
 ## 0.8.4
 
-- Correções de bugs em diferentes dialetos (VisuAlg e Potigol).
+- Correções de _bugs_ em diferentes dialetos (VisuAlg e Potigol).
 
 ## 0.8.3
 
@@ -203,7 +621,7 @@
 
 - Novos métodos para vetores em Delégua: `aparar`, `apararInicio`, `apararFim`;
 - Novo método para textos em Delégua: `concatenar`;
-- Correção de bug no passo dinâmico para instrução `para`, no VisuAlg.
+- Correção de _bug_ no passo dinâmico para instrução `para`, no VisuAlg.
 
 ## 0.7.2
 
@@ -229,11 +647,11 @@
 
 ## 0.6.2
 
-- Correção de bug em blocos de repetição com `sustar` em Delégua.
+- Correção de _bug_ em blocos de repetição com `sustar` em Delégua.
 
 ## 0.6.1
 
-- Correção de bug em blocos de repetição com `retorna` em Delégua.
+- Correção de _bug_ em blocos de repetição com `retorna` em Delégua.
 
 ## 0.6.0
 
@@ -245,7 +663,7 @@
 
 ## 0.5.7
 
-- Correção de bug no método `filtrarPor()` em Delégua.
+- Correção de _bug_ no método `filtrarPor()` em Delégua.
 
 ## 0.5.6
 
@@ -279,11 +697,11 @@
 
 ## 0.4.7
 
-- Corrigindo bugs no dialeto VisuAlg em que funções e procedimentos que vinham antes de `var` não eram reconhecidos corretamente.
+- Corrigindo _bugs_ no dialeto VisuAlg em que funções e procedimentos que vinham antes de `var` não eram reconhecidos corretamente.
 
 ## 0.4.6
 
-- Remoção de bugs de atribuição para variáveis indexadas em vários dialetos.
+- Remoção de _bugs_ de atribuição para variáveis indexadas em vários dialetos.
 
 ## 0.4.5
 
@@ -296,11 +714,11 @@
 
 ## 0.4.3
 
-- Correção de bug ao intercalar comandos "próximo" e "continuar" na mesma depuração com VisuAlg.
+- Correção de _bug_ ao intercalar comandos "próximo" e "continuar" na mesma depuração com VisuAlg.
 
 ## 0.4.2
 
-- Correções de bugs em instruções `enquanto` e `escolha` do VisuAlg.
+- Correções de _bugs_ em instruções `enquanto` e `escolha` do VisuAlg.
 
 ## 0.4.1
 
@@ -315,28 +733,28 @@
 
 ## 0.3.11
 
-- Resolvido bug: avaliação sintática de comparação igual no VisuAlg devolvendo símbolo errado pro interpretador.
+- Resolvido _bug_: avaliação sintática de comparação igual no VisuAlg devolvendo símbolo errado pro interpretador.
 
 ## 0.3.10
 
-- Resolvido bug: reatribuição de variáveis causando valores `NaN` em depuração.
+- Resolvido _bug_: reatribuição de variáveis causando valores `NaN` em depuração.
 
 ## 0.3.9
 
-- Resolvido bug: `enquanto (verdadeiro)` em Delégua causa loop infinito: https://github.com/DesignLiquido/vscode/issues/6
-- Resolvido bug: `inteiro(leia())` chama o prompt três vezes: https://github.com/DesignLiquido/vscode/issues/7
-- Resolvido bug: reatribuição de variáveis causando valores `NaN`.
+- Resolvido _bug_: `enquanto (verdadeiro)` em Delégua causa loop infinito: https://github.com/DesignLiquido/vscode/issues/6
+- Resolvido _bug_: `inteiro(leia())` chama o prompt três vezes: https://github.com/DesignLiquido/vscode/issues/7
+- Resolvido _bug_: reatribuição de variáveis causando valores `NaN`.
 
 ## 0.3.8
 
 - Registrando funções de entrada e saída do VisuAlg nos provedores de completude e documentação-em-código;
-- Correção de bug na chamada do formatador Delégua;
-- Correção de bug na depuração que não mostrava as variáveis atuais.
+- Correção de _bug_ na chamada do formatador Delégua;
+- Correção de _bug_ na depuração que não mostrava as variáveis atuais.
 
 ## 0.3.7
 
 - Ajustes para VisuAlg no núcleo da linguagem;
-- Documentação-em-código para VisuAlg (colocar o mouse em cima do nome da função, mostra o que ela faz).
+- Documentação-em-código para VisuAlg (colocar o ponteiro do _mouse_ em cima do nome da função, mostra o que ela faz).
 
 ## 0.3.6
 
@@ -345,7 +763,7 @@
 
 ## 0.3.5
 
-- Corrigindo bug que não escrevia em console quando o método de saída é de escrita na mesma linha.
+- Corrigindo _bug_ que não escrevia em console quando o método de saída é de escrita na mesma linha.
 
 ## 0.3.4
 
@@ -361,7 +779,7 @@
 
 ## 0.3.1
 
-- Correção de bugs no dialeto VisuAlg;
+- Correção de _bugs_ no dialeto VisuAlg;
 - Atualização de ícone de LinCones.
 
 ## 0.3.0
@@ -373,7 +791,7 @@
 ## 0.2.8
 
 - Mudança de lógica no descarte de escopos de execução durante depuração, o que corrige alguns comportamentos quanto depurando código em todas as linguagens suportadas;
-- Ajuste na inspeção "hover" de variável, que não estava funcionando para variáveis com caracteres maiúsculos.
+- Ajuste na inspeção `hover` (passar o ponteiro do _mouse_ em cima) de variável, que não estava funcionando para variáveis com caracteres maiúsculos.
 
 ## 0.2.7
 

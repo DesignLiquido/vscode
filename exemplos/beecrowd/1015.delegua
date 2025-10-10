@@ -1,0 +1,9 @@
+var matematica = importar('matematica')
+
+var x1 = número(leia("Digite x1: "));
+var y1 = número(leia("Digite y1: "));
+var x2 = número(leia("Digite x2: "));
+var y2 = número(leia("Digite y2: "));
+
+var distancia = matematica.raizQuadrada((x1-x2) ** 2 + (y1-y2) ** 2)
+escreva(distancia)

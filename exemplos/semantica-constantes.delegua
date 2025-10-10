@@ -1,2 +1,2 @@
-const a = 123
+constante a = 123
 a = 234

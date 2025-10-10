@@ -1,0 +1,12 @@
+variaveis
+    // Declaração do módulo
+    dizerOla: modulo;
+inicio
+    // Chamada do módulo
+    dizerOla;
+fim
+
+// Definição do módulo
+modulo dizerOla;
+    escrever "Olá, mundo!";
+fim modulo;

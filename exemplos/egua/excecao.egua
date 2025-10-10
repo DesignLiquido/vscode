@@ -1,0 +1,12 @@
+função teste() {
+    tente {
+        1 > "1";
+        escreva("Tente - Pegue: ERRO!");
+    } pegue {
+        escreva("Tente - Pegue: OK!");
+    } finalmente {
+        retorna(" ");
+    }
+}
+
+escreva(teste());

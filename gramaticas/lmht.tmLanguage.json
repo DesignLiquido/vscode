@@ -2033,7 +2033,7 @@
 					]
 				},
 				{
-					"begin": "(?i)(<)(base|link|meta)(?=\\s|/?>)",
+					"begin": "(?i)(<)(base|recurso|meta)(?=\\s|/?>)",
 					"beginCaptures": {
 						"1": {
 							"name": "punctuation.definition.tag.begin.lmht"
@@ -2056,7 +2056,7 @@
 					]
 				},
 				{
-					"begin": "(?i)(<)(noscript|title)(?=\\s|/?>)",
+					"begin": "(?i)(<)(noscript|titulo|título)(?=\\s|/?>)",
 					"beginCaptures": {
 						"1": {
 							"name": "punctuation.definition.tag.begin.lmht"
@@ -2079,7 +2079,7 @@
 					]
 				},
 				{
-					"begin": "(?i)(</)(noscript|title)(?=\\s|/?>)",
+					"begin": "(?i)(</)(noscript|titulo|título)(?=\\s|/?>)",
 					"beginCaptures": {
 						"1": {
 							"name": "punctuation.definition.tag.begin.lmht"
@@ -2102,7 +2102,7 @@
 					]
 				},
 				{
-					"begin": "(?i)(<)(col|hr|input)(?=\\s|/?>)",
+					"begin": "(?i)(<)(col|hr|campo)(?=\\s|/?>)",
 					"beginCaptures": {
 						"1": {
 							"name": "punctuation.definition.tag.begin.lmht"
@@ -2125,7 +2125,7 @@
 					]
 				},
 				{
-					"begin": "(?i)(<)(endereço|endereco|artigo|aparte|citacao|citação|corpo|botao|botão|titulo|título|grupo-colunas|lista-pesquisavel|lista-pesquisável|lista-definições|lista-definicoes|definicao|definição|detalhes|modal|divisão|divisao|termo|campos|descrição|descricao|figura|footer|formulario|formulário|cabeca|cabeça|cabeca-tabela|cabeça-tabela|cabeçalho|cabecalho|hgroup|lmht|titulo[1-6]|título[1-6]|etiqueta|legend|item-lista|principal|map|menu|medidor|navegacao|navegação|lista-numerada|grupo-opcoes|grupo-opções|opcao|opção|output|p(ar[aá]grafo)?|preformatado|progresso|secao|seção|selecao|seleção|slot|sumario|sumário|tabela|corpo-tabela|celula|célula|invisivel|invisível|area-texto|área-texto|rodapé|rodape|linha|lista-simples)(?=\\s|/?>)",
+					"begin": "(?i)(<)(endereço|endereco|artigo|aparte|citacao|citação|corpo|botao|botão|titulo|título|grupo-colunas|lista-pesquisavel|lista-pesquisável|lista-definições|lista-definicoes|definicao|definição|detalhes|modal|divisão|divisao|termo|campos?|descrição|descricao|figura|footer|formulario|formulário|cabeca|cabeça|cabeca-tabela|cabeça-tabela|cabeçalho|cabecalho|hgroup|lmht|titulo[1-6]|título[1-6]|etiqueta|legend|item-lista|principal|map|menu|medidor|navegacao|navegação|lista-numerada|grupo-opcoes|grupo-opções|opcao|opção|output|p(ar[aá]grafo)?|preformatado|progresso|secao|seção|selecao|seleção|slot|sumario|sumário|tabela|corpo-tabela|celula|célula|invisivel|invisível|area-texto|área-texto|rodapé|rodape|linha|lista-simples)(?=\\s|/?>)",
 					"beginCaptures": {
 						"1": {
 							"name": "punctuation.definition.tag.begin.lmht"
@@ -2148,7 +2148,7 @@
 					]
 				},
 				{
-					"begin": "(?i)(</)(endereço|endereco|artigo|aparte|citacao|citação|corpo|botao|botão|titulo|título|grupo-colunas|lista-pesquisavel|lista-pesquisável|lista-definições|lista-definicoes|definicao|definição|detalhes|modal|divisão|divisao|lista-definicoes|lista-definiçoes|lista-definições|termo|campos|descrição|descricao|figura|footer|formulario|formulário|cabeca|cabeça|cabeca-tabela|cabeça-tabela|cabeçalho|cabecalho|hgroup|lmht|titulo[1-6]|título[1-6]|etiqueta|legend|item-lista|principal|map|menu|medidor|navegacao|navegação|lista-numerada|grupo-opcoes|grupo-opções|opcao|opção|output|p(ar[aá]grafo)?|preformatado|progresso|secao|seção|selecao|seleção|slot|sumario|sumário|tabela|corpo-tabela|celula|célula|invisivel|invisível|area-texto|área-texto|rodapé|rodape|linha|lista-simples)(?=\\s|/?>)",
+					"begin": "(?i)(</)(endere[cç]o|artigo|aparte|citacao|citação|corpo|botao|botão|titulo|título|grupo-colunas|liga[cç][aã]o|lista-pesquis[aá]vel|lista-defini[cç][oõ]es|defini[cç][aã]o|detalhes|modal|divis[aã]o|lista-definicoes|lista-definiçoes|lista-definições|termo|campos?|descrição|descricao|figura|footer|formulario|formulário|cabe[cç]a|cabe[cç]a-tabelacabeçalho|cabecalho|hgroup|lmht|titulo[1-6]|título[1-6]|etiqueta|legend|item-lista|principal|map|menu|medidor|navegacao|navegação|lista-numerada|grupo-opcoes|grupo-opções|opcao|opção|output|p(ar[aá]grafo)?|preformatado|progresso|secao|seção|selecao|seleção|slot|sumario|sumário|tabela|corpo-tabela|celula|célula|invisivel|invisível|area-texto|área-texto|rodapé|rodape|linha|lista-simples)(?=\\s|/?>)",
 					"beginCaptures": {
 						"1": {
 							"name": "punctuation.definition.tag.begin.lmht"
@@ -2171,7 +2171,7 @@
 					]
 				},
 				{
-					"begin": "(?i)(<)(area|br|wbr)(?=\\s|/?>)",
+					"begin": "(?i)(<)(area|área|br|wbr)(?=\\s|/?>)",
 					"beginCaptures": {
 						"1": {
 							"name": "punctuation.definition.tag.begin.lmht"
@@ -2263,7 +2263,7 @@
 					]
 				},
 				{
-					"begin": "(?i)(<)(audio|canvas|iframe|object|picture|video)(?=\\s|/?>)",
+					"begin": "(?i)(<)(audio|canvas|iframe|object|picture|v[ií]deo)(?=\\s|/?>)",
 					"beginCaptures": {
 						"1": {
 							"name": "punctuation.definition.tag.begin.lmht"
@@ -2286,7 +2286,7 @@
 					]
 				},
 				{
-					"begin": "(?i)(</)(audio|canvas|iframe|object|picture|video)(?=\\s|/?>)",
+					"begin": "(?i)(</)(audio|canvas|iframe|object|picture|v[ií]deo)(?=\\s|/?>)",
 					"beginCaptures": {
 						"1": {
 							"name": "punctuation.definition.tag.begin.lmht"

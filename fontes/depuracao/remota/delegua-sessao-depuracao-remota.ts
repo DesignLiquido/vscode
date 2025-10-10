@@ -26,13 +26,14 @@ import { Subject } from 'await-notify';
 import * as base64 from 'base64-js';
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 
+import { inferirTipoVariavel } from '@designliquido/delegua/inferenciador';
+import { palavrasReservadas } from '@designliquido/delegua/lexador/palavras-reservadas';
+
 import { DeleguaTempoExecucaoRemoto } from '../remota/delegua-tempo-execucao-remoto';
 import { DeleguaPontoParada } from '../delegua-ponto-parada';
 import { ArgumentosInicioDepuracao } from '../argumentos-inicio-depuracao';
 import { InvocacaoDelegua } from './invocacao-delegua';
 
-import { inferirTipoVariavel } from '@designliquido/delegua/fontes/interpretador/inferenciador';
-import { palavrasReservadas } from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
 
 /**
  * Classe responsável por traduzir para o VSCode eventos enviados pelo

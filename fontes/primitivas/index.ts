@@ -1,8 +1,12 @@
-import { primitivasNumero } from './primitivas-numero';
-import { primitivasTexto } from './primitivas-texto';
-import { primitivasVetor } from './primitivas-vetor';
+import { PrimitivaInterface } from '@designliquido/delegua/interfaces';
+
+import primitivasDicionario from '@designliquido/delegua/bibliotecas/primitivas-dicionario';
+import primitivasNumero from '@designliquido/delegua/bibliotecas/primitivas-numero';
+import primitivasTexto from '@designliquido/delegua/bibliotecas/primitivas-texto';
+import primitivasVetor from '@designliquido/delegua/bibliotecas/primitivas-vetor';
+
 import { metodosBibliotecaGlobal } from './metodos-biblioteca-global';
-import { PrimitivaOuMetodo } from './tipos';
+import { PrimitivaOuMetodo, ParametroAssinaturaMetodo } from './tipos';
 
 const ordenar = (a: any, b: any) => {
     const nome1 = a['nome'].toUpperCase();
@@ -19,10 +23,36 @@ const ordenar = (a: any, b: any) => {
     return 0;
 };
 
+function formatarPrimitivas(moduloPrimitivas: {[nome: string]: PrimitivaInterface}) {
+    const primitivasFormatadas: PrimitivaOuMetodo[] = [];
+    for (const [nome, primitiva] of Object.entries(moduloPrimitivas)) {
+        primitivasFormatadas.push({
+            nome: nome,
+            assinaturas: [{
+                formato: `${nome}()`,
+                parametros: primitiva.argumentos.map(p => ({
+                    nome: p.nome,
+                    documentacao: p.documentacao
+                } as ParametroAssinaturaMetodo))
+            }],
+            documentacao: primitiva.documentacao,
+            exemploCodigo: primitiva.exemploCodigo
+        } as PrimitivaOuMetodo);
+    }
+
+    return primitivasFormatadas;
+}
+
+const primitivasDicionarioFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasDicionario);
+const primitivasNumeroFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasNumero);
+const primitivasTextoFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasTexto);
+const primitivasVetorFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasVetor);
+
 const primitivas: PrimitivaOuMetodo[] = [
-    ...primitivasNumero, 
-    ...primitivasTexto, 
-    ...primitivasVetor,
+    ...primitivasDicionarioFormatadas,
+    ...primitivasNumeroFormatadas, 
+    ...primitivasTextoFormatadas, 
+    ...primitivasVetorFormatadas,
     ...metodosBibliotecaGlobal
 ].sort(ordenar);
 

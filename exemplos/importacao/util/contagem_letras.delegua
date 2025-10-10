@@ -1,0 +1,12 @@
+//Função para contabilizar caracteres informadas excluindo espaçamentos
+funcao contagem_letras(texto) {
+    var vetor_palavras = [];
+
+    para var i = 0; i < texto.tamanho(); i = i + 1 {
+        se texto[i] != ' ' {
+            vetor_palavras.adicionar(texto[i]);
+        }
+    } 
+
+    retorna vetor_palavras.tamanho();
+}

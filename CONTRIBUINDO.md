@@ -33,6 +33,90 @@
 
 * Para adicionar funcionalidades tipo IntelliSense, _hovers_ e validadores, veja a documentação do VS Code em https://code.visualstudio.com/docs (inglês).
 
-## Instalar sua extensão
+## Instalar a extensão (modo manual)
 
-* Para usar sua extensão, com o Visual Studio Code, copie todos os arquivos para `<seu diretório home>/.vscode/extensions` e reinicie o VSCode.
+* Para usar a extensão de modo manual, com o Visual Studio Code, copie todos os arquivos para `<seu diretório home>/.vscode/extensions` e reinicie o VSCode.
+
+## Depuração
+
+Delégua possui um protocolo próprio de comunicação entre depurador e cliente de depuração, [conforme especificado aqui](https://github.com/DesignLiquido/delegua/wiki/Suporte-%C3%A0-depura%C3%A7%C3%A3o). A ideia é que seja possível escrever interações entre diferentes clientes de depuração, como outros editores que tenham suporte a depuração, por exemplo. 
+
+O Visual Studio Code também possui [um protocolo de comunicação detalhado aqui](https://microsoft.github.io/debug-adapter-protocol/overview). Para que Delégua e Visual Studio Code se entendam, é preciso um intermediador entre eles, implementado pela classe `DeleguaTempoExecucaoLocal`. 
+
+Segundo a documentação do Visual Studio Code, linguagens podem usar ou um executável que faça a tradução das mensagens entre linguagem e Visual Studio Code, um servidor _Socket_ implementado dentro da extensão, ou ainda, uma implementação customizada. Até a versão 0.1.1 desta extensão, usávamos um servidor _Socket_  (ver classes `DeleguaTempoExecucaoRemota` e `DeleguaSessaoDepuracaoRemota`), que abre em uma porta aleatória disponível. Esta forma comanda a execução de Delégua com a opção `--depurador` definida, que abre o servidor de depuração na porta 7777 e espera uma instrução de pronto para liberar os comandos de depuração para a interface do VSCode. A implementação ainda existe, mas não é habilitada por padrão. Poderá voltar no futuro.
+
+Atualmente, a extensão usa o núcleo da linguagem Delégua como uma dependência NPM e instancia e controla os elementos da linguagem. 
+
+### Depurando a extensão
+
+Basta executar o comando "Extensão", na opção "Executar e Depurar" do VSCode. Isso deve acionar o procedimento de construção e abrir a janela de testes da extensão.
+
+#### Antiga forma de depuração usando pacotes _linkados_
+
+Antigamente, para acompanhar a execução de código por linguagem, era recomendado ligar (_linkar_) pacotes. Isso deixou de funcionar bem especialmente para o ESBuild, que passou a dar muitos erros com referências de Delégua e seus dialetos quando se usa pacotes _linkados_. Este roteiro é mantido aqui por razões históricas.
+
+Os pacotes que podem ser linkados estão em `tsconfig.json`, no diretório raiz.
+
+Primeiro é preciso clonar o repositório correspondente. Por exemplo, se queremos inspecionar o núcleo de Delégua, devemos clonar [`@designliquido/delegua`](https://github.com/DesignLiquido/delegua). Além disso, é preciso clonar também o pacote Node de Delégua, já que todas as linguagens que esta extensão interpreta são dependentes dele: [`@designliquido/delegua-node`](https://github.com/DesignLiquido/delegua-node). Se isso não for feito, o VSCode se perde na hora de encontrar os mapas de fontes, e o resultado será um arquivo JS (que não é o que queremos).
+
+Após clonar os repositórios, é preciso avisar ao Yarn que queremos criar um link simbólico para cada um deles. Isso é feito pelo comando `yarn link` na raiz de cada repositório.
+
+De volta a este repositório, use os comandos `yarn link "@designliquido/delegua"` e `yarn link "@designliquido/delegua-node"` no diretório raiz deste projeto para substituir os pacotes do `node_modules` pelos pacotes linkados. Os links simbólicos deve aparecer nos diretórios correspondentes dos pacotes dentro de `node_modules` (normalmente com uma setinha ao lado do diretório para indicar que é um _link_ simbólico).
+
+Por fim, comente as linhas que apontam para o diretório `dist` no `tsconfig.json`. No nosso exemplo, as linhas abaixo devem ser descomentadas:
+
+```jsonc
+{
+    // ...
+    paths: {
+        // ...
+        // "@designliquido/delegua": ["node_modules/@designliquido/delegua/dist"],
+        // "@designliquido/delegua/*": ["node_modules/@designliquido/delegua/dist/*"],
+        // "@designliquido/delegua-node": ["node_modules/@designliquido/delegua-node/dist"],
+        // "@designliquido/delegua-node/*": ["node_modules/@designliquido/delegua-node/dist/*"],
+        // ...
+    }
+    // ...
+}
+```
+
+E descomente as linhas que apontam para o diretório `fontes`:
+
+```jsonc
+{
+    // ...
+    paths: {
+        // ...
+        "@designliquido/delegua": ["node_modules/@designliquido/delegua/fontes"],
+        "@designliquido/delegua/*": ["node_modules/@designliquido/delegua/fontes/*"],
+        "@designliquido/delegua-node": ["node_modules/@designliquido/delegua-node/fontes"],
+        "@designliquido/delegua-node/*": ["node_modules/@designliquido/delegua-node/fontes/*"],
+        // ...
+    }
+    // ...
+}
+```
+
+### Dicas de pontos de parada
+
+Abaixo temos algumas dicas de onde colocar pontos de parada para a inspeção de funcionalidades.
+
+- Execução de código, qualquer linguagem: `fontes\depuracao\local\delegua-tempo-execucao-local.ts`, linha 212, ou seja:
+
+```ts
+            this.interpretador.instrucaoContinuarInterpretacao().then(_ => {
+                // Pós-execução
+                for (let erro of this.interpretador.erros) {
+                    this.enviarEvento('saida', erro);
+                }
+            });
+```
+
+- Análise semântica: `fontes\analise-semantica\index.ts`, linhas 80 a 83:
+
+```ts
+    resultadoLexador = lexador.mapear(linhas, -1);
+    resultadoAvaliadorSintatico = avaliadorSintatico.analisar(resultadoLexador, -1);
+    resultadoAnalisadorSemantico = analisadorSemantico.analisar(resultadoAvaliadorSintatico.declaracoes);
+    popularDiagnosticos(resultadoAnalisadorSemantico.diagnosticos, diagnosticos, documento);
+```

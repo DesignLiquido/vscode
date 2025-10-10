@@ -1,0 +1,133 @@
+{
+  "Declaração de rota Get": {
+    "prefix": "rotaGet",
+    "body": [
+      "liquido.rotaGet(funcao(requisicao, resposta) {",
+      "  ${1:// Código aqui}",
+      "  resposta.enviar(${2:retorno}).status(200)",
+      "})"
+    ],
+    "description": "Declaração de rota GET"
+  },
+
+  "Declaração de rota Post": {
+    "prefix": "rotaPost",
+    "body": [
+      "liquido.rotaPost(funcao(requisicao, resposta) {",
+      "  ${1:// Código aqui}",
+      "  resposta.enviar(${2:retorno}).status(201)",
+      "})"
+    ],
+    "description": "Declaração de rota POST"
+  },
+
+  "Declaração de rota Put": {
+    "prefix": "rotaPut",
+    "body": [
+      "liquido.rotaPut(funcao(requisicao, resposta) {",
+      "  ${1:// Código aqui}",
+      "  resposta.enviar(${2:retorno}).status(200)",
+      "})"
+    ],
+    "description": "Declaração de rota PUT"
+  },
+
+  "Declaração de rota Delete": {
+    "prefix": "rotaDelete",
+    "body": [
+      "liquido.rotaDelete(funcao(requisicao, resposta) {",
+      "  ${1:// Código aqui}",
+      "  resposta.enviar(${2:retorno}).status(200)",
+      "})"
+    ],
+    "description": "Declaração de rota DELETE"
+  },
+
+  "Declaração de rota Patch": {
+    "prefix": "rotaPatch",
+    "body": [
+      "liquido.rotaPatch(funcao(requisicao, resposta) {",
+      "  ${1:// Código aqui}",
+      "  resposta.enviar(${2:retorno}).status(200)",
+      "})"
+    ],
+    "description": "Declaração de rota PATCH"
+  },
+
+  "Declaração de rota Options": {
+    "prefix": "rotaOptions",
+    "body": [
+      "liquido.rotaOptions(funcao(requisicao, resposta) {",
+      "  ${1:// Código aqui}",
+      "  resposta.enviar(${2:retorno}).status(200)",
+      "})"
+    ],
+    "description": "Declaração de rota OPTIONS"
+  },
+
+  "Declaração de rota Copy": {
+    "prefix": "rotaCopy",
+    "body": [
+      "liquido.rotaCopy(funcao(requisicao, resposta) {",
+      "  ${1:// Código aqui}",
+      "  resposta.enviar(${2:retorno}).status(200)",
+      "})"
+    ],
+    "description": "Declaração de rota COPY"
+  },
+
+  "Declaração de rota Head": {
+    "prefix": "rotaHead",
+    "body": [
+      "liquido.rotaHead(funcao(requisicao, resposta) {",
+      "  ${1:// Código aqui}",
+      "  resposta.status(200)",
+      "})"
+    ],
+    "description": "Declaração de rota HEAD"
+  },
+
+  "Declaração de rota Lock": {
+    "prefix": "rotaLock",
+    "body": [
+      "liquido.rotaLock(funcao(requisicao, resposta) {",
+      "  ${1:// Código aqui}",
+      "  resposta.enviar(${2:retorno}).status(200)",
+      "})"
+    ],
+    "description": "Declaração de rota LOCK"
+  },
+
+  "Declaração de rota Unlock": {
+    "prefix": "rotaUnlock",
+    "body": [
+      "liquido.rotaUnlock(funcao(requisicao, resposta) {",
+      "  ${1:// Código aqui}",
+      "  resposta.enviar(${2:retorno}).status(200)",
+      "})"
+    ],
+    "description": "Declaração de rota UNLOCK"
+  },
+
+  "Declaração de rota Purge": {
+    "prefix": "rotaPurge",
+    "body": [
+      "liquido.rotaPurge(funcao(requisicao, resposta) {",
+      "  ${1:// Código aqui}",
+      "  resposta.enviar(${2:retorno}).status(200)",
+      "})"
+    ],
+    "description": "Declaração de rota PURGE"
+  },
+
+  "Declaração de rota Propfind": {
+    "prefix": "rotaPropfind",
+    "body": [
+      "liquido.rotaPropfind(funcao(requisicao, resposta) {",
+      "  ${1:// Código aqui}",
+      "  resposta.enviar(${2:retorno}).status(200)",
+      "})"
+    ],
+    "description": "Declaração de rota PROPFIND"
+  }
+}

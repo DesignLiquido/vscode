@@ -28,11 +28,36 @@
         },
         "comments": {
             "patterns": [
-                {
-                    "match": "(//).*",
-                    "name": "comment.line.double-slash"
-                }
-            ]
+				{
+					"begin": "/\\*\\*(?!/)",
+					"captures": {
+						"0": {
+							"name": "punctuation.definition.comment.portugolstudio"
+						}
+					},
+					"end": "\\*/",
+					"name": "comment.block.documentation.portugolstudio"
+				},
+				{
+					"begin": "/\\*",
+					"captures": {
+						"0": {
+							"name": "punctuation.definition.comment.portugolstudio"
+						}
+					},
+					"end": "\\*/",
+					"name": "comment.block.portugolstudio"
+				},
+				{
+					"captures": {
+						"1": {
+							"name": "punctuation.definition.comment.portugolstudio"
+						}
+					},
+					"match": "(//).*$\\n?",
+					"name": "comment.line.double-slash.portugolstudio"
+				}
+			]
         },
         "constants": {
             "patterns": [

@@ -5,28 +5,45 @@ import { DebugProtocol } from '@vscode/debugprotocol';
 
 import { cyrb53, PontoParada } from '@designliquido/delegua';
 
-import { ElementoPilhaVsCode } from '../elemento-pilha';
-import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/fontes/interfaces';
-import { LexadorPortugolStudio } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-portugol-studio';
-import { LexadorVisuAlg } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-visualg';
-import { AvaliadorSintaticoPortugolStudio } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-portugol-studio';
-import { LexadorPitugues } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-pitugues';
-import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-pitugues';
-import { LexadorMapler } from '@designliquido/delegua/fontes/lexador/dialetos/lexador-mapler';
-import { AvaliadorSintaticoMapler } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos/avaliador-sintatico-mapler';
-import { Importador } from '@designliquido/delegua-node/fontes/importador';
-import { ImportadorInterface } from '@designliquido/delegua-node/fontes/interfaces';
-import { InterpretadorComDepuracaoImportacao } from '@designliquido/delegua-node/fontes/interpretador/interpretador-com-depuracao-importacao';
-import { InterpretadorVisuAlgComDepuracaoImportacao } from '@designliquido/delegua-node/fontes/interpretador/dialetos/interpretador-visualg-com-depuracao-importacao';
+import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
 
-import { palavrasReservadas } from '@designliquido/delegua/fontes/lexador/palavras-reservadas';
-import { InterpretadorPortugolStudioComDepuracao } from '@designliquido/delegua/fontes/interpretador/dialetos';
-import { InterpretadorPotigolComDepuracao } from '@designliquido/delegua/fontes/interpretador/dialetos/potigol/interpretador-potigol-com-depuracao';
-import { LexadorBirl, LexadorPotigol } from '@designliquido/delegua/fontes/lexador/dialetos';
-import { AvaliadorSintaticoBirl, AvaliadorSintaticoPotigol, AvaliadorSintaticoVisuAlg } from '@designliquido/delegua/fontes/avaliador-sintatico/dialetos';
-import { Declaracao } from '@designliquido/delegua/fontes/declaracoes';
-import { Lexador } from '@designliquido/delegua/fontes/lexador';
-import { AvaliadorSintatico } from '@designliquido/delegua/fontes/avaliador-sintatico';
+import { Importador, RetornoImportador } from '@designliquido/delegua-node/importador';
+import { InterpretadorComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/interpretador-com-depuracao-importacao';
+import { ImportadorInterface } from '@designliquido/delegua-node/interfaces';
+import { AvaliadorSintaticoComImportacao } from '@designliquido/delegua-node/avaliador-sintatico';
+
+import { LexadorPitugues } from '@designliquido/delegua/lexador/dialetos/lexador-pitugues';
+import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-pitugues';
+
+import { palavrasReservadas } from '@designliquido/delegua/lexador/palavras-reservadas';
+
+import { Declaracao } from '@designliquido/delegua/declaracoes';
+import { Lexador } from '@designliquido/delegua/lexador';
+
+import { LexadorBirl } from '@designliquido/birl/lexador';
+import { AvaliadorSintaticoBirl } from '@designliquido/birl/avaliador-sintatico';
+import { InterpretadorBirlComDepuracao } from '@designliquido/birl/interpretador';
+
+import { LexadorMapler } from '@designliquido/mapler/lexador';
+import { AvaliadorSintaticoMapler } from '@designliquido/mapler/avaliador-sintatico';
+import { ResolvedorMapler } from '@designliquido/mapler/resolvedor';
+import { InterpretadorMaplerComDepuracao } from '@designliquido/mapler/interpretador';
+
+import { LexadorPortugolStudio } from '@designliquido/portugol-studio/lexador';
+import { AvaliadorSintaticoPortugolStudio } from '@designliquido/portugol-studio/avaliador-sintatico';
+import { InterpretadorPortugolStudioComDepuracao } from '@designliquido/portugol-studio/interpretador';
+
+import { LexadorPotigol } from '@designliquido/potigol/lexador';
+import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sintatico';
+import { InterpretadorPotigolComDepuracao } from '@designliquido/potigol/interpretador';
+
+import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg } from '@designliquido/visualg';
+import { InterpretadorVisuAlgComDepuracao } from '@designliquido/visualg/interpretador';
+
+import { ElementoPilhaVsCode } from '../elemento-pilha';
+import { ProvedorVisaoEntradaSaida } from '../../visoes';
+import { ImportadorExtensao } from '../../importador';
+import { formatarDiagnosticosAvaliacaoSintatica } from 'fontes/avaliacao-sintatica';
 
 /**
  * Em teoria não precisaria uma classe de tempo de execução local, mas,
@@ -40,15 +57,22 @@ import { AvaliadorSintatico } from '@designliquido/delegua/fontes/avaliador-sint
 export class DeleguaTempoExecucaoLocal extends EventEmitter {
     private lexador: LexadorInterface<SimboloInterface>;
     private avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>;
-    private importador: ImportadorInterface<SimboloInterface, Declaracao>;
+    private importador: ImportadorInterface<SimboloInterface>;
+    private importadorExtensao: ImportadorExtensao;
     private interpretador: InterpretadorComDepuracaoInterface;
+    private resolvedor: { resolver(declaracoes: Declaracao[]): Promise<Declaracao[]> };
 
+    private _documento: vscode.TextDocument;
+    private _dialetoSelecionado: 'delegua' | 'pitugues' | 'birl' | 'mapler' | 'portugol-studio' | 'potigol' | 'visualg';
     private _arquivoInicial: string = '';
     private _conteudoArquivo: string[];
     private _hashArquivoInicial = -1;
     private _pontosParada: PontoParada[] = [];
     
-    constructor() {
+    constructor(
+        private readonly provedorVisaoEntradaSaida: ProvedorVisaoEntradaSaida,
+        private readonly diagnosticos: vscode.DiagnosticCollection
+    ) {
         super();
     }
 
@@ -58,97 +82,114 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
      * @param argumentos Vetor de argumentos adicionais.
      */
     private enviarEvento(evento: string, ...argumentos: any[]) {
+        // `setImmediate` libera o _event loop_, permitindo ao VSCode atualizar
+        // todos os componentes da tela.
         setImmediate((_) => {
             this.emit(evento, ...argumentos);
         });
     }
 
+    private limparTela() {
+        this.enviarEvento('limparTela');
+    }
+
     private selecionarDialetoPorExtensao(extensao: string) {
         switch (extensao.toLowerCase()) {
             case "alg":
+                this._dialetoSelecionado = 'visualg';
                 this.lexador = new LexadorVisuAlg();
                 this.avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
-                this.importador = new Importador(
-                    this.lexador, 
-                    this.avaliadorSintatico, 
-                    {},
-                    {},
-                    true);
-                this.interpretador = new InterpretadorVisuAlgComDepuracaoImportacao(this.importador, process.cwd(), 
-                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
+                this.importadorExtensao = new ImportadorExtensao(this.lexador);
+
+                this.interpretador = new InterpretadorVisuAlgComDepuracao(
+                    process.cwd(), 
+                    this.escreverEmSaida.bind(this), 
+                    this.escreverEmSaidaMesmaLinha.bind(this),
+                    this.limparTela.bind(this)
+                );
                 break;
             case "birl":
+                this._dialetoSelecionado = 'birl';
                 this.lexador = new LexadorBirl();
                 this.avaliadorSintatico = new AvaliadorSintaticoBirl();
-                this.importador = new Importador(
-                    this.lexador, 
-                    this.avaliadorSintatico, 
-                    {},
-                    {},
-                    true);
-                this.interpretador = new InterpretadorComDepuracaoImportacao(this.importador, process.cwd(), 
-                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
+                this.importadorExtensao = new ImportadorExtensao(this.lexador);
+
+                this.interpretador = new InterpretadorBirlComDepuracao(
+                    process.cwd(), 
+                    this.escreverEmSaida.bind(this), 
+                    this.escreverEmSaidaMesmaLinha.bind(this)
+                );
                 break;
+            case "pitu":
             case "pitugues":
+                this._dialetoSelecionado = 'pitugues';
                 this.lexador = new LexadorPitugues();
                 this.avaliadorSintatico = new AvaliadorSintaticoPitugues();
                 this.importador = new Importador(
-                    this.lexador, 
-                    this.avaliadorSintatico, 
+                    this.lexador,
                     {},
                     {},
                     true);
-                this.interpretador = new InterpretadorComDepuracaoImportacao(this.importador, process.cwd(), 
-                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
+                this.interpretador = new InterpretadorComDepuracaoImportacao(
+                    this.importador as any, 
+                    process.cwd(), 
+                    this.escreverEmSaida.bind(this), 
+                    this.escreverEmSaidaMesmaLinha.bind(this)
+                );
                 break;
             case "mapler":
+                this._dialetoSelecionado = 'mapler';
                 this.lexador = new LexadorMapler();
                 this.avaliadorSintatico = new AvaliadorSintaticoMapler();
-                this.importador = new Importador(
-                    this.lexador, 
-                    this.avaliadorSintatico, 
-                    {},
-                    {},
-                    true);
-                this.interpretador = new InterpretadorComDepuracaoImportacao(this.importador, process.cwd(), 
-                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
+                this.importadorExtensao = new ImportadorExtensao(this.lexador);
+                this.resolvedor = new ResolvedorMapler();
+
+                this.interpretador = new InterpretadorMaplerComDepuracao(
+                    process.cwd(), 
+                    this.escreverEmSaida.bind(this)
+                );
                 break;
             case "por":
+                this._dialetoSelecionado = 'portugol-studio';
                 this.lexador = new LexadorPortugolStudio();
                 this.avaliadorSintatico = new AvaliadorSintaticoPortugolStudio();
-                this.importador = new Importador(
-                    this.lexador, 
-                    this.avaliadorSintatico, 
-                    {},
-                    {},
-                    true);
-                this.interpretador = new InterpretadorPortugolStudioComDepuracao(process.cwd(), 
-                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
+                this.importadorExtensao = new ImportadorExtensao(this.lexador);
+
+                this.interpretador = new InterpretadorPortugolStudioComDepuracao(
+                    process.cwd(), 
+                    this.escreverEmSaida.bind(this), 
+                    this.escreverEmSaidaMesmaLinha.bind(this), 
+                    this.limparTela.bind(this)
+                );
                 break;
             case "poti":
             case "potigol":
+                this._dialetoSelecionado = 'potigol';
                 this.lexador = new LexadorPotigol();
                 this.avaliadorSintatico = new AvaliadorSintaticoPotigol();
-                this.importador = new Importador(
-                    this.lexador, 
-                    this.avaliadorSintatico, 
-                    {},
-                    {},
-                    true);
-                this.interpretador = new InterpretadorPotigolComDepuracao(process.cwd(), 
-                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
+                this.importadorExtensao = new ImportadorExtensao(this.lexador);
+                
+                this.interpretador = new InterpretadorPotigolComDepuracao(
+                    process.cwd(), 
+                    this.escreverEmSaida.bind(this), 
+                    this.escreverEmSaidaMesmaLinha.bind(this)
+                );
                 break;
             default:
+                this._dialetoSelecionado = 'delegua';
                 this.lexador = new Lexador();
-                this.avaliadorSintatico = new AvaliadorSintatico();
                 this.importador = new Importador(
                     this.lexador, 
-                    this.avaliadorSintatico, 
                     {},
                     {},
                     true);
-                this.interpretador = new InterpretadorComDepuracaoImportacao(this.importador, process.cwd(), 
-                    this.escreverEmSaida.bind(this), this.escreverEmSaidaMesmaLinha.bind(this));
+                this.avaliadorSintatico = new AvaliadorSintaticoComImportacao(this.importador);
+                this.interpretador = new InterpretadorComDepuracaoImportacao(
+                    this.importador as any, 
+                    process.cwd(), 
+                    this.escreverEmSaida.bind(this), 
+                    this.escreverEmSaidaMesmaLinha.bind(this)
+                );
                 break;
         }
     }
@@ -158,31 +199,96 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
      * @param arquivoInicial 
      * @param pararNaEntrada 
      */
-    iniciar(arquivoInicial: string, pararNaEntrada: boolean) {
+    async iniciar(
+        documento: vscode.TextDocument | undefined,
+        arquivoInicial: string, 
+        pararNaEntrada: boolean
+    ) {
+        this.diagnosticos.clear();
+        if (!documento) {
+            throw new Error('Por favor, abra um arquivo antes de iniciar uma execução.');
+        }
+
+        this.provedorVisaoEntradaSaida.ativarVisao();
+        this._documento = documento;
         const partesNomeArquivo = arquivoInicial.split('.');
+        const partesDiretorio = documento.uri.path.split('/').slice(0, -1);
+        let diretorioBase = partesDiretorio.reduce((anterior, parte) => anterior + `/${parte}`);
+        if (diretorioBase.length > 1) {
+            diretorioBase = diretorioBase.slice(1);
+        }
         this.selecionarDialetoPorExtensao(partesNomeArquivo.pop() || '.delegua');
 
         // Inicialização do interpretador pós escolha de dialeto.
+        this.interpretador.diretorioBase = diretorioBase;
         this.interpretador.pontosParada = this._pontosParada;
         this.interpretador.finalizacaoDaExecucao = this.finalizacao.bind(this);
         this.interpretador.avisoPontoParadaAtivado = this.avisoPontoParadaAtivado.bind(this);
         
         this._arquivoInicial = arquivoInicial;
-        const retornoImportador = this.importador.importar(arquivoInicial, true);
-        this._hashArquivoInicial = retornoImportador.hashArquivo;
-        this._conteudoArquivo = this.importador.conteudoArquivosAbertos[this._hashArquivoInicial];
+        let retornoImportador: RetornoImportador<SimboloInterface>;
+
+        if (['delegua', 'pitugues'].includes(this._dialetoSelecionado)) {
+            retornoImportador = this.importador.importar(arquivoInicial, -1);
+            this._hashArquivoInicial = retornoImportador.hashArquivo;
+            this._conteudoArquivo = this.importador.conteudoArquivosAbertos[this._hashArquivoInicial];
+        } else {
+            retornoImportador = this.importadorExtensao.importarViaFuncaoConteudoDocumento(
+                this._documento.getText, 
+                this._documento.fileName
+            );
+            this._hashArquivoInicial = retornoImportador.hashArquivo;
+            this._conteudoArquivo = retornoImportador.conteudoArquivo;
+        }
+
+        const retornoAvaliadorSintatico = this.avaliadorSintatico.analisar(retornoImportador.retornoLexador, retornoImportador.hashArquivo);
+        if (retornoAvaliadorSintatico.erros.length > 0) {
+            const documentoAtivo = vscode.window.activeTextEditor?.document as vscode.TextDocument;
+            this.diagnosticos.set(
+                documentoAtivo?.uri as vscode.Uri, 
+                formatarDiagnosticosAvaliacaoSintatica(retornoAvaliadorSintatico.erros, documentoAtivo)
+            );
+
+            throw new Error("Há erros de avaliação sintática no código. Favor verificar o painel de problemas para uma descrição detalhada dos erros.");
+        }
+
+        let declaracoes = retornoAvaliadorSintatico.declaracoes;
+        if (this.resolvedor) {
+            declaracoes = await this.resolvedor.resolver(declaracoes);
+        }
 
         this.interpretador.prepararParaDepuracao(
-            retornoImportador.retornoAvaliadorSintatico.declaracoes,
+            declaracoes
         );
 
+        this.provedorVisaoEntradaSaida.limparTerminal();
         this.interpretador.interfaceEntradaSaida = {
-            question: (mensagem: string, callback: Function) => {
-                vscode.window.showInputBox({
-                    prompt: mensagem,
-                    title: mensagem
-                }).then((resposta: any) => {
-                    callback(resposta);
+            // TODO: Isso só está aqui ainda para servir como referência para
+            // funcionalidades futuras da extensão.
+            /* question: async (mensagem: string, callback: Function) => {
+                return new Promise<any>((resolve, reject) => {
+                    vscode.window.showInputBox({
+                        prompt: mensagem,
+                        title: mensagem
+                    }).then((resposta: any) => {
+                        callback(resposta);
+                        resolve(0);
+                    });
+                });
+            } */
+            question: async (mensagem: string, callback: Function) => {
+                return new Promise<any>((resolve) => {
+                    // `setImmediate` libera o _event loop_, permitindo ao VSCode atualizar
+                    // todos os componentes da tela.
+                    setImmediate((_) => {
+                        this.provedorVisaoEntradaSaida.escreverEmSaidaMesmaLinha(mensagem);
+                        this.provedorVisaoEntradaSaida.promessaLeitura.wait().then(_ => {
+                            const copiaResultadoLeia = this.provedorVisaoEntradaSaida.copiaEntrada;
+                            this.provedorVisaoEntradaSaida.copiaEntrada = "";
+                            callback(copiaResultadoLeia);
+                            resolve(0);
+                        });
+                    });
                 });
             }
         };

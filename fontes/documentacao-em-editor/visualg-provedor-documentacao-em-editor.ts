@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 
 import { 
+    estruturasDados,
     primitivasCaracteresVisuAlg, 
     primitivasEntradaSaidaVisuAlg, 
     primitivasNumeroVisuAlg 
@@ -19,6 +20,19 @@ export class VisuAlgProvedorDocumentacaoEmEditor
     ): vscode.ProviderResult<vscode.Hover> {
         const intervalo = document.getWordRangeAtPosition(position);
         const palavra = document.getText(intervalo);
+
+        const estruturaDados = estruturasDados.find(
+            (estrutura) => estrutura.nome === palavra
+        );
+
+        if (estruturaDados) {
+            const documentacaoElemento = new vscode.MarkdownString(estruturaDados.documentacao);
+            if (estruturaDados.exemploCodigo) {
+                documentacaoElemento.appendCodeblock(estruturaDados.exemploCodigo);
+            }
+            
+            return new vscode.Hover(documentacaoElemento);
+        }
 
         const primitivaCaracter = primitivasCaracteresVisuAlg.find(
             (primitiva) => primitiva.nome === palavra

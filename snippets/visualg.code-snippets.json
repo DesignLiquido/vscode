@@ -26,7 +26,7 @@
 	"Escreve a frase na tela": {
 		"prefix": "escreva",
 		"body": [
-			"escreva(\"$1\")",
+			"escreva(\"$1\")"
 		],
 		"description": "Escreve a frase na tela"
 	},
@@ -34,7 +34,7 @@
 	"Escreve a frase na tela e pula uma linha": {
 		"prefix": "escreval",
 		"body": [
-			"escreval(\"$1\")",
+			"escreval(\"$1\")"
 		],
 		"description": "Escreve a frase na tela e pula uma linha"
 	},
@@ -79,6 +79,6 @@
 			"ate verdadeiro"
 		],
 		"description": "Constrói a estrutura Repita Até"
-	},
+	}
 
 }

@@ -1,0 +1,22 @@
+classe Resposta {
+    visao: texto
+    valores: dicionário
+
+    lmht(*visaoEValores) {
+        se visaoEValores.tamanho() > 1 {
+            isto.visao = visaoEValores[0]
+            isto.valores = visaoEValores[1]
+        } senão {
+            isto.valores = visaoEValores[0]
+        }
+
+        retorna isto
+    }
+}
+
+var resp = Resposta()
+resp.lmht("teste", { "valor1": 1})
+escreva(resp.visao)
+escreva(resp.valores)
+resp.lmht({ "valor2": 2 })
+escreva(resp.valores)

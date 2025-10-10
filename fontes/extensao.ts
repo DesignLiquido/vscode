@@ -10,21 +10,30 @@ import {
 import {
     DeleguaProvedorDocumentacaoEmEditor,
     FolesProvedorDocumentacaoEmEditor,
+    LinConEsProvedorDocumentacaoEmEditor
 } from './documentacao-em-editor';
 import {
     DeleguaProvedorCompletude,
     FolesProvedorCompletude,
     LiquidoProvedorCompletude,
 } from './completude';
-import { DeleguaProvedorFormatacao } from './formatadores';
+import { DeleguaProvedorFormatacao, VisualgProvedorFormatacao } from './formatadores';
+
+import { LmhtProvedorCompletude } from './completude/lmht-provedor-completude';
 import { VisuAlgProvedorCompletude } from './completude/visualg-provedor-completude';
 import { VisuAlgProvedorDocumentacaoEmEditor } from './documentacao-em-editor/visualg-provedor-documentacao-em-editor';
 import { traduzir } from './traducao';
 import { analiseSemantica } from './analise-semantica';
 import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
-import { LmhtProvedorCompletude } from './completude/lmht-provedor-completude';
+
 import { LmhtProvedorDocumentacaoEmEditor } from './documentacao-em-editor/lmht-provedor-documentacao-em-editor';
 import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
+
+import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio-provedor-formatacao';
+import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao';
+
+import { ProvedorVisaoEntradaSaida } from './visoes';
+import { MaplerProvedorFormatacao } from './formatadores/mapler-provedor-formatacao';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -34,6 +43,15 @@ import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
 const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
 let changeTimeout;
 
+/**
+ * O ponto de entrada da extensão. Aqui registramos tudo:
+ * - Ponto de entrada de todas as análises semânticas;
+ * - Comandos de tradução;
+ * - Provedores de completude (também chamado de _IntelliSense_);
+ * - Provedores de documentação em editor (vulgo, "documentação quando coloca-se o ponteiro do mouse em cima do símbolo");
+ * - Depuradores.
+ * @param context O contexto da extensão.
+ */
 export function activate(context: vscode.ExtensionContext) {
     const diagnosticosDelegua = vscode.languages.createDiagnosticCollection("delegua");
 	context.subscriptions.push(diagnosticosDelegua);
@@ -45,7 +63,10 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
 		vscode.workspace.onDidChangeTextDocument((evento) => {
             switch (evento.document.languageId) {
+                case 'birl':
                 case 'delegua':
+                case 'mapler':
+                case 'visualg':
                     if (changeTimeout !== null) {
                         clearTimeout(changeTimeout);
                     }
@@ -68,76 +89,104 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.workspace.onDidCloseTextDocument(doc => diagnosticosDelegua.delete(doc.uri))
 	);
 
-    // TODO: Remover bug da traducão reversa.
-    /* context.subscriptions.push(
-        vscode.commands.registerCommand(
-            'extension.designliquido.traduzir.css.para.foles',
-            () => traduzir('css', 'foles')
-        )
-    ); */
-
     // Traduções
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
+            'extension.designliquido.traduzir.css.para.foles',
+            async () => await traduzir('css', 'foles')
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
             'extension.designliquido.traduzir.delegua.para.assemblyscript',
-            () => traduzir('delegua', 'assemblyscript')
+            async () => await traduzir('delegua', 'assemblyscript')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.delegua.para.javascript',
-            () => traduzir('delegua', 'js')
+            async () => await traduzir('delegua', 'js')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.delegua.para.python',
-            () => traduzir('delegua', 'py')
+            async () => await traduzir('delegua', 'py')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.foles.para.css',
-            () => traduzir('foles', 'css')
+            async () => await traduzir('foles', 'css')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.html.para.lmht',
-            () => traduzir('html', 'lmht')
+            async () => await traduzir('html', 'lmht')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.javascript.para.delegua',
-            () => traduzir('js', 'delegua')
+            async () => await traduzir('js', 'delegua')
         )
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.lmht.para.html',
-            () => traduzir('lmht', 'html')
+            async () => await traduzir('lmht', 'html')
         )
     );
     
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.visualg.para.delegua',
-            () => traduzir('alg', 'delegua')
+            async () => await traduzir('alg', 'delegua')
         )
     );    
 
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
             'delegua',
-            new DeleguaProvedorFormatacao()
+            new DeleguaProvedorFormatacao(diagnosticosDelegua)
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'mapler',
+            new MaplerProvedorFormatacao()
+        )
+    );
+
+    // TODO: Testar antes de habilitar.
+    context.subscriptions.push(
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'portugolstudio',
+            new PortugolStudioProvedorFormatacao()
+        )
+    );
+    
+    context.subscriptions.push(
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'potigol',
+            new PotigolProvedorFormatacao()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'visualg',
+            new VisualgProvedorFormatacao()
         )
     );
 
@@ -198,6 +247,12 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(
+            'lincones',
+            new LinConEsProvedorDocumentacaoEmEditor()
+        )
+    );
+    context.subscriptions.push(
+        vscode.languages.registerHoverProvider(
             'lmht',
             new LmhtProvedorDocumentacaoEmEditor()
         )
@@ -215,6 +270,20 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerSignatureHelpProvider(
             'delegua',
             new DeleguaProvedorAssinaturaMetodos()
+        )
+    );
+
+    // Visão de Entrada e Saída
+    const provedorEntradaSaida = new ProvedorVisaoEntradaSaida(context.extensionUri);
+    context.subscriptions.push(
+		vscode.window.registerWebviewViewProvider(
+            ProvedorVisaoEntradaSaida.viewType, 
+            provedorEntradaSaida, 
+            {
+                webviewOptions: {
+                    retainContextWhenHidden: true
+                }
+            }
         )
     );
 
@@ -246,10 +315,10 @@ export function activate(context: vscode.ExtensionContext) {
             break;
 
         case 'inline':
-            // run the debug adapter inside the extension and directly talk to it
+            // Roda o adaptador dentro da extensão e fala diretamente com ele.
             configurarDepuracao(
                 context,
-                new FabricaAdaptadorDepuracaoEmbutido()
+                new FabricaAdaptadorDepuracaoEmbutido(provedorEntradaSaida, diagnosticosDelegua)
             );
             break;
     }

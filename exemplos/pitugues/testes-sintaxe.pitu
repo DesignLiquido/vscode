@@ -1,0 +1,7 @@
+imprima("abre")
+
+var tex = "Eu sou um abacaxi"
+var div = tex.dividir(" ")
+escreva(div)
+
+imprima("fecha")

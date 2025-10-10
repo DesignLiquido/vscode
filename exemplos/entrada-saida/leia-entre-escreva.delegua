@@ -1,0 +1,7 @@
+escreva("ola")
+var n1 = leia("digite n1")
+var n2 = leia("digite n2")
+var n3 = leia("digite n3")
+escreva(n1)
+escreva(n2)
+escreva(n3)

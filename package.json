@@ -1,14 +1,14 @@
 {
     "name": "designliquido-vscode",
     "displayName": "Design Líquido - Linguagens em Português",
-    "description": "Extensão de sintaxe para o Visual Studio Code nas linguagens da Design Líquido: Delégua, LMHT, FolEs, LinConEs e dialetos de Portugol.",
+    "description": "Extensão de sintaxe para o Visual Studio Code nas linguagens da Design Líquido: Delégua, LMHT, FolEs, LinConEs, dialetos de Portugol (VisuAlg, Portugol Studio, Mapler) e outras linguagens de programação em português.",
     "icon": "recursos/icone.png",
     "publisher": "designliquido",
     "repository": {
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.9.15",
+    "version": "0.15.6",
     "engines": {
         "vscode": "^1.68.0"
     },
@@ -23,10 +23,18 @@
         "lincones",
         "portugol",
         "potigol",
-        "tradutor"
+        "tradutor",
+        "portuguese",
+        "português"
     ],
     "categories": [
-        "Programming Languages"
+        "Debuggers",
+        "Education",
+        "Formatters",
+        "Language Packs",
+        "Linters",
+        "Programming Languages",
+        "Snippets"
     ],
     "author": "Leonel Sanches da Silva",
     "contributors": [
@@ -46,13 +54,13 @@
         "compilar": "tsc -p ./",
         "lint": "eslint depuracao --ext ts",
         "typecheck": "tsc -p tsconfig.json --noEmit",
-        "esbuild-base": "esbuild ./fontes/extensao.ts --bundle --tsconfig=./tsconfig.json --external:vscode --format=cjs --platform=node --outfile=dist/extensao.js",
-        "watch": "npm run -S esbuild-base -- --sourcemap --sources-content=false --watch",
+        "esbuild-base": "esbuild ./fontes/extensao.ts --bundle --sources-content=true --tsconfig=./tsconfig.json --external:vscode --format=cjs --platform=node --outfile=dist/extensao.js",
+        "watch": "npm run -S esbuild-base -- --sourcemap --watch",
         "esbuild-web": "esbuild ./fontes/extensao-web.ts --bundle --tsconfig=./tsconfig.json --external:vscode --format=cjs --platform=browser --outfile=dist/extensao-web.js",
-        "watch-web": "npm run -S esbuild-web -- --sourcemap --sources-content=false --watch",
-        "montar": "npm run -S esbuild-base -- --sourcemap --sources-content=false && npm run -S esbuild-web -- --sourcemap --sources-content=false",
-        "empacotar": "yarn esbuild-base && yarn copy-files-from-to && vsce package --yarn",
-        "publicar": "vsce publish",
+        "watch-web": "npm run -S esbuild-web -- --sourcemap --sources-content=true --watch",
+        "montar": "npm run -S esbuild-base -- --sourcemap --sources-content=true && npm run -S esbuild-web -- --sourcemap",
+        "empacotar": "yarn esbuild-base && yarn copy-files-from-to && yarn vsce package --yarn",
+        "publicar": "yarn vsce publish",
         "publicar-pre-lancamento": "vsce publish --pre-release",
         "vscode:pre-publicar": "rimraf dist && npm run -S esbuild-base -- --minify && npm run -S esbuild-web -- --minify",
         "testar": "npm run typecheck",
@@ -75,6 +83,10 @@
     },
     "contributes": {
         "commands": [
+            {
+                "command": "extension.designliquido.traduzir.css.para.foles",
+                "title": "Tradução: Traduzir fonte CSS para FolEs"
+            },
             {
                 "command": "extension.designliquido.traduzir.delegua.para.assemblyscript",
                 "title": "Tradução: Traduzir fonte Delégua para AssemblyScript"
@@ -319,6 +331,7 @@
                     "pitugues"
                 ],
                 "extensions": [
+                    ".pitu",
                     ".pitugues"
                 ],
                 "configuration": "./configuracoes/configuracao-pitugues.json",
@@ -397,6 +410,11 @@
                 "path": "./gramaticas/foles.tmLanguage.json"
             },
             {
+                "language": "lincones",
+                "scopeName": "source.lincones",
+                "path": "./gramaticas/lincones.tmLanguage.json"
+            },
+            {
                 "language": "lmht",
                 "scopeName": "source.lmht",
                 "path": "./gramaticas/lmht.tmLanguage.json"
@@ -432,11 +450,19 @@
         "snippets": [
             {
                 "language": "delegua",
-                "path": "./snippets/delegua.code-snippets"
+                "path": "./snippets/delegua.code-snippets.json"
+            },
+            {
+                "language": "lincones",
+                "path": "./snippets/lincones.code-snippets.json"
+            },
+            {
+                "language": "delegua",
+                "path": "./snippets/liquido.code-snippets.json"
             },
             {
                 "language": "visualg",
-                "path": "./snippets/visualg.code-snippets"
+                "path": "./snippets/visualg.code-snippets.json"
             }
         ],
         "walkthroughs": [
@@ -469,30 +495,58 @@
                     }
                 ]
             }
-        ]
+        ],
+        "viewsContainers": {
+            "panel": [
+                {
+                    "id": "entradaESaida",
+                    "title": "Entrada e Saída",
+                    "icon": "recursos/delegua-logo.svg"
+                }
+            ]
+        },
+        "views": {
+            "entradaESaida": [
+                {
+                    "type": "webview",
+                    "id": "extension.designliquido.entradaESaida",
+                    "name": "Entrada e Saída",
+                    "icon": "recursos/delegua-logo.svg"
+                }
+            ]
+        }
     },
     "devDependencies": {
-        "@types/node": "^17.0.18",
+        "@types/node": "^22.15.21",
         "@types/vscode": "^1.68.0",
         "@typescript-eslint/eslint-plugin": "^5.28.0",
         "@typescript-eslint/parser": "^5.28.0",
-        "@vscode/debugadapter": "^1.53.0",
-        "@vscode/debugadapter-testsupport": "^1.55.1",
-        "@vscode/debugprotocol": "^1.53.0",
+        "@vscode/debugadapter": "^1.68.0",
+        "@vscode/debugadapter-testsupport": "^1.68.0",
+        "@vscode/debugprotocol": "^1.68.0",
+        "@vscode/vsce": "^3.6.0",
         "await-notify": "^1.0.1",
         "base64-js": "^1.5.1",
         "copy-files-from-to": "^3.9.0",
-        "esbuild": "^0.14.45",
+        "esbuild": "^0.25.8",
         "eslint": "^8.18.0",
-        "ts-loader": "^9.4.2",
-        "typescript": "^4.7.4",
-        "webpack": "^5.75.0",
-        "webpack-cli": "^5.0.1"
+        "ts-loader": "^9.5.2",
+        "typescript": "^5.8.3",
+        "webpack": "^5.99.9",
+        "webpack-cli": "^6.0.1"
     },
     "dependencies": {
-        "@designliquido/delegua-node": "^0.27.0",
-        "@designliquido/foles": "^0.5.1",
-        "@designliquido/lmht-js": "^0.4.3",
+        "@designliquido/delegua-estatistica": "^0.1.0",
+        "@designliquido/delegua-fisica": "^0.1.0",
+        "@designliquido/delegua-http": "^0.1.2",
+        "@designliquido/delegua-json": "^0.2.1",
+        "@designliquido/delegua-matematica": "^0.3.0",
+        "@designliquido/delegua-node": "^1.7.8",
+        "@designliquido/delegua-tempo": "^1.0.1",
+        "@designliquido/foles": "^0.10.0",
+        "@designliquido/lmht-js": "^0.5.0",
+        "@xterm/addon-fit": "^0.10.0",
+        "@xterm/xterm": "^5.5.0",
         "lodash": "^4.17.21",
         "real-executable-path": "^3.0.0"
     },
