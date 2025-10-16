@@ -465,6 +465,39 @@
                 "path": "./snippets/visualg.code-snippets.json"
             }
         ],
+        "walkthroughs": [
+            {
+                "id": "pitugues",
+                "title": "Iniciando programação em Pituguês",
+                "description": "Um tutorial sobre como programar em português com a linguagem Pituguês",
+                "steps": [
+                    {
+                        "id": "passo1",
+                        "title": "Primeiro passo",
+                        "description": "Abrir projeto existente ou criar novo projeto.\n\n[Selecionar pasta](command:vscode.openFolder)",
+                        "media": {
+                            "markdown": "media/walkthrough.md"
+                        }
+                    },
+                    {
+                        "id": "passo2",
+                        "title": "Segundo passo",
+                        "description": "Dentro do projeto, crie um arquivo com a extensão '.pitugues' ou '.pitu', escreva seu código em Pituguês e salve o arquivo: \n\n [Clique aqui para criar um arquivo .pitugues](command:extension.designliquido.criarArquivoPitugues)",
+                        "media": {
+                            "markdown": "media/walkthrough.md"
+                        }
+                    },
+                    {
+                        "id": "passo3",
+                        "title": "Terceiro passo",
+                        "description": "Vá até a aba de depuração e clique em 'Run and Debug': [Abrir Run and Debug](command:workbench.view.debug). No terminal, abra a aba 'Entrada e Saída': [Abrir Terminal](command:workbench.action.terminal.toggleTerminal)",
+                        "media": {
+                            "markdown": "media/walkthrough.md"
+                        }
+                    }
+                ]
+            }
+        ],
         "viewsContainers": {
             "panel": [
                 {
@@ -497,7 +530,7 @@
         "await-notify": "^1.0.1",
         "base64-js": "^1.5.1",
         "copy-files-from-to": "^3.9.0",
-        "esbuild": "^0.25.8",
+        "esbuild": "^0.25.11",
         "eslint": "^8.18.0",
         "ts-loader": "^9.5.2",
         "typescript": "^5.8.3",

@@ -1,4 +1,7 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
+
 
 import { configurarDepuracao } from './depuracao/configuracao-depuracao';
 import { FabricaAdaptadorDepuracaoEmbutido } from './depuracao/fabricas';
@@ -286,6 +289,36 @@ export function activate(context: vscode.ExtensionContext) {
             }
         )
     );
+
+    const criarArquivoPitugues = vscode.commands.registerCommand(
+        'extension.designliquido.criarArquivoPitugues',
+        async () => {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+            if (!workspaceFolders) {
+                vscode.window.showErrorMessage('Nenhuma pasta aberta no VS Code.');
+                return;
+            }
+
+            const rootPath = workspaceFolders[0].uri.fsPath;
+            let baseName = 'novo-arquivo';
+            let extension = '.pitugues';
+            let filePath = path.join(rootPath, baseName + extension);
+            let counter = 1;
+
+            while (fs.existsSync(filePath)) {
+                filePath = path.join(rootPath, `${baseName}-${counter}${extension}`);
+                counter++;
+            }
+
+            fs.writeFileSync(filePath, '');
+            vscode.window.showInformationMessage(`Arquivo criado: ${path.basename(filePath)}`);
+
+            const doc = await vscode.workspace.openTextDocument(filePath);
+            await vscode.window.showTextDocument(doc);
+        }
+    );
+    context.subscriptions.push(criarArquivoPitugues);
+
 
     // debug adapters can be run in different ways by using a vscode.DebugAdapterDescriptorFactory:
     switch (runMode) {
