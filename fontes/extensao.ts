@@ -319,6 +319,14 @@ export function activate(context: vscode.ExtensionContext) {
     );
     context.subscriptions.push(criarArquivoPitugues);
 
+    const abrirPainelEntradaESaida = vscode.commands.registerCommand(
+        'extension.designliquido.abrirPainelEntradaESaida',
+        () => {
+            provedorEntradaSaida.ativarVisao();
+        }
+    );
+    context.subscriptions.push(abrirPainelEntradaESaida);
+
 
     // debug adapters can be run in different ways by using a vscode.DebugAdapterDescriptorFactory:
     switch (runMode) {

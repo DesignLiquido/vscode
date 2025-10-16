@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.15.6",
+    "version": "0.16.0",
     "engines": {
         "vscode": "^1.68.0"
     },
@@ -76,13 +76,18 @@
         "onDebugDynamicConfigurations:designliquido",
         "onCommand:extension.designliquido.getProgramName",
         "onCommand:extension.designliquido.runEditorContents",
-        "onCommand:extension.designliquido.debugEditorContents"
+        "onCommand:extension.designliquido.debugEditorContents",
+        "onCommand:extension.designliquido.abrirPainelEntradaESaida"
     ],
     "workspaceTrust": {
         "request": "never"
     },
     "contributes": {
         "commands": [
+            {
+                "command": "extension.designliquido.abrirPainelEntradaESaida",
+                "title": "Abrir Painel de Entrada e Saída"
+            },
             {
                 "command": "extension.designliquido.traduzir.css.para.foles",
                 "title": "Tradução: Traduzir fonte CSS para FolEs"
@@ -472,27 +477,27 @@
                 "description": "Um tutorial sobre como programar em português com a linguagem Pituguês",
                 "steps": [
                     {
-                        "id": "passo1",
+                        "id": "pitugues-passo1",
                         "title": "Primeiro passo",
                         "description": "Abrir projeto existente ou criar novo projeto.\n\n[Selecionar pasta](command:vscode.openFolder)",
                         "media": {
-                            "markdown": "media/walkthrough.md"
+                            "markdown": "recursos/passos-a-passos/pitugues.md"
                         }
                     },
                     {
-                        "id": "passo2",
+                        "id": "pitugues-passo2",
                         "title": "Segundo passo",
                         "description": "Dentro do projeto, crie um arquivo com a extensão '.pitugues' ou '.pitu', escreva seu código em Pituguês e salve o arquivo: \n\n [Clique aqui para criar um arquivo .pitugues](command:extension.designliquido.criarArquivoPitugues)",
                         "media": {
-                            "markdown": "media/walkthrough.md"
+                            "markdown": "recursos/passos-a-passos/pitugues.md"
                         }
                     },
                     {
-                        "id": "passo3",
+                        "id": "pitugues-passo3",
                         "title": "Terceiro passo",
-                        "description": "Vá até a aba de depuração e clique em 'Run and Debug': [Abrir Run and Debug](command:workbench.view.debug). No terminal, abra a aba 'Entrada e Saída': [Abrir Terminal](command:workbench.action.terminal.toggleTerminal)",
+                        "description": "Vá até a aba de depuração e clique em ['Run and Debug' (ou 'Executar e Depurar')](command:workbench.view.debug). Se necessário, [abra manualmente a aba 'Entrada e Saída'](command:extension.designliquido.abrirPainelEntradaESaida)",
                         "media": {
-                            "markdown": "media/walkthrough.md"
+                            "markdown": "recursos/passos-a-passos/pitugues.md"
                         }
                     }
                 ]

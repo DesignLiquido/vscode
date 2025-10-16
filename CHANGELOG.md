@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.16.0
+
+- Passo-a-passo (_walkthrough_) para Pituguês: https://github.com/DesignLiquido/vscode/pull/75.
+
 ## 0.15.6
 
 - Colateral pós atualização de versão de `delegua-node`: https://github.com/DesignLiquido/vscode/issues/71.
