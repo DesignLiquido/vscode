@@ -478,26 +478,37 @@
                 "steps": [
                     {
                         "id": "pitugues-passo1",
-                        "title": "Primeiro passo",
+                        "title": "Abra ou Crie um projeto Pituguês!",
                         "description": "Abrir projeto existente ou criar novo projeto.\n\n[Selecionar pasta](command:vscode.openFolder)",
                         "media": {
-                            "markdown": "recursos/passos-a-passos/pitugues.md"
+                            "image": "recursos/passos-a-passos/pitugues/pitugues-passo-01.png",
+                            "altText": ""
                         }
                     },
                     {
                         "id": "pitugues-passo2",
-                        "title": "Segundo passo",
+                        "title": "Crie um arquivo Pituguês",
                         "description": "Dentro do projeto, crie um arquivo com a extensão '.pitugues' ou '.pitu', escreva seu código em Pituguês e salve o arquivo: \n\n [Clique aqui para criar um arquivo .pitugues](command:extension.designliquido.criarArquivoPitugues)",
                         "media": {
-                            "markdown": "recursos/passos-a-passos/pitugues.md"
+                            "image": "recursos/passos-a-passos/pitugues/pitugues-passo-02.png",
+                            "altText": ""
                         }
                     },
                     {
                         "id": "pitugues-passo3",
-                        "title": "Terceiro passo",
-                        "description": "Vá até a aba de depuração e clique em ['Run and Debug' (ou 'Executar e Depurar')](command:workbench.view.debug). Se necessário, [abra manualmente a aba 'Entrada e Saída'](command:extension.designliquido.abrirPainelEntradaESaida)",
+                        "title": "Execute o seu código...",
+                        "description": "Vá até a aba de depuração e clique em ['Run and Debug' (ou 'Executar e Depurar')](command:workbench.view.debug). No terminal, [abra a aba 'Entrada e Saída'](command:extension.designliquido.abrirPainelEntradaESaida)",
                         "media": {
-                            "markdown": "recursos/passos-a-passos/pitugues.md"
+                            "image": "recursos/passos-a-passos/pitugues/pitugues-passo-03.png",
+                            "altText": ""                        }
+                    },
+                    {
+                        "id": "pitugues-passo4",
+                        "title": "Continue explorando! ",
+                        "description": "Conheça a [documentação](https://github.com/DesignLiquido/pitugues-docs/wiki)! ",
+                        "media": {
+                            "image": "recursos/passos-a-passos/pitugues/explorar-img.png",
+                            "altText": ""
                         }
                     }
                 ]
