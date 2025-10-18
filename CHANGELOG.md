@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.16.1
+
+- Nova biblioteca para Delégua: `arquivos`;
+- Modificações em passo-a-passo para Pituguês: https://github.com/DesignLiquido/vscode/pull/77.
+
 ## 0.16.0
 
 - Passo-a-passo (_walkthrough_) para Pituguês: https://github.com/DesignLiquido/vscode/pull/75.
