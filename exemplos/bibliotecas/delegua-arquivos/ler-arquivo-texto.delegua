@@ -1,0 +1,5 @@
+const arquivos = importar('arquivos')
+
+const conteudoArquivoTexto = arquivos.abrir('./arquivo.txt')
+const linhas = conteudoArquivoTexto.paraTexto()
+escreva(linhas.dividir("\n"))

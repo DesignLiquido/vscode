@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.16.2
+
+- Delégua passa a suportar novo mecanismo de importação: `importar tudo como arquivos de arquivos`;
+- Operador Elvis em Delégua, para coalescência de nulo: https://github.com/DesignLiquido/delegua/wiki/Operadores#operadores-de-coalesc%C3%AAncia-de-nulo
+
 ## 0.16.1
 
 - Nova biblioteca para Delégua: `arquivos`;
