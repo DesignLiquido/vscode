@@ -1,5 +1,13 @@
 # Histórico de Modificações
 
+## 0.16.3
+
+- Suporte a [`se` ternário em Delégua](https://github.com/DesignLiquido/delegua/wiki/Condicionais#se-tern%C3%A1rio);
+- Suporte ao operador Elvis em Delégua, para [coalescência de nulo](https://github.com/DesignLiquido/delegua/wiki/Operadores#operadores-de-coalesc%C3%AAncia-de-nulo);
+- Melhoramentos na documentação de primitivas de vetor em Delégua;
+- Correção no método de primitiva de vetor `encaixar` em Delégua;
+- Pituguês passa a ter um micro-lexador.
+
 ## 0.16.2
 
 - Delégua passa a suportar novo mecanismo de importação: `importar tudo como arquivos de arquivos`;
