@@ -6,6 +6,7 @@
 - Implantação do `se` ternário em Pituguês: https://github.com/DesignLiquido/delegua/pull/956;
 - Camel Case para Snake Case em métodos de primitivas para Pituguês: https://github.com/DesignLiquido/delegua/pull/959;
 - Correção em soma de vetores de Delégua;
+- Delégua passa a suportar [compreensão de listas](https://github.com/DesignLiquido/delegua/wiki/Estruturas-de-dados-elementares#compreens%C3%A3o-de-listas);
 - Atualização da versão de FolEs para 0.11.1.
 
 ## 0.16.3
