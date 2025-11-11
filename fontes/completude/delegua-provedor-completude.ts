@@ -1,36 +1,11 @@
 import * as vscode from 'vscode';
 
-import { primitivasMetodosLiquido, objetosEmRotaLiquido } from '../primitivas/primitivas-liquido';
-import primitivas from '../primitivas';
+import { Const, Var } from '@designliquido/delegua/declaracoes';
 
-interface TipoParametro {
-    nome: string;
-    propriedades: PropriedadeParametro[];
-    metodos?: MetodoParametro[];
-}
-
-interface PropriedadeParametro {
-    nome: string;
-    tipo: string;
-    documentacao: string;
-    tipoCompletude?: vscode.CompletionItemKind;
-    propriedadesAninhadas?: PropriedadeParametro[];
-}
-
-interface MetodoParametro {
-    nome: string;
-    parametros: string[];
-    tipoRetorno?: string;
-    documentacao: string;
-    snippet?: string;
-    permiteEncadeamento?: boolean;
-}
-
-interface ParametroDetectado {
-    nome: string;
-    tipoOriginal: string;
-    linha: number;
-}
+import { primitivasMetodosLiquido, objetosEmRotaLiquido } from '../bibliotecas/primitivas-liquido';
+import { primitivas, primitivasDicionarioFormatadas, primitivasNumeroFormatadas, primitivasTextoFormatadas, primitivasVetorFormatadas, funcoesNativasDelegua } from '../bibliotecas';
+import { obterResultado } from '../analise-codigo/cache-analise';
+import { ParametroDetectado, TipoParametro } from './interfaces';
 
 /**
  * Classe de provedor de completude de Delégua. 
@@ -41,7 +16,7 @@ interface ParametroDetectado {
 export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider {
 
     // Definições de tipos de Liquido e seus parâmetros.
-    private readonly tiposParametros: TipoParametro[] = [
+    private readonly tiposParametrosLiquido: TipoParametro[] = [
         {
             nome: 'requisicao',
             propriedades: [
@@ -141,17 +116,86 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
         }
     ];
 
+    protected completudesParaDelegua(
+        textoAntesPosicao: string, 
+        palavraAntesPonto: string | null, 
+        parametrosDetectados: ParametroDetectado[], 
+        declaracaoCorrespondente: { nome: string; tipo: string; } | undefined
+    ): vscode.CompletionItem[] {
+        if (textoAntesPosicao.endsWith('.')) {
+            const tipoDetectadoLiquido = this.obterTipoParametroComDeteccao(palavraAntesPonto, parametrosDetectados);
+            if (tipoDetectadoLiquido) {
+                const tipoLiquido = this.tiposParametrosLiquido.find(tp => tp.nome === tipoDetectadoLiquido.nome);
+                if (tipoLiquido) {
+                    return this.criarCompletudesCompletas(tipoLiquido);
+                }
+            }
+
+            if (declaracaoCorrespondente) {
+                switch (declaracaoCorrespondente.tipo) {
+                    case 'dicionario':
+                    case 'dicionário':
+                        return primitivasDicionarioFormatadas.map(funcaoNativa => {
+                            let itemCompletude = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function);
+                            itemCompletude.documentation = new vscode.MarkdownString(funcaoNativa.documentacao);
+                            return itemCompletude;
+                        });
+                    case 'numero':
+                    case 'número':
+                        return primitivasNumeroFormatadas.map(funcaoNativa => {
+                            let itemCompletude = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function);
+                            itemCompletude.documentation = new vscode.MarkdownString(funcaoNativa.documentacao);
+                            return itemCompletude;
+                        });
+                    case 'texto':
+                        return primitivasTextoFormatadas.map(funcaoNativa => {
+                            let itemCompletude = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function);
+                            itemCompletude.documentation = new vscode.MarkdownString(funcaoNativa.documentacao);
+                            return itemCompletude;
+                        });
+                    case 'vetor':
+                    case 'dicionario[]':
+                    case 'dicionário[]':
+                    case 'numero[]':
+                    case 'número[]':
+                    case 'logico[]':
+                    case 'lógico[]':
+                    case 'qualquer[]':
+                    case 'texto[]':
+                        return primitivasVetorFormatadas.map(funcaoNativa => {
+                            let itemCompletude = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function);
+                            itemCompletude.documentation = new vscode.MarkdownString(funcaoNativa.documentacao);
+                            return itemCompletude;
+                        });
+                    default:
+                        return primitivas.map(funcaoNativa => {
+                            let itemCompletude = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function);
+                            itemCompletude.documentation = new vscode.MarkdownString(funcaoNativa.documentacao);
+                            return itemCompletude;
+                        });
+                }
+            }
+        }
+
+        return funcoesNativasDelegua.map(funcaoNativa => {
+            let itemCompletude = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function);
+            itemCompletude.documentation = new vscode.MarkdownString(funcaoNativa.documentacao);
+            return itemCompletude;
+        });
+    }
+
     provideCompletionItems(documento: vscode.TextDocument, posicao: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionList<vscode.CompletionItem> | vscode.CompletionItem[]> {
+        const resultadoAnalise = obterResultado(documento.uri.toString());
         const linhaTexto = documento.lineAt(posicao).text;
         const textoAntesPosicao = linhaTexto.substring(0, posicao.character);
-        
+
         const detalhesEscopo = this.obterDetalhesEscopo(documento, posicao);
         const parametrosDetectados = this.detectarParametrosDaFuncao(documento, posicao);
-        
+
         // console.log('Detalhes do escopo:', detalhesEscopo);
         // console.log('Parâmetros detectados:', parametrosDetectados);
 
-        const caminhoCompleto = this.analisarCaminhoCompleto(textoAntesPosicao);
+        const caminhoCompleto = this.analisarCadeiaChamadasEmCodigo(textoAntesPosicao);
         // console.log('Caminho completo:', caminhoCompleto);
 
         if (caminhoCompleto.length > 0) {
@@ -160,9 +204,21 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
                 return completudes;
             }
         }
-        
+
+        const todasAsVariaveisOuConstantes = resultadoAnalise?.avaliadorSintatico.declaracoes.flatMap(declaracao => {
+            if (declaracao instanceof Var) {
+                return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
+            }
+
+            if (declaracao instanceof Const) {
+                return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
+            }
+
+            return [];
+        }) || [];
         const palavraAntesPonto = this.obterPalavraAntesPonto(textoAntesPosicao);
-        
+        const declaracaoCorrespondente = todasAsVariaveisOuConstantes.find(v => v.nome === palavraAntesPonto);
+
         // Propriedades com um parâmetro com tipo definido.
         const tipoParametro = this.obterTipoParametroComDeteccao(palavraAntesPonto, parametrosDetectados);
         if (tipoParametro && this.estaNoContextoCorreto(detalhesEscopo, palavraAntesPonto)) {
@@ -179,8 +235,6 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
                     return itemCompletude;
                 });
             default:
-                const palavraAntesPonto = this.obterPalavraAntesPonto(textoAntesPosicao);
-        
                 // Primitivas de Liquido
                 if (palavraAntesPonto === 'liquido') {
                     return primitivasMetodosLiquido.map(funcaoNativa => {
@@ -191,27 +245,27 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
                     });
                 }
 
-                return primitivas.map(funcaoNativa => {
-                    let itemCompletude = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function);
-                    itemCompletude.documentation = new vscode.MarkdownString(funcaoNativa.documentacao);
-                    return itemCompletude;
-                });
+                return this.completudesParaDelegua(textoAntesPosicao, palavraAntesPonto, parametrosDetectados, declaracaoCorrespondente);
         }
     }
 
-    private analisarCaminhoCompleto(texto: string): string[] {
-        // Encontra padrões como: objeto.propriedade.metodo().propriedade.
+    /**
+     * Encontra padrões como: objeto.propriedade.metodo().propriedade.
+     * @param {string} texto A porção do código antes do cursor, para análise de cadeia de chamadas.
+     * @returns 
+     */
+    private analisarCadeiaChamadasEmCodigo(texto: string): string[] {
         const regex = /(\w+)(?:\.(\w+)(?:\([^)]*\))?)*\.$/;
         const match = texto.match(regex);
-        
+
         if (!match) {
             return [];
         }
-        
+
         // Extrai todas as partes da cadeia de chamadas
         const partes = texto.split('.');
         const caminho: string[] = [];
-        
+
         for (let i = 0; i < partes.length - 1; i++) {
             const parte = partes[i];
             // Remove parênteses para melhor análise
@@ -220,33 +274,33 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
                 caminho.push(nomeSemParenteses.trim());
             }
         }
-        
+
         return caminho;
     }
 
     private criarCompletudesCompletas(tipoParametro: TipoParametro): vscode.CompletionItem[] {
         const completudes: vscode.CompletionItem[] = [];
-        
+
         // Completudes de propriedades
         if (tipoParametro.propriedades) {
             completudes.push(...tipoParametro.propriedades.map(propriedade => {
                 const itemCompletude = new vscode.CompletionItem(
-                    propriedade.nome, 
+                    propriedade.nome,
                     propriedade.tipoCompletude || vscode.CompletionItemKind.Property
                 );
-                
+
                 itemCompletude.documentation = new vscode.MarkdownString(propriedade.documentacao);
                 itemCompletude.detail = `(${propriedade.tipo}) ${propriedade.nome}`;
-                
-                // Add indication for nested properties
+
+                // Indicação para propriedades aninhadas
                 if (propriedade.propriedadesAninhadas && propriedade.propriedadesAninhadas.length > 0) {
                     itemCompletude.detail += ` - ${propriedade.propriedadesAninhadas.length} propriedades aninhadas`;
                 }
-                
+
                 return itemCompletude;
             }));
         }
-        
+
         // Completudes de métodos
         if (tipoParametro.metodos) {
             completudes.push(...tipoParametro.metodos.map(metodo => {
@@ -254,36 +308,36 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
                     metodo.nome,
                     vscode.CompletionItemKind.Method
                 );
-                
+
                 itemCompletude.documentation = new vscode.MarkdownString(metodo.documentacao);
                 itemCompletude.detail = `${metodo.nome}(${metodo.parametros.join(', ')})`;
-                
+
                 if (metodo.tipoRetorno) {
                     itemCompletude.detail += ` → ${metodo.tipoRetorno}`;
                 }
-                
+
                 if (metodo.permiteEncadeamento) {
                     itemCompletude.detail += ' (encadeável)';
                 }
-                
+
                 if (metodo.snippet) {
                     itemCompletude.insertText = new vscode.SnippetString(metodo.snippet);
                 } else {
                     itemCompletude.insertText = new vscode.SnippetString(`${metodo.nome}($0)`);
                 }
-                
+
                 return itemCompletude;
             }));
         }
-        
+
         return completudes;
     }
 
     private estaNoContextoCorreto(detalhesEscopo: any, nomeParametro: string | null): boolean {
-        if (!nomeParametro) { 
+        if (!nomeParametro) {
             return false;
         }
-        
+
         const escoposValidos = ['rotaGet', 'rotaPost'];
         return escoposValidos.includes(detalhesEscopo.tipoEscopo);
     }
@@ -294,28 +348,28 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
     }
 
     private obterCompletudesParaCaminho(caminho: string[], parametrosDetectados: ParametroDetectado[], detalhesEscopo: any): vscode.CompletionItem[] | null {
-        if (caminho.length === 0) { 
+        if (caminho.length === 0) {
             return null;
         }
-        
+
         const objetoBase = caminho[0];
         let tipoAtual = this.obterTipoParametroComDeteccao(objetoBase, parametrosDetectados);
-        
-        if (!tipoAtual) { 
+
+        if (!tipoAtual) {
             return null;
         }
-        
+
         for (let i = 1; i < caminho.length; i++) {
             const propriedadeNome = caminho[i];
-            
+
             // Verifica se é um método ou propriedade que trabalha com encadeamento.
             const metodo = tipoAtual.metodos?.find(m => m.nome === propriedadeNome);
             if (metodo && metodo.permiteChaining && metodo.tipoRetorno) {
                 // Continue com o tipo de retorno
-                tipoAtual = this.tiposParametros.find(t => t.nome === metodo.tipoRetorno) || tipoAtual;
+                tipoAtual = this.tiposParametrosLiquido.find(t => t.nome === metodo.tipoRetorno) || tipoAtual;
                 continue;
             }
-            
+
             // Verifica se é uma propriedade aninhada.
             const propriedade = tipoAtual.propriedades?.find(p => p.nome === propriedadeNome);
             if (propriedade && propriedade.propriedadesAninhadas) {
@@ -326,11 +380,11 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
                 };
                 continue;
             }
-            
+
             // Se não pode continuar o encadeamento, retorna nulo.
             return null;
         }
-        
+
         return this.criarCompletudesCompletas(tipoAtual);
     }
 
@@ -345,11 +399,11 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
         const palavrasChaveEscopo = [
             'rotaGet', 'rotaPost'
         ];
-        
+
         for (let linha = 0; linha <= posicao.line; linha++) {
             const textoLinha = documento.lineAt(linha).text;
             const fimLinha = linha === posicao.line ? posicao.character : textoLinha.length;
-            
+
             // Procurar por certos escopos de Liquido
             palavrasChaveEscopo.forEach(palavra => {
                 const regex = new RegExp(`\\bliquido\.${palavra}\\b`, 'gi');
@@ -361,7 +415,7 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
                     }
                 }
             });
-            
+
             // Contar abertura e fechamento de escopos
             for (let coluna = 0; coluna < fimLinha; coluna++) {
                 const char = textoLinha[coluna];
@@ -375,7 +429,7 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
                 }
             }
         }
-        
+
         return {
             dentroDoEscopo: contadorChaves > 0,
             nivelAninhamento: contadorChaves,
@@ -385,52 +439,52 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
     }
 
     private obterTipoParametro(nomeParametro: string | null): TipoParametro | null {
-        if (!nomeParametro) { 
+        if (!nomeParametro) {
             return null;
         }
 
-        return this.tiposParametros.find(tipo => tipo.nome === nomeParametro) || null;
+        return this.tiposParametrosLiquido.find(tipo => tipo.nome === nomeParametro) || null;
     }
 
     private obterTipoParametroComDeteccao(nomeParametro: string | null, parametrosDetectados: ParametroDetectado[]): TipoParametro | null {
-        if (!nomeParametro) { 
+        if (!nomeParametro) {
             return null;
         }
-        
+
         // Primeiro tenta correspondência direta.
         const tiposDireto = this.obterTipoParametro(nomeParametro);
-        if (tiposDireto) { 
+        if (tiposDireto) {
             return tiposDireto;
         }
-        
+
         // Então, tenta correspondência por casamento de parâmetros.
         const parametroDetectado = parametrosDetectados.find(p => p.nome === nomeParametro);
         if (parametroDetectado) {
             return this.obterTipoParametro(parametroDetectado.tipoOriginal);
         }
-        
+
         return null;
     }
 
     private detectarParametrosDaFuncao(documento: vscode.TextDocument, posicao: vscode.Position): ParametroDetectado[] {
         const parametrosDetectados: ParametroDetectado[] = [];
-        
+
         // Olha em retrospecto por definições de funções, limitado a 50 ocorrências
         const linhaInicio = Math.max(0, posicao.line - 50);
-        
+
         for (let linha = posicao.line; linha >= linhaInicio; linha--) {
             const textoLinha = documento.lineAt(linha).text;
-            
+
             // Procura por padrões como: liquido.rotaGet(function(req, res) {
-            const matchFuncao = textoLinha.match(/liquido\.(rotaGet|rotaPost|rotaPut|rotaDelete)\s*\(\s*funcao\s*\(\s*(\w+)\s*,\s*(\w+)\s*\)/);
-            if (matchFuncao) {
+            const correspondenciasFuncoes = textoLinha.match(/liquido\.(rotaGet|rotaPost|rotaPut|rotaDelete)\s*\(\s*funcao\s*\(\s*(\w+)\s*,\s*(\w+)\s*\)/);
+            if (correspondenciasFuncoes) {
                 parametrosDetectados.push(
-                    { nome: matchFuncao[2], tipoOriginal: 'requisicao', linha },
-                    { nome: matchFuncao[3], tipoOriginal: 'resposta', linha }
+                    { nome: correspondenciasFuncoes[2], tipoOriginal: 'requisicao', linha },
+                    { nome: correspondenciasFuncoes[3], tipoOriginal: 'resposta', linha }
                 );
                 break;
             }
-            
+
             // Futuro: procura por _middlewares_.
             /* const matchMiddleware = textoLinha.match(/liquido\.(rotaGet|rotaPost|rotaPut|rotaDelete)\s*\([^,]+,\s*\w+\s*,\s*\(\s*(\w+)\s*,\s*(\w+)\s*,\s*(\w+)\s*\)/);
             if (matchMiddleware) {
@@ -442,7 +496,7 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
                 break;
             } */
         }
-        
+
         return parametrosDetectados;
     }
 }

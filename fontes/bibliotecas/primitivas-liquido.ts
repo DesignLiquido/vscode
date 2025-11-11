@@ -1,4 +1,4 @@
-import { PrimitivaOuMetodo } from "./tipos";
+import { FuncaoNativaOuMetodoPrimitiva } from "./tipos";
 
 const parametrosTodasPrimitivas = [
     {
@@ -11,7 +11,7 @@ const parametrosTodasPrimitivas = [
     }
 ];
 
-export const primitivasMetodosLiquido: PrimitivaOuMetodo[] = [
+export const primitivasMetodosLiquido: FuncaoNativaOuMetodoPrimitiva[] = [
     {
         nome: 'rotaGet',
         assinaturas: [
@@ -50,7 +50,7 @@ export const primitivasMetodosLiquido: PrimitivaOuMetodo[] = [
     }
 ];
 
-export const objetosEmRotaLiquido: PrimitivaOuMetodo[] = [
+export const objetosEmRotaLiquido: FuncaoNativaOuMetodoPrimitiva[] = [
     {
         nome: 'requisicao',
         assinaturas: [

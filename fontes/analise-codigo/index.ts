@@ -31,6 +31,7 @@ import { AnalisadorSemanticoPortugolStudio } from "@designliquido/portugol-studi
 import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg, AnalisadorSemanticoVisuAlg } from '@designliquido/visualg';
 
 import { formatarDiagnosticosAvaliacaoSintatica } from '../avaliacao-sintatica';
+import { definirResultado } from './cache-analise';
 
 const mapaSeveridadeDiagnosticos = {
     0: vscode.DiagnosticSeverity.Error,
@@ -44,13 +45,13 @@ const mapaSeveridadeDiagnosticos = {
 };
 
 /**
- * Ponto de entrada de todas as análises semânticas, selecionando o dialeto pela extensão de arquivo.
- * Alguns problemas são detectados na análise sintática.
+ * Ponto de entrada de todas as análises, léxicas, sintáticas e semânticas, selecionando o dialeto pela extensão de arquivo.
+ * Problemas são detectados na análise sintática. Avisos são detectados na análise semântica. Ambos são reportados para o VSCode por meio do objeto `diagnosticos`.
  * @param {vscode.TextDocument} documento O documento aberto no VSCode.
  * @param {vscode.DiagnosticCollection} diagnosticos O objeto de diagnósticos, que instrui o VSCode
  *                                                   a mostrar os problemas atuais.
  */
-export function analiseSemantica(
+export function executarAnalises(
     documento: vscode.TextDocument,
     diagnosticos: vscode.DiagnosticCollection
 ): void {
@@ -132,8 +133,17 @@ export function analiseSemantica(
         listaOcorrencias = listaOcorrencias.concat(formatarDiagnosticosAnaliseSemantica(resultadoAnalisadorSemantico.diagnosticos, documento));
         diagnosticos.set(documento.uri, listaOcorrencias);
     } catch (erro: any) {
+        resultadoAnalisadorSemantico = {
+            diagnosticos: []
+        } as RetornoAnalisadorSemantico;
         console.error(`Erro ao executar análise semântica para arquivo de extensão ${extensaoArquivo}`, erro);
     }
+
+    definirResultado(documento.uri.toString(), {
+        lexador: resultadoLexador,
+        avaliadorSintatico: resultadoAvaliadorSintatico,
+        analisadorSemantico: resultadoAnalisadorSemantico
+    });
 }
 
 function formatarDiagnosticosAnaliseSemantica(

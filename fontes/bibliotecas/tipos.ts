@@ -8,7 +8,7 @@ export type AssinaturaMetodo = {
     parametros: ParametroAssinaturaMetodo[]
 };
 
-export type PrimitivaOuMetodo = {
+export type FuncaoNativaOuMetodoPrimitiva = {
     nome: string;
     assinaturas?: AssinaturaMetodo[];
     documentacao: string;

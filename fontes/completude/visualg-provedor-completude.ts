@@ -4,7 +4,7 @@ import {
     primitivasCaracteresVisuAlg, 
     primitivasEntradaSaidaVisuAlg,
     primitivasNumeroVisuAlg 
-} from '../primitivas/dialetos/visualg';
+} from '../bibliotecas/dialetos/visualg';
 
 /**
  * Classe de provedor de completude de Delégua. 

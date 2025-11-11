@@ -1,6 +1,49 @@
-import { PrimitivaOuMetodo } from "./tipos";
+import { FuncaoNativaOuMetodoPrimitiva } from "./tipos";
 
-export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
+export const funcoesNativasDelegua: FuncaoNativaOuMetodoPrimitiva[] = [
+    {
+        nome: 'aleatorio',
+        assinaturas: [
+            {
+                formato: 'aleatorio()',
+                parametros: []
+            }
+        ],
+        documentacao:
+            '### Descrição \n \n' +
+            'Retorna um número aleatório entre 0 e 1.' +
+            '\n\n ### Exemplo de Código\n' +
+            '\n\n```delegua\nvar numeroAleatorio = aleatorio();' +
+            '\n\nescreva(numeroAleatorio); // 0.8540051495195808\n```' +
+            '\n \n ### Formas de uso  \n',
+        exemploCodigo: 'função aleatorio()',
+    },
+    {
+        nome: 'aleatorioEntre',
+        assinaturas: [
+            {
+                formato: 'aleatorioEntre(minimo: número, maximo: número)',
+                parametros: [
+                    {
+                        nome: 'minimo',
+                        documentacao: 'O valor mínimo do intervalo.'
+                    },
+                    {
+                        nome: 'maximo',
+                        documentacao: 'O valor máximo do intervalo.'
+                    }
+                ]
+            }
+        ],
+        documentacao:
+            '### Descrição \n \n' +
+            'Retorna um número inteiro aleatório entre os valores passados para a função.' +
+            '\n\n ### Exemplo de Código\n' +
+            '\n\n```delegua\nvar numeroAleatorio = aleatorioEntre(1, 9);' +
+            '\n\nescreva(numeroAleatorio); // Retornará um valor entre 1 e 8.\n```' +
+            '\n \n ### Formas de uso  \n',
+        exemploCodigo: 'função aleatorioEntre(numero minimo, numero maximo)',
+    },
     {
         nome: 'escreva',
         assinaturas: [
@@ -54,71 +97,6 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
         exemploCodigo: 'função filtrarPor(meuVetor, minhaFuncaoParaValidar)',
     },
     {
-        nome: 'texto',
-        assinaturas: [
-            {
-                formato: 'texto(numero: número)',
-                parametros: [
-                    {
-                        nome: 'numero',
-                        documentacao: 'O número a ser convertido em texto.'
-                    }
-                ]
-            }
-        ],
-        documentacao:
-            '# Descrição \n \n' +
-            'Transforma números flutuantes ou inteiros em texto.' +
-            '\n\n ### Exemplo de Código\n' +
-            '\n\n```delegua\ntexto(7)\n```' +
-            '\n \n ### Formas de uso  \n',
-        exemploCodigo: 'função texto(1234)'
-
-    },
-    {
-        nome: 'aleatorio',
-        assinaturas: [
-            {
-                formato: 'aleatorio()',
-                parametros: []
-            }
-        ],
-        documentacao:
-            '### Descrição \n \n' +
-            'Retorna um número aleatório entre 0 e 1.' +
-            '\n\n ### Exemplo de Código\n' +
-            '\n\n```delegua\nvar numeroAleatorio = aleatorio();' +
-            '\n\nescreva(numeroAleatorio); // 0.8540051495195808\n```' +
-            '\n \n ### Formas de uso  \n',
-        exemploCodigo: 'função aleatorio()',
-    },
-    {
-        nome: 'aleatorioEntre',
-        assinaturas: [
-            {
-                formato: 'aleatorioEntre(minimo: número, maximo: número)',
-                parametros: [
-                    {
-                        nome: 'minimo',
-                        documentacao: 'O valor mínimo do intervalo.'
-                    },
-                    {
-                        nome: 'maximo',
-                        documentacao: 'O valor máximo do intervalo.'
-                    }
-                ]
-            }
-        ],
-        documentacao:
-            '### Descrição \n \n' +
-            'Retorna um número inteiro aleatório entre os valores passados para a função.' +
-            '\n\n ### Exemplo de Código\n' +
-            '\n\n```delegua\nvar numeroAleatorio = aleatorioEntre(1, 9);' +
-            '\n\nescreva(numeroAleatorio); // Retornará um valor entre 1 e 8.\n```' +
-            '\n \n ### Formas de uso  \n',
-        exemploCodigo: 'função aleatorioEntre(numero minimo, numero maximo)',
-    },
-    {
         nome: 'inteiro',
         assinaturas: [
             {
@@ -139,6 +117,29 @@ export const metodosBibliotecaGlobal: PrimitivaOuMetodo[] = [
             '\n\nescreva(111 + inteiro(testeTexto)); // 222\n```' +
             '\n \n ### Formas de uso  \n',
         exemploCodigo: 'função inteiro("123")',
+    },
+    {
+        nome: 'leia',
+        assinaturas: [
+            {
+                formato: 'leia(orientação: texto)',
+                parametros: [
+                    {
+                        nome: 'orientação',
+                        documentacao: 'O texto a ser exibido para o usuário, indicando o que ele deve digitar.'
+                    }
+                ]
+            }
+        ],
+        documentacao:
+            '# `leia()`\n' +
+            '### Descrição \n \n' +
+            'Lê um valor do usuário, a partir da entrada padrão, e o retorna como texto.' +
+            '\n\n ### Exemplo de Código\n' +
+            '\n\n```delegua\nvar nome = leia("Digite seu nome: ");' +
+            '\n\nescreva("Olá, ${nome}!");\n```' +
+            '\n \n ### Formas de uso  \n',
+        exemploCodigo: 'função leia("Digite seu nome: ")',       
     },
     {
         nome: 'numero',

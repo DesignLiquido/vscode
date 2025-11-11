@@ -1,6 +1,6 @@
-import { PrimitivaOuMetodo } from "./tipos";
+import { FuncaoNativaOuMetodoPrimitiva } from "./tipos";
 
-export const primitivasTexto: PrimitivaOuMetodo[] = [
+export const primitivasTexto: FuncaoNativaOuMetodoPrimitiva[] = [
     {
         nome: 'aparar',
         assinaturas: [

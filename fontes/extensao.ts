@@ -26,7 +26,7 @@ import { LmhtProvedorCompletude } from './completude/lmht-provedor-completude';
 import { VisuAlgProvedorCompletude } from './completude/visualg-provedor-completude';
 import { VisuAlgProvedorDocumentacaoEmEditor } from './documentacao-em-editor/visualg-provedor-documentacao-em-editor';
 import { traduzir } from './traducao';
-import { analiseSemantica } from './analise-semantica';
+import { executarAnalises } from './analise-codigo';
 import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
 
 import { LmhtProvedorDocumentacaoEmEditor } from './documentacao-em-editor/lmht-provedor-documentacao-em-editor';
@@ -60,11 +60,21 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(diagnosticosDelegua);
 
     if (vscode.window.activeTextEditor) {
-		analiseSemantica(vscode.window.activeTextEditor.document, diagnosticosDelegua);
+		executarAnalises(vscode.window.activeTextEditor.document, diagnosticosDelegua);
 	}
 
     context.subscriptions.push(
-		vscode.workspace.onDidChangeTextDocument((evento) => {
+        vscode.workspace.onDidOpenTextDocument(doc => {
+            if (['birl', 'delegua', 'mapler', 'visualg', 'portugol-studio'].includes(doc.languageId)) {
+                executarAnalises(doc, diagnosticosDelegua);
+            }
+        }),
+        vscode.window.onDidChangeActiveTextEditor(editor => {
+            if (editor && ['birl', 'delegua', 'mapler', 'visualg', 'portugol-studio'].includes(editor.document.languageId)) {
+                executarAnalises(editor.document, diagnosticosDelegua);
+            }
+        }),
+        vscode.workspace.onDidChangeTextDocument((evento) => {
             switch (evento.document.languageId) {
                 case 'birl':
                 case 'delegua':
@@ -73,10 +83,10 @@ export function activate(context: vscode.ExtensionContext) {
                     if (changeTimeout !== null) {
                         clearTimeout(changeTimeout);
                     }
-                    changeTimeout = setInterval(function () {
+                    changeTimeout = setTimeout(function () {
                         clearTimeout(changeTimeout);
                         changeTimeout = null;
-                        analiseSemantica(evento.document, diagnosticosDelegua);
+                        executarAnalises(evento.document, diagnosticosDelegua);
                     }, 500);
                     break;
                 case 'lmht':
@@ -86,7 +96,7 @@ export function activate(context: vscode.ExtensionContext) {
                     break;
             }
         })
-	);
+    );
 
 	context.subscriptions.push(
 		vscode.workspace.onDidCloseTextDocument(doc => diagnosticosDelegua.delete(doc.uri))

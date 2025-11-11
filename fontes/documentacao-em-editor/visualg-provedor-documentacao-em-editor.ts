@@ -5,7 +5,7 @@ import {
     primitivasCaracteresVisuAlg, 
     primitivasEntradaSaidaVisuAlg, 
     primitivasNumeroVisuAlg 
-} from '../primitivas/dialetos/visualg';
+} from '../bibliotecas/dialetos/visualg';
 
 /**
  * Provedor de documentação para "hover" (ponteiro do _mouse_ por cima do elemento de código.)

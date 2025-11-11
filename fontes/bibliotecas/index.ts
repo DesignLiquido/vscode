@@ -5,8 +5,8 @@ import primitivasNumero from '@designliquido/delegua/bibliotecas/primitivas-nume
 import primitivasTexto from '@designliquido/delegua/bibliotecas/primitivas-texto';
 import primitivasVetor from '@designliquido/delegua/bibliotecas/primitivas-vetor';
 
-import { metodosBibliotecaGlobal } from './metodos-biblioteca-global';
-import { PrimitivaOuMetodo, ParametroAssinaturaMetodo } from './tipos';
+import { funcoesNativasDelegua } from './funcoes-nativas';
+import { FuncaoNativaOuMetodoPrimitiva, ParametroAssinaturaMetodo } from './tipos';
 
 const ordenar = (a: any, b: any) => {
     const nome1 = a['nome'].toUpperCase();
@@ -24,7 +24,7 @@ const ordenar = (a: any, b: any) => {
 };
 
 function formatarPrimitivas(moduloPrimitivas: {[nome: string]: PrimitivaInterface}) {
-    const primitivasFormatadas: PrimitivaOuMetodo[] = [];
+    const primitivasFormatadas: FuncaoNativaOuMetodoPrimitiva[] = [];
     for (const [nome, primitiva] of Object.entries(moduloPrimitivas)) {
         primitivasFormatadas.push({
             nome: nome,
@@ -37,23 +37,29 @@ function formatarPrimitivas(moduloPrimitivas: {[nome: string]: PrimitivaInterfac
             }],
             documentacao: primitiva.documentacao,
             exemploCodigo: primitiva.exemploCodigo
-        } as PrimitivaOuMetodo);
+        } as FuncaoNativaOuMetodoPrimitiva);
     }
 
     return primitivasFormatadas;
 }
 
-const primitivasDicionarioFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasDicionario);
-const primitivasNumeroFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasNumero);
-const primitivasTextoFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasTexto);
-const primitivasVetorFormatadas: PrimitivaOuMetodo[] = formatarPrimitivas(primitivasVetor);
+const primitivasDicionarioFormatadas: FuncaoNativaOuMetodoPrimitiva[] = formatarPrimitivas(primitivasDicionario);
+const primitivasNumeroFormatadas: FuncaoNativaOuMetodoPrimitiva[] = formatarPrimitivas(primitivasNumero);
+const primitivasTextoFormatadas: FuncaoNativaOuMetodoPrimitiva[] = formatarPrimitivas(primitivasTexto);
+const primitivasVetorFormatadas: FuncaoNativaOuMetodoPrimitiva[] = formatarPrimitivas(primitivasVetor);
 
-const primitivas: PrimitivaOuMetodo[] = [
+const primitivas: FuncaoNativaOuMetodoPrimitiva[] = [
     ...primitivasDicionarioFormatadas,
     ...primitivasNumeroFormatadas, 
     ...primitivasTextoFormatadas, 
-    ...primitivasVetorFormatadas,
-    ...metodosBibliotecaGlobal
+    ...primitivasVetorFormatadas
 ].sort(ordenar);
 
-export default primitivas;
+export { 
+    primitivas, 
+    primitivasDicionarioFormatadas,
+    primitivasNumeroFormatadas,
+    primitivasTextoFormatadas,
+    primitivasVetorFormatadas,
+    funcoesNativasDelegua 
+};

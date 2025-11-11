@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
-import primitivas from '../primitivas';
-import { PrimitivaOuMetodo } from '../primitivas/tipos';
+import { primitivas } from '../bibliotecas';
+import { FuncaoNativaOuMetodoPrimitiva } from '../bibliotecas/tipos';
 
 /**
  * Provedor de assinatura de métodos de Delégua.
@@ -22,7 +22,7 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
             return undefined;
         }
 
-        const primitivaOuMetodoGlobal: PrimitivaOuMetodo | undefined = primitivas.find(
+        const primitivaOuMetodoGlobal: FuncaoNativaOuMetodoPrimitiva | undefined = primitivas.find(
             (primitiva) => primitiva.nome === resultadoRegex[1]
         );
 
