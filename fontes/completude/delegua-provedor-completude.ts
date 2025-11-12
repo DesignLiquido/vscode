@@ -216,6 +216,13 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
 
             return [];
         }) || [];
+
+        const completudesDeVariaveisEConstantes = todasAsVariaveisOuConstantes.map(v => {
+            let itemCompletude = new vscode.CompletionItem(v.nome, vscode.CompletionItemKind.Variable);
+            itemCompletude.detail = `(${v.tipo}) ${v.nome}`;
+            return itemCompletude;
+        });
+
         const palavraAntesPonto = this.obterPalavraAntesPonto(textoAntesPosicao);
         const declaracaoCorrespondente = todasAsVariaveisOuConstantes.find(v => v.nome === palavraAntesPonto);
 
@@ -245,7 +252,7 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
                     });
                 }
 
-                return this.completudesParaDelegua(textoAntesPosicao, palavraAntesPonto, parametrosDetectados, declaracaoCorrespondente);
+                return completudesDeVariaveisEConstantes.concat(this.completudesParaDelegua(textoAntesPosicao, palavraAntesPonto, parametrosDetectados, declaracaoCorrespondente));
         }
     }
 

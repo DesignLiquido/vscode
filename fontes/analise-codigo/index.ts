@@ -79,6 +79,10 @@ export function executarAnalises(
 
         case "delegua":
             lexador = new Lexador();
+            // TODO: Mudar `importar` em `delegua-node` para ser assíncrono, e usar `AvaliadorSintaticoComImportacao` aqui.
+            /* avaliadorSintatico = new AvaliadorSintaticoComImportacao(
+                new ImportadorExtensao(lexador)
+            ); */
             avaliadorSintatico = new AvaliadorSintatico();
             analisadorSemantico = new AnalisadorSemantico();
             break;
