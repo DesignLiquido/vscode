@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.17.0
+
+- Completude, documentação em editor, e mecanismo de assinatura de métodos reformulado em Delégua.
+
 ## 0.16.4
 
 - Nova função nativa: `clonar()`, em Delégua: https://github.com/DesignLiquido/delegua/pull/957;
