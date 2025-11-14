@@ -22,7 +22,7 @@
             "patterns": [
                 {
                     "name": "keyword.control.visualg",
-                    "match": "(?i)\\b(ate|até|algoritmo|faca|faça|var|inicio|fimalgoritmo|se|senao|senão|fimse|para|fimpara|fazer|enquanto|escolha|caso|padrao|repita|tente|pegue|procedimento|fimprocedimento|finalmente|retorne|funcao|fimfuncao|função|fimfunção|escreva|leia)\\b"
+                    "match": "(?i)\\b(aleatorio||algoritmo|arquivo|ate|até|caractere|cronometro|debug|e|eco|entao|escreva|escreval|faca|faça|falso|inicio|fimalgoritmo|int|inteiro|limpatela|logico|mod|nao|não|ou|passo|pausa|real|timer|vetor|verdadeiro|xou|se|senao|senão|fimse|para|fimpara|fazer|enquanto|escolha|caso|outrocaso|padrao|repita|fimrepita|procedimento|fimprocedimento|retorne|funcao|fimfuncao|função|fimfunção|leia|var)\\b"
                 }
             ]
         },
