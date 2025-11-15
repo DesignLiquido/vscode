@@ -14,6 +14,7 @@ import { AvaliadorSintaticoComImportacao } from '@designliquido/delegua-node/ava
 
 import { LexadorPitugues } from '@designliquido/delegua/lexador/dialetos/lexador-pitugues';
 import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-pitugues';
+import { InterpretadorPituguesComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/dialetos/interpretador-pitugues-com-depuracao-importacao';
 
 import { palavrasReservadas } from '@designliquido/delegua/lexador/palavras-reservadas';
 
@@ -130,7 +131,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
                     {},
                     {},
                     true);
-                this.interpretador = new InterpretadorComDepuracaoImportacao(
+                this.interpretador = new InterpretadorPituguesComDepuracaoImportacao(
                     this.importador as any, 
                     process.cwd(), 
                     this.escreverEmSaida.bind(this), 

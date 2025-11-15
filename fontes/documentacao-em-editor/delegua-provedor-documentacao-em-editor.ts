@@ -45,7 +45,6 @@ export class DeleguaProvedorDocumentacaoEmEditor
         const cadeiaTokens = textoAntesPosicao.trim().split(/[\s\(\)\[\]\{\};]+/).pop()?.split('.');
         if (cadeiaTokens && cadeiaTokens.length >= 2) {
             const objeto = cadeiaTokens[cadeiaTokens.length - 2];
-            const metodo = cadeiaTokens[cadeiaTokens.length - 1];
 
             const declaracao = todasAsVariaveisOuConstantes.find(d => d.nome === objeto);
             if (declaracao) {

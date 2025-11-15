@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.17.1
+
+- Pituguês passa a ter um conjunto de funções nativas e métodos de primitivas à parte, bem como seu próprio interpretador;
+- Configurando símbolos de fechamento para Pituguês.
+
 ## 0.17.0
 
 - Completude, documentação em editor, e mecanismo de assinatura de métodos reformulado em Delégua.
