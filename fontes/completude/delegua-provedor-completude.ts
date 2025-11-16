@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { Const, Var } from '@designliquido/delegua/declaracoes';
+import { Classe, Const, FuncaoDeclaracao, Var } from '@designliquido/delegua/declaracoes';
 
 import { primitivasMetodosLiquido, objetosEmRotaLiquido } from '../bibliotecas/primitivas-liquido';
 import { primitivas, primitivasDicionarioFormatadas, primitivasNumeroFormatadas, primitivasTextoFormatadas, primitivasVetorFormatadas, funcoesNativasDelegua } from '../bibliotecas';
@@ -205,7 +205,7 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
             }
         }
 
-        const todasAsVariaveisOuConstantes = resultadoAnalise?.avaliadorSintatico.declaracoes.flatMap(declaracao => {
+        const declaracoesPertinentes = resultadoAnalise?.avaliadorSintatico.declaracoes.flatMap(declaracao => {
             if (declaracao instanceof Var) {
                 return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
             }
@@ -214,17 +214,25 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
                 return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
             }
 
+            if (declaracao instanceof Classe) {
+                return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.simbolo.lexema }];
+            }
+
+            if (declaracao instanceof FuncaoDeclaracao) {
+                return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
+            }
+
             return [];
         }) || [];
 
-        const completudesDeVariaveisEConstantes = todasAsVariaveisOuConstantes.map(v => {
+        const completudesDeVariaveisEConstantes = declaracoesPertinentes.map(v => {
             let itemCompletude = new vscode.CompletionItem(v.nome, vscode.CompletionItemKind.Variable);
             itemCompletude.detail = `(${v.tipo}) ${v.nome}`;
             return itemCompletude;
         });
 
         const palavraAntesPonto = this.obterPalavraAntesPonto(textoAntesPosicao);
-        const declaracaoCorrespondente = todasAsVariaveisOuConstantes.find(v => v.nome === palavraAntesPonto);
+        const declaracaoCorrespondente = declaracoesPertinentes.find(v => v.nome === palavraAntesPonto);
 
         // Propriedades com um parâmetro com tipo definido.
         const tipoParametro = this.obterTipoParametroComDeteccao(palavraAntesPonto, parametrosDetectados);
@@ -252,7 +260,9 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
                     });
                 }
 
-                return completudesDeVariaveisEConstantes.concat(this.completudesParaDelegua(textoAntesPosicao, palavraAntesPonto, parametrosDetectados, declaracaoCorrespondente));
+                return completudesDeVariaveisEConstantes.concat(
+                    this.completudesParaDelegua(textoAntesPosicao, palavraAntesPonto, parametrosDetectados, declaracaoCorrespondente)
+                );
         }
     }
 

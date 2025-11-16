@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { Const, Var } from '@designliquido/delegua/declaracoes';
+import { Classe, Const, FuncaoDeclaracao, Var } from '@designliquido/delegua/declaracoes';
 
 import { obterResultado } from '../analise-codigo/cache-analise';
 import { 
@@ -29,12 +29,20 @@ export class DeleguaProvedorDocumentacaoEmEditor
         const linhaTexto = documento.lineAt(posicao).text;
         const textoAntesPosicao = linhaTexto.substring(0, posicao.character);
 
-        const todasAsVariaveisOuConstantes = resultadoAnalise?.avaliadorSintatico.declaracoes.flatMap(declaracao => {
+        const declaracoesPertinentes = resultadoAnalise?.avaliadorSintatico.declaracoes.flatMap(declaracao => {
             if (declaracao instanceof Var) {
                 return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
             }
 
             if (declaracao instanceof Const) {
+                return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
+            }
+
+            if (declaracao instanceof Classe) {
+                return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.simbolo.lexema }];
+            }
+
+            if (declaracao instanceof FuncaoDeclaracao) {
                 return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
             }
 
@@ -46,7 +54,7 @@ export class DeleguaProvedorDocumentacaoEmEditor
         if (cadeiaTokens && cadeiaTokens.length >= 2) {
             const objeto = cadeiaTokens[cadeiaTokens.length - 2];
 
-            const declaracao = todasAsVariaveisOuConstantes.find(d => d.nome === objeto);
+            const declaracao = declaracoesPertinentes.find(d => d.nome === objeto);
             if (declaracao) {
                 const tipo = declaracao.tipo;
                 switch (tipo) {
@@ -131,10 +139,12 @@ export class DeleguaProvedorDocumentacaoEmEditor
         }
 
         // Terceira tentativa: variáveis ou constantes declaradas no código.
-        const variavelOuConstanteCorrespondente = todasAsVariaveisOuConstantes.find(declaracao => declaracao.nome === palavra);
+        const declaracaoPertinenteCorrespondente = declaracoesPertinentes.find(declaracao => declaracao.nome === palavra);
 
-        if (variavelOuConstanteCorrespondente) {
-            const documentacaoElemento = new vscode.MarkdownString(`**${variavelOuConstanteCorrespondente.nome}**: \`${variavelOuConstanteCorrespondente.tipo}\``);
+        if (declaracaoPertinenteCorrespondente) {
+            const documentacaoElemento = new vscode.MarkdownString();
+            const codigo = `${declaracaoPertinenteCorrespondente.nome}: ${declaracaoPertinenteCorrespondente.tipo}`;
+            documentacaoElemento.appendCodeblock(codigo, 'delegua');
             return new vscode.Hover(documentacaoElemento);
         }
 
