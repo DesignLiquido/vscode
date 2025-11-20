@@ -107,10 +107,14 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 		// Do the same for the stylesheet.
 		const estilosTerminal = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@xterm', 'xterm', 'css', 'xterm.css'));
 
+        // Generate a nonce for inline scripts
+        const nonce = this.obterNonce();
+
         const htmlFinal = `<!DOCTYPE html>
         <html lang="en">
             <head>
                 <meta charset="UTF-8">
+                <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https:; script-src ${webview.cspSource} 'nonce-${nonce}'; style-src ${webview.cspSource} 'unsafe-inline'; font-src ${webview.cspSource};">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <script src="${scriptUri}"></script>
                 <script src="${addonFitUrl}"></script>
@@ -119,7 +123,7 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
             <body>
                 <div id="terminal"></div>
 
-                <script>
+                <script nonce="${nonce}">
                     const vscode = acquireVsCodeApi();
 
                     const oldState = vscode.getState() || {};
@@ -190,4 +194,13 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 
 		return htmlFinal;
 	}
+
+    protected obterNonce() {
+        let texto = '';
+        const caracteresPossiveis = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for (let i = 0; i < 32; i++) {
+            texto += caracteresPossiveis.charAt(Math.floor(Math.random() * caracteresPossiveis.length));
+        }
+        return texto;
+    }
 }

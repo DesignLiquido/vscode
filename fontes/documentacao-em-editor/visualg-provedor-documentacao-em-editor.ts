@@ -73,6 +73,6 @@ export class VisuAlgProvedorDocumentacaoEmEditor
             return new vscode.Hover(documentacaoElemento);
         }
 
-        return new vscode.Hover('');
+        return undefined;
     }
 }
