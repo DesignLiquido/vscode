@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.17.2
+
+- Correções diversas no dialeto VisuAlg quanto ao colorimento de palavras-chave e provedor de documentação em código: https://github.com/DesignLiquido/vscode/issues/79. 
+
 ## 0.17.1
 
 - Pituguês passa a ter um conjunto de funções nativas e métodos de primitivas à parte, bem como seu próprio interpretador;
