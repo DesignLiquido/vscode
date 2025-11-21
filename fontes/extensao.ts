@@ -206,7 +206,7 @@ export function activate(context: vscode.ExtensionContext) {
     // IntelliSense para Delégua e Liquido.
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
-            { language: 'delegua', pattern: 'configuracao.delegua' },
+            { scheme: 'file', language: 'delegua', pattern: '**/configuracao.delegua' },
             new LiquidoProvedorCompletude(),
             '.' // acionado quando desenvolvedor/a digita '.'
         )
@@ -214,7 +214,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
-            'delegua',
+            [
+                { scheme: 'file', language: 'delegua' },
+                { scheme: 'untitled', language: 'delegua' }
+            ],
             new DeleguaProvedorCompletude()
         )
     );
@@ -222,7 +225,10 @@ export function activate(context: vscode.ExtensionContext) {
     // IntelliSense para FolEs
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
-            'foles',
+            [
+                { scheme: 'file', language: 'foles' },
+                { scheme: 'untitled', language: 'foles' }
+            ],
             new FolesProvedorCompletude()
         )
     );
@@ -230,7 +236,10 @@ export function activate(context: vscode.ExtensionContext) {
     // IntelliSense para LMHT
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
-            'lmht',
+            [
+                { scheme: 'file', language: 'lmht' },
+                { scheme: 'untitled', language: 'lmht' }
+            ],
             new LmhtProvedorCompletude()
         )
     );
@@ -238,7 +247,10 @@ export function activate(context: vscode.ExtensionContext) {
     // IntelliSense para VisuAlg
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
-            'visualg',
+            [
+                { scheme: 'file', language: 'visualg' },
+                { scheme: 'untitled', language: 'visualg' }
+            ],
             new VisuAlgProvedorCompletude()
         )
     );
@@ -246,34 +258,49 @@ export function activate(context: vscode.ExtensionContext) {
     // Hovers
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(
-            'delegua',
+            [
+                { scheme: 'file', language: 'delegua' },
+                { scheme: 'untitled', language: 'delegua' }
+            ],
             new DeleguaProvedorDocumentacaoEmEditor()
         )
     );
 
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(
-            'foles',
+            [
+                { scheme: 'file', language: 'foles' },
+                { scheme: 'untitled', language: 'foles' }
+            ],
             new FolesProvedorDocumentacaoEmEditor()
         )
     );
 
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(
-            'lincones',
+            [
+                { scheme: 'file', language: 'lincones' },
+                { scheme: 'untitled', language: 'lincones' }
+            ],
             new LinConEsProvedorDocumentacaoEmEditor()
         )
     );
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(
-            'lmht',
+            [
+                { scheme: 'file', language: 'lmht' },
+                { scheme: 'untitled', language: 'lmht' }
+            ],
             new LmhtProvedorDocumentacaoEmEditor()
         )
     );
 
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(
-            'visualg',
+            [
+                { scheme: 'file', language: 'visualg' },
+                { scheme: 'untitled', language: 'visualg' }
+            ],
             new VisuAlgProvedorDocumentacaoEmEditor()
         )
     );
@@ -281,7 +308,10 @@ export function activate(context: vscode.ExtensionContext) {
     // Assinaturas de funções e métodos
     context.subscriptions.push(
         vscode.languages.registerSignatureHelpProvider(
-            'delegua',
+            [
+                { scheme: 'file', language: 'delegua' },
+                { scheme: 'untitled', language: 'delegua' }
+            ],
             new DeleguaProvedorAssinaturaMetodos()
         )
     );

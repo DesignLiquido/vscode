@@ -11,8 +11,8 @@
 	"Repetição Fazer Enquanto": {
 		"prefix": "fazer enquanto",
 		"body": [
-			"$var i = 0;",
-			"$fazer { ",
+			"var i = 0;",
+			"fazer { ",
 			"\tescreva(i);",
 			"\ti = i + 1;",
 			"} enquanto(i < 5)"

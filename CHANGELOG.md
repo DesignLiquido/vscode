@@ -4,7 +4,9 @@
 
 - Adicionado método de primitiva de dicionário `.itens()` para Delégua e Pituguês: https://github.com/DesignLiquido/delegua/pull/981
 - Mudanças internas em Delégua em como trabalhar com tuplas;
-- Ajustes e colaterais nos dialetos para acomodar mudanças no núcleo de Delégua.
+- Ajustes e colaterais nos dialetos para acomodar mudanças no núcleo de Delégua;
+- Novo ícone para Pituguês;
+- Correções diversas em _snippets_ de código.
 
 ## 0.17.2
 
