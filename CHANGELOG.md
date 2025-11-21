@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.17.3
+
+- Adicionado método de primitiva de dicionário `.itens()` para Delégua e Pituguês: https://github.com/DesignLiquido/delegua/pull/981
+- Mudanças internas em Delégua em como trabalhar com tuplas;
+- Ajustes e colaterais nos dialetos para acomodar mudanças no núcleo de Delégua.
+
 ## 0.17.2
 
 - Correções diversas no dialeto VisuAlg quanto ao colorimento de palavras-chave e provedor de documentação em código: https://github.com/DesignLiquido/vscode/issues/79. 
