@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.17.3",
+    "version": "0.18.0",
     "engines": {
         "vscode": "^1.68.0"
     },
@@ -119,8 +119,16 @@
                 "title": "Tradução: Traduzir fonte JavaScript para Delégua"
             },
             {
+                "command": "extension.designliquido.traduzir.lincones.para.sql",
+                "title": "Tradução: Traduzir fonte LinConEs para SQL"
+            },
+            {
                 "command": "extension.designliquido.traduzir.lmht.para.html",
                 "title": "Tradução: Traduzir fonte LMHT para HTML"
+            },
+            {
+                "command": "extension.designliquido.traduzir.sql.para.lincones",
+                "title": "Tradução: Traduzir fonte SQL para LinConEs"
             },
             {
                 "command": "extension.designliquido.traduzir.visualg.para.delegua",
@@ -502,7 +510,8 @@
                         "description": "Vá até a aba de depuração e clique em ['Run and Debug' (ou 'Executar e Depurar')](command:workbench.view.debug). No terminal, [abra a aba 'Entrada e Saída'](command:extension.designliquido.abrirPainelEntradaESaida)",
                         "media": {
                             "image": "recursos/passos-a-passos/pitugues/pitugues-passo-03.png",
-                            "altText": ""                        }
+                            "altText": ""
+                        }
                     },
                     {
                         "id": "pitugues-passo4",
@@ -562,9 +571,10 @@
         "@designliquido/delegua-http": "^0.1.2",
         "@designliquido/delegua-json": "^0.2.1",
         "@designliquido/delegua-matematica": "^0.3.0",
-        "@designliquido/delegua-node": "^1.9.4",
+        "@designliquido/delegua-node": "^1.9.5",
         "@designliquido/delegua-tempo": "^1.0.1",
         "@designliquido/foles": "^0.11.1",
+        "@designliquido/lincones-js": "^0.0.6",
         "@designliquido/lmht-js": "^0.5.0",
         "@xterm/addon-fit": "^0.10.0",
         "@xterm/xterm": "^5.5.0",

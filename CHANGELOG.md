@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.18.0
+
+- `contém` e `não contém` para Delégua e Pituguês;
+- Adição de tradução de LinConEs para SQL.
+
 ## 0.17.3
 
 - Adicionado método de primitiva de dicionário `.itens()` para Delégua e Pituguês: https://github.com/DesignLiquido/delegua/pull/981

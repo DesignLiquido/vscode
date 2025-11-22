@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as sistemaOperacional from 'node:os';
+import * as sistemaOperacional from 'os';
 
 import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
 import { FormatadorDelegua } from '@designliquido/delegua/formatadores';
