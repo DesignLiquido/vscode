@@ -214,12 +214,10 @@
     commander "^14.0.0"
     vlq "^2.0.4"
 
-"@designliquido/lincones-js@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@designliquido/lincones-js/-/lincones-js-0.0.6.tgz#f7fe48b773912b1a8b303eec2796888191e6224d"
-  integrity sha512-rhKp2pv76mzLD0Er7xIKlNuwEhSMflWPPGBMycCI8V56eqvur9RnyUTtOgZL9Tk47C5XMXaKnGypC0VmNb6M/A==
-  dependencies:
-    prettier "^2.8.0"
+"@designliquido/lincones-js@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@designliquido/lincones-js/-/lincones-js-0.1.0.tgz#f2f9a357ceb95f3e291b929f045122d3b2f9f4e4"
+  integrity sha512-SWt4Klpfyrrp8H9D+IVH62LwwFXJ8gbU8/eZnTm/RJwImr0t6GAqUei8qO1PVetwOcJznUgCCmn5L9AplKI8pg==
 
 "@designliquido/lmht-js@^0.5.0":
   version "0.5.0"
@@ -3261,11 +3259,6 @@ prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
-
-prettier@^2.8.0:
-  version "2.8.8"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
-  integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
 
 proxy-from-env@^1.1.0:
   version "1.1.0"

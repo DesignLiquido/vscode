@@ -150,16 +150,15 @@ function traduzirPorMotorLinConEs(deLinguagem: string, paraLinguagem: string, ca
             const resultadoAvaliadorSintatico = avaliadorSintatico.analisar(resultadoLexador);
             resultadoTraducao = tradutorSqlAnsi.traduzir(resultadoAvaliadorSintatico.comandos);
             break;
-        // TODO: Terminar
-        /* case 'sql':
+        case 'sql':
             const lexadorReverso = new LexadorSqlAnsi();
             const avaliadorSintaticoReverso = new AvaliadorSintaticoSqlAnsi();
             const tradutorReverso = new TradutorReversoSqlAnsi();
 
             const resultadoLexadorReverso = lexadorReverso.mapear(conteudoArquivo.split(sistemaOperacional.EOL));
             const resultadoAvaliadorSintaticoReverso = avaliadorSintaticoReverso.analisar(resultadoLexadorReverso);
-            resultadoTraducao = tradutorReverso.traduzir(resultadoAvaliadorSintaticoReverso);
-            break; */
+            resultadoTraducao = tradutorReverso.traduzir(resultadoAvaliadorSintaticoReverso.comandos);
+            break;
     }
 
     return resultadoTraducao;

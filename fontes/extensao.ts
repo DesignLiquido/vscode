@@ -166,6 +166,13 @@ export function activate(context: vscode.ExtensionContext) {
             async () => await traduzir('lmht', 'html')
         )
     );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
+            'extension.designliquido.traduzir.sql.para.lincones',
+            async () => await traduzir('sql', 'lincones')
+        )
+    );
     
     context.subscriptions.push(
         vscode.commands.registerCommand(

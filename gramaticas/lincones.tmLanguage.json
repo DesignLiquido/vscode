@@ -41,7 +41,7 @@
                     "name": "keyword.other.lincones"
                 }
             },
-            "match": "(?i:^\\s*(excluir)\\s+(aggregate|conversion|database|domain|function|group|index|language|operator class|operator|rule|schema|sequence|tabela|tablespace|trigger|type|user|view))",
+            "match": "(?i:^\\s*(remover)\\s+(aggregate|conversion|database|domain|function|group|index|language|operator class|operator|rule|schema|sequence|tabela|tablespace|trigger|type|user|view))",
             "name": "meta.drop.lincones"
         },
         {
@@ -59,7 +59,7 @@
                     "name": "keyword.other.cascade.lincones"
                 }
             },
-            "match": "(?i:\\s*(excluir)\\s+(tabela)\\s+(\\w+)(\\s+cascade)?\\b)",
+            "match": "(?i:\\s*(excluir)\\s+(tabela)\\s+(\\w+)(\\s+cascata)?\\b)",
             "name": "meta.drop.lincones"
         },
         {
@@ -133,7 +133,7 @@
             "name": "constant.numeric.lincones"
         },
         {
-            "match": "(?i:\\b(selecionar(\\s+(all|distinct))?|inserir\\s+(ignore\\s+)?em|atualizar|excluir|de|definir|onde|group\\s+by|or|like|and|union(\\s+all)?|having|order\\s+by|limit|cross\\s+join|join|straight_join|(inner|(left|right|full)(\\s+outer)?)\\s+join|natural(\\s+(inner|(left|right|full)(\\s+outer)?))?\\s+join)\\b)",
+            "match": "(?i:\\b(selecionar(\\s+(todos|distinct))?|inserir\\s+(ignore\\s+)?em|atualizar|excluir|de|definir|onde|agrupar\\s+por|ou|como|e|uni[aã]o(\\s+de\\s+todos\\s+com)?|tendo|ordenar\\s+por|limitar|cross\\s+join|join|straight_join|(inner|(left|right|full)(\\s+outer)?)\\s+join|natural(\\s+(inner|(left|right|full)(\\s+outer)?))?\\s+join)\\b)",
             "name": "keyword.other.DML.lincones"
         },
         {

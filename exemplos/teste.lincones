@@ -33,6 +33,6 @@ RENOMEAR COLUNA Cidade PARA Bairro;
 ALTERAR TABELA Pessoas
 MODIFICAR COLUNA DataNascimento ano;
 
-EXCLUIR TABELA Transportadoras;
+REMOVER TABELA Transportadoras;
 
 --Comentario aleatório
