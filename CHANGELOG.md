@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.18.1
+
+- Exponenciação à direita para todos os dialetos: https://github.com/DesignLiquido/delegua/pull/990;
+- Nova biblioteca de Delégua: [`criptografia`](https://github.com/DesignLiquido/delegua-criptografia). 
+
 ## 0.18.0
 
 - `contém` e `não contém` para Delégua e Pituguês;

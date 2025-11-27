@@ -1,0 +1,25 @@
+var criptografia = importar('criptografia')
+
+// Gerar hash SHA-256
+var hash = criptografia.sha256("Olá Mundo")
+escreva(hash)
+
+// Gerar UUID
+var id = criptografia.gerarUuid()
+escreva(id)
+
+// Codificar em Base64
+var textoBase64 = criptografia.codificarBase64("Texto secreto")
+escreva(textoBase64)
+
+// Criptografar com AES-256
+var resultado = criptografia.criptografarAes256("mensagem secreta", "minha-chave-super-secreta-aqui!")
+escreva(resultado.textoCriptografado)
+
+// Descriptografar com AES-256
+var textoOriginal = criptografia.descriptografarAes256(
+    resultado.textoCriptografado,
+    "minha-chave-super-secreta-aqui!",
+    resultado.iv
+)
+escreva(textoOriginal)
