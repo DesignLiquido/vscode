@@ -12,6 +12,14 @@
     "engines": {
         "vscode": "^1.68.0"
     },
+    "browser": "./dist/extensao-web.js",
+    "main": "./dist/extensao.js",
+    "capabilities": {
+        "virtualWorkspaces": true,
+        "untrustedWorkspaces": {
+            "supported": true
+        }
+    },
     "keywords": [
         "delegua",
         "birl",
@@ -72,7 +80,6 @@
         "pre-empacotar-web": "webpack --mode production --devtool hidden-source-map",
         "test-compile": "tsc -p ./"
     },
-    "main": "./dist/extensao.js",
     "activationEvents": [
         "onDebugResolve:designliquido",
         "onDebugDynamicConfigurations:designliquido",
@@ -553,6 +560,7 @@
         "@vscode/debugadapter": "^1.68.0",
         "@vscode/debugadapter-testsupport": "^1.68.0",
         "@vscode/debugprotocol": "^1.68.0",
+        "@vscode/test-web": "^0.0.76",
         "@vscode/vsce": "^3.6.0",
         "await-notify": "^1.0.1",
         "base64-js": "^1.5.1",
