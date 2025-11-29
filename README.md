@@ -99,10 +99,7 @@ Esta extensão está disponível tanto na versão desktop quanto na versão web 
 - **Análise de código em tempo real** com diagnósticos de erros e avisos
 - **IntelliSense** com sugestões de código inteligentes
 - **Documentação contextual** ao passar o mouse sobre símbolos
-- **Formatação automática** para:
-  - Delégua
-  - Mapler  
-  - VisuAlg
+- **Formatação automática** para Delégua e dialetos de Portugol
 - **Painel de Entrada e Saída** interativo
 - **Suporte a depuração** para todas as linguagens
 - **Criação de arquivos** Pituguês diretamente do navegador
@@ -112,7 +109,6 @@ Esta extensão está disponível tanto na versão desktop quanto na versão web 
 Devido a restrições do ambiente de navegador, os seguintes recursos não estão disponíveis:
 
 - **Tradução de código** entre linguagens (requer ambiente Node.js)
-- **Formatação de código** para Potigol e Portugol Studio
   
 > 💡 **Dica:** Para acesso completo a todos os recursos, instale a extensão na versão _desktop_ do VS Code.
 

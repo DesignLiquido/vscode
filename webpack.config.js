@@ -3,6 +3,7 @@
 'use strict';
 
 const path = require('path');
+const webpack = require('webpack');
 
 /**@type {import('webpack').Configuration}*/
 const webConfig = {
@@ -46,6 +47,11 @@ const webConfig = {
       'child_process': false
     }
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
+  ],
   module: {
     rules: [
       {

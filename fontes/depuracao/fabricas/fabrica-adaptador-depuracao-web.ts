@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { DeleguaSessaoDepuracaoWeb } from '../local/delegua-sessao-depuracao-web';
+import { DeleguaSessaoDepuracaoWeb } from '../web/delegua-sessao-depuracao-web';
 import { ProvedorVisaoEntradaSaida } from '../../visoes';
 
 export class FabricaAdaptadorDepuracaoWeb implements vscode.DebugAdapterDescriptorFactory {

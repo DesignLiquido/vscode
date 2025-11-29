@@ -21,17 +21,18 @@ import { Subject } from 'await-notify';
 
 import { inferirTipoVariavel } from '@designliquido/delegua/inferenciador';
 
-import { ArgumentosInicioDepuracao } from '../argumentos-inicio-depuracao';
-import { DeleguaTempoExecucaoLocal } from './delegua-tempo-execucao-local';
-import { DeleguaPontoParada } from '../delegua-ponto-parada';
-import { ElementoPilhaVsCode } from '../elemento-pilha';
-import { PontoParadaExtensao } from '../ponto-parada-extensao';
-import { ProvedorVisaoEntradaSaida } from '../../visoes';
+import { ArgumentosInicioDepuracao } from './argumentos-inicio-depuracao';
+import { DeleguaTempoExecucaoLocal } from './local/delegua-tempo-execucao-local';
+import { DeleguaPontoParada } from './delegua-ponto-parada';
+import { ElementoPilhaVsCode } from './elemento-pilha';
+import { PontoParadaExtensao } from './ponto-parada-extensao';
+import { ProvedorVisaoEntradaSaida } from '../visoes';
+import { TempoExecucaoInterface } from './tempo-execucao-interface';
 
 export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
-    private static threadId = 1;
+    protected static threadId = 1;
 
-    private tempoExecucao: DeleguaTempoExecucaoLocal;
+    protected tempoExecucao: TempoExecucaoInterface;
 
     private _arquivoInicial = '';
 
@@ -42,8 +43,8 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
     private _referenciaEscopoGlobal = 0;
 
     constructor(
-        private readonly provedorVisaoEntradaSaida: ProvedorVisaoEntradaSaida,
-        private readonly diagnosticos: vscode.DiagnosticCollection
+        protected readonly provedorVisaoEntradaSaida: ProvedorVisaoEntradaSaida,
+        protected readonly diagnosticos: vscode.DiagnosticCollection
     ) {
         super();
 

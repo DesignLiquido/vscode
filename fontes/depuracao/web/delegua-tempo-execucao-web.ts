@@ -7,19 +7,14 @@ import { cyrb53, PontoParada } from '@designliquido/delegua';
 
 import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
 
-import { Importador, RetornoImportador } from '@designliquido/delegua-node/importador';
-import { InterpretadorComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/interpretador-com-depuracao-importacao';
-import { ImportadorInterface } from '@designliquido/delegua-node/interfaces';
-import { AvaliadorSintaticoComImportacao } from '@designliquido/delegua-node/avaliador-sintatico';
-
 import { LexadorPitugues } from '@designliquido/delegua/lexador/dialetos/lexador-pitugues';
 import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-pitugues';
-import { InterpretadorPituguesComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/dialetos/interpretador-pitugues-com-depuracao-importacao';
 
 import { palavrasReservadasDelegua } from '@designliquido/delegua/lexador/palavras-reservadas';
 
 import { Declaracao } from '@designliquido/delegua/declaracoes';
 import { Lexador } from '@designliquido/delegua/lexador';
+import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
 
 import { LexadorBirl } from '@designliquido/birl/lexador';
 import { AvaliadorSintaticoBirl } from '@designliquido/birl/avaliador-sintatico';
@@ -47,19 +42,18 @@ import { ImportadorExtensao } from '../../importador';
 import { formatarDiagnosticosAvaliacaoSintatica } from '../../avaliacao-sintatica';
 import { TempoExecucaoInterface } from '../tempo-execucao-interface';
 
+// Polyfill para setImmediate no ambiente web
+const setImmediatePolyfill = (callback: (...args: any[]) => void, ...args: any[]) => {
+    setTimeout(() => callback(...args), 0);
+};
+
 /**
- * Em teoria não precisaria uma classe de tempo de execução local, mas,
- * aparentemente, a sessão de depuração precisa trabalhar com um EventEmitter
- * para funcionar corretamente.
- * 
- * Classe responsável por se comunicar com a linguagem Delégua, traduzindo 
- * as requisições do Visual Studio Code para o núcleo da linguagem, e também 
- * recebendo instruções da linguagem e emitindo os eventos correspondentes.
+ * Versão web do tempo de execução local.
+ * Esta versão não depende de módulos Node.js como `process` e usa APIs do VSCode para tudo.
  */
-export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExecucaoInterface {
+export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecucaoInterface {
     private lexador: LexadorInterface<SimboloInterface>;
     private avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>;
-    private importador: ImportadorInterface<SimboloInterface>;
     private importadorExtensao: ImportadorExtensao;
     private interpretador: InterpretadorComDepuracaoInterface;
     private resolvedor: { resolver(declaracoes: Declaracao[]): Promise<Declaracao[]> };
@@ -70,6 +64,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
     private _conteudoArquivo: string[];
     private _hashArquivoInicial = -1;
     private _pontosParada: PontoParada[] = [];
+    private _diretorioBase: string = '';
     
     constructor(
         private readonly provedorVisaoEntradaSaida: ProvedorVisaoEntradaSaida,
@@ -80,13 +75,9 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
 
     /**
      * Efetivamente envia o evento para o objeto de sessão de depuração.
-     * @param evento O nome do evento, conforme lista de eventos no construtor da sessão de depuração.
-     * @param argumentos Vetor de argumentos adicionais.
      */
     private enviarEvento(evento: string, ...argumentos: any[]) {
-        // `setImmediate` libera o _event loop_, permitindo ao VSCode atualizar
-        // todos os componentes da tela.
-        setImmediate((_) => {
+        setImmediatePolyfill(() => {
             this.emit(evento, ...argumentos);
         });
     }
@@ -95,7 +86,19 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
         this.enviarEvento('limparTela');
     }
 
+    /**
+     * Obtém o diretório base do workspace
+     */
+    private obterDiretorioBase(): string {
+        if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
+            return vscode.workspace.workspaceFolders[0].uri.path;
+        }
+        return '';
+    }
+
     private selecionarDialetoPorExtensao(extensao: string) {
+        const diretorioBase = this.obterDiretorioBase();
+        
         switch (extensao.toLowerCase()) {
             case "alg":
                 this._dialetoSelecionado = 'visualg';
@@ -104,7 +107,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
 
                 this.interpretador = new InterpretadorVisuAlgComDepuracao(
-                    process.cwd(), 
+                    diretorioBase,
                     this.escreverEmSaida.bind(this), 
                     this.escreverEmSaidaMesmaLinha.bind(this),
                     this.limparTela.bind(this)
@@ -117,7 +120,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
 
                 this.interpretador = new InterpretadorBirlComDepuracao(
-                    process.cwd(), 
+                    diretorioBase,
                     this.escreverEmSaida.bind(this), 
                     this.escreverEmSaidaMesmaLinha.bind(this)
                 );
@@ -127,16 +130,13 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
                 this._dialetoSelecionado = 'pitugues';
                 this.lexador = new LexadorPitugues();
                 this.avaliadorSintatico = new AvaliadorSintaticoPitugues();
-                this.importador = new Importador(
-                    this.lexador,
-                    {},
-                    {},
-                    true);
-                this.interpretador = new InterpretadorPituguesComDepuracaoImportacao(
-                    this.importador as any, 
-                    process.cwd(), 
-                    this.escreverEmSaida.bind(this), 
-                    this.escreverEmSaidaMesmaLinha.bind(this)
+                this.importadorExtensao = new ImportadorExtensao(this.lexador);
+                
+                // Nota: Para Pitugues na web, não usamos InterpretadorPituguesComDepuracaoImportacao
+                // pois ele depende do Importador do delegua-node
+                // Em vez disso, use o importadorExtensao para imports
+                vscode.window.showWarningMessage(
+                    'Depuração completa de Pituguês com imports não está disponível na versão web. Use a versão desktop para recursos completos.'
                 );
                 break;
             case "mapler":
@@ -147,7 +147,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
                 this.resolvedor = new ResolvedorMapler();
 
                 this.interpretador = new InterpretadorMaplerComDepuracao(
-                    process.cwd(), 
+                    diretorioBase,
                     this.escreverEmSaida.bind(this)
                 );
                 break;
@@ -158,7 +158,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
 
                 this.interpretador = new InterpretadorPortugolStudioComDepuracao(
-                    process.cwd(), 
+                    diretorioBase,
                     this.escreverEmSaida.bind(this), 
                     this.escreverEmSaidaMesmaLinha.bind(this), 
                     this.limparTela.bind(this)
@@ -172,7 +172,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
                 
                 this.interpretador = new InterpretadorPotigolComDepuracao(
-                    process.cwd(), 
+                    diretorioBase,
                     this.escreverEmSaida.bind(this), 
                     this.escreverEmSaidaMesmaLinha.bind(this)
                 );
@@ -180,27 +180,18 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
             default:
                 this._dialetoSelecionado = 'delegua';
                 this.lexador = new Lexador();
-                this.importador = new Importador(
-                    this.lexador, 
-                    {},
-                    {},
-                    true);
-                this.avaliadorSintatico = new AvaliadorSintaticoComImportacao(this.importador);
-                this.interpretador = new InterpretadorComDepuracaoImportacao(
-                    this.importador as any, 
-                    process.cwd(), 
-                    this.escreverEmSaida.bind(this), 
-                    this.escreverEmSaidaMesmaLinha.bind(this)
+                this.avaliadorSintatico = new AvaliadorSintatico();
+                this.importadorExtensao = new ImportadorExtensao(this.lexador);
+                
+                // Nota: Para Delégua na web, não usamos InterpretadorComDepuracaoImportacao
+                // pois ele depende do Importador do delegua-node
+                vscode.window.showWarningMessage(
+                    'Depuração completa de Delégua com imports não está disponível na versão web. Use a versão desktop para recursos completos.'
                 );
                 break;
         }
     }
 
-    /**
-     * 
-     * @param arquivoInicial 
-     * @param pararNaEntrada 
-     */
     async iniciar(
         documento: vscode.TextDocument | undefined,
         arquivoInicial: string, 
@@ -215,35 +206,36 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
         this._documento = documento;
         const partesNomeArquivo = arquivoInicial.split('.');
         const partesDiretorio = documento.uri.path.split('/').slice(0, -1);
-        let diretorioBase = partesDiretorio.reduce((anterior, parte) => anterior + `/${parte}`);
-        if (diretorioBase.length > 1) {
+        let diretorioBase = partesDiretorio.join('/');
+        if (diretorioBase.startsWith('/') && diretorioBase.length > 1) {
             diretorioBase = diretorioBase.slice(1);
         }
+        
+        this._diretorioBase = diretorioBase;
         this.selecionarDialetoPorExtensao(partesNomeArquivo.pop() || '.delegua');
 
         // Inicialização do interpretador pós escolha de dialeto.
-        this.interpretador.diretorioBase = diretorioBase;
-        this.interpretador.pontosParada = this._pontosParada;
-        this.interpretador.finalizacaoDaExecucao = this.finalizacao.bind(this);
-        this.interpretador.avisoPontoParadaAtivado = this.avisoPontoParadaAtivado.bind(this);
+        if (this.interpretador) {
+            this.interpretador.diretorioBase = diretorioBase;
+            this.interpretador.pontosParada = this._pontosParada;
+            this.interpretador.finalizacaoDaExecucao = this.finalizacao.bind(this);
+            this.interpretador.avisoPontoParadaAtivado = this.avisoPontoParadaAtivado.bind(this);
+        }
         
         this._arquivoInicial = arquivoInicial;
-        let retornoImportador: RetornoImportador<SimboloInterface>;
 
-        if (['delegua', 'pitugues'].includes(this._dialetoSelecionado)) {
-            retornoImportador = this.importador.importar(arquivoInicial, -1);
-            this._hashArquivoInicial = retornoImportador.hashArquivo;
-            this._conteudoArquivo = this.importador.conteudoArquivosAbertos[this._hashArquivoInicial];
-        } else {
-            retornoImportador = this.importadorExtensao.importarViaFuncaoConteudoDocumento(
-                this._documento.getText, 
-                this._documento.fileName
-            );
-            this._hashArquivoInicial = retornoImportador.hashArquivo;
-            this._conteudoArquivo = retornoImportador.conteudoArquivo;
-        }
+        const retornoImportador = this.importadorExtensao.importarViaFuncaoConteudoDocumento(
+            this._documento.getText.bind(this._documento), 
+            this._documento.fileName
+        );
+        this._hashArquivoInicial = retornoImportador.hashArquivo;
+        this._conteudoArquivo = retornoImportador.conteudoArquivo;
 
-        const retornoAvaliadorSintatico = this.avaliadorSintatico.analisar(retornoImportador.retornoLexador, retornoImportador.hashArquivo);
+        const retornoAvaliadorSintatico = this.avaliadorSintatico.analisar(
+            retornoImportador.retornoLexador, 
+            retornoImportador.hashArquivo
+        );
+        
         if (retornoAvaliadorSintatico.erros.length > 0) {
             const documentoAtivo = vscode.window.activeTextEditor?.document as vscode.TextDocument;
             this.diagnosticos.set(
@@ -259,32 +251,19 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
             declaracoes = await this.resolvedor.resolver(declaracoes);
         }
 
-        this.interpretador.prepararParaDepuracao(
-            declaracoes
-        );
+        if (!this.interpretador) {
+            throw new Error('Interpretador não foi inicializado corretamente.');
+        }
+
+        this.interpretador.prepararParaDepuracao(declaracoes);
 
         this.provedorVisaoEntradaSaida.limparTerminal();
         this.interpretador.interfaceEntradaSaida = {
-            // TODO: Isso só está aqui ainda para servir como referência para
-            // funcionalidades futuras da extensão.
-            /* question: async (mensagem: string, callback: Function) => {
-                return new Promise<any>((resolve, reject) => {
-                    vscode.window.showInputBox({
-                        prompt: mensagem,
-                        title: mensagem
-                    }).then((resposta: any) => {
-                        callback(resposta);
-                        resolve(0);
-                    });
-                });
-            } */
             question: async (mensagem: string, callback: Function) => {
                 return new Promise<any>((resolve) => {
-                    // `setImmediate` libera o _event loop_, permitindo ao VSCode atualizar
-                    // todos os componentes da tela.
-                    setImmediate((_) => {
+                    setImmediatePolyfill(() => {
                         this.provedorVisaoEntradaSaida.escreverEmSaidaMesmaLinha(mensagem);
-                        this.provedorVisaoEntradaSaida.promessaLeitura.wait().then(_ => {
+                        this.provedorVisaoEntradaSaida.promessaLeitura.wait().then(() => {
                             const copiaResultadoLeia = this.provedorVisaoEntradaSaida.copiaEntrada;
                             this.provedorVisaoEntradaSaida.copiaEntrada = "";
                             callback(copiaResultadoLeia);
@@ -296,19 +275,15 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
         };
 
         if (pararNaEntrada) {
-            // Executar apenas um passo na entrada.
             this.interpretador.comando = 'proximo';
-            this.interpretador.instrucaoPasso().then(_ => {
-                // Pós-execução
+            this.interpretador.instrucaoPasso().then(() => {
                 for (let erro of this.interpretador.erros) {
                     this.enviarEvento('saida', erro);
                 }
             });
         } else {
-            // Executamos até encontrar ou um ponto de parada, ou uma exceção.
             this.interpretador.comando = 'continuar';
-            this.interpretador.instrucaoContinuarInterpretacao().then(_ => {
-                // Pós-execução
+            this.interpretador.instrucaoContinuarInterpretacao().then(() => {
                 for (let erro of this.interpretador.erros) {
                     this.enviarEvento('saida', erro);
                 }
@@ -326,12 +301,6 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
         this.interpretador.instrucaoContinuarInterpretacao();
     }
 
-    /**
-     * Definição dos pontos de parada. 
-     * Ocorre antes de `iniciar()`, quando o interpretador ainda não
-     * foi instanciado. Por isso usamos `this._pontosParada`.
-     * @param pontosParada Os pontos de parada vindos da extensão.
-     */
     definirPontosParada(pontosParada: DebugProtocol.Breakpoint[]) {
         for (let pontoParada of pontosParada) {
             this._pontosParada.push({
@@ -369,15 +338,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
         });
     }
 
-    // TODO: Recolocar quando comando 'pausar' estiver devidamente implementado em Delégua.
-    /* pausar() {
-        this.interpretador.comando = 'pausar';
-        this.enviarEvento('pararEmPasso');
-    } */
-
     pilhaExecucao(): ElementoPilhaVsCode[] {
-        // O primeiro elemento da pilha é apenas onde fica o ambiente global.
-        // Por isso é descartado.
         const pilha = this.interpretador.pilhaEscoposExecucao.pilha.slice(1);
         const pilhaRetorno: ElementoPilhaVsCode[] = [];
 
@@ -416,9 +377,6 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
         return this.interpretador.pilhaEscoposExecucao.obterTodasVariaveis([]);
     }
 
-    /**
-     * Usado pelo depurador para dizer que a execução finalizou.
-     */
     finalizacao() {
         this.enviarEvento('finalizar');
     }
