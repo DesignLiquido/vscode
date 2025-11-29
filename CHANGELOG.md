@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.19.0
+
+- Primeira versão _web_ da extensão.
+
 ## 0.18.1
 
 - Exponenciação à direita para todos os dialetos: https://github.com/DesignLiquido/delegua/pull/990;

@@ -9,12 +9,14 @@ import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, Lexado
 
 import { LexadorPitugues } from '@designliquido/delegua/lexador/dialetos/lexador-pitugues';
 import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-pitugues';
+import { InterpretadorPituguesComDepuracao } from '@designliquido/delegua/interpretador/dialetos/pitugues';
 
 import { palavrasReservadasDelegua } from '@designliquido/delegua/lexador/palavras-reservadas';
 
 import { Declaracao } from '@designliquido/delegua/declaracoes';
 import { Lexador } from '@designliquido/delegua/lexador';
 import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
+import { InterpretadorComDepuracao } from '@designliquido/delegua/interpretador/depuracao';
 
 import { LexadorBirl } from '@designliquido/birl/lexador';
 import { AvaliadorSintaticoBirl } from '@designliquido/birl/avaliador-sintatico';
@@ -132,11 +134,16 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
                 this.avaliadorSintatico = new AvaliadorSintaticoPitugues();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
                 
-                // Nota: Para Pitugues na web, não usamos InterpretadorPituguesComDepuracaoImportacao
-                // pois ele depende do Importador do delegua-node
-                // Em vez disso, use o importadorExtensao para imports
-                vscode.window.showWarningMessage(
-                    'Depuração completa de Pituguês com imports não está disponível na versão web. Use a versão desktop para recursos completos.'
+                // Usa InterpretadorPituguesComDepuracao básico (sem suporte a imports avançados)
+                this.interpretador = new InterpretadorPituguesComDepuracao(
+                    diretorioBase,
+                    this.escreverEmSaida.bind(this), 
+                    this.escreverEmSaidaMesmaLinha.bind(this)
+                );
+                
+                // Aviso sobre limitação de imports
+                vscode.window.showInformationMessage(
+                    'Depuração de Pituguês disponível na web. Imports avançados requerem a versão desktop.'
                 );
                 break;
             case "mapler":
@@ -183,10 +190,16 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
                 this.avaliadorSintatico = new AvaliadorSintatico();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
                 
-                // Nota: Para Delégua na web, não usamos InterpretadorComDepuracaoImportacao
-                // pois ele depende do Importador do delegua-node
-                vscode.window.showWarningMessage(
-                    'Depuração completa de Delégua com imports não está disponível na versão web. Use a versão desktop para recursos completos.'
+                // Usa InterpretadorComDepuracao básico (sem suporte a imports avançados)
+                this.interpretador = new InterpretadorComDepuracao(
+                    diretorioBase,
+                    this.escreverEmSaida.bind(this), 
+                    this.escreverEmSaidaMesmaLinha.bind(this)
+                );
+                
+                // Aviso sobre limitação de imports
+                vscode.window.showInformationMessage(
+                    'Depuração de Delégua disponível na web. Imports avançados requerem a versão desktop.'
                 );
                 break;
         }

@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.18.1",
+    "version": "0.19.0",
     "engines": {
         "vscode": "^1.68.0"
     },
@@ -69,7 +69,7 @@
         "compilar-web": "webpack --mode development",
         "watch-web": "webpack --mode development --watch",
         "montar": "npm run -S build-base -- --sourcemap --sources-content=true && npm run -S build-web -- --sourcemap",
-        "empacotar": "yarn build-base && yarn copy-files-from-to && yarn vsce package --yarn",
+        "empacotar": "yarn build-base && yarn pre-empacotar-web && yarn copy-files-from-to && yarn vsce package --yarn",
         "publicar": "yarn vsce publish",
         "publicar-pre-lancamento": "vsce publish --pre-release",
         "vscode:pre-publicar": "rimraf dist && npm run -S build-base -- --minify && npm run -S build-web -- --minify",
