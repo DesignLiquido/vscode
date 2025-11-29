@@ -1,18 +1,20 @@
 import * as vscode from 'vscode';
-import * as sistemaOperacional from 'node:os';
 
 import { LexadorPortugolStudio, AvaliadorSintaticoPortugolStudio } from '@designliquido/portugol-studio';
 import { FormatadorPortugolStudio } from '@designliquido/portugol-studio/formatador/formatador-portugol-studio';
 
 export class PortugolStudioProvedorFormatacao implements vscode.DocumentFormattingEditProvider {
-    provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
+    provideDocumentFormattingEdits(documento: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
         const lexador = new LexadorPortugolStudio();
         const avaliadorSintatico = new AvaliadorSintaticoPortugolStudio();
-        const formatador = new FormatadorPortugolStudio(sistemaOperacional.EOL);
 
-        const resultadoLexador = lexador.mapear(document.getText().split('\n'), -1);
+        // Definição de final da linha. 
+        const caracterFimDaLinha = documento.eol === vscode.EndOfLine.CRLF ? '\r\n' : '\n';
+        const formatador = new FormatadorPortugolStudio(caracterFimDaLinha);
+
+        const resultadoLexador = lexador.mapear(documento.getText().split('\n'), -1);
         const resultadoAvaliacaoSintatica = avaliadorSintatico.analisar(resultadoLexador, -1);
-        let codigoFormatado: string = document.getText();
+        let codigoFormatado: string = documento.getText();
         try {
             codigoFormatado = formatador.formatar(resultadoAvaliacaoSintatica.declaracoes);
         } catch (erro) {
@@ -22,8 +24,8 @@ export class PortugolStudioProvedorFormatacao implements vscode.DocumentFormatti
         return [
             vscode.TextEdit.replace(
                 new vscode.Range(
-                    document.lineAt(0).range.start,
-                    document.lineAt(document.lineCount - 1).range.end
+                    documento.lineAt(0).range.start,
+                    documento.lineAt(documento.lineCount - 1).range.end
                 ),
                 codigoFormatado
             ),

@@ -6,7 +6,7 @@ const path = require('path');
 
 /**@type {import('webpack').Configuration}*/
 const webConfig = {
-  target: 'webworker', // Web extensions run in webworker context
+  target: 'webworker',
   entry: './fontes/extensao-web.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -19,10 +19,20 @@ const webConfig = {
     vscode: 'commonjs vscode'
   },
   resolve: {
-    mainFields: ['browser', 'module', 'main'], // Prefer browser-compatible versions
+    mainFields: ['browser', 'module', 'main'],
     extensions: ['.ts', '.js'],
     fallback: {
-      // Exclude Node.js core modules - use vscode APIs instead
+      // Polyfills needed for antlr4ts
+      'assert': require.resolve('assert/'),
+      
+      // Polyfills needed for @vscode/debugadapter
+      'url': require.resolve('url/'),
+      
+      // Polyfills for other dependencies
+      'timers': require.resolve('timers-browserify'),
+      'tty': false, // Not needed in browser
+      
+      // Node.js core modules - exclude these
       'fs': false,
       'path': false,
       'os': false,
@@ -30,7 +40,10 @@ const webConfig = {
       'stream': false,
       'util': false,
       'buffer': false,
-      'process': false
+      'process': false,
+      'net': false,
+      'readline': false,
+      'child_process': false
     }
   },
   module: {
@@ -42,7 +55,7 @@ const webConfig = {
           {
             loader: 'ts-loader',
             options: {
-              transpileOnly: true, // Faster builds
+              transpileOnly: true,
               compilerOptions: {
                 module: 'esnext'
               }
@@ -53,8 +66,14 @@ const webConfig = {
     ]
   },
   performance: {
-    hints: false // Disable size warnings for now
-  }
+    hints: false
+  },
+  ignoreWarnings: [
+    {
+      module: /delegua-node/,
+      message: /Critical dependency/
+    }
+  ]
 };
 
 module.exports = webConfig;

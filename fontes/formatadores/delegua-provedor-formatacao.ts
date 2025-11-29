@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as sistemaOperacional from 'os';
 
 import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
 import { FormatadorDelegua } from '@designliquido/delegua/formatadores';
@@ -13,7 +12,10 @@ export class DeleguaProvedorFormatacao implements vscode.DocumentFormattingEditP
     provideDocumentFormattingEdits(documento: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
         const lexador = new Lexador();
         const avaliadorSintatico = new AvaliadorSintatico(false);
-        const formatador = new FormatadorDelegua(sistemaOperacional.EOL);
+
+        // Definição de final da linha. 
+        const caracterFimDaLinha = documento.eol === vscode.EndOfLine.CRLF ? '\r\n' : '\n';
+        const formatador = new FormatadorDelegua(caracterFimDaLinha);
 
         const resultadoLexador = lexador.mapear(documento.getText().split('\n'), -1);
         const resultadoAvaliacaoSintatica = avaliadorSintatico.analisar(resultadoLexador, -1);

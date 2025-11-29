@@ -15,14 +15,14 @@ import {
     VisuAlgProvedorCompletude,
     LmhtProvedorCompletude
 } from './completude';
-import { 
-    DeleguaProvedorFormatacao, 
-    VisualgProvedorFormatacao,
-    PortugolStudioProvedorFormatacao,
-    PotigolProvedorFormatacao,
-    MaplerProvedorFormatacao
-} from './formatadores';
-import { traduzir } from './traducao';
+
+// Importações individuais dos formatadores
+import { DeleguaProvedorFormatacao } from './formatadores/delegua-provedor-formatacao';
+import { VisualgProvedorFormatacao } from './formatadores/visualg-provedor-formatacao';
+import { MaplerProvedorFormatacao } from './formatadores/mapler-provedor-formatacao';
+import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao';
+import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio-provedor-formatacao';
+
 import { executarAnalises } from './analise-codigo';
 import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
 import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
@@ -30,6 +30,22 @@ import { ProvedorVisaoEntradaSaida } from './visoes';
 import { FabricaAdaptadorDepuracaoWeb } from './depuracao/fabricas/fabrica-adaptador-depuracao-web';
 
 let changeTimeout: NodeJS.Timeout | null = null;
+
+/**
+ * Função auxiliar para mostrar aviso sobre recursos não disponíveis na web
+ */
+function mostrarAvisoRecursoIndisponivelWeb(recurso: string) {
+    vscode.window.showWarningMessage(
+        `${recurso} não está disponível na versão web do VSCode. Use a versão desktop para este recurso.`
+    );
+}
+
+/**
+ * Versão simplificada de tradução que mostra aviso
+ */
+async function traduzirWeb(origem: string, destino: string) {
+    mostrarAvisoRecursoIndisponivelWeb('Tradução de código');
+}
 
 export function activate(context: vscode.ExtensionContext) {
     const diagnosticosDelegua = vscode.languages.createDiagnosticCollection("delegua");
@@ -81,7 +97,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.workspace.onDidCloseTextDocument(doc => diagnosticosDelegua.delete(doc.uri))
     );
 
-    // Traduções
+    // Traduções - Com aviso de que não estão disponíveis na web
     const traducoes = [
         ['extension.designliquido.traduzir.css.para.foles', 'css', 'foles'],
         ['extension.designliquido.traduzir.delegua.para.assemblyscript', 'delegua', 'assemblyscript'],
@@ -100,17 +116,17 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 comando,
-                async () => await traduzir(origem, destino)
+                async () => await traduzirWeb(origem, destino)
             )
         );
     });
 
-    // Formatadores
+    // Formatadores - Agora todos funcionam na web!
     const formatadores = [
         ['delegua', new DeleguaProvedorFormatacao(diagnosticosDelegua)],
         ['mapler', new MaplerProvedorFormatacao()],
-        ['portugolstudio', new PortugolStudioProvedorFormatacao()],
         ['potigol', new PotigolProvedorFormatacao()],
+        ['portugolstudio', new PortugolStudioProvedorFormatacao()],
         ['visualg', new VisualgProvedorFormatacao()]
     ];
 
@@ -188,7 +204,7 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
-    // Comando para criar arquivo Pitugues (adaptado para Web)
+    // Comando para criar arquivo Pitugues
     const criarArquivoPitugues = vscode.commands.registerCommand(
         'extension.designliquido.criarArquivoPitugues',
         async () => {

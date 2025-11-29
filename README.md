@@ -35,6 +35,19 @@ Editores suportados:
 - [VSCodium](https://vscodium.com/)
 - [Cursor](https://www.cursor.com/)
 
+### 📦 Como Usar
+
+**Na Web:**
+1. Acesse [vscode.dev](https://vscode.dev) ou [github.dev](https://github.dev)
+2. Instale a extensão "Design Líquido - Linguagens em Português"
+3. Abra ou crie arquivos `.delegua`, `.visualg`, `.mapler`, etc.
+
+**No Desktop:**
+1. Abra o VS Code
+2. Vá em Extensões (Ctrl+Shift+X)
+3. Busque por "Design Líquido"
+4. Clique em Instalar
+
 ## Funcionalidades até então
 
 - Sintaxe colorida
@@ -75,6 +88,33 @@ Para depurar seu código, siga os passos de qualquer um dos vídeos abaixo:
 - [Executando Portugol Studio e Portugol Webstudio no Visual Studio Code](https://www.youtube.com/watch?v=joLJo875hMs)
 
 O resultado da execução aparecerá no painel "Entrada e Saída", que fica juntamente com o console de depuração e o terminal.
+
+## 🌐 Versão Web (vscode.dev)
+
+Esta extensão está disponível tanto na versão desktop quanto na versão web do VS Code (vscode.dev e github.dev). 
+
+### ✅ Recursos Disponíveis na Web
+
+- **Destaque de sintaxe** para todas as linguagens suportadas
+- **Análise de código em tempo real** com diagnósticos de erros e avisos
+- **IntelliSense** com sugestões de código inteligentes
+- **Documentação contextual** ao passar o mouse sobre símbolos
+- **Formatação automática** para:
+  - Delégua
+  - Mapler  
+  - VisuAlg
+- **Painel de Entrada e Saída** interativo
+- **Suporte a depuração** para todas as linguagens
+- **Criação de arquivos** Pituguês diretamente do navegador
+
+### ❌ Limitações da Versão Web
+
+Devido a restrições do ambiente de navegador, os seguintes recursos não estão disponíveis:
+
+- **Tradução de código** entre linguagens (requer ambiente Node.js)
+- **Formatação de código** para Potigol e Portugol Studio
+  
+> 💡 **Dica:** Para acesso completo a todos os recursos, instale a extensão na versão _desktop_ do VS Code.
 
 ## Quem já Contribuiu
 

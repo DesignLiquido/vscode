@@ -1,19 +1,21 @@
 import * as vscode from 'vscode';
-import * as sistemaOperacional from 'os';
 
 import { FormatadorVisuAlg } from '@designliquido/visualg/formatador';
 import { LexadorVisuAlg } from '@designliquido/visualg/lexador';
 import { AvaliadorSintaticoVisuAlg } from '@designliquido/visualg/avaliador-sintatico';
 
 export class VisualgProvedorFormatacao implements vscode.DocumentFormattingEditProvider {
-    provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
+    provideDocumentFormattingEdits(documento: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
         const lexador = new LexadorVisuAlg();
         const avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
-        const formatador = new FormatadorVisuAlg(sistemaOperacional.EOL);
+
+        // Definição de final da linha. 
+        const caracterFimDaLinha = documento.eol === vscode.EndOfLine.CRLF ? '\r\n' : '\n';
+        const formatador = new FormatadorVisuAlg(caracterFimDaLinha);
         
-        let codigoFormatado: string = document.getText();
+        let codigoFormatado: string = documento.getText();
         try {
-            const resultadoLexador = lexador.mapear(document.getText().split('\n'), -1);
+            const resultadoLexador = lexador.mapear(documento.getText().split('\n'), -1);
             const resultadoAvaliacaoSintatica = avaliadorSintatico.analisar(resultadoLexador, -1);
             
             codigoFormatado = formatador.formatar(resultadoAvaliacaoSintatica.declaracoes);
@@ -24,8 +26,8 @@ export class VisualgProvedorFormatacao implements vscode.DocumentFormattingEditP
         return [
             vscode.TextEdit.replace(
                 new vscode.Range(
-                    document.lineAt(0).range.start,
-                    document.lineAt(document.lineCount - 1).range.end
+                    documento.lineAt(0).range.start,
+                    documento.lineAt(documento.lineCount - 1).range.end
                 ),
                 codigoFormatado
             ),

@@ -16,7 +16,7 @@ import { LexadorPitugues } from '@designliquido/delegua/lexador/dialetos/lexador
 import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-pitugues';
 import { InterpretadorPituguesComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/dialetos/interpretador-pitugues-com-depuracao-importacao';
 
-import { palavrasReservadas } from '@designliquido/delegua/lexador/palavras-reservadas';
+import { palavrasReservadasDelegua } from '@designliquido/delegua/lexador/palavras-reservadas';
 
 import { Declaracao } from '@designliquido/delegua/declaracoes';
 import { Lexador } from '@designliquido/delegua/lexador';
@@ -44,7 +44,7 @@ import { InterpretadorVisuAlgComDepuracao } from '@designliquido/visualg/interpr
 import { ElementoPilhaVsCode } from '../elemento-pilha';
 import { ProvedorVisaoEntradaSaida } from '../../visoes';
 import { ImportadorExtensao } from '../../importador';
-import { formatarDiagnosticosAvaliacaoSintatica } from 'fontes/avaliacao-sintatica';
+import { formatarDiagnosticosAvaliacaoSintatica } from '../../avaliacao-sintatica';
 
 /**
  * Em teoria não precisaria uma classe de tempo de execução local, mas,
@@ -353,7 +353,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter {
     }
 
     obterVariavel(nome: string) {
-        if (Object.keys(palavrasReservadas).includes(nome)) {
+        if (Object.keys(palavrasReservadasDelegua).includes(nome)) {
             return undefined;
         }
 
