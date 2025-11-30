@@ -36,7 +36,7 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
 
     private _arquivoInicial = '';
 
-    private _idPontoParada = 1;
+    protected _idPontoParada = 1;
     private _configuracaoFinalizada = new Subject();
     private _alocadorEscopos = new Handles<string>();
     // private _referenciaEscopoLocal = 0;

@@ -9,6 +9,7 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 
     public static readonly viewType = 'extension.designliquido.entradaESaida';
 
+    // Legacy Subject for backward compatibility (keep if used elsewhere)
     promessaLeitura: { 
         wait: () => Promise<any>,
         notify: () => void,
@@ -19,6 +20,9 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
     copiaEntrada: string;
 
     private _view?: vscode.WebviewView;
+
+    // NEW: Promise-based input handler for web environment
+    private resolverLeitura: ((value: string) => void) | null = null;
 
     constructor(
 		private readonly _extensionUri: vscode.Uri,
@@ -36,10 +40,7 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
         this._view = webviewView;
 
 		webviewView.webview.options = {
-			// Allow scripts in the webview
 			enableScripts: true,
-            // retainContextWhenHidden: true,
-
 			localResourceRoots: [
 				this._extensionUri
 			]
@@ -53,7 +54,21 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 					{
                         this.copiaEntrada = this.entrada;
                         this.entrada = "";
+                        
+                        // Notify legacy Subject (keep for backward compatibility)
                         this.promessaLeitura.notify();
+                        
+                        // NEW: Resolve Promise-based input handler
+                        if (this.resolverLeitura) {
+                            const resolver = this.resolverLeitura;
+                            const valor = this.copiaEntrada;
+                            this.resolverLeitura = null;
+                            
+                            // Resolve on next tick to yield control to event loop
+                            setTimeout(() => {
+                                resolver(valor);
+                            }, 0);
+                        }
 						break;
 					}
                 case 'deleteChar':
@@ -70,6 +85,19 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
                     }
 			}
 		});
+    }
+
+    /**
+     * NEW: Aguarda entrada do usuário de forma não-bloqueante.
+     * Retorna uma Promise que resolve quando o usuário pressiona Enter.
+     * Esta implementação é otimizada para o ambiente web e não bloqueia o event loop.
+     */
+    public aguardarEntrada(): Promise<string> {
+        return new Promise((resolve) => {
+            // IMPORTANT: Always wait for fresh input, never use stale copiaEntrada
+            // The resolver will be called when commandSent is received
+            this.resolverLeitura = resolve;
+        });
     }
 
     public ativarVisao(): void {

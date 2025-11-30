@@ -68,6 +68,9 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
     private _pontosParada: PontoParada[] = [];
     private _diretorioBase: string = '';
     
+    // Store breakpoint lines temporarily until we have the file hash
+    private _linhasPontosParada: number[] = [];
+    
     constructor(
         private readonly provedorVisaoEntradaSaida: ProvedorVisaoEntradaSaida,
         private readonly diagnosticos: vscode.DiagnosticCollection
@@ -134,14 +137,12 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
                 this.avaliadorSintatico = new AvaliadorSintaticoPitugues();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
                 
-                // Usa InterpretadorPituguesComDepuracao básico (sem suporte a imports avançados)
                 this.interpretador = new InterpretadorPituguesComDepuracao(
                     diretorioBase,
                     this.escreverEmSaida.bind(this), 
                     this.escreverEmSaidaMesmaLinha.bind(this)
                 );
                 
-                // Aviso sobre limitação de imports
                 vscode.window.showInformationMessage(
                     'Depuração de Pituguês disponível na web. Imports avançados requerem a versão desktop.'
                 );
@@ -190,14 +191,12 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
                 this.avaliadorSintatico = new AvaliadorSintatico();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
                 
-                // Usa InterpretadorComDepuracao básico (sem suporte a imports avançados)
                 this.interpretador = new InterpretadorComDepuracao(
                     diretorioBase,
                     this.escreverEmSaida.bind(this), 
                     this.escreverEmSaidaMesmaLinha.bind(this)
                 );
                 
-                // Aviso sobre limitação de imports
                 vscode.window.showInformationMessage(
                     'Depuração de Delégua disponível na web. Imports avançados requerem a versão desktop.'
                 );
@@ -270,20 +269,25 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
 
         this.interpretador.prepararParaDepuracao(declaracoes);
 
+        // CRITICAL: Set breakpoints AFTER prepararParaDepuracao
+        // Create breakpoints with the correct file hash using stored line numbers
+        this._pontosParada = this._linhasPontosParada.map(linha => ({
+            hashArquivo: this._hashArquivoInicial,
+            linha: linha
+        }));
+        
+        // Assign to interpreter
+        this.interpretador.pontosParada = this._pontosParada;
+
         this.provedorVisaoEntradaSaida.limparTerminal();
+
+        // Non-blocking input handler
         this.interpretador.interfaceEntradaSaida = {
             question: async (mensagem: string, callback: Function) => {
-                return new Promise<any>((resolve) => {
-                    setImmediatePolyfill(() => {
-                        this.provedorVisaoEntradaSaida.escreverEmSaidaMesmaLinha(mensagem);
-                        this.provedorVisaoEntradaSaida.promessaLeitura.wait().then(() => {
-                            const copiaResultadoLeia = this.provedorVisaoEntradaSaida.copiaEntrada;
-                            this.provedorVisaoEntradaSaida.copiaEntrada = "";
-                            callback(copiaResultadoLeia);
-                            resolve(0);
-                        });
-                    });
-                });
+                this.provedorVisaoEntradaSaida.escreverEmSaidaMesmaLinha(mensagem);
+                const resposta = await this.provedorVisaoEntradaSaida.aguardarEntrada();
+                callback(resposta);
+                return 0;
             }
         };
 
@@ -293,6 +297,8 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
                 for (let erro of this.interpretador.erros) {
                     this.enviarEvento('saida', erro);
                 }
+            }).catch((erro) => {
+                this.enviarEvento('saida', `Erro durante execução: ${erro.message || erro}`);
             });
         } else {
             this.interpretador.comando = 'continuar';
@@ -300,31 +306,51 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
                 for (let erro of this.interpretador.erros) {
                     this.enviarEvento('saida', erro);
                 }
+            }).catch((erro) => {
+                this.enviarEvento('saida', `Erro durante execução: ${erro.message || erro}`);
             });
         }
     }
 
     adentrarEscopo() {
-        this.interpretador.adentrarEscopo();
+        if (this.interpretador) {
+            this.interpretador.adentrarEscopo();
+        }
     }
 
     continuar() {
-        this.interpretador.comando = 'continuar';
-        this.interpretador.pontoDeParadaAtivo = false;
-        this.interpretador.instrucaoContinuarInterpretacao();
+        if (this.interpretador) {
+            this.interpretador.comando = 'continuar';
+            this.interpretador.pontoDeParadaAtivo = false;
+            this.interpretador.instrucaoContinuarInterpretacao().catch((erro) => {
+                this.enviarEvento('saida', `Erro ao continuar: ${erro.message || erro}`);
+            });
+        }
     }
 
     definirPontosParada(pontosParada: DebugProtocol.Breakpoint[]) {
-        for (let pontoParada of pontosParada) {
-            this._pontosParada.push({
-                hashArquivo: cyrb53(pontoParada.source?.path?.toLowerCase() || ''),
-                linha: Number(pontoParada.line),
-            });
+        // Store the line numbers - we'll calculate hashes when we have the file
+        this._linhasPontosParada = pontosParada.map(bp => Number(bp.line));
+        
+        // If we already have a file hash (from a previous run), create the breakpoints now
+        if (this._hashArquivoInicial !== -1) {
+            this._pontosParada = this._linhasPontosParada.map(linha => ({
+                hashArquivo: this._hashArquivoInicial,
+                linha: linha
+            }));
+            
+            if (this.interpretador) {
+                this.interpretador.pontosParada = this._pontosParada;
+            }
         }
     }
 
     reiniciarPontosParada() {
         this._pontosParada = [];
+        this._linhasPontosParada = [];
+        if (this.interpretador) {
+            this.interpretador.pontosParada = this._pontosParada;
+        }
     }
 
     escreverEmSaida(mensagem: string) {
@@ -340,18 +366,26 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
             return undefined;
         }
 
-        return this.interpretador.obterVariavel(nome);
+        return this.interpretador?.obterVariavel(nome);
     }
 
     passo() {
-        this.interpretador.comando = 'proximo';
-        this.interpretador.pontoDeParadaAtivo = false;
-        this.interpretador.instrucaoPasso().then(() => {
-            this.enviarEvento('pararEmPasso');
-        });
+        if (this.interpretador) {
+            this.interpretador.comando = 'proximo';
+            this.interpretador.pontoDeParadaAtivo = false;
+            this.interpretador.instrucaoPasso().then(() => {
+                this.enviarEvento('pararEmPasso');
+            }).catch((erro) => {
+                this.enviarEvento('saida', `Erro ao executar passo: ${erro.message || erro}`);
+            });
+        }
     }
 
     pilhaExecucao(): ElementoPilhaVsCode[] {
+        if (!this.interpretador) {
+            return [];
+        }
+
         const pilha = this.interpretador.pilhaEscoposExecucao.pilha.slice(1);
         const pilhaRetorno: ElementoPilhaVsCode[] = [];
 
@@ -363,19 +397,21 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
                 pilhaRetorno.push({
                     id: ++id,
                     linha: declaracaoAtual.linha,
-                    nome: this._conteudoArquivo[declaracaoAtual.linha - 1].trim(),
+                    nome: this._conteudoArquivo[declaracaoAtual.linha - 1]?.trim() || '<desconhecido>',
                     arquivo: this._arquivoInicial,
                     metodo: '<principal>'
                 });
             } else {
                 const ultimaDeclaracaoEscopo = pilhaElemento.declaracoes[pilhaElemento.declaracoes.length - 1];
-                pilhaRetorno.push({
-                    id: ++id,
-                    linha: ultimaDeclaracaoEscopo.linha,
-                    nome: this._conteudoArquivo[ultimaDeclaracaoEscopo.linha - 1].trim(),
-                    arquivo: this._arquivoInicial,
-                    metodo: '<principal>'
-                });
+                if (ultimaDeclaracaoEscopo) {
+                    pilhaRetorno.push({
+                        id: ++id,
+                        linha: ultimaDeclaracaoEscopo.linha,
+                        nome: this._conteudoArquivo[ultimaDeclaracaoEscopo.linha - 1]?.trim() || '<desconhecido>',
+                        arquivo: this._arquivoInicial,
+                        metodo: '<principal>'
+                    });
+                }
             }
         }
 
@@ -383,11 +419,13 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
     }
 
     sairEscopo() {
-        this.interpretador.instrucaoProximoESair();
+        if (this.interpretador) {
+            this.interpretador.instrucaoProximoESair();
+        }
     }
 
     variaveis() {
-        return this.interpretador.pilhaEscoposExecucao.obterTodasVariaveis([]);
+        return this.interpretador?.pilhaEscoposExecucao.obterTodasVariaveis([]) || [];
     }
 
     finalizacao() {

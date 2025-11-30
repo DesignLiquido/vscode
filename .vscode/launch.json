@@ -6,7 +6,7 @@
 	"version": "0.2.0",
     "configurations": [
         {
-            "name": "Extensão",
+            "name": "Depurar Extensão no VSCode",
             "type": "extensionHost",
             "request": "launch",
             "args": [
@@ -17,6 +17,13 @@
 			 	"${workspaceFolder}/dist/**/*.js"
 			],
 			"preLaunchTask": "npm: watch"
+        },
+        {
+          "type": "chrome",
+          "request": "launch",
+          "name": "Testar Extensão no Navegador",
+          "url": "http://localhost:3000",
+          "webRoot": "${workspaceFolder}"
         }
     ]
 }
