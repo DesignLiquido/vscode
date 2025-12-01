@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.19.1
+
+- Correções em mecanismo de depuração para versão _web_;
+- Correções no formatador Delégua para esta extensão.
+
 ## 0.19.0
 
 - Primeira versão _web_ da extensão.
