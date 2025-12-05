@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 
-
 import { configurarDepuracao } from './depuracao/configuracao-depuracao';
 import { FabricaAdaptadorDepuracaoEmbutido } from './depuracao/fabricas';
 import {
@@ -38,6 +37,8 @@ import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-forma
 import { ProvedorVisaoEntradaSaida } from './visoes';
 import { MaplerProvedorFormatacao } from './formatadores/mapler-provedor-formatacao';
 import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-formatacao';
+import { gerarFluxograma } from './visoes/fluxogramas/geracao-fluxogramas';
+import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-visoes-fluxograma';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -102,6 +103,17 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.workspace.onDidCloseTextDocument(doc => diagnosticosDelegua.delete(doc.uri))
 	);
+
+    // Comandos de menu
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
+            'extension.designliquido.verFluxograma',
+            async (uri: vscode.Uri) => {
+                await gerarFluxograma(uri, context);
+            }
+        )
+    );
 
     // Traduções
 
@@ -210,7 +222,6 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
-    // TODO: Testar antes de habilitar.
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
             'portugolstudio',
@@ -435,5 +446,5 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
-    // nothing to do
+    GerenciadorVisoesFluxograma.descartar();
 }

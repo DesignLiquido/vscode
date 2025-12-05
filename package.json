@@ -138,6 +138,10 @@
             {
                 "command": "extension.designliquido.traduzir.visualg.para.delegua",
                 "title": "Tradução: Traduzir fonte VisuAlg para Delégua"
+            },
+            {
+                "command": "extension.designliquido.verFluxograma",
+                "title": "Ver Fluxograma"
             }
         ],
         "breakpoints": [
@@ -236,6 +240,65 @@
                         }
                     }
                 ]
+            }
+        ],
+        "grammars": [
+            {
+                "language": "birl",
+                "scopeName": "source.birl",
+                "path": "./gramaticas/birl.tmLanguage.json"
+            },
+            {
+                "language": "delegua",
+                "scopeName": "source.delegua",
+                "path": "./gramaticas/delegua.tmLanguage.json"
+            },
+            {
+                "language": "pitugues",
+                "scopeName": "source.pitugues",
+                "path": "./gramaticas/pitugues.tmLanguage.json"
+            },
+            {
+                "language": "foles",
+                "scopeName": "source.foles",
+                "path": "./gramaticas/foles.tmLanguage.json"
+            },
+            {
+                "language": "lincones",
+                "scopeName": "source.lincones",
+                "path": "./gramaticas/lincones.tmLanguage.json"
+            },
+            {
+                "language": "lmht",
+                "scopeName": "source.lmht",
+                "path": "./gramaticas/lmht.tmLanguage.json"
+            },
+            {
+                "language": "mapler",
+                "scopeName": "source.mapler",
+                "path": "./gramaticas/mapler.tmLanguage.json"
+            },
+            {
+                "language": "portugolstudio",
+                "scopeName": "source.portugolstudio",
+                "path": "./gramaticas/portugolstudio.tmLanguage.json"
+            },
+            {
+                "language": "potigol",
+                "scopeName": "source.potigol",
+                "path": "./gramaticas/potigol.tmLanguage.json"
+            },
+            {
+                "language": "visualg",
+                "scopeName": "source.visualg",
+                "path": "./gramaticas/visualg.tmLanguage.json"
+            }
+        ],
+        "iconThemes": [
+            {
+                "id": "designliquido",
+                "label": "Design Líquido",
+                "path": "./recursos/tema-icones.json"
             }
         ],
         "languages": [
@@ -408,65 +471,28 @@
                 }
             }
         ],
-        "grammars": [
-            {
-                "language": "birl",
-                "scopeName": "source.birl",
-                "path": "./gramaticas/birl.tmLanguage.json"
-            },
-            {
-                "language": "delegua",
-                "scopeName": "source.delegua",
-                "path": "./gramaticas/delegua.tmLanguage.json"
-            },
-            {
-                "language": "pitugues",
-                "scopeName": "source.pitugues",
-                "path": "./gramaticas/pitugues.tmLanguage.json"
-            },
-            {
-                "language": "foles",
-                "scopeName": "source.foles",
-                "path": "./gramaticas/foles.tmLanguage.json"
-            },
-            {
-                "language": "lincones",
-                "scopeName": "source.lincones",
-                "path": "./gramaticas/lincones.tmLanguage.json"
-            },
-            {
-                "language": "lmht",
-                "scopeName": "source.lmht",
-                "path": "./gramaticas/lmht.tmLanguage.json"
-            },
-            {
-                "language": "mapler",
-                "scopeName": "source.mapler",
-                "path": "./gramaticas/mapler.tmLanguage.json"
-            },
-            {
-                "language": "portugolstudio",
-                "scopeName": "source.portugolstudio",
-                "path": "./gramaticas/portugolstudio.tmLanguage.json"
-            },
-            {
-                "language": "potigol",
-                "scopeName": "source.potigol",
-                "path": "./gramaticas/potigol.tmLanguage.json"
-            },
-            {
-                "language": "visualg",
-                "scopeName": "source.visualg",
-                "path": "./gramaticas/visualg.tmLanguage.json"
-            }
-        ],
-        "iconThemes": [
-            {
-                "id": "designliquido",
-                "label": "Design Líquido",
-                "path": "./recursos/tema-icones.json"
-            }
-        ],
+        "menus": {
+            "explorer/context": [
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.verFluxograma",
+                    "group": "navigation"
+                }
+            ],
+            "editor/title/context": [
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.verFluxograma",
+                    "group": "navigation"
+                }
+            ],
+            "commandPalette": [
+                {
+                    "command": "extension.designliquido.verFluxograma",
+                    "when": "editorLangId == delegua || resourceExtname == .delegua"
+                }
+            ]
+        },
         "snippets": [
             {
                 "language": "delegua",
@@ -559,7 +585,7 @@
         "@vscode/debugadapter-testsupport": "^1.68.0",
         "@vscode/debugprotocol": "^1.68.0",
         "@vscode/test-web": "^0.0.76",
-        "@vscode/vsce": "^3.6.0",
+        "@vscode/vsce": "^3.7.1",
         "assert": "^2.1.0",
         "await-notify": "^1.0.1",
         "base64-js": "^1.5.1",

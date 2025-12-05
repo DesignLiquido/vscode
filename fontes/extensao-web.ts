@@ -29,6 +29,8 @@ import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
 import { ProvedorVisaoEntradaSaida } from './visoes';
 import { FabricaAdaptadorDepuracaoWeb } from './depuracao/fabricas/fabrica-adaptador-depuracao-web';
 import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-formatacao';
+import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-visoes-fluxograma';
+import { gerarFluxogramaWeb } from './visoes/fluxogramas/geracao-fluxogramas-web';
 
 let changeTimeout: NodeJS.Timeout | null = null;
 
@@ -122,6 +124,17 @@ export function activate(context: vscode.ExtensionContext) {
             )
         );
     });
+
+    // Comandos de menu
+    
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
+            'extension.designliquido.verFluxograma',
+            async (uri: vscode.Uri) => {
+                await gerarFluxogramaWeb(uri, context);
+            }
+        )
+    );
 
     // Formatadores - Agora todos funcionam na web!
     const formatadores = [
@@ -266,5 +279,5 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
-    // nothing to do
+    GerenciadorVisoesFluxograma.descartar();
 }
