@@ -28,6 +28,7 @@ import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
 import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
 import { ProvedorVisaoEntradaSaida } from './visoes';
 import { FabricaAdaptadorDepuracaoWeb } from './depuracao/fabricas/fabrica-adaptador-depuracao-web';
+import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-formatacao';
 
 let changeTimeout: NodeJS.Timeout | null = null;
 
@@ -97,12 +98,13 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.workspace.onDidCloseTextDocument(doc => diagnosticosDelegua.delete(doc.uri))
     );
 
-    // Traduções - Com aviso de que não estão disponíveis na web
+    // Traduções
     const traducoes = [
         ['extension.designliquido.traduzir.css.para.foles', 'css', 'foles'],
         ['extension.designliquido.traduzir.delegua.para.assemblyscript', 'delegua', 'assemblyscript'],
         ['extension.designliquido.traduzir.delegua.para.javascript', 'delegua', 'js'],
         ['extension.designliquido.traduzir.delegua.para.python', 'delegua', 'py'],
+        ['extension.designliquido.traduzir.delegua.para.x64', 'delegua', 'x64'],
         ['extension.designliquido.traduzir.foles.para.css', 'foles', 'css'],
         ['extension.designliquido.traduzir.html.para.lmht', 'html', 'lmht'],
         ['extension.designliquido.traduzir.javascript.para.delegua', 'js', 'delegua'],
@@ -125,6 +127,7 @@ export function activate(context: vscode.ExtensionContext) {
     const formatadores = [
         ['delegua', new DeleguaProvedorFormatacao(diagnosticosDelegua)],
         ['mapler', new MaplerProvedorFormatacao()],
+        ['pitugues', new PituguesProvedorFormatacao(diagnosticosDelegua)],
         ['potigol', new PotigolProvedorFormatacao()],
         ['portugolstudio', new PortugolStudioProvedorFormatacao()],
         ['visualg', new VisualgProvedorFormatacao()]

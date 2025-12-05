@@ -37,6 +37,7 @@ import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-forma
 
 import { ProvedorVisaoEntradaSaida } from './visoes';
 import { MaplerProvedorFormatacao } from './formatadores/mapler-provedor-formatacao';
+import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-formatacao';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -134,6 +135,13 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
+            'extension.designliquido.traduzir.delegua.para.x64',
+            async () => await traduzir('delegua', 'x64')
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
             'extension.designliquido.traduzir.foles.para.css',
             async () => await traduzir('foles', 'css')
         )
@@ -185,6 +193,13 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerDocumentFormattingEditProvider(
             'delegua',
             new DeleguaProvedorFormatacao(diagnosticosDelegua)
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'pitugues',
+            new PituguesProvedorFormatacao(diagnosticosDelegua)
         )
     );
 

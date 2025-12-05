@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.19.2
+
+- Nova tradução: Delégua para x64 (NASM e YASM);
+- Primeira versão do formatador de código Pituguês.
+
 ## 0.19.1
 
 - Correções em mecanismo de depuração para versão _web_;

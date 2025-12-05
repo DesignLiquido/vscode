@@ -27,7 +27,7 @@ import { ConversorHtml, ConversorLmht } from '@designliquido/lmht-js';
  * @param paraLinguagem - Linguagem de destino, representada pela extensão do arquivo.
  * @returns Uma Promise que resolve para qualquer mensagem de erro ou `void` se a tradução for bem-sucedida.
  */
-export async function traduzir(deLinguagem: string, paraLinguagem: string): Promise<any> {
+export async function traduzir(deLinguagem: string, paraLinguagem: string, alvo: string = ''): Promise<any> {
     try {
         let caminhoArquivoAbertoEditor =
             vscode.window.activeTextEditor?.document?.fileName ?? '';
@@ -54,7 +54,7 @@ export async function traduzir(deLinguagem: string, paraLinguagem: string): Prom
                 resultadoTraducao = traduzirPorMotorLinConEs(deLinguagem, paraLinguagem, caminhoArquivoAbertoEditor);
                 break;
             default:
-                resultadoTraducao = traduzirPorMotorDelegua(deLinguagem, paraLinguagem, caminhoArquivoAbertoEditor);
+                resultadoTraducao = traduzirPorMotorDelegua(deLinguagem, paraLinguagem, alvo, caminhoArquivoAbertoEditor);
                 break;
         }
 
@@ -85,7 +85,7 @@ export async function traduzir(deLinguagem: string, paraLinguagem: string): Prom
  * @param caminhoArquivoAbertoEditor O arquivo a ser traduzido.
  * @returns O texto com o conteúdo da tradução.
  */
-function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: string, caminhoArquivoAbertoEditor: string): string {
+function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: string, alvo: string, caminhoArquivoAbertoEditor: string): string {
     let resultadoTraducao = '';
     const delegua = new Delegua(
         undefined,
@@ -98,7 +98,7 @@ function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: string, cam
         return '';
     }
 
-    delegua.traduzirArquivo(caminhoArquivoAbertoEditor, `${deLinguagem}-para-${paraLinguagem}`, true);
+    delegua.traduzirArquivo(caminhoArquivoAbertoEditor, `${deLinguagem}-para-${paraLinguagem}`, alvo, true);
     return resultadoTraducao;
 }
 
