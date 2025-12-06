@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import tradutorWeb from './traducao/index-web';
 
 import { configurarDepuracao } from './depuracao/configuracao-depuracao';
 import {
@@ -35,19 +36,16 @@ import { gerarFluxogramaWeb } from './visoes/fluxogramas/geracao-fluxogramas-web
 let changeTimeout: NodeJS.Timeout | null = null;
 
 /**
- * Função auxiliar para mostrar aviso sobre recursos não disponíveis na web
- */
-function mostrarAvisoRecursoIndisponivelWeb(recurso: string) {
-    vscode.window.showWarningMessage(
-        `${recurso} não está disponível na versão web do VSCode. Use a versão desktop para este recurso.`
-    );
-}
-
-/**
  * Versão simplificada de tradução que mostra aviso
  */
-async function traduzirWeb(origem: string, destino: string) {
-    mostrarAvisoRecursoIndisponivelWeb('Tradução de código');
+async function traduzirWeb(origem: string, destino: string, alvo: string) {
+    try {
+        // Chama a versão web-safe do tradutor registrada em `fontes/traducao/index-web.ts`.
+        // O módulo tratará leitura/escrita via `vscode.workspace.fs` e mostrará mensagens apropriadas.
+        await tradutorWeb.traduzir(origem, destino, alvo);
+    } catch (error: any) {
+        vscode.window.showErrorMessage(`Erro na tradução web: ${error?.message ?? String(error)}`);
+    }
 }
 
 export function activate(context: vscode.ExtensionContext) {
@@ -102,11 +100,14 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Traduções
     const traducoes = [
-        ['extension.designliquido.traduzir.css.para.foles', 'css', 'foles'],
-        ['extension.designliquido.traduzir.delegua.para.assemblyscript', 'delegua', 'assemblyscript'],
-        ['extension.designliquido.traduzir.delegua.para.javascript', 'delegua', 'js'],
-        ['extension.designliquido.traduzir.delegua.para.python', 'delegua', 'py'],
-        ['extension.designliquido.traduzir.delegua.para.x64', 'delegua', 'x64'],
+        ['extension.designliquido.traduzir.css.para.foles', 'css', 'foles', ''],
+        ['extension.designliquido.traduzir.delegua.para.arm.android', 'delegua', 'arm', 'android'],
+        ['extension.designliquido.traduzir.delegua.para.arm.linux', 'delegua', 'arm', 'linux-arm'],
+        ['extension.designliquido.traduzir.delegua.para.assemblyscript', 'delegua', 'assemblyscript', ''],
+        ['extension.designliquido.traduzir.delegua.para.javascript', 'delegua', 'js', ''],
+        ['extension.designliquido.traduzir.delegua.para.python', 'delegua', 'py', ''],
+        ['extension.designliquido.traduzir.delegua.para.x64.linux', 'delegua', 'x64', 'linux'],
+        ['extension.designliquido.traduzir.delegua.para.x64.windows', 'delegua', 'x64', 'windows'],
         ['extension.designliquido.traduzir.foles.para.css', 'foles', 'css'],
         ['extension.designliquido.traduzir.html.para.lmht', 'html', 'lmht'],
         ['extension.designliquido.traduzir.javascript.para.delegua', 'js', 'delegua'],
@@ -116,11 +117,11 @@ export function activate(context: vscode.ExtensionContext) {
         ['extension.designliquido.traduzir.visualg.para.delegua', 'alg', 'delegua']
     ];
 
-    traducoes.forEach(([comando, origem, destino]) => {
+    traducoes.forEach(([comando, origem, destino, alvo]) => {
         context.subscriptions.push(
             vscode.commands.registerCommand(
                 comando,
-                async () => await traduzirWeb(origem, destino)
+                async () => await traduzirWeb(origem, destino, alvo)
             )
         );
     });

@@ -1,0 +1,141 @@
+import { Lexador } from '@designliquido/delegua/lexador';
+import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
+import { PlataformaAlvo, PlataformaAlvoARM, TradutorAssemblyARM, TradutorAssemblyScript, TradutorAssemblyX64, TradutorJavaScript, TradutorPython, TradutorReversoJavaScript } from '@designliquido/delegua/tradutores';
+import { AvaliadorSintaticoInterface } from '@designliquido/delegua';
+
+interface TradutorInterface<T> {
+    traduzir(declaracoes: T[]): string;
+}
+
+interface ImportadorInterface {
+    diretorioBase: string;
+    importar(caminho: string, indice: number): any;
+}
+
+export class NucleoTraducaoDeleguaWeb 
+{
+    lexador: Lexador;
+    avaliadorSintatico: AvaliadorSintaticoInterface<any, any>;
+    tradutor: TradutorInterface<any>;
+    funcaoDeRetorno: Function;
+    funcaoDeRetornoMesmaLinha: Function;
+    importador: ImportadorInterface;
+
+    arquivosAbertos: { [identificador: string]: string };
+    conteudoArquivosAbertos: { [identificador: string]: string[] };
+
+    comandoTraducao: string = '';
+
+    extensoes = {
+        arm: '.s',
+        assemblyscript: '.as',
+        delegua: '.delegua',
+        javascript: '.js',
+        js: '.js',
+        alg: '.alg',
+        visualg: '.alg',
+        python: '.py',
+        py: '.py',
+        x64: '.nasm'
+    };
+
+    constructor(
+        funcaoDeRetorno: Function,
+        funcaoDeRetornoMesmaLinha: Function
+    ) {
+        this.arquivosAbertos = {};
+        this.conteudoArquivosAbertos = {};
+
+        this.funcaoDeRetorno = funcaoDeRetorno || console.log;
+        this.funcaoDeRetornoMesmaLinha = funcaoDeRetornoMesmaLinha || console.log;
+    }
+
+    afericaoErrosLexador(retornoLexador: any): boolean {
+        // Verificar se há erros no retorno do lexador
+        return retornoLexador && (retornoLexador.erros || retornoLexador.erros?.length > 0);
+    }
+
+    iniciarTradutor(comandoTraducao: string, alvo: string = '') {
+        this.comandoTraducao = comandoTraducao;
+        this.lexador = new Lexador(false);
+
+        switch (comandoTraducao) {
+            case 'delegua-para-arm':
+                this.avaliadorSintatico = new AvaliadorSintatico();
+                let alvoResolvidoARM: PlataformaAlvoARM = 'linux-arm';
+                if (alvo === 'android') {
+                    alvoResolvidoARM = 'android';
+                }
+
+                this.tradutor = new TradutorAssemblyARM(alvoResolvidoARM);
+                break;
+            case 'delegua-para-assemblyscript':
+            case 'delegua-para-as':
+                this.avaliadorSintatico = new AvaliadorSintatico();
+                this.tradutor = new TradutorAssemblyScript();
+                break;
+            case 'delegua-para-js':
+            case 'delegua-para-javascript':
+                this.avaliadorSintatico = new AvaliadorSintatico();
+                this.tradutor = new TradutorJavaScript();
+                break;
+            case 'delegua-para-py':
+            case 'delegua-para-python':
+                this.avaliadorSintatico = new AvaliadorSintatico();
+                this.tradutor = new TradutorPython();
+                break;
+            case 'delegua-para-x64':
+                this.avaliadorSintatico = new AvaliadorSintatico();
+                let alvoResolvido: PlataformaAlvo = 'linux';
+                if (alvo === 'windows') {
+                    alvoResolvido = 'windows';
+                }
+
+                this.tradutor = new TradutorAssemblyX64(alvoResolvido);
+                break;
+            // TODO: Reabilitar depois de se livrar de `delegua-node` aqui.
+            /* case 'js-para-delegua':
+            case 'javascript-para-delegua':
+                this.avaliadorSintatico = new AvaliadorSintaticoJavaScript();
+                this.tradutor = new TradutorReversoJavaScript();
+                break;
+            case 'alg-para-delegua':
+            case 'visualg-para-delegua':
+                this.avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
+                this.tradutor = new TradutorReversoVisuAlg();
+                break; */
+            default:
+                throw new Error(`Tradutor '${comandoTraducao}' não implementado.`);
+        }
+    }
+
+    /**
+     * Realiza a tradução do arquivo passado como parâmetro no comando de execução.
+     * @param caminhoRelativoArquivo O caminho do arquivo.
+     * @param gerarArquivoSaida Se o resultado da tradução deve ser escrito em arquivo.
+     *                          Se verdadeiro, os arquivos de saída são escritos no mesmo diretório
+     *                          do arquivo passado no primeiro parâmetro.
+     */
+    async traduzirArquivo(conteudo: string): Promise<any> {
+        try {
+            const retornoLexador = this.lexador.mapear(
+                conteudo.split(`\n`), -1
+            );
+
+            if (this.afericaoErrosLexador(retornoLexador)) {
+                throw new Error('Erro na análise léxica');
+            }
+
+            const retornoAvaliadorSintatico = this.avaliadorSintatico.analisar(
+                retornoLexador, 
+                -1
+            );
+
+            const resultado = this.tradutor.traduzir(retornoAvaliadorSintatico.declaracoes);
+
+            return resultado;
+        } catch (erro: any) {
+            this.funcaoDeRetorno(''); // Retornar string vazia em caso de erro
+        }
+    }
+}

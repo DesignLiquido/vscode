@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.20.0
+
+- Nova funcionalidade: geração de fluxogramas;
+- Nova tradução: Delégua para ARM (Linux e Android);
+- Correções no Pituguês para permitir alguns casos com ponto-e-vírgula no meio da linha.
+
 ## 0.19.2
 
 - Nova tradução: Delégua para x64 (NASM e YASM);

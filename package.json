@@ -100,12 +100,32 @@
                 "title": "Tradução: Traduzir fonte CSS para FolEs"
             },
             {
+                "command": "extension.designliquido.traduzir.delegua.para.arm.linux",
+                "title": "Tradução: Traduzir fonte Delégua para ARM (Linux)"
+            },
+            {
+                "command": "extension.designliquido.traduzir.delegua.para.arm.android",
+                "title": "Tradução: Traduzir fonte Delégua para ARM (Android)"
+            },
+            {
                 "command": "extension.designliquido.traduzir.delegua.para.assemblyscript",
                 "title": "Tradução: Traduzir fonte Delégua para AssemblyScript"
             },
             {
                 "command": "extension.designliquido.traduzir.delegua.para.javascript",
                 "title": "Tradução: Traduzir fonte Delégua para JavaScript"
+            },
+            {
+                "command": "extension.designliquido.traduzir.delegua.para.python",
+                "title": "Tradução: Traduzir fonte Delégua para Python"
+            },
+            {
+                "command": "extension.designliquido.traduzir.delegua.para.x64.linux",
+                "title": "Tradução: Traduzir fonte Delégua para x64 (Linux)"
+            },
+            {
+                "command": "extension.designliquido.traduzir.delegua.para.x64.windows",
+                "title": "Tradução: Traduzir fonte Delégua para x64 (Windows)"
             },
             {
                 "command": "extension.designliquido.traduzir.delegua.para.python",
@@ -609,7 +629,7 @@
         "@designliquido/delegua-http": "^0.1.2",
         "@designliquido/delegua-json": "^0.2.1",
         "@designliquido/delegua-matematica": "^0.3.0",
-        "@designliquido/delegua-node": "^1.11.0",
+        "@designliquido/delegua-node": "^1.12.1",
         "@designliquido/delegua-tempo": "^1.0.1",
         "@designliquido/foles": "^0.11.1",
         "@designliquido/lincones-js": "^0.1.0",
