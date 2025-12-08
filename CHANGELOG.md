@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.20.1
+
+- Melhorias em biblioteca de criptografia para Delégua e Pituguês;
+- Declaração de variáveis em Pituguês é sempre implícita: em outras palavras, `var` não é mais aceita como palavra reservada: https://github.com/DesignLiquido/delegua/pull/1001
+
 ## 0.20.0
 
 - Nova funcionalidade: geração de fluxogramas;
