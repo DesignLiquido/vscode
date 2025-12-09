@@ -9,7 +9,7 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 
     public static readonly viewType = 'extension.designliquido.entradaESaida';
 
-    // Legacy Subject for backward compatibility (keep if used elsewhere)
+    // Subject legado para retrocompatibilidade (manter se usado em outro lugar)
     promessaLeitura: { 
         wait: () => Promise<any>,
         notify: () => void,
@@ -21,7 +21,7 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 
     private _view?: vscode.WebviewView;
 
-    // NEW: Promise-based input handler for web environment
+    // NOVO: Manipulador de entrada baseado em Promise para ambiente web
     private resolverLeitura: ((value: string) => void) | null = null;
 
     constructor(
@@ -54,17 +54,17 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 					{
                         this.copiaEntrada = this.entrada;
                         this.entrada = "";
-                        
-                        // Notify legacy Subject (keep for backward compatibility)
+
+                        // Notifica Subject legado (manter para retrocompatibilidade)
                         this.promessaLeitura.notify();
-                        
-                        // NEW: Resolve Promise-based input handler
+
+                        // NOVO: Resolve manipulador de entrada baseado em Promise
                         if (this.resolverLeitura) {
                             const resolver = this.resolverLeitura;
                             const valor = this.copiaEntrada;
                             this.resolverLeitura = null;
-                            
-                            // Resolve on next tick to yield control to event loop
+
+                            // Resolve no próximo tick para ceder controle ao loop de eventos
                             setTimeout(() => {
                                 resolver(valor);
                             }, 0);
@@ -88,14 +88,14 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
     }
 
     /**
-     * NEW: Aguarda entrada do usuário de forma não-bloqueante.
+     * NOVO: Aguarda entrada do usuário de forma não-bloqueante.
      * Retorna uma Promise que resolve quando o usuário pressiona Enter.
      * Esta implementação é otimizada para o ambiente web e não bloqueia o event loop.
      */
     public aguardarEntrada(): Promise<string> {
         return new Promise((resolve) => {
-            // IMPORTANT: Always wait for fresh input, never use stale copiaEntrada
-            // The resolver will be called when commandSent is received
+            // IMPORTANTE: Sempre aguardar nova entrada, nunca usar copiaEntrada obsoleta
+            // O resolver será chamado quando commandSent for recebido
             this.resolverLeitura = resolve;
         });
     }
@@ -128,14 +128,14 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 	}
 
     private _getHtmlForWebview(webview: vscode.Webview) {
-		// Get the local path to main script run in the webview, then convert it to a uri we can use in the webview.
+		// Obtém o caminho local para o script principal executado na webview, depois converte para um URI que podemos usar na webview.
 		const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@xterm', 'xterm', 'lib', 'xterm.js'));
 		const addonFitUrl = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@xterm', 'addon-fit', 'lib', 'addon-fit.js'));
 
-		// Do the same for the stylesheet.
+		// Faz o mesmo para a folha de estilos.
 		const estilosTerminal = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@xterm', 'xterm', 'css', 'xterm.css'));
 
-        // Generate a nonce for inline scripts
+        // Gera um nonce para scripts inline
         const nonce = this.obterNonce();
 
         const htmlFinal = `<!DOCTYPE html>
@@ -173,7 +173,7 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 
                     const oldState = vscode.getState() || {};
 
-                    // Get VS Code theme colors
+                    // Obtém as cores do tema do VS Code
                     const computedStyle = getComputedStyle(document.documentElement);
                     const backgroundColor = computedStyle.getPropertyValue('--vscode-terminal-background') ||
                                           computedStyle.getPropertyValue('--vscode-editor-background');
@@ -197,6 +197,17 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 
                     terminal.open(document.getElementById("terminal"));
                     fitAddon.fit();
+
+                    // Redimensiona o terminal quando o painel é redimensionado
+                    const resizeObserver = new ResizeObserver(() => {
+                        fitAddon.fit();
+                    });
+                    resizeObserver.observe(document.getElementById("terminal"));
+
+                    // Também lida com eventos de redimensionamento da janela
+                    window.addEventListener('resize', () => {
+                        fitAddon.fit();
+                    });
 
                     if (oldState) {
                         terminal.write(oldState);
@@ -223,18 +234,22 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
                         }
                     });
 
-                    // Handle messages sent from the extension to the webview
+                    // Lida com mensagens enviadas da extensão para a webview
                     window.addEventListener('message', event => {
-                        const message = event.data; // The json data that the extension sent
+                        const message = event.data; // Os dados JSON que a extensão enviou
                         switch (message.type) {
                             case 'escreverEmSaida':
                                 {
                                     terminal.writeln(message.content);
+                                    // Auto-rolagem para o final
+                                    terminal.scrollToBottom();
                                     break;
                                 }
                             case 'escreverEmSaidaMesmaLinha':
                                 {
                                     terminal.write(message.content);
+                                    // Auto-rolagem para o final
+                                    terminal.scrollToBottom();
                                     break;
                                 }
                             case 'limparTerminal':

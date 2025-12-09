@@ -45,8 +45,8 @@ export class DeleguaTempoExecucaoRemoto extends EventEmitter {
     private _pontosParada = new Map<string, DeleguaPontoParada[]>();
     private _mapaPontosParada = new Map<string, Map<number, DeleguaPontoParada>>();
 
-    // since we want to send breakpoint events, we will assign an id to every event
-	// so that the frontend can match events with breakpoints.
+    // como queremos enviar eventos de ponto de parada, atribuiremos um id a cada evento
+	// para que o frontend possa combinar eventos com pontos de parada.
 	private _breakpointId    = 1;
 
     private _arquivoFonte = '';
@@ -114,10 +114,10 @@ export class DeleguaTempoExecucaoRemoto extends EventEmitter {
         this.conectarAoDepurador();
 
         if (pararNaEntrada) {
-            // we step once
+            // damos um passo
             this.passo('stopOnEntry');
         } else {
-            // we just start to run until we hit a breakpoint or an exception
+            // apenas começamos a executar até atingirmos um ponto de parada ou uma exceção
             this.continuar();
         }
         //this.printDeléguaOutput('StartDebug ' + host + ":" + port + "(" + this._instanceId + ")");

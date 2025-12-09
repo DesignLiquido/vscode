@@ -53,7 +53,7 @@ export class GerenciadorVisoesFluxograma {
             localizadorExtensao
         );
 
-        // Reset when the panel is closed
+        // Reinicia quando o painel é fechado
         painel.onDidDispose(
             () => {
                 GerenciadorVisoesFluxograma.painelAtual = undefined;

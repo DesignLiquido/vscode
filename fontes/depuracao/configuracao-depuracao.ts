@@ -23,7 +23,8 @@ export function configurarDepuracao(
 					name: 'Executar Arquivo',
 					request: 'launch',
 					program: targetResource.fsPath,
-					debugConsole: 'none'
+					debugConsole: 'none',
+					internalConsoleOptions: 'neverOpen'
 				});
 			}
 		}),
@@ -40,7 +41,8 @@ export function configurarDepuracao(
 					request: 'launch',
 					program: targetResource.fsPath,
 					stopOnEntry: false,
-					debugConsole: 'none'
+					debugConsole: 'none',
+					internalConsoleOptions: 'neverOpen'
 				});
 			}
 		}),
@@ -73,7 +75,9 @@ export function configurarDepuracao(
 					name: "Execução do arquivo atual",
 					request: "launch",
 					type: "delegua",
-					program: "${file}"
+					program: "${file}",
+					debugConsole: "none",
+					internalConsoleOptions: "neverOpen"
 				}
 			];
 		}

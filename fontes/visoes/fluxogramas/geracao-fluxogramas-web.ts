@@ -11,7 +11,7 @@ import { GerenciadorVisoesFluxograma } from './gerenciador-visoes-fluxograma';
  */
 export async function gerarFluxogramaWeb(uri: vscode.Uri | undefined, context: vscode.ExtensionContext) {
     try {
-        // Get the file URI
+        // Obtém o URI do arquivo
         const fileUri = uri || vscode.window.activeTextEditor?.document.uri;
 
         if (!fileUri) {
@@ -19,11 +19,11 @@ export async function gerarFluxogramaWeb(uri: vscode.Uri | undefined, context: v
             return;
         }
 
-        // Get the file name
+        // Obtém o nome do arquivo
         const pathSegments = fileUri.path.split('/');
         const fileName = pathSegments[pathSegments.length - 1];
 
-        // Validate file extension (optional)
+        // Valida a extensão do arquivo (opcional)
         if (!fileName.endsWith('.delegua') && !fileName.endsWith('.delégua')) {
             const proceed = await vscode.window.showWarningMessage(
                 'Este arquivo pode não ser um arquivo Delégua válido. Deseja continuar?',
@@ -35,7 +35,7 @@ export async function gerarFluxogramaWeb(uri: vscode.Uri | undefined, context: v
             }
         }
 
-        // Show progress indicator
+        // Exibe indicador de progresso
         await vscode.window.withProgress(
             {
                 location: vscode.ProgressLocation.Notification,
@@ -45,12 +45,12 @@ export async function gerarFluxogramaWeb(uri: vscode.Uri | undefined, context: v
             async (progress) => {
                 progress.report({ increment: 0, message: 'Lendo arquivo...' });
 
-                // Parse the Delégua code
+                // Analisa o código Delégua
                 const lexador = new Lexador();
                 const avaliadorSintatico = new AvaliadorSintatico();
-                
-                // Note: In web version, workspace folders work differently
-                // You may need to adapt this based on your needs
+
+                // Nota: Na versão web, as pastas do workspace funcionam de forma diferente
+                // Você pode precisar adaptar isso conforme suas necessidades
                 // const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.toString();
                 const importador = new ImportadorExtensao(lexador);
 
@@ -70,7 +70,7 @@ export async function gerarFluxogramaWeb(uri: vscode.Uri | undefined, context: v
 
                 progress.report({ increment: 30, message: 'Gerando diagrama...' });
 
-                // Generate Mermaid diagram
+                // Gera diagrama Mermaid
                 const tradutor = new TradutorMermaidJs();
                 const diagramaMermaid = tradutor.traduzir(retornoAvaliadorSintatico.declaracoes);
 
@@ -83,8 +83,8 @@ export async function gerarFluxogramaWeb(uri: vscode.Uri | undefined, context: v
 
                 progress.report({ increment: 30, message: 'Exibindo fluxograma...' });
 
-                // Create and show the webview panel using the shared manager
-                // Note: context.extensionUri works in both desktop and web
+                // Cria e exibe o painel webview usando o gerenciador compartilhado
+                // Nota: context.extensionUri funciona tanto no desktop quanto na web
                 GerenciadorVisoesFluxograma.criarOuExibir(
                     diagramaMermaid,
                     fileName,

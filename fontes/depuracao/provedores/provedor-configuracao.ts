@@ -37,13 +37,21 @@ export class ProvedorConfiguracaoDelegua
 			}
         }
 
+		// Garante que o Console de Depuração nunca abra automaticamente
+		if (!config.internalConsoleOptions) {
+			config.internalConsoleOptions = 'neverOpen';
+		}
+		if (!config.debugConsole) {
+			config.debugConsole = 'none';
+		}
+
         if (!config.program) {
             return vscode.window
                 .showInformationMessage(
                     'Caminho para arquivo fonte a ser depurado não encontrado.'
                 )
                 .then((_) => {
-                    return undefined; // abort launch
+                    return undefined; // abortar inicialização
                 });
         }
 

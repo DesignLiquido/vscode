@@ -67,8 +67,8 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
     private _hashArquivoInicial = -1;
     private _pontosParada: PontoParada[] = [];
     private _diretorioBase: string = '';
-    
-    // Store breakpoint lines temporarily until we have the file hash
+
+    // Armazena linhas de pontos de parada temporariamente até termos o hash do arquivo
     private _linhasPontosParada: number[] = [];
     
     constructor(
@@ -269,19 +269,19 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
 
         this.interpretador.prepararParaDepuracao(declaracoes);
 
-        // CRITICAL: Set breakpoints AFTER prepararParaDepuracao
-        // Create breakpoints with the correct file hash using stored line numbers
+        // CRÍTICO: Define pontos de parada APÓS prepararParaDepuracao
+        // Cria pontos de parada com o hash de arquivo correto usando números de linha armazenados
         this._pontosParada = this._linhasPontosParada.map(linha => ({
             hashArquivo: this._hashArquivoInicial,
             linha: linha
         }));
-        
-        // Assign to interpreter
+
+        // Atribui ao interpretador
         this.interpretador.pontosParada = this._pontosParada;
 
         this.provedorVisaoEntradaSaida.limparTerminal();
 
-        // Non-blocking input handler
+        // Manipulador de entrada não-bloqueante
         this.interpretador.interfaceEntradaSaida = {
             question: async (mensagem: string, callback: Function) => {
                 this.provedorVisaoEntradaSaida.escreverEmSaidaMesmaLinha(mensagem);
@@ -329,10 +329,10 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
     }
 
     definirPontosParada(pontosParada: DebugProtocol.Breakpoint[]) {
-        // Store the line numbers - we'll calculate hashes when we have the file
+        // Armazena os números de linha - calcularemos os hashes quando tivermos o arquivo
         this._linhasPontosParada = pontosParada.map(bp => Number(bp.line));
-        
-        // If we already have a file hash (from a previous run), create the breakpoints now
+
+        // Se já temos um hash de arquivo (de uma execução anterior), cria os pontos de parada agora
         if (this._hashArquivoInicial !== -1) {
             this._pontosParada = this._linhasPontosParada.map(linha => ({
                 hashArquivo: this._hashArquivoInicial,

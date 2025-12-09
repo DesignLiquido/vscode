@@ -436,7 +436,7 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
         response: DebugProtocol.LaunchResponse,
         args: ArgumentosInicioDepuracao
     ) {
-        // make sure to 'Stop' the buffered logging if 'trace' is not set
+        // garante que o registro em buffer seja 'Stop' se 'trace' não estiver definido
         logger.setup(
             args.trace ? Logger.LogLevel.Verbose : Logger.LogLevel.Stop,
             false
@@ -537,10 +537,10 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
         } */
         const clientLines = args.lines || [];
 
-        // clear all breakpoints for this file
+        // limpa todos os pontos de parada para este arquivo
         this._tempoExecucao.limparTodosPontosParada(path);
 
-        // set and verify breakpoint locations
+        // define e verifica localizações de pontos de parada
         const actualBreakpoints = clientLines.map((l) => {
             let { verificado, linha, id } = this._tempoExecucao.definirPontoParada(
                 path,

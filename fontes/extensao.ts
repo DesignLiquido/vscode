@@ -429,10 +429,10 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(abrirPainelEntradaESaida);
 
 
-    // debug adapters can be run in different ways by using a vscode.DebugAdapterDescriptorFactory:
+    // adaptadores de depuração podem ser executados de diferentes formas usando um vscode.DebugAdapterDescriptorFactory:
     switch (runMode) {
         case 'server':
-            // run the debug adapter as a server inside the extension and communicate via a socket
+            // executa o adaptador de depuração como um servidor dentro da extensão e comunica via socket
             configurarDepuracao(
                 context,
                 new DeleguaAdapterServerDescriptorFactory()
@@ -440,7 +440,7 @@ export function activate(context: vscode.ExtensionContext) {
             break;
 
         case 'namedPipeServer':
-            // run the debug adapter as a server inside the extension and communicate via a named pipe (Windows) or UNIX domain socket (non-Windows)
+            // executa o adaptador de depuração como um servidor dentro da extensão e comunica via named pipe (Windows) ou socket de domínio UNIX (não-Windows)
             configurarDepuracao(
                 context,
                 new DeleguaAdapterNamedPipeServerDescriptorFactory()
@@ -449,7 +449,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         case 'external':
         default:
-            // run the debug adapter as a separate process
+            // executa o adaptador de depuração como um processo separado
             configurarDepuracao(
                 context,
                 new DeleguaDebugAdapterExecutableFactory()

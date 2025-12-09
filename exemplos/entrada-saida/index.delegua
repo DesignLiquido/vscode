@@ -16,8 +16,8 @@ escreva(1 == "1");
 escreva(1 == '1');
 
 // Nulo
-var variavel;
-escreva(variavel);
+var minhaVariavel;
+escreva(minhaVariavel);
 var nula = nulo;
 escreva(nula);
 
@@ -37,9 +37,9 @@ se (a == 1) {
 }
 
 escolha (2) {
-    caso "1":
-        escreva("correspondente à opção 1");
     caso 1:
+        escreva("correspondente à opção 1");
+    caso 2:
         escreva("correspondente à opção 2"); 
     padrao:
         escreva("Sem opção correspondente");

@@ -40,7 +40,7 @@ export async function gerarFluxograma(uri: vscode.Uri | undefined, context: vsco
             async (progresso) => {
                 progresso.report({ increment: 0, message: 'Lendo arquivo...' });
 
-                // Parse the Delégua code
+                // Analisa o código Delégua
                 const lexador = new Lexador();
                 const importador = new ImportadorExtensao(lexador);
                 const avaliadorSintatico = new AvaliadorSintatico();

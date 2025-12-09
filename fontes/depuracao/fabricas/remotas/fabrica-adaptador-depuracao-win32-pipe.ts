@@ -32,7 +32,7 @@ export class DeleguaAdapterNamedPipeServerDescriptorFactory
             }).listen(pipePath);
         }
 
-        // make VS Code connect to debug server
+        // faz o VS Code conectar ao servidor de depuração
         return new vscode.DebugAdapterNamedPipeServer(
             this.server.address() as string
         );
