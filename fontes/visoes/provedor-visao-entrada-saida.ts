@@ -147,6 +147,23 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
                 <script src="${scriptUri}"></script>
                 <script src="${addonFitUrl}"></script>
                 <link href="${estilosTerminal}" rel="stylesheet">
+                <style>
+                    html, body {
+                        height: 100%;
+                        margin: 0;
+                        padding: 0;
+                        overflow: hidden;
+                        background-color: var(--vscode-terminal-background, var(--vscode-editor-background));
+                        color: var(--vscode-terminal-foreground, var(--vscode-editor-foreground));
+                    }
+                    #terminal {
+                        height: 100%;
+                        width: 100%;
+                    }
+                    .xterm {
+                        height: 100%;
+                    }
+                </style>
             </head>
             <body>
                 <div id="terminal"></div>
@@ -156,10 +173,21 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 
                     const oldState = vscode.getState() || {};
 
+                    // Get VS Code theme colors
+                    const computedStyle = getComputedStyle(document.documentElement);
+                    const backgroundColor = computedStyle.getPropertyValue('--vscode-terminal-background') ||
+                                          computedStyle.getPropertyValue('--vscode-editor-background');
+                    const foregroundColor = computedStyle.getPropertyValue('--vscode-terminal-foreground') ||
+                                          computedStyle.getPropertyValue('--vscode-editor-foreground');
+
                     const terminal = new Terminal({
                         rows: 20,
                         fontFamily: '"Cascadia Code", Menlo, monospace',
-                        allowProposedApi: true
+                        allowProposedApi: true,
+                        theme: {
+                            background: backgroundColor,
+                            foreground: foregroundColor
+                        }
                     });
                     let resultadoLeia = "";
                     let ultimoBuffer = 0;
