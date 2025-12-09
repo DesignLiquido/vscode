@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.20.2
+
+- Ajustes no painel de entrada e saída conforme sugestões de https://github.com/DesignLiquido/visualg/issues/82;
+- Vários melhoramentos no analisador semântico de Delégua;
+- Ajuste na gramática de Pituguês quanto a importação e alguns outros símbolos.
+
 ## 0.20.1
 
 - Melhorias em biblioteca de criptografia para Delégua e Pituguês;
