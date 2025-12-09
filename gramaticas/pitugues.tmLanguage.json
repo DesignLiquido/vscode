@@ -14,6 +14,18 @@
 		}
 	],
 	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.pitugues",
+				"match": "\\b(caso|const|constante|enquanto|escolha|fazer|finalmente|fixo|fun[cç][aã]o|padr[aã]o|para|pegue|retorna|se|sen[aã]o|tente|var|vari[aá]vel)\\b"
+		}]
+	},
+	"functions": {
+		"patterns": [{
+			"name": "keyword.function.pitugues",
+			"match": "\\b(aleatorio|aleatorioEntre|escreva|inteiro|leia|mapear|ordenar|real|tamanho|texto|importar|ajuda|exemplo|limpar|salvar|carregar|fun1|fun1R|ajuda|exemplo|limpar|salvar|carregar|fun1|fun1R|linspace|fun2|fun2R|rand|aprox|pale|vet|qtd|plot|max|min|intervalo|mediana|smtr|media|ve|sqr|variancia|devpad|covar|coefvar|coefcorr|coluna|linha|transposta|matriz|matrizmult|matrizinv|matrizid|deter|csl|sen|cos|tan|arcos|arsen|artan|exp|log|pot|aleat|raizq|vmed|deltas|deltat|acel|mrufh|mrufhp|mruvel|mruvfh|mruvfhp|mruvvel|mruvvelp|inercia|vmmv|van|periodo|pid)\\b"
+		}]
+	},
 		"impossible": {
 			"comment": "This is a special rule that should be used where no match is desired. It is not a good idea to match something like '1{0}' because in some cases that can result in infinite loops in token generation. So the rule instead matches and impossible expression to allow a match to fail and move to the next token.",
 			"match": "$.^"
@@ -942,11 +954,11 @@
 			"match": "(}(?!}))"
 		},
 		"import": {
-			"comment": "Import statements used to correctly mark `from`, `import`, and `as`\n",
+			"comment": "Import statements used to correctly mark `de`/`from`, `importar`/`import`, and `as`\n",
 			"patterns": [
 				{
-					"begin": "\\b(?<!\\.)(from)\\b(?=.+import)",
-					"end": "$|(?=import)",
+					"begin": "\\b(?<!\\.)(from|de)\\b(?=.+(?:import|importar))",
+					"end": "$|(?=(?:import|importar))",
 					"beginCaptures": {
 						"1": {
 							"name": "keyword.control.import.pitugues"
@@ -963,7 +975,7 @@
 					]
 				},
 				{
-					"begin": "\\b(?<!\\.)(import)\\b",
+					"begin": "\\b(?<!\\.)(import|importar)\\b",
 					"end": "$",
 					"beginCaptures": {
 						"1": {
@@ -1748,7 +1760,7 @@
 			]
 		},
 		"illegal-names": {
-			"match": "(?x)\n  \\b(?:\n    (\n      and | assert | async | await | sustar | classe | continua | const | fun[cç][aã]o | var\n      | del | elif | else | except | finally | for | from | global\n      | if | in | is | (?<=\\.)lambda | lambda(?=\\s*[\\.=])\n      | n[aã]o | ou | pass | raise | retorna | tente | enquanto | with\n      | yield\n    ) | (\n      as | import\n    )\n  )\\b\n",
+			"match": "(?x)\n  \\\b(?:\n    (\n      and | assert | async | await | sustar | classe | continua | const | fun[cç][aã]o | var\n      | del | elif | else | except | finally | for | from | global\n      | if | in | is | (?<=\\.)lambda | lambda(?=\\s*[\\.=])\n      | n[aã]o | ou | pass | raise | retorna | tente | enquanto | with\n      | yield\n    ) | (\n      as | import | importar | de\n    )\n  )\\b\n",
 			"captures": {
 				"1": {
 					"name": "keyword.control.flow.pitugues"
