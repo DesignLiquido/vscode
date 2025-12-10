@@ -510,40 +510,76 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         this.sendResponse(response);
     }
 
+    protected resolverValorVariavelOuConstante(variavelOuConstante: { nome: string; valor: any; tipo: string; }): string {
+        if (variavelOuConstante.valor === null || variavelOuConstante.valor === undefined) {
+            return 'nulo';
+        }
+
+        if (variavelOuConstante.valor === true) {
+            return 'verdadeiro';
+        }
+
+        if (variavelOuConstante.valor === false) {
+            return 'falso';
+        }
+
+        // Ensure value is always converted to string
+        return String(variavelOuConstante.valor);
+    }
+
     /**
      * Devolve todas as variáveis em tempo de execução. Normalmente é a informação
      * apresentada no painel "Variables" do VSCode enquanto depurando o código.
      * @param response Uma `VariablesResponse`
-     * @param args Normalmente a referência da variável, mas não usamos até então (ver comentário abaixo)
+     * @param args Contém a referência da variável/escopo sendo requisitada
      */
     protected variablesRequest(
         response: DebugProtocol.VariablesResponse,
         args: DebugProtocol.VariablesArguments
     ): void {
-        const variaveis = this.tempoExecucao.variaveis();
+        // Verificar se a requisição é para o escopo global
+        if (args.variablesReference === this._referenciaEscopoGlobal) {
+            const variaveis = this.tempoExecucao.variaveis();
 
-        response.body = {
-            variables: variaveis.map(
-                (variavel) =>
-                    ({
-                        name: variavel.nome,
-                        type: variavel.tipo,
-                        value: String(variavel.valor),
-                        // TODO: Essa `variablesReference` deve ser maior que zero quando o objeto é composto.
-                        // Por exemplo, formado por outras variáveis.
-                        // Por enquanto todas as referências são definidas como zero porque até então
-                        // as linguagens não fazem referência de outras variáveis.
-                        // variablesReference: this._referenciaEscopoGlobal,
-                        variablesReference: 0,
-                        namedVariables: 0,
-                        indexedVariables: 0,
-                        presentationHint: {
-                            kind: 'data',
-                            attributes: ['rawString'],
-                        } as DebugProtocol.VariablePresentationHint,
-                    } as DebugProtocol.Variable)
-            ),
-        };
+            // Filtrar variáveis inválidas e remover duplicatas
+            const variaveisVistas = new Set<string>();
+            const variaveisValidas = variaveis.filter((variavel) => {
+                // Verificar se a variável tem um nome válido
+                if (!variavel || !variavel.nome || typeof variavel.nome !== 'string') {
+                    return false;
+                }
+
+                // Verificar se já vimos essa variável (evitar duplicatas)
+                if (variaveisVistas.has(variavel.nome)) {
+                    return false;
+                }
+
+                variaveisVistas.add(variavel.nome);
+                return true;
+            });
+
+            response.body = {
+                variables: variaveisValidas.map(
+                    (variavel) =>
+                        ({
+                            name: variavel.nome,
+                            type: variavel.tipo ? String(variavel.tipo) : 'unknown',
+                            value: this.resolverValorVariavelOuConstante(variavel),
+                            // TODO: Essa `variablesReference` deve ser maior que zero quando o objeto é composto.
+                            // Por exemplo, formado por outras variáveis.
+                            // Por enquanto todas as referências são definidas como zero porque até então
+                            // as linguagens não fazem referência de outras variáveis.
+                            variablesReference: 0,
+                        } as DebugProtocol.Variable)
+                ),
+            };
+        } else {
+            // Para outras referências de escopo, retornar vazio
+            response.body = {
+                variables: [],
+            };
+        }
+
         this.sendResponse(response);
     }
 
