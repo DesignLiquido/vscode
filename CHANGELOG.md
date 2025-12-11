@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.20.3
+
+- Melhoras gerais nos analisadores semânticos de todos os dialetos de Delégua;
+- Implementação do desempacotamento de valores com operador `*` (resto) em Pituguês: https://github.com/DesignLiquido/delegua/pull/1007;
+- Implementação de um avaliador de expressão para o painel de avaliação em depuração.
+
 ## 0.20.2
 
 - Ajustes no painel de entrada e saída conforme sugestões de https://github.com/DesignLiquido/visualg/issues/82;
@@ -9,7 +15,7 @@
 ## 0.20.1
 
 - Melhorias em biblioteca de criptografia para Delégua e Pituguês;
-- Declaração de variáveis em Pituguês é sempre implícita: em outras palavras, `var` não é mais aceita como palavra reservada: https://github.com/DesignLiquido/delegua/pull/1001
+- Declaração de variáveis em Pituguês é sempre implícita: em outras palavras, `var` não é mais aceita como palavra reservada: https://github.com/DesignLiquido/delegua/pull/1001.
 
 ## 0.20.0
 

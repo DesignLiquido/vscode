@@ -1,8 +1,11 @@
 import * as vscode from 'vscode';
 import { DebugProtocol } from '@vscode/debugprotocol';
+
 import { ElementoPilhaVsCode } from './elemento-pilha';
+import { InterpretadorComDepuracaoInterface } from '@designliquido/delegua/interfaces';
 
 export interface TempoExecucaoInterface {
+    interpretador: InterpretadorComDepuracaoInterface;
     on(eventName: string | symbol, listener: (...args: any[]) => void): any;
     iniciar(documento: vscode.TextDocument | undefined, arquivoInicial: string, pararNaEntrada: boolean): Promise<any>;
     adentrarEscopo(): void;

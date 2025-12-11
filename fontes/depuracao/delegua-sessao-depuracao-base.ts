@@ -20,6 +20,7 @@ import { DebugProtocol } from '@vscode/debugprotocol';
 import { Subject } from 'await-notify';
 
 import { inferirTipoVariavel } from '@designliquido/delegua/inferenciador';
+import { AvaliadorExpressaoDepuracao, InterpretadorComDepuracao } from '@designliquido/delegua/interpretador/depuracao';
 
 import { ArgumentosInicioDepuracao } from './argumentos-inicio-depuracao';
 import { DeleguaTempoExecucaoLocal } from './local/delegua-tempo-execucao-local';
@@ -338,13 +339,15 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
      * @param response A resposta a ser enviada para a interface do VSCode.
      * @param args Argumentos adicionais.
      */
-    protected evaluateRequest(
+    protected async evaluateRequest(
         response: DebugProtocol.EvaluateResponse,
         args: DebugProtocol.EvaluateArguments
-    ): void {
-        const resposta = this.tempoExecucao.obterVariavel(
-            args.expression.toLowerCase()
+    ): Promise<void> {
+        const avaliador = new AvaliadorExpressaoDepuracao(
+            this.tempoExecucao.interpretador as InterpretadorComDepuracao
         );
+
+        const resposta = await avaliador.avaliarExpressao(args.expression);
 
         if (resposta !== undefined) {
             const responseModificada = this.montarEvaluateResponse(

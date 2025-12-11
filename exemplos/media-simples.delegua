@@ -1,8 +1,5 @@
-var n1 = 0;
-var n2 = 0;
-
-var n1 = leia("digite a nota 1 ");
-var n2 = leia("digite a nota 2 ");
+var n1 = inteiro(leia("digite a nota 1 "));
+var n2 = inteiro(leia("digite a nota 2 "));
 
 var media = (n1+n2)/2;
 

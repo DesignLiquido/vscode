@@ -61,7 +61,6 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
     private avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>;
     private importador: ImportadorInterface<SimboloInterface>;
     private importadorExtensao: ImportadorExtensao;
-    private interpretador: InterpretadorComDepuracaoInterface;
     private resolvedor: { resolver(declaracoes: Declaracao[]): Promise<Declaracao[]> };
 
     private _documento: vscode.TextDocument;
@@ -71,6 +70,8 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
     private _hashArquivoInicial = -1;
     private _pontosParada: PontoParada[] = [];
     
+    interpretador: InterpretadorComDepuracaoInterface;
+
     constructor(
         private readonly provedorVisaoEntradaSaida: ProvedorVisaoEntradaSaida,
         private readonly diagnosticos: vscode.DiagnosticCollection
