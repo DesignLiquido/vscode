@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+
 import tradutorWeb from './traducao/index-web';
 
 import { configurarDepuracao } from './depuracao/configuracao-depuracao';
@@ -48,6 +49,15 @@ async function traduzirWeb(origem: string, destino: string, alvo: string) {
     }
 }
 
+/**
+ * O ponto de entrada da extensão na Web. Aqui registramos tudo:
+ * - Ponto de entrada de todas as análises semânticas;
+ * - Comandos de tradução;
+ * - Provedores de completude (também chamado de _IntelliSense_);
+ * - Provedores de documentação em editor (vulgo, "documentação quando coloca-se o ponteiro do mouse em cima do símbolo");
+ * - Depuradores.
+ * @param context O contexto da extensão.
+ */
 export function activate(context: vscode.ExtensionContext) {
     const diagnosticosDelegua = vscode.languages.createDiagnosticCollection("delegua");
     context.subscriptions.push(diagnosticosDelegua);
@@ -73,6 +83,7 @@ export function activate(context: vscode.ExtensionContext) {
                 case 'birl':
                 case 'delegua':
                 case 'mapler':
+                case 'pitugues':
                 case 'visualg':
                     if (changeTimeout !== null) {
                         clearTimeout(changeTimeout);

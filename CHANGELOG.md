@@ -1,5 +1,12 @@
 # Histórico de Modificações
 
+## 0.21.0
+
+- Melhoramentos no mecanismo de adentrar escopo do depurador;
+- Inclusão de um estilizador para Delégua, juntamente com a formatação de código;
+- Novas sintaxes de Pituguês, como desempacotamento de coleções: https://github.com/DesignLiquido/delegua/pull/1008;
+- Habilitação do analisador semântico de Pituguês: https://github.com/DesignLiquido/delegua/pull/1009.
+
 ## 0.20.3
 
 - Melhoras gerais nos analisadores semânticos de todos os dialetos de Delégua;

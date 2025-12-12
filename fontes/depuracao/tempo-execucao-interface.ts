@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import { DebugProtocol } from '@vscode/debugprotocol';
+import { InterpretadorComDepuracaoInterface } from '@designliquido/delegua/interfaces';
 
 import { ElementoPilhaVsCode } from './elemento-pilha';
-import { InterpretadorComDepuracaoInterface } from '@designliquido/delegua/interfaces';
 
 export interface TempoExecucaoInterface {
     interpretador: InterpretadorComDepuracaoInterface;

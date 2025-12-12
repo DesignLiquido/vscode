@@ -81,6 +81,7 @@ export function activate(context: vscode.ExtensionContext) {
                 case 'birl':
                 case 'delegua':
                 case 'mapler':
+                case 'pitugues':
                 case 'visualg':
                     if (changeTimeout !== null) {
                         clearTimeout(changeTimeout);

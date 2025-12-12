@@ -59,6 +59,88 @@ Editores suportados:
 - Mecanismo de completude de funções da biblioteca global para Delégua
 - Suporte a depuração para Delégua, Pituguês, Portugol VisuAlg, Portugol Studio/Webstudio e Mapler
 
+## ⚙️ Configuração do Estilizador
+
+O Estilizador é uma ferramenta que aplica regras para melhorar a qualidade e consistência do código Delégua durante a formatação. Diferente de formatadores que apenas ajustam a apresentação visual, o Estilizador modifica a árvore sintática para aplicar convenções e boas práticas.
+
+### Configurações Disponíveis
+
+Você pode configurar o Estilizador acessando as configurações do VS Code (`Ctrl` + `,`) e buscando por "delegua estilizador", ou editando diretamente o arquivo `settings.json`:
+
+#### Habilitar/Desabilitar o Estilizador
+
+```json
+{
+  "delegua.estilizador.habilitado": true
+}
+```
+
+**Valor padrão:** `true`
+**Descrição:** Controle mestre para habilitar ou desabilitar o Estilizador durante a formatação de código.
+
+#### Fortalecimento de Tipos
+
+```json
+{
+  "delegua.estilizador.fortalecerTipos.habilitado": false
+}
+```
+
+**Valor padrão:** `false`
+**Descrição:** Converte declarações com tipo `qualquer` para tipos inferidos automaticamente.
+
+**Exemplos:**
+- `var x = 5` → `var x: número = 5`
+- `var nome = "João"` → `var nome: texto = "João"`
+- `constante PI = 3.14` → `constante PI: número = 3.14`
+
+#### Convenção de Nomenclatura
+
+```json
+{
+  "delegua.estilizador.convencaoNomenclatura.habilitado": false,
+  "delegua.estilizador.convencaoNomenclatura.variaveis": "caixaCamelo",
+  "delegua.estilizador.convencaoNomenclatura.constantes": "CAIXA_ALTA",
+  "delegua.estilizador.convencaoNomenclatura.funcoes": "caixaCamelo"
+}
+```
+
+**Valor padrão:** `false` (desabilitado)
+**Descrição:** Aplica convenções de nomenclatura para identificadores no código.
+
+**Opções para Variáveis e Funções:**
+- `caixaCamelo` (camelCase): `minhaVariavel`, `minhaFuncao`
+- `caixa_cobra` (snake_case): `minha_variavel`, `minha_funcao`
+- `CaixaPascal` (PascalCase): `MinhaVariavel`, `MinhaFuncao`
+
+**Opções para Constantes:**
+- `CAIXA_ALTA` (UPPER_CASE): `MINHA_CONSTANTE`
+- `caixaCamelo` (camelCase): `minhaConstante`
+
+### Exemplo de Configuração Completa
+
+```json
+{
+  "delegua.estilizador.habilitado": true,
+  "delegua.estilizador.fortalecerTipos.habilitado": true,
+  "delegua.estilizador.convencaoNomenclatura.habilitado": true,
+  "delegua.estilizador.convencaoNomenclatura.variaveis": "caixaCamelo",
+  "delegua.estilizador.convencaoNomenclatura.constantes": "CAIXA_ALTA",
+  "delegua.estilizador.convencaoNomenclatura.funcoes": "caixaCamelo"
+}
+```
+
+### Como Usar
+
+1. Configure as opções desejadas nas configurações do VS Code
+2. Abra um arquivo `.delegua`
+3. Formate o documento usando:
+   - `Shift` + `Alt` + `F` (Windows/Linux)
+   - `Shift` + `Option` + `F` (Mac)
+   - Ou clique com o botão direito e selecione "Formatar Documento"
+
+O Estilizador aplicará automaticamente as regras configuradas durante a formatação.
+
 ## Tradução entre linguagens
 
 Essa extensão suporta tradução entre linguagens:

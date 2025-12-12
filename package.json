@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.20.3",
+    "version": "0.21.0",
     "engines": {
         "vscode": "^1.68.0"
     },
@@ -594,6 +594,69 @@
                     "icon": "recursos/delegua-logo.svg"
                 }
             ]
+        },
+        "configuration": {
+            "title": "Design Líquido",
+            "properties": {
+                "delegua.estilizador.habilitado": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Habilitar ou desabilitar o Estilizador durante a formatação de código."
+                },
+                "delegua.estilizador.fortalecerTipos.habilitado": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Habilitar regra de fortalecimento de tipos. Converte declarações com tipo 'qualquer' para tipos inferidos (número, texto, lógico, etc.)."
+                },
+                "delegua.estilizador.convencaoNomenclatura.habilitado": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Habilitar regra de convenção de nomenclatura para identificadores."
+                },
+                "delegua.estilizador.convencaoNomenclatura.variaveis": {
+                    "type": "string",
+                    "enum": [
+                        "caixaCamelo",
+                        "caixa_cobra",
+                        "CaixaPascal"
+                    ],
+                    "enumDescriptions": [
+                        "caixaCamelo - primeira palavra minúscula, demais capitalizadas (ex: minhaVariavel)",
+                        "caixa_cobra - palavras separadas por underscore em minúsculas (ex: minha_variavel)",
+                        "CaixaPascal - todas as palavras capitalizadas (ex: MinhaVariavel)"
+                    ],
+                    "default": "caixaCamelo",
+                    "description": "Convenção de nomenclatura para variáveis."
+                },
+                "delegua.estilizador.convencaoNomenclatura.constantes": {
+                    "type": "string",
+                    "enum": [
+                        "CAIXA_ALTA",
+                        "caixaCamelo"
+                    ],
+                    "enumDescriptions": [
+                        "CAIXA_ALTA - todas as letras maiúsculas separadas por underscore (ex: MINHA_CONSTANTE)",
+                        "caixaCamelo - primeira palavra minúscula, demais capitalizadas (ex: minhaConstante)"
+                    ],
+                    "default": "CAIXA_ALTA",
+                    "description": "Convenção de nomenclatura para constantes."
+                },
+                "delegua.estilizador.convencaoNomenclatura.funcoes": {
+                    "type": "string",
+                    "enum": [
+                        "caixaCamelo",
+                        "caixa_cobra",
+                        "CaixaPascal"
+                    ],
+                    "enumDescriptions": [
+                        "camelCase - primeira palavra minúscula, demais capitalizadas (ex: minhaFuncao)",
+                        "snake_case - palavras separadas por underscore em minúsculas (ex: minha_funcao)",
+                        "PascalCase - todas as palavras capitalizadas (ex: MinhaFuncao)"
+                    ],
+                    "default": "caixaCamelo",
+                    "description": "Convenção de nomenclatura para funções."
+                }
+            }
         }
     },
     "devDependencies": {
@@ -629,7 +692,7 @@
         "@designliquido/delegua-http": "^0.1.2",
         "@designliquido/delegua-json": "^0.2.1",
         "@designliquido/delegua-matematica": "^0.3.0",
-        "@designliquido/delegua-node": "^1.12.4",
+        "@designliquido/delegua-node": "^1.12.7",
         "@designliquido/delegua-tempo": "^1.0.1",
         "@designliquido/foles": "^0.11.1",
         "@designliquido/lincones-js": "^0.1.0",

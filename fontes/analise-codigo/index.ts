@@ -5,9 +5,10 @@ import { AvaliadorSintaticoInterface, LexadorInterface, SimboloInterface } from 
 import { DiagnosticoAnalisadorSemantico } from '@designliquido/delegua/interfaces/erros';
 import { Declaracao } from '@designliquido/delegua/declaracoes';
 
-import { Lexador } from '@designliquido/delegua/lexador';
-import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
+import { Lexador, LexadorPitugues } from '@designliquido/delegua/lexador';
+import { AvaliadorSintatico, AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico';
 import { AnalisadorSemanticoInterface } from '@designliquido/delegua/interfaces/analisador-semantico-interface';
+import { AnalisadorSemanticoPitugues } from '@designliquido/delegua/analisador-semantico/dialetos';
 
 import { LexadorBirl } from '@designliquido/birl/lexador';
 import { AvaliadorSintaticoBirl } from '@designliquido/birl/avaliador-sintatico';
@@ -58,11 +59,11 @@ export function executarAnalises(
     const extensaoArquivo = documento.fileName.split('.')[1];
     let lexador: LexadorInterface<SimboloInterface>;
     let avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>;
-    let analisadorSemantico: AnalisadorSemanticoInterface;
+    let analisadorSemantico: AnalisadorSemanticoInterface | undefined = undefined;
     let linhas: string[];
     let resultadoLexador: RetornoLexador<SimboloInterface>;
     let resultadoAvaliadorSintatico: RetornoAvaliadorSintatico<Declaracao>;
-    let resultadoAnalisadorSemantico: RetornoAnalisadorSemantico;
+    let resultadoAnalisadorSemantico: RetornoAnalisadorSemantico | undefined = undefined;
 
     switch (extensaoArquivo) {
         case "birl":
@@ -85,6 +86,13 @@ export function executarAnalises(
             ); */
             avaliadorSintatico = new AvaliadorSintatico();
             analisadorSemantico = new AnalisadorSemantico();
+            break;
+
+        case "pitu":
+        case "pitugues":
+            lexador = new LexadorPitugues();
+            avaliadorSintatico = new AvaliadorSintaticoPitugues();
+            analisadorSemantico = new AnalisadorSemanticoPitugues();
             break;
 
         case "poti":
@@ -132,24 +140,32 @@ export function executarAnalises(
         );
     }
 
-    try {
-        resultadoAnalisadorSemantico = analisadorSemantico.analisar(resultadoAvaliadorSintatico.declaracoes);
-        listaOcorrencias = listaOcorrencias.concat(formatarDiagnosticosAnaliseSemantica(resultadoAnalisadorSemantico.diagnosticos, documento));
-        diagnosticos.set(documento.uri, listaOcorrencias);
-    } catch (erro: any) {
-        resultadoAnalisadorSemantico = {
-            diagnosticos: []
-        } as RetornoAnalisadorSemantico;
-        console.error(`Erro ao executar análise semântica para arquivo de extensão ${extensaoArquivo}`, erro);
+    if (analisadorSemantico !== undefined) {
+        try {
+            resultadoAnalisadorSemantico = analisadorSemantico.analisar(resultadoAvaliadorSintatico.declaracoes);
+            listaOcorrencias = listaOcorrencias.concat(formatarDiagnosticosAnaliseSemantica(resultadoAnalisadorSemantico.diagnosticos, documento));
+            diagnosticos.set(documento.uri, listaOcorrencias);
+        } catch (erro: any) {
+            resultadoAnalisadorSemantico = {
+                diagnosticos: []
+            } as RetornoAnalisadorSemantico;
+            console.error(`Erro ao executar análise semântica para arquivo de extensão ${extensaoArquivo}`, erro);
+        }
     }
 
     definirResultado(documento.uri.toString(), {
         lexador: resultadoLexador,
         avaliadorSintatico: resultadoAvaliadorSintatico,
-        analisadorSemantico: resultadoAnalisadorSemantico
+        analisadorSemantico: resultadoAnalisadorSemantico || { diagnosticos: [] }
     });
 }
 
+/**
+ * Formata os diagnósticos encontrados na análise semântica para o formato de diagnósticos do VSCode.
+ * @param diagnosticosAnaliseSemantica Os diagnósticos encontrados na análise semântica.
+ * @param documento O documento aberto no VSCode.
+ * @returns {vscode.Diagnostic[]} Uma lista de diagnósticos formatados para o VSCode.
+ */
 function formatarDiagnosticosAnaliseSemantica(
     diagnosticosAnaliseSemantica: DiagnosticoAnalisadorSemantico[],
     documento: vscode.TextDocument
