@@ -1,5 +1,11 @@
 # Histórico de Modificações
 
+## 0.21.1
+
+- Fatiamento (Slicing) de Coleções em Pituguês: https://github.com/DesignLiquido/delegua/pull/1012;
+- Suporte a f-string em Pituguês, substituindo a interpolação vinda de Delégua: https://github.com/DesignLiquido/delegua/pull/1013;
+- Várias atualizações em FolEs.
+
 ## 0.21.0
 
 - Melhoramentos no mecanismo de adentrar escopo do depurador;
