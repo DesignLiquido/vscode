@@ -20,13 +20,13 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.delegua",
-				"match": "\\b(caso|const|constante|enquanto|escolha|fazer|finalmente|fixo|fun[cç][aã]o|padr[aã]o|para|pegue|retorna|se|sen[aã]o|tente|var|vari[aá]vel)\\b"
+				"match": "\\b(caso|como|const|constante|enquanto|escolha|falhar|fazer|finalmente|fixo|fun[cç][aã]o|padr[aã]o|para|pegue|retorna|se|sen[aã]o|tente|tendo|var|vari[aá]vel)\\b"
 			}]
 		},
 		"functions": {
 			"patterns": [{
 				"name": "keyword.function.delegua",
-				"match": "\\b(aleatorio|aleatorioEntre|escreva|inteiro|leia|mapear|ordenar|real|tamanho|texto|importar|ajuda|exemplo|limpar|salvar|carregar|fun1|fun1R|ajuda|exemplo|limpar|salvar|carregar|fun1|fun1R|linspace|fun2|fun2R|rand|aprox|pale|vet|qtd|plot|max|min|intervalo|mediana|smtr|media|ve|sqr|variancia|devpad|covar|coefvar|coefcorr|coluna|linha|transposta|matriz|matrizmult|matrizinv|matrizid|deter|csl|sen|cos|tan|arcos|arsen|artan|exp|log|pot|aleat|raizq|vmed|deltas|deltat|acel|mrufh|mrufhp|mruvel|mruvfh|mruvfhp|mruvvel|mruvvelp|inercia|vmmv|van|periodo|pid)\\b"
+				"match": "\\b(aleatorio|aleatorioEntre|escreva|inteiro|intervalo|leia|mapear|ordenar|real|tamanho|texto|importar|ajuda|exemplo|limpar|salvar|carregar|fun1|fun1R|ajuda|exemplo|limpar|salvar|carregar|fun1|fun1R|linspace|fun2|fun2R|rand|aprox|pale|vet|qtd|plot|max|min|intervalo|mediana|smtr|media|ve|sqr|variancia|devpad|covar|coefvar|coefcorr|coluna|linha|transposta|matriz|matrizmult|matrizinv|matrizid|deter|csl|sen|cos|tan|arcos|arsen|artan|exp|log|pot|aleat|raizq|vmed|deltas|deltat|acel|mrufh|mrufhp|mruvel|mruvfh|mruvfhp|mruvvel|mruvvelp|inercia|vmmv|van|periodo|pid)\\b"
 			}]
 		},
 		"constants": {
@@ -42,13 +42,13 @@
 		"logical": {
 			"patterns": [{
 				"name": "keyword.operator.logical.delegua",
-				"match": "\\b(e|ou)\\b"
+				"match": "\\b(e|ou|em|n[aã]o|cont[eé]m)\\b"
 			}]
 		},
 		"types": {
 			"patterns": [{
 				"name": "storage.type.primitive.delegua",
-				"match": "\\b(dicion[aá]rio|l[oó]gico|longo|m[oó]dulo|n[uú]mero|objeto|vetor|texto)\\b"
+				"match": "\\b(dicion[aá]rio|inteiro|l[oó]gico|longo|m[oó]dulo|n[uú]mero|objeto|real|vetor|texto)\\b"
 			}]
 		},
 		"comments": {

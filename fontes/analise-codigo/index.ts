@@ -75,7 +75,8 @@ export function executarAnalises(
         case "mapler":
             lexador = new LexadorMapler();
             avaliadorSintatico = new AvaliadorSintaticoMapler();
-            analisadorSemantico = new AnalisadorSemanticoMapler();
+            // TODO: Maturar casos do analisador semântico antes de reabilitar a linha abaixo.
+            // analisadorSemantico = new AnalisadorSemanticoMapler();
             break;
 
         case "delegua":
@@ -106,7 +107,8 @@ export function executarAnalises(
         case "visualg":
             lexador = new LexadorVisuAlg();
             avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
-            analisadorSemantico = new AnalisadorSemanticoVisuAlg();
+            // TODO: Maturar casos do analisador semântico antes de reabilitar a linha abaixo.
+            // analisadorSemantico = new AnalisadorSemanticoVisuAlg();
             break;
             
         case "por":

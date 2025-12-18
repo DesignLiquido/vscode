@@ -1,8 +1,15 @@
 # Histórico de Modificações
 
+## 0.21.2
+
+- Tuplas de tamanho N em Pituguês: https://github.com/DesignLiquido/delegua/pull/1025;
+- Melhorias gerais nos formatadores de Mapler e Potigol;
+- Remoção de bug em Potigol que poderia causar _loops_ infinitos;
+- Correções em função nativa `intervalo()` para verificação de tipos de variáveis passadas por parâmetro em Delégua e Pituguês.
+
 ## 0.21.1
 
-- Fatiamento (Slicing) de Coleções em Pituguês: https://github.com/DesignLiquido/delegua/pull/1012;
+- Fatiamento (_slicing_) de coleções em Pituguês: https://github.com/DesignLiquido/delegua/pull/1012;
 - Suporte a f-string em Pituguês, substituindo a interpolação vinda de Delégua: https://github.com/DesignLiquido/delegua/pull/1013;
 - Várias atualizações em FolEs.
 
