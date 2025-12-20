@@ -52,10 +52,10 @@ const mapaSeveridadeDiagnosticos = {
  * @param {vscode.DiagnosticCollection} diagnosticos O objeto de diagnósticos, que instrui o VSCode
  *                                                   a mostrar os problemas atuais.
  */
-export function executarAnalises(
+export async function executarAnalises(
     documento: vscode.TextDocument,
     diagnosticos: vscode.DiagnosticCollection
-): void {
+): Promise<void> {
     const extensaoArquivo = documento.fileName.split('.')[1];
     let lexador: LexadorInterface<SimboloInterface>;
     let avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>;
@@ -76,7 +76,7 @@ export function executarAnalises(
             lexador = new LexadorMapler();
             avaliadorSintatico = new AvaliadorSintaticoMapler();
             // TODO: Maturar casos do analisador semântico antes de reabilitar a linha abaixo.
-            // analisadorSemantico = new AnalisadorSemanticoMapler();
+            analisadorSemantico = new AnalisadorSemanticoMapler();
             break;
 
         case "delegua":
@@ -108,7 +108,7 @@ export function executarAnalises(
             lexador = new LexadorVisuAlg();
             avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
             // TODO: Maturar casos do analisador semântico antes de reabilitar a linha abaixo.
-            // analisadorSemantico = new AnalisadorSemanticoVisuAlg();
+            analisadorSemantico = new AnalisadorSemanticoVisuAlg();
             break;
             
         case "por":
@@ -144,7 +144,7 @@ export function executarAnalises(
 
     if (analisadorSemantico !== undefined) {
         try {
-            resultadoAnalisadorSemantico = analisadorSemantico.analisar(resultadoAvaliadorSintatico.declaracoes);
+            resultadoAnalisadorSemantico = await analisadorSemantico.analisar(resultadoAvaliadorSintatico.declaracoes);
             listaOcorrencias = listaOcorrencias.concat(formatarDiagnosticosAnaliseSemantica(resultadoAnalisadorSemantico.diagnosticos, documento));
             diagnosticos.set(documento.uri, listaOcorrencias);
         } catch (erro: any) {

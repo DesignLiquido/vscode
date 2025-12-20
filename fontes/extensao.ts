@@ -62,18 +62,24 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(diagnosticosDelegua);
 
     if (vscode.window.activeTextEditor) {
-		executarAnalises(vscode.window.activeTextEditor.document, diagnosticosDelegua);
+		executarAnalises(vscode.window.activeTextEditor.document, diagnosticosDelegua).catch(erro => {
+			console.error('Erro ao executar análises:', erro);
+		});
 	}
 
     context.subscriptions.push(
         vscode.workspace.onDidOpenTextDocument(doc => {
             if (['birl', 'delegua', 'mapler', 'visualg', 'portugol-studio'].includes(doc.languageId)) {
-                executarAnalises(doc, diagnosticosDelegua);
+                executarAnalises(doc, diagnosticosDelegua).catch(erro => {
+					console.error('Erro ao executar análises:', erro);
+				});
             }
         }),
         vscode.window.onDidChangeActiveTextEditor(editor => {
             if (editor && ['birl', 'delegua', 'mapler', 'visualg', 'portugol-studio'].includes(editor.document.languageId)) {
-                executarAnalises(editor.document, diagnosticosDelegua);
+                executarAnalises(editor.document, diagnosticosDelegua).catch(erro => {
+					console.error('Erro ao executar análises:', erro);
+				});
             }
         }),
         vscode.workspace.onDidChangeTextDocument((evento) => {
@@ -89,7 +95,9 @@ export function activate(context: vscode.ExtensionContext) {
                     changeTimeout = setTimeout(function () {
                         clearTimeout(changeTimeout);
                         changeTimeout = null;
-                        executarAnalises(evento.document, diagnosticosDelegua);
+                        executarAnalises(evento.document, diagnosticosDelegua).catch(erro => {
+							console.error('Erro ao executar análises:', erro);
+						});
                     }, 500);
                     break;
                 case 'lmht':

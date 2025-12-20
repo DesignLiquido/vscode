@@ -61,7 +61,7 @@ escreva(mapear([5, 3], funcaoParaMapear));
 var numeroAleatorio = aleatorio();
 escreva(numeroAleatorio);
 
-var numeroAleatorio = aleatorioEntre(1,9);
+numeroAleatorio = aleatorioEntre(1,9);
 escreva(numeroAleatorio);
 
 var testeTexto = "111";

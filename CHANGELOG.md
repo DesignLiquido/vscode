@@ -1,5 +1,10 @@
 # Histórico de Modificações
 
+## 0.21.3
+
+- Delégua e Pituguês passam a suportar um operador de repetição, `*`, entre um texto e um número inteiro: https://github.com/DesignLiquido/delegua/pull/1028;
+- Diversos melhoramentos em diferentes analisadores semânticos dos dialetos de Delégua.
+
 ## 0.21.2
 
 - Tuplas de tamanho N em Pituguês: https://github.com/DesignLiquido/delegua/pull/1025;
