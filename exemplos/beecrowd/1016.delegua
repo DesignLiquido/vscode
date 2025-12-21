@@ -1,0 +1,5 @@
+var distancia = inteiro(leia("Digite a distância: "))
+const diferenca = 30
+const tempo = 60
+const tempoGasto = (tempo * distancia) / diferenca
+escreva("${tempoGasto} minutos")

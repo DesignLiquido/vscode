@@ -8,12 +8,16 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.21.3",
+    "version": "0.22.0",
     "engines": {
-        "vscode": "^1.68.0"
+        "vscode": "^1.80.0"
     },
     "browser": "./dist/extensao-web.js",
     "main": "./dist/extensao.js",
+    "extensionKind": [
+        "ui",
+        "workspace"
+    ],
     "capabilities": {
         "virtualWorkspaces": true,
         "untrustedWorkspaces": {
@@ -79,6 +83,17 @@
         "pre-empacotar-web": "webpack --mode production --devtool hidden-source-map"
     },
     "activationEvents": [
+        "onLanguage:birl",
+        "onLanguage:delegua",
+        "onLanguage:egua",
+        "onLanguage:foles",
+        "onLanguage:lincones",
+        "onLanguage:lmht",
+        "onLanguage:mapler",
+        "onLanguage:pitugues",
+        "onLanguage:portugolstudio",
+        "onLanguage:potigol",
+        "onLanguage:visualg",
         "onDebugResolve:designliquido",
         "onDebugDynamicConfigurations:designliquido",
         "onCommand:extension.designliquido.getProgramName",
@@ -692,7 +707,7 @@
         "@designliquido/delegua-http": "^0.1.2",
         "@designliquido/delegua-json": "^0.2.1",
         "@designliquido/delegua-matematica": "^0.3.0",
-        "@designliquido/delegua-node": "^1.12.10",
+        "@designliquido/delegua-node": "^1.12.11",
         "@designliquido/delegua-tempo": "^1.0.1",
         "@designliquido/foles": "^0.12.0",
         "@designliquido/lincones-js": "^0.1.0",

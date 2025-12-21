@@ -1,5 +1,12 @@
 # Histórico de Modificações
 
+## 0.22.0
+
+- Atualizando _engine_ do VSCode para a versão 1.80.0;
+- Método `partição()` para Delégua e Pituguês: https://github.com/DesignLiquido/delegua/pull/1031;
+- Limitações e correções do uso de operadores `*` e `+` em Delégua;
+- Revisão de casos no analisador semântico de dialetos de Delégua, como verificação mais apurada de tipos em operações matemáticas.
+
 ## 0.21.3
 
 - Delégua e Pituguês passam a suportar um operador de repetição, `*`, entre um texto e um número inteiro: https://github.com/DesignLiquido/delegua/pull/1028;
