@@ -707,7 +707,7 @@
         "@designliquido/delegua-http": "^0.1.2",
         "@designliquido/delegua-json": "^0.2.1",
         "@designliquido/delegua-matematica": "^0.3.0",
-        "@designliquido/delegua-node": "^1.12.11",
+        "@designliquido/delegua-node": "^1.12.12",
         "@designliquido/delegua-tempo": "^1.0.1",
         "@designliquido/foles": "^0.12.0",
         "@designliquido/lincones-js": "^0.1.0",

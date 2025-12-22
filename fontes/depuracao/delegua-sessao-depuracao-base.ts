@@ -160,14 +160,23 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
                 caminhoArquivo = '',
                 linha = 0
             ) => {
-                let eventoSaida: DebugProtocol.OutputEvent;
                 if (textoOuExcecao instanceof Error) {
-                    eventoSaida = new OutputEvent(`${textoOuExcecao.stack}`);
-                    eventoSaida.body.source =
-                        this.criarReferenciaSource(caminhoArquivo);
+                    // Envia para o Debug Console (mantém comportamento existente)
+                    const eventoSaida: DebugProtocol.OutputEvent = new OutputEvent(`${textoOuExcecao.stack}`);
+                    eventoSaida.body.source = this.criarReferenciaSource(caminhoArquivo);
                     eventoSaida.body.line = this.convertDebuggerLineToClient(linha);
                     this.sendEvent(eventoSaida);
+
+                    // Também envia para o painel Entrada e Saída
+                    const mensagemErro = this.formatarMensagemErro(textoOuExcecao, caminhoArquivo, linha);
+                    this.provedorVisaoEntradaSaida.escreverEmSaida(mensagemErro);
+
+                    // Adiciona diagnóstico para destacar linha com erro no editor
+                    if (caminhoArquivo && linha > 0) {
+                        this.adicionarDiagnosticoErro(textoOuExcecao, caminhoArquivo, linha);
+                    }
                 } else {
+                    // Tratamento de string (sem alteração)
                     const textoSemEscape = textoOuExcecao
                         .replace(/\\t/g, '\t')
                         .replace(/\\n/g, '\r\n');
@@ -595,6 +604,57 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
     protected terminateRequest(response: DebugProtocol.TerminateResponse, args: DebugProtocol.TerminateArguments, request?: DebugProtocol.Request): void {
         this.tempoExecucao.finalizacao();
         this.sendResponse(response);
+    }
+
+    /**
+     * Formata mensagem de erro para exibição no painel Entrada e Saída
+     * @param erro Objeto de erro
+     * @param caminhoArquivo Caminho do arquivo onde ocorreu o erro
+     * @param linha Linha onde ocorreu o erro
+     * @returns Mensagem formatada para o terminal
+     */
+    private formatarMensagemErro(erro: Error, caminhoArquivo: string, linha: number): string {
+        const mensagemBase = erro.message || String(erro);
+
+        if (linha > 0) {
+            return `\r\n[Erro] Linha ${linha}: ${mensagemBase}`;
+        }
+
+        return `\r\n[Erro] ${mensagemBase}`;
+    }
+
+    /**
+     * Adiciona diagnóstico de erro para destacar a linha com erro no editor
+     * @param erro Objeto de erro
+     * @param caminhoArquivo Caminho do arquivo onde ocorreu o erro
+     * @param linha Linha onde ocorreu o erro
+     */
+    private adicionarDiagnosticoErro(erro: Error, caminhoArquivo: string, linha: number): void {
+        try {
+            const uri = vscode.Uri.file(caminhoArquivo);
+            const mensagemErro = erro.message || String(erro);
+
+            // Cria uma range para a linha inteira (coluna 0 até o final da linha)
+            const range = new vscode.Range(
+                linha - 1, 0, // Linha (convertida de 1-indexed para 0-indexed)
+                linha - 1, Number.MAX_SAFE_INTEGER // Até o final da linha
+            );
+
+            const diagnostic = new vscode.Diagnostic(
+                range,
+                mensagemErro,
+                vscode.DiagnosticSeverity.Error
+            );
+
+            diagnostic.source = 'Delégua Runtime';
+
+            // Adiciona o diagnóstico ao arquivo
+            this.diagnosticos.set(uri, [diagnostic]);
+        } catch (erroInterno) {
+            // Se falhar ao adicionar diagnóstico, apenas ignora
+            // para não interromper a execução
+            console.error('Erro ao adicionar diagnóstico:', erroInterno);
+        }
     }
 
     protected abstract criarReferenciaSource(caminho: string): Source;

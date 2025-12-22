@@ -204,9 +204,28 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
         }
     }
 
+    /**
+     * Extrai informações de localização (arquivo e linha) de um erro
+     * @param erro Objeto de erro
+     * @returns Objeto com caminhoArquivo e linha
+     */
+    private extrairLocalizacaoErro(erro: any): { caminhoArquivo: string; linha: number } {
+        let caminhoArquivo = this._arquivoInicial;
+        let linha = 0;
+
+        // Tenta extrair informações do símbolo, se disponível
+        if (erro.hasOwnProperty('simbolo') && erro.simbolo) {
+            if (erro.simbolo.linha) {
+                linha = erro.simbolo.linha;
+            }
+        }
+
+        return { caminhoArquivo, linha };
+    }
+
     async iniciar(
         documento: vscode.TextDocument | undefined,
-        arquivoInicial: string, 
+        arquivoInicial: string,
         pararNaEntrada: boolean
     ) {
         this.diagnosticos.clear();
@@ -295,7 +314,8 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
             this.interpretador.comando = 'proximo';
             this.interpretador.instrucaoPasso().then(() => {
                 for (let erro of this.interpretador.erros) {
-                    this.enviarEvento('saida', erro);
+                    const { caminhoArquivo, linha } = this.extrairLocalizacaoErro(erro);
+                    this.enviarEvento('saida', erro, false, caminhoArquivo, linha);
                 }
             }).catch((erro) => {
                 this.enviarEvento('saida', `Erro durante execução: ${erro.message || erro}`);
@@ -304,7 +324,8 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
             this.interpretador.comando = 'continuar';
             this.interpretador.instrucaoContinuarInterpretacao().then(() => {
                 for (let erro of this.interpretador.erros) {
-                    this.enviarEvento('saida', erro);
+                    const { caminhoArquivo, linha } = this.extrairLocalizacaoErro(erro);
+                    this.enviarEvento('saida', erro, false, caminhoArquivo, linha);
                 }
             }).catch((erro) => {
                 this.enviarEvento('saida', `Erro durante execução: ${erro.message || erro}`);
