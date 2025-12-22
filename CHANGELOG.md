@@ -5,7 +5,8 @@
 - Atualizando _engine_ do VSCode para a versão 1.80.0;
 - Método `partição()` para Delégua e Pituguês: https://github.com/DesignLiquido/delegua/pull/1031;
 - Limitações e correções do uso de operadores `*` e `+` em Delégua;
-- Revisão de casos no analisador semântico de dialetos de Delégua, como verificação mais apurada de tipos em operações matemáticas.
+- Revisão de casos no analisador semântico de dialetos de Delégua, como verificação mais apurada de tipos em operações matemáticas;
+- Melhoramentos na exibição de erros de execução.
 
 ## 0.21.3
 

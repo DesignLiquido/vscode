@@ -83,23 +83,11 @@
         "pre-empacotar-web": "webpack --mode production --devtool hidden-source-map"
     },
     "activationEvents": [
-        "onLanguage:birl",
-        "onLanguage:delegua",
-        "onLanguage:egua",
-        "onLanguage:foles",
-        "onLanguage:lincones",
-        "onLanguage:lmht",
-        "onLanguage:mapler",
-        "onLanguage:pitugues",
-        "onLanguage:portugolstudio",
-        "onLanguage:potigol",
-        "onLanguage:visualg",
         "onDebugResolve:designliquido",
         "onDebugDynamicConfigurations:designliquido",
         "onCommand:extension.designliquido.getProgramName",
         "onCommand:extension.designliquido.runEditorContents",
-        "onCommand:extension.designliquido.debugEditorContents",
-        "onCommand:extension.designliquido.abrirPainelEntradaESaida"
+        "onCommand:extension.designliquido.debugEditorContents"
     ],
     "workspaceTrust": {
         "request": "never"
