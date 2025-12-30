@@ -11,9 +11,14 @@ import { cyrb53 } from '@designliquido/delegua/geracao-identificadores';
  * não depende das bibliotecas `fs` e `os` do Node.js.
  * A leitura dos arquivos espera um adaptador do próprio ambiente do VSCode,
  * seja ele na Web ou em execução nativa.
+ *
+ * Nota: Esta classe não implementa ImportadorInterface diretamente devido à
+ * necessidade de métodos async, mas mantém compatibilidade estrutural.
  */
 export class ImportadorExtensao {
     lexador: LexadorInterface<SimboloInterface>;
+    diretorioBase: string = '';
+    conteudoArquivosAbertos: { [identificador: string]: string[] } = {};
 
     constructor(
         lexador: LexadorInterface<SimboloInterface>,
@@ -21,7 +26,7 @@ export class ImportadorExtensao {
         this.lexador = lexador;
     }
 
-    async importar(nomeArquivo: string) {
+    async importar(nomeArquivo: string, _: number): Promise<RetornoImportador<SimboloInterface>> {
         if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
             const folderUri = vscode.workspace.workspaceFolders[0].uri;
             // TODO: Verificar se o posix causa algum problema na hora de usar na web.
@@ -40,7 +45,7 @@ export class ImportadorExtensao {
                 retornoLexador
             } as RetornoImportador<SimboloInterface>;
         } else {
-            console.info("Não há workspaces válidos abertos.");
+            throw new Error("Não há espaços de trabalho abertos válidos.");
         }
     }
 

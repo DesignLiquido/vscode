@@ -6,7 +6,7 @@ import { DiagnosticoAnalisadorSemantico } from '@designliquido/delegua/interface
 import { Declaracao } from '@designliquido/delegua/declaracoes';
 
 import { Lexador, LexadorPitugues } from '@designliquido/delegua/lexador';
-import { AvaliadorSintatico, AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico';
+import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico';
 import { AnalisadorSemanticoInterface } from '@designliquido/delegua/interfaces/analisador-semantico-interface';
 import { AnalisadorSemanticoPitugues } from '@designliquido/delegua/analisador-semantico/dialetos';
 
@@ -20,6 +20,7 @@ import { AnalisadorSemanticoMapler } from '@designliquido/mapler/analisador-sema
 
 import { RetornoAvaliadorSintatico, RetornoLexador } from '@designliquido/delegua/interfaces/retornos';
 import { RetornoAnalisadorSemantico } from '@designliquido/delegua/interfaces/retornos/retorno-analisador-semantico';
+import { AvaliadorSintaticoComImportacao } from '@designliquido/delegua-node/avaliador-sintatico';
 
 import { LexadorPotigol } from '@designliquido/potigol/lexador';
 import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sintatico';
@@ -33,6 +34,7 @@ import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg, AnalisadorSemanticoVisuAlg }
 
 import { formatarDiagnosticosAvaliacaoSintatica } from '../avaliacao-sintatica';
 import { definirResultado } from './cache-analise';
+import { ImportadorExtensao } from '../importador';
 
 const mapaSeveridadeDiagnosticos = {
     0: vscode.DiagnosticSeverity.Error,
@@ -75,17 +77,14 @@ export async function executarAnalises(
         case "mapler":
             lexador = new LexadorMapler();
             avaliadorSintatico = new AvaliadorSintaticoMapler();
-            // TODO: Maturar casos do analisador semântico antes de reabilitar a linha abaixo.
             analisadorSemantico = new AnalisadorSemanticoMapler();
             break;
 
         case "delegua":
             lexador = new Lexador();
-            // TODO: Mudar `importar` em `delegua-node` para ser assíncrono, e usar `AvaliadorSintaticoComImportacao` aqui.
-            /* avaliadorSintatico = new AvaliadorSintaticoComImportacao(
-                new ImportadorExtensao(lexador)
-            ); */
-            avaliadorSintatico = new AvaliadorSintatico();
+            avaliadorSintatico = new AvaliadorSintaticoComImportacao(
+                new ImportadorExtensao(lexador) as any
+            );
             analisadorSemantico = new AnalisadorSemantico();
             break;
 
@@ -107,7 +106,6 @@ export async function executarAnalises(
         case "visualg":
             lexador = new LexadorVisuAlg();
             avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
-            // TODO: Maturar casos do analisador semântico antes de reabilitar a linha abaixo.
             analisadorSemantico = new AnalisadorSemanticoVisuAlg();
             break;
             
@@ -127,7 +125,7 @@ export async function executarAnalises(
 
     // TODO: Mudar isso quando avaliadores sintáticos não mais emitirem `throw` de erros.
     try {
-        resultadoAvaliadorSintatico = avaliadorSintatico.analisar(resultadoLexador, -1);
+        resultadoAvaliadorSintatico = await avaliadorSintatico.analisar(resultadoLexador, -1);
     } catch (erro: any) {
         resultadoAvaliadorSintatico = {
             declaracoes: [],

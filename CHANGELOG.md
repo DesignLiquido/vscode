@@ -1,5 +1,14 @@
 # Histórico de Modificações
 
+## 0.22.1
+
+- Delégua e Pituguês passam a suportar N aninhamentos de vetor: https://github.com/DesignLiquido/delegua/issues/1043;
+- Pituguês passa a suportar diversos caracteres de escape: https://github.com/DesignLiquido/delegua/issues/913;
+- Operador de desempacotamento de dicionários em Pituguês: https://github.com/DesignLiquido/delegua/issues/888;
+- Formatação de texto com operador % em Pituguês: https://github.com/DesignLiquido/delegua/issues/1011;
+- Equiparação de operadores de atribuição composta entre Delégua e Pituguês: https://github.com/DesignLiquido/delegua/issues/1014;
+- Funções de conversão entre tuplas e vetores em Pituguês: https://github.com/DesignLiquido/delegua/issues/884.
+
 ## 0.22.0
 
 - Atualizando _engine_ do VSCode para a versão 1.80.0;

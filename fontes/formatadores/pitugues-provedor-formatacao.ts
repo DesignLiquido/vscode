@@ -9,16 +9,16 @@ import { formatarDiagnosticosAvaliacaoSintatica } from '../avaliacao-sintatica';
 export class PituguesProvedorFormatacao implements vscode.DocumentFormattingEditProvider {
     constructor(private readonly diagnosticosDelegua: vscode.DiagnosticCollection) {}
 
-    provideDocumentFormattingEdits(documento: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
+    async provideDocumentFormattingEdits(documento: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Promise<vscode.TextEdit[] | null> {
         const lexador = new Lexador();
         const avaliadorSintatico = new AvaliadorSintatico(false);
 
-        // Definição de final da linha. 
+        // Definição de final da linha.
         // const caracterFimDaLinha = documento.eol === vscode.EndOfLine.CRLF ? '\r\n' : '\n';
         const formatador = new FormatadorPitugues(); // TODO: Atualizar formatador, colocando o caracter de fim de linha como parâmetro.
 
         const resultadoLexador = lexador.mapear(documento.getText().split('\n'), -1);
-        const resultadoAvaliacaoSintatica = avaliadorSintatico.analisar(resultadoLexador, -1);
+        const resultadoAvaliacaoSintatica = await avaliadorSintatico.analisar(resultadoLexador, -1);
 
         if (resultadoAvaliacaoSintatica.erros.length > 0) {
             let listaOcorrencias: vscode.Diagnostic[] = [];
@@ -33,18 +33,22 @@ export class PituguesProvedorFormatacao implements vscode.DocumentFormattingEdit
             return null;
         }
 
-        formatador.formatar(resultadoAvaliacaoSintatica.declaracoes).then(resultado => {
-            return [
-                vscode.TextEdit.replace(
-                    new vscode.Range(
-                        documento.lineAt(0).range.start,
-                        documento.lineAt(documento.lineCount - 1).range.end
-                    ),
-                    resultado
-                ),
-            ];
-        }).catch(erro => {
+        let resultado: string;
+        try {
+            resultado = await formatador.formatar(resultadoAvaliacaoSintatica.declaracoes);
+        } catch (erro) {
             console.error(erro);
-        });        
+            return null;
+        }
+
+        return [
+            vscode.TextEdit.replace(
+                new vscode.Range(
+                    documento.lineAt(0).range.start,
+                    documento.lineAt(documento.lineCount - 1).range.end
+                ),
+                resultado
+            ),
+        ];
     }
 }

@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { EventEmitter } from 'events';
 import { DebugProtocol } from '@vscode/debugprotocol';
 
-import { cyrb53, PontoParada } from '@designliquido/delegua';
+import { PontoParada } from '@designliquido/delegua';
 
 import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
 
@@ -57,8 +57,9 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
     private lexador: LexadorInterface<SimboloInterface>;
     private avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>;
     private importadorExtensao: ImportadorExtensao;
-    private interpretador: InterpretadorComDepuracaoInterface;
     private resolvedor: { resolver(declaracoes: Declaracao[]): Promise<Declaracao[]> };
+
+    interpretador: InterpretadorComDepuracaoInterface;
 
     private _documento: vscode.TextDocument;
     private _dialetoSelecionado: 'delegua' | 'pitugues' | 'birl' | 'mapler' | 'portugol-studio' | 'potigol' | 'visualg';
@@ -143,9 +144,6 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
                     this.escreverEmSaidaMesmaLinha.bind(this)
                 );
                 
-                vscode.window.showInformationMessage(
-                    'Depuração de Pituguês disponível na web. Imports avançados requerem a versão desktop.'
-                );
                 break;
             case "mapler":
                 this._dialetoSelecionado = 'mapler';
@@ -197,9 +195,6 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
                     this.escreverEmSaidaMesmaLinha.bind(this)
                 );
                 
-                vscode.window.showInformationMessage(
-                    'Depuração de Delégua disponível na web. Imports avançados requerem a versão desktop.'
-                );
                 break;
         }
     }
@@ -262,7 +257,7 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
         this._hashArquivoInicial = retornoImportador.hashArquivo;
         this._conteudoArquivo = retornoImportador.conteudoArquivo;
 
-        const retornoAvaliadorSintatico = this.avaliadorSintatico.analisar(
+        const retornoAvaliadorSintatico = await this.avaliadorSintatico.analisar(
             retornoImportador.retornoLexador, 
             retornoImportador.hashArquivo
         );

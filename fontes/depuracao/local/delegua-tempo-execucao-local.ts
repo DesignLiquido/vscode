@@ -263,7 +263,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
             this._conteudoArquivo = retornoImportador.conteudoArquivo;
         }
 
-        const retornoAvaliadorSintatico = this.avaliadorSintatico.analisar(retornoImportador.retornoLexador, retornoImportador.hashArquivo);
+        const retornoAvaliadorSintatico = await this.avaliadorSintatico.analisar(retornoImportador.retornoLexador, retornoImportador.hashArquivo);
         if (retornoAvaliadorSintatico.erros.length > 0) {
             const documentoAtivo = vscode.window.activeTextEditor?.document as vscode.TextDocument;
             this.diagnosticos.set(

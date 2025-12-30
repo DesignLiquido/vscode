@@ -116,7 +116,7 @@ Abaixo temos algumas dicas de onde colocar pontos de parada para a inspeção de
 
 ```ts
     resultadoLexador = lexador.mapear(linhas, -1);
-    resultadoAvaliadorSintatico = avaliadorSintatico.analisar(resultadoLexador, -1);
+    resultadoAvaliadorSintatico = await avaliadorSintatico.analisar(resultadoLexador, -1);
     resultadoAnalisadorSemantico = analisadorSemantico.analisar(resultadoAvaliadorSintatico.declaracoes);
     popularDiagnosticos(resultadoAnalisadorSemantico.diagnosticos, diagnosticos, documento);
 ```
