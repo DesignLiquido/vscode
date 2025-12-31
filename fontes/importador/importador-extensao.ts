@@ -1,21 +1,24 @@
 import * as vscode from 'vscode';
-import { posix } from 'path';
 
 import { LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
-
-import { RetornoImportador } from "@designliquido/delegua-node/importador";
+import { RetornoLexador } from '@designliquido/delegua/interfaces/retornos';
 import { cyrb53 } from '@designliquido/delegua/geracao-identificadores';
+import { ImportadorInterface } from '../interfaces';
+
+export interface RetornoImportador<S extends SimboloInterface> {
+    conteudoArquivo: string[];
+    nomeArquivo: string;
+    hashArquivo: number;
+    retornoLexador: RetornoLexador<S>;
+}
 
 /**
  * Diferentemente do importador de `delegua-node`, este importador
  * não depende das bibliotecas `fs` e `os` do Node.js.
  * A leitura dos arquivos espera um adaptador do próprio ambiente do VSCode,
  * seja ele na Web ou em execução nativa.
- *
- * Nota: Esta classe não implementa ImportadorInterface diretamente devido à
- * necessidade de métodos async, mas mantém compatibilidade estrutural.
  */
-export class ImportadorExtensao {
+export class ImportadorExtensao implements ImportadorInterface<SimboloInterface> {
     lexador: LexadorInterface<SimboloInterface>;
     diretorioBase: string = '';
     conteudoArquivosAbertos: { [identificador: string]: string[] } = {};
@@ -27,15 +30,38 @@ export class ImportadorExtensao {
     }
 
     async importar(nomeArquivo: string, _: number): Promise<RetornoImportador<SimboloInterface>> {
-        if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
-            const folderUri = vscode.workspace.workspaceFolders[0].uri;
-            // TODO: Verificar se o posix causa algum problema na hora de usar na web.
-            const fileUri = folderUri.with({ path: posix.join(folderUri.path, nomeArquivo) });
+        let fileUri: vscode.Uri;
+
+        // Check if the path is already an absolute URI or file system path
+        try {
+            // Try to parse as URI first (handles file:// URIs)
+            if (nomeArquivo.startsWith('file://') || nomeArquivo.startsWith('vscode-')) {
+                fileUri = vscode.Uri.parse(nomeArquivo);
+            }
+            // Check if it's an absolute file path (Windows: C:\, D:\, etc. or Unix: /)
+            else if (
+                nomeArquivo.match(/^[a-zA-Z]:[/\\]/) || // Windows absolute path
+                nomeArquivo.startsWith('/') || // Unix absolute path
+                nomeArquivo.startsWith('\\\\') // UNC path
+            ) {
+                fileUri = vscode.Uri.file(nomeArquivo);
+            }
+            // Otherwise, treat as relative path
+            else {
+                if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
+                    throw new Error("Não há espaços de trabalho abertos válidos.");
+                }
+                const folderUri = vscode.workspace.workspaceFolders[0].uri;
+                fileUri = vscode.Uri.joinPath(folderUri, nomeArquivo);
+            }
 
             const bufferArquivo = await vscode.workspace.fs.readFile(fileUri);
             const conteudoArquivo = Buffer.from(bufferArquivo).toString('utf8').split('\n').map(linha => linha + '\0');
 
+            // Store the content in conteudoArquivosAbertos for potential reuse
             const hashArquivo = cyrb53(nomeArquivo.toLowerCase());
+            this.conteudoArquivosAbertos[hashArquivo] = conteudoArquivo;
+
             const retornoLexador = this.lexador.mapear(conteudoArquivo, hashArquivo);
 
             return {
@@ -44,8 +70,8 @@ export class ImportadorExtensao {
                 hashArquivo,
                 retornoLexador
             } as RetornoImportador<SimboloInterface>;
-        } else {
-            throw new Error("Não há espaços de trabalho abertos válidos.");
+        } catch (erro: any) {
+            throw new Error(`Erro ao importar arquivo '${nomeArquivo}': ${erro.message}`);
         }
     }
 

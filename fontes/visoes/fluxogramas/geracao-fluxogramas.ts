@@ -45,11 +45,11 @@ export async function gerarFluxograma(uri: vscode.Uri | undefined, context: vsco
                 const importador = new ImportadorExtensao(lexador);
                 const avaliadorSintatico = new AvaliadorSintatico();
 
-                const retornoImportador = await importador.importar(nomeArquivo);
+                const retornoImportador = await importador.importar(nomeArquivo, -1);
 
                 progresso.report({ increment: 30, message: 'Analisando código...' });
 
-                const retornoAvaliadorSintatico = avaliadorSintatico.analisar(
+                const retornoAvaliadorSintatico = await avaliadorSintatico.analisar(
                     retornoImportador?.retornoLexador as RetornoLexador<SimboloInterface<string>>, 
                     -1
                 );

@@ -20,7 +20,6 @@ import { AnalisadorSemanticoMapler } from '@designliquido/mapler/analisador-sema
 
 import { RetornoAvaliadorSintatico, RetornoLexador } from '@designliquido/delegua/interfaces/retornos';
 import { RetornoAnalisadorSemantico } from '@designliquido/delegua/interfaces/retornos/retorno-analisador-semantico';
-import { AvaliadorSintaticoComImportacao } from '@designliquido/delegua-node/avaliador-sintatico';
 
 import { LexadorPotigol } from '@designliquido/potigol/lexador';
 import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sintatico';
@@ -35,6 +34,7 @@ import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg, AnalisadorSemanticoVisuAlg }
 import { formatarDiagnosticosAvaliacaoSintatica } from '../avaliacao-sintatica';
 import { definirResultado } from './cache-analise';
 import { ImportadorExtensao } from '../importador';
+import { AvaliadorSintaticoComImportacao } from '../avaliacao-sintatica/avaliador-sintatico-com-importacao';
 
 const mapaSeveridadeDiagnosticos = {
     0: vscode.DiagnosticSeverity.Error,

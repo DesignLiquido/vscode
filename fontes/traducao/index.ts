@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as caminho from 'path';
 import * as sistemaArquivos from 'fs';
 
-import { Delegua } from '@designliquido/delegua-node/delegua';
+// import { Delegua } from '@designliquido/delegua-node/delegua';
 import { traduzirPorMotorFolEs, traduzirPorMotorLinConEs, traduzirPorMotorLmht } from './comum';
 
 /**
@@ -44,7 +44,9 @@ export async function traduzir(deLinguagem: string, paraLinguagem: string, alvo:
                 resultadoTraducao = await traduzirPorMotorLinConEs(deLinguagem, paraLinguagem, caminhoArquivoAbertoEditor);
                 break;
             default:
-                resultadoTraducao = traduzirPorMotorDelegua(deLinguagem, paraLinguagem, alvo, caminhoArquivoAbertoEditor);
+                // traduzirPorMotorDelegua is commented out due to removal of delegua-node dependency
+                throw new Error('Tradução via motor Delégua não está disponível na versão web da extensão.');
+                // resultadoTraducao = traduzirPorMotorDelegua(deLinguagem, paraLinguagem, alvo, caminhoArquivoAbertoEditor);
                 break;
         }
 
@@ -70,11 +72,14 @@ export async function traduzir(deLinguagem: string, paraLinguagem: string, alvo:
 
 /**
  * Traduções pelo motor de Delégua, seja diretas ou reversas.
+ * NOTA: Esta função foi comentada devido à remoção da dependência delegua-node
+ * para compatibilidade com a versão web da extensão.
  * @param deLinguagem Extensão da linguagem de origem.
  * @param paraLinguagem Extensão da linguagem de destino.
  * @param caminhoArquivoAbertoEditor O arquivo a ser traduzido.
  * @returns O texto com o conteúdo da tradução.
  */
+/*
 function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: string, alvo: string, caminhoArquivoAbertoEditor: string): string {
     let resultadoTraducao = '';
     const delegua = new Delegua(
@@ -91,3 +96,4 @@ function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: string, alv
     delegua.traduzirArquivo(caminhoArquivoAbertoEditor, `${deLinguagem}-para-${paraLinguagem}`, alvo, true);
     return resultadoTraducao;
 }
+*/

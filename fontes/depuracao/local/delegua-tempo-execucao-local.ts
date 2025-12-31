@@ -7,14 +7,13 @@ import { cyrb53, PontoParada } from '@designliquido/delegua';
 
 import { AvaliadorSintaticoInterface, InterpretadorComDepuracaoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
 
-import { Importador, RetornoImportador } from '@designliquido/delegua-node/importador';
-import { InterpretadorComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/interpretador-com-depuracao-importacao';
-import { ImportadorInterface } from '@designliquido/delegua-node/interfaces';
-import { AvaliadorSintaticoComImportacao } from '@designliquido/delegua-node/avaliador-sintatico';
+import { RetornoImportador } from '../../importador/importador-extensao';
+import { AvaliadorSintaticoComImportacao } from '../../avaliacao-sintatica/avaliador-sintatico-com-importacao';
+import { InterpretadorComDepuracaoImportacao } from '../../interpretador/interpretador-com-depuracao-importacao';
+import { InterpretadorPituguesComDepuracaoImportacao } from '../../interpretador/dialetos/interpretador-pitugues-com-depuracao-importacao';
 
 import { LexadorPitugues } from '@designliquido/delegua/lexador/dialetos/lexador-pitugues';
 import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico/dialetos/avaliador-sintatico-pitugues';
-import { InterpretadorPituguesComDepuracaoImportacao } from '@designliquido/delegua-node/interpretador/dialetos/interpretador-pitugues-com-depuracao-importacao';
 
 import { palavrasReservadasDelegua } from '@designliquido/delegua/lexador/palavras-reservadas';
 
@@ -59,7 +58,6 @@ import { TempoExecucaoInterface } from '../tempo-execucao-interface';
 export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExecucaoInterface {
     private lexador: LexadorInterface<SimboloInterface>;
     private avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>;
-    private importador: ImportadorInterface<SimboloInterface>;
     private importadorExtensao: ImportadorExtensao;
     private resolvedor: { resolver(declaracoes: Declaracao[]): Promise<Declaracao[]> };
 
@@ -128,13 +126,9 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
                 this._dialetoSelecionado = 'pitugues';
                 this.lexador = new LexadorPitugues();
                 this.avaliadorSintatico = new AvaliadorSintaticoPitugues();
-                this.importador = new Importador(
-                    this.lexador,
-                    {},
-                    {},
-                    true);
+                this.importadorExtensao = new ImportadorExtensao(this.lexador);
                 this.interpretador = new InterpretadorPituguesComDepuracaoImportacao(
-                    this.importador as any, 
+                    this.importadorExtensao as any, 
                     process.cwd(), 
                     this.escreverEmSaida.bind(this), 
                     this.escreverEmSaidaMesmaLinha.bind(this)
@@ -181,14 +175,10 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
             default:
                 this._dialetoSelecionado = 'delegua';
                 this.lexador = new Lexador();
-                this.importador = new Importador(
-                    this.lexador, 
-                    {},
-                    {},
-                    true);
-                this.avaliadorSintatico = new AvaliadorSintaticoComImportacao(this.importador);
+                this.importadorExtensao = new ImportadorExtensao(this.lexador);
+                this.avaliadorSintatico = new AvaliadorSintaticoComImportacao(this.importadorExtensao as any);
                 this.interpretador = new InterpretadorComDepuracaoImportacao(
-                    this.importador as any, 
+                    this.importadorExtensao as any, 
                     process.cwd(), 
                     this.escreverEmSaida.bind(this), 
                     this.escreverEmSaidaMesmaLinha.bind(this)
@@ -251,12 +241,13 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
         let retornoImportador: RetornoImportador<SimboloInterface>;
 
         if (['delegua', 'pitugues'].includes(this._dialetoSelecionado)) {
-            retornoImportador = this.importador.importar(arquivoInicial, -1);
+            // Use document URI for more reliable path resolution
+            retornoImportador = await this.importadorExtensao.importar(documento.uri.fsPath, -1);
             this._hashArquivoInicial = retornoImportador.hashArquivo;
-            this._conteudoArquivo = this.importador.conteudoArquivosAbertos[this._hashArquivoInicial];
+            this._conteudoArquivo = retornoImportador.conteudoArquivo;
         } else {
             retornoImportador = this.importadorExtensao.importarViaFuncaoConteudoDocumento(
-                this._documento.getText, 
+                this._documento.getText,
                 this._documento.fileName
             );
             this._hashArquivoInicial = retornoImportador.hashArquivo;
