@@ -35,7 +35,6 @@ export async function traduzirPorMotorFolEs(
             break;
     }
 
-    // sistemaArquivos.writeFileSync(caminhoArquivoAbertoEditor.split('.')[0] + `.${paraLinguagem}`, resultadoTraducao);
     funcaoEscrita(caminhoArquivoAbertoEditor.split('.')[0] + `.${paraLinguagem}`, resultadoTraducao);
     return Promise.resolve(resultadoTraducao);
 }
@@ -107,7 +106,6 @@ export async function traduzirPorMotorLmht(
             break;
     }
 
-    // sistemaArquivos.writeFileSync(caminhoArquivoAbertoEditor.split('.')[0] + `.${paraLinguagem}`, resultadoTraducao);
     funcaoEscrita(caminhoArquivoAbertoEditor.split('.')[0] + `.${paraLinguagem}`, resultadoTraducao);
     return resultadoTraducao;
 }

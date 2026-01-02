@@ -2,8 +2,13 @@ import * as vscode from 'vscode';
 import * as caminho from 'path';
 import * as sistemaArquivos from 'fs';
 
-// import { Delegua } from '@designliquido/delegua-node/delegua';
 import { traduzirPorMotorFolEs, traduzirPorMotorLinConEs, traduzirPorMotorLmht } from './comum';
+import { AvaliadorSintaticoInterface, Lexador, PlataformaAlvo, PlataformaAlvoARM, TradutorAssemblyARM, TradutorAssemblyScript, TradutorAssemblyX64, TradutorElixir, TradutorJavaScript, TradutorPython, TradutorReversoJavaScript, TradutorRuby } from '@designliquido/delegua';
+import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
+import { TradutorInterface } from './tradutor-interface';
+import { AvaliadorSintaticoJavaScript } from '@designliquido/delegua/avaliador-sintatico/traducao/avaliador-sintatico-javascript';
+import { AvaliadorSintaticoVisuAlg } from '@designliquido/visualg/avaliador-sintatico';
+import { TradutorReversoVisuAlg } from '@designliquido/visualg/tradutores';
 
 /**
  * Ponto de entrada para todas as traduções desta extensão.
@@ -44,9 +49,7 @@ export async function traduzir(deLinguagem: string, paraLinguagem: string, alvo:
                 resultadoTraducao = await traduzirPorMotorLinConEs(deLinguagem, paraLinguagem, caminhoArquivoAbertoEditor);
                 break;
             default:
-                // traduzirPorMotorDelegua is commented out due to removal of delegua-node dependency
-                throw new Error('Tradução via motor Delégua não está disponível na versão web da extensão.');
-                // resultadoTraducao = traduzirPorMotorDelegua(deLinguagem, paraLinguagem, alvo, caminhoArquivoAbertoEditor);
+                resultadoTraducao = await traduzirPorMotorDelegua(deLinguagem, paraLinguagem, alvo);
                 break;
         }
 
@@ -58,42 +61,190 @@ export async function traduzir(deLinguagem: string, paraLinguagem: string, alvo:
             .basename(caminhoArquivoAbertoEditor)
             .replace(`.${deLinguagem}`, '');
 
-        vscode.env.clipboard.writeText(resultadoTraducao);
-        vscode.window.showInformationMessage(
-            `O arquivo foi traduzido e salvo no caminho atual com nome: ${nomeArquivo}.${paraLinguagem}`
-        );
-        vscode.window.showInformationMessage(
-            'Tradução copiada para área de transferência'
-        );
+        // Obter configuração de resultado da tradução
+        const configuracao = vscode.workspace.getConfiguration('delegua');
+        const resultadoOpcao = configuracao.get<string>('traducao.resultadoTraducao', 'Ambos');
+
+        // Implementar lógica baseada na opção selecionada
+        switch (resultadoOpcao) {
+            case 'Área de Transferência':
+                await vscode.env.clipboard.writeText(resultadoTraducao);
+                vscode.window.showInformationMessage(
+                    'Tradução copiada para área de transferência'
+                );
+                break;
+
+            case 'Arquivo':
+                const caminhoArquivoDestino = caminhoArquivoAbertoEditor.replace(
+                    `.${deLinguagem}`,
+                    `.${paraLinguagem}`
+                );
+                sistemaArquivos.writeFileSync(caminhoArquivoDestino, resultadoTraducao);
+                vscode.window.showInformationMessage(
+                    `O arquivo foi traduzido e salvo no caminho atual com nome: ${nomeArquivo}.${paraLinguagem}`
+                );
+                break;
+
+            case 'Ambos':
+            default:
+                const caminhoArquivoAmb = caminhoArquivoAbertoEditor.replace(
+                    `.${deLinguagem}`,
+                    `.${paraLinguagem}`
+                );
+                sistemaArquivos.writeFileSync(caminhoArquivoAmb, resultadoTraducao);
+                await vscode.env.clipboard.writeText(resultadoTraducao);
+                vscode.window.showInformationMessage(
+                    `O arquivo foi traduzido e salvo no caminho atual com nome: ${nomeArquivo}.${paraLinguagem}`
+                );
+                vscode.window.showInformationMessage(
+                    'Tradução copiada para área de transferência'
+                );
+                break;
+        }
     } catch (error: any) {
         return vscode.window.showInformationMessage(`Erro ao traduzir: ${error.message}`);
     }
 }
 
 /**
+ * Verifica se houve erros na análise léxica e os reporta ao usuário.
+ * @param retornoLexador Resultado da análise léxica.
+ * @returns true se houve erros, false caso contrário.
+ */
+function afericaoErrosLexador(retornoLexador: any): boolean {
+    if (retornoLexador.erros.length > 0) {
+        for (const erroLexador of retornoLexador.erros) {
+            vscode.window.showErrorMessage(
+                `Erro léxico na linha ${erroLexador.linha}: ${erroLexador.mensagem} no '${erroLexador.caractere}'`
+            );
+        }
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Verifica se houve erros na análise sintática e os reporta ao usuário.
+ * @param retornoAvaliadorSintatico Resultado da análise sintática.
+ * @returns true se houve erros, false caso contrário.
+ */
+function afericaoErrosAvaliadorSintatico(retornoAvaliadorSintatico: any): boolean {
+    if (retornoAvaliadorSintatico.erros && retornoAvaliadorSintatico.erros.length > 0) {
+        for (const erroAvaliadorSintatico of retornoAvaliadorSintatico.erros) {
+            vscode.window.showErrorMessage(
+                `Erro sintático na linha ${erroAvaliadorSintatico.linha}: ${erroAvaliadorSintatico.mensagem}`
+            );
+        }
+        return true;
+    }
+    return false;
+}
+
+/**
  * Traduções pelo motor de Delégua, seja diretas ou reversas.
- * NOTA: Esta função foi comentada devido à remoção da dependência delegua-node
- * para compatibilidade com a versão web da extensão.
  * @param deLinguagem Extensão da linguagem de origem.
  * @param paraLinguagem Extensão da linguagem de destino.
+ * @param alvo Plataforma alvo para tradução (quando aplicável).
  * @param caminhoArquivoAbertoEditor O arquivo a ser traduzido.
  * @returns O texto com o conteúdo da tradução.
  */
-/*
-function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: string, alvo: string, caminhoArquivoAbertoEditor: string): string {
-    let resultadoTraducao = '';
-    const delegua = new Delegua(
-        undefined,
-        (traducao: string) => {
-            resultadoTraducao = traducao;
-        }
-    );
+async function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: string, alvo: string): Promise<string> {
+    const lexador = new Lexador(false);
+    let avaliadorSintatico: AvaliadorSintaticoInterface<any, any>;
+    let tradutor: TradutorInterface<any>;
 
-    if (!caminhoArquivoAbertoEditor) {
-        return '';
+    switch (deLinguagem) {
+        case 'js':
+        case 'javascript':
+            avaliadorSintatico = new AvaliadorSintaticoJavaScript();
+            tradutor = new TradutorReversoJavaScript();
+            break;
+        case 'alg':
+        case 'visualg':
+            avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
+            tradutor = new TradutorReversoVisuAlg();
+            break;
+        default:
+            switch (paraLinguagem) {
+                case 'arm':
+                    avaliadorSintatico = new AvaliadorSintatico();
+                    let alvoResolvidoARM: PlataformaAlvoARM = 'linux-arm';
+                    if (alvo === 'android') {
+                        alvoResolvidoARM = 'android';
+                    }
+
+                    tradutor = new TradutorAssemblyARM(alvoResolvidoARM);
+                    break;
+                case 'assemblyscript':
+                case 'as':
+                    avaliadorSintatico = new AvaliadorSintatico();
+                    tradutor = new TradutorAssemblyScript();
+                    break;
+                case 'elixir':
+                case 'ex':
+                    avaliadorSintatico = new AvaliadorSintatico();
+                    tradutor = new TradutorElixir();
+                    break;
+                case 'javascript':
+                case 'js':
+                    avaliadorSintatico = new AvaliadorSintatico();
+                    tradutor = new TradutorJavaScript();
+                    break;
+                case 'py':
+                case 'python':
+                    avaliadorSintatico = new AvaliadorSintatico();
+                    tradutor = new TradutorPython();
+                    break;
+                case 'rb':
+                case 'ruby':
+                    avaliadorSintatico = new AvaliadorSintatico();
+                    tradutor = new TradutorRuby();
+                    break;
+                case 'x64':
+                    avaliadorSintatico = new AvaliadorSintatico();
+                    let alvoResolvido: PlataformaAlvo = 'linux';
+                    if (alvo === 'windows') {
+                        alvoResolvido = 'windows';
+                    }
+
+                    tradutor = new TradutorAssemblyX64(alvoResolvido);
+                break;
+                default:
+                    throw new Error(`Tradutor '${paraLinguagem}' não implementado.`);
+            }
     }
 
-    delegua.traduzirArquivo(caminhoArquivoAbertoEditor, `${deLinguagem}-para-${paraLinguagem}`, alvo, true);
-    return resultadoTraducao;
+    try {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            vscode.window.showErrorMessage('Nenhum editor ativo encontrado.');
+            return '';
+        }
+
+        const conteudo = editor.document.getText();
+
+        const retornoLexador = lexador.mapear(
+            conteudo.split(`\n`), -1
+        );
+
+        if (afericaoErrosLexador(retornoLexador)) {
+            return '';
+        }
+
+        const retornoAvaliadorSintatico = await avaliadorSintatico.analisar(
+            retornoLexador,
+            -1
+        );
+
+        if (afericaoErrosAvaliadorSintatico(retornoAvaliadorSintatico)) {
+            return '';
+        }
+
+        const resultado = await tradutor.traduzir(retornoAvaliadorSintatico.declaracoes);
+
+        return resultado;
+    } catch (erro: any) {
+        vscode.window.showErrorMessage(`Erro durante tradução: ${erro.message}`);
+        return '';
+    }
 }
-*/

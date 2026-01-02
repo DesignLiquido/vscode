@@ -1,19 +1,18 @@
 import { Lexador } from '@designliquido/delegua/lexador';
 import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
-import { PlataformaAlvo, PlataformaAlvoARM, TradutorAssemblyARM, TradutorAssemblyScript, TradutorAssemblyX64, TradutorJavaScript, TradutorPython, TradutorReversoJavaScript } from '@designliquido/delegua/tradutores';
-import { AvaliadorSintaticoInterface } from '@designliquido/delegua';
+import { PlataformaAlvo, PlataformaAlvoARM, TradutorAssemblyARM, TradutorAssemblyScript, TradutorAssemblyX64, TradutorElixir, TradutorJavaScript, TradutorPython, TradutorReversoJavaScript, TradutorRuby } from '@designliquido/delegua/tradutores';
+import { AvaliadorSintaticoInterface, TradutorInterface } from '@designliquido/delegua';
+import { AvaliadorSintaticoJavaScript } from '@designliquido/delegua/avaliador-sintatico/traducao/avaliador-sintatico-javascript';
 
-interface TradutorInterface<T> {
-    traduzir(declaracoes: T[]): string;
-}
+import { AvaliadorSintaticoVisuAlg } from '@designliquido/visualg/avaliador-sintatico';
+import { TradutorReversoVisuAlg } from '@designliquido/visualg/tradutores';
 
 interface ImportadorInterface {
     diretorioBase: string;
     importar(caminho: string, indice: number): any;
 }
 
-export class NucleoTraducaoDeleguaWeb 
-{
+export class NucleoTraducaoDeleguaWeb {
     lexador: Lexador;
     avaliadorSintatico: AvaliadorSintaticoInterface<any, any>;
     tradutor: TradutorInterface<any>;
@@ -29,6 +28,7 @@ export class NucleoTraducaoDeleguaWeb
     extensoes = {
         arm: '.s',
         assemblyscript: '.as',
+        elixir: '.ex',
         delegua: '.delegua',
         javascript: '.js',
         js: '.js',
@@ -36,6 +36,7 @@ export class NucleoTraducaoDeleguaWeb
         visualg: '.alg',
         python: '.py',
         py: '.py',
+        ruby: '.rb',
         x64: '.nasm'
     };
 
@@ -74,6 +75,10 @@ export class NucleoTraducaoDeleguaWeb
                 this.avaliadorSintatico = new AvaliadorSintatico();
                 this.tradutor = new TradutorAssemblyScript();
                 break;
+            case 'delegua-para-elixir':
+                this.avaliadorSintatico = new AvaliadorSintatico();
+                this.tradutor = new TradutorElixir();
+                break;
             case 'delegua-para-js':
             case 'delegua-para-javascript':
                 this.avaliadorSintatico = new AvaliadorSintatico();
@@ -84,6 +89,10 @@ export class NucleoTraducaoDeleguaWeb
                 this.avaliadorSintatico = new AvaliadorSintatico();
                 this.tradutor = new TradutorPython();
                 break;
+            case 'delegua-para-ruby':
+                this.avaliadorSintatico = new AvaliadorSintatico();
+                this.tradutor = new TradutorRuby();
+                break;
             case 'delegua-para-x64':
                 this.avaliadorSintatico = new AvaliadorSintatico();
                 let alvoResolvido: PlataformaAlvo = 'linux';
@@ -93,8 +102,7 @@ export class NucleoTraducaoDeleguaWeb
 
                 this.tradutor = new TradutorAssemblyX64(alvoResolvido);
                 break;
-            // TODO: Reabilitar depois de se livrar de `delegua-node` aqui.
-            /* case 'js-para-delegua':
+            case 'js-para-delegua':
             case 'javascript-para-delegua':
                 this.avaliadorSintatico = new AvaliadorSintaticoJavaScript();
                 this.tradutor = new TradutorReversoJavaScript();
@@ -103,7 +111,7 @@ export class NucleoTraducaoDeleguaWeb
             case 'visualg-para-delegua':
                 this.avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
                 this.tradutor = new TradutorReversoVisuAlg();
-                break; */
+                break;
             default:
                 throw new Error(`Tradutor '${comandoTraducao}' não implementado.`);
         }
@@ -126,12 +134,12 @@ export class NucleoTraducaoDeleguaWeb
                 throw new Error('Erro na análise léxica');
             }
 
-            const retornoAvaliadorSintatico = this.avaliadorSintatico.analisar(
-                retornoLexador, 
+            const retornoAvaliadorSintatico = await this.avaliadorSintatico.analisar(
+                retornoLexador,
                 -1
             );
 
-            const resultado = this.tradutor.traduzir(retornoAvaliadorSintatico.declaracoes);
+            const resultado = await this.tradutor.traduzir(retornoAvaliadorSintatico.declaracoes);
 
             return resultado;
         } catch (erro: any) {

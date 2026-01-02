@@ -1,5 +1,12 @@
 # Histórico de Modificações
 
+## 0.23.0
+
+- Novos tradutores: Delégua para Elixir e Ruby;
+- Geração de fluxogramas de Delégua agora suportam funções e classes;
+- Funções nativas `maximo()`, `minimo()` e `somar()` para Pituguês: https://github.com/DesignLiquido/delegua/pull/1049;
+- Correções de uso de parâmetros em procedimentos do VisuAlg.
+
 ## 0.22.1
 
 - Delégua e Pituguês passam a suportar N aninhamentos de vetor: https://github.com/DesignLiquido/delegua/issues/1043;

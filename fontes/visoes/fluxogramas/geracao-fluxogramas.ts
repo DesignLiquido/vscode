@@ -57,7 +57,7 @@ export async function gerarFluxograma(uri: vscode.Uri | undefined, context: vsco
                 progresso.report({ increment: 30, message: 'Gerando diagrama...' });
 
                 const tradutor = new TradutorMermaidJs();
-                const diagramaMermaid = tradutor.traduzir(retornoAvaliadorSintatico.declaracoes);
+                const diagramaMermaid = await tradutor.traduzir(retornoAvaliadorSintatico.declaracoes);
 
                 if (!diagramaMermaid || diagramaMermaid.trim() === '') {
                     vscode.window.showWarningMessage(
