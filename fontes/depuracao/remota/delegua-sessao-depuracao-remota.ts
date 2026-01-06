@@ -27,7 +27,7 @@ import * as base64 from 'base64-js';
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 
 import { inferirTipoVariavel } from '@designliquido/delegua/inferenciador';
-import { palavrasReservadas } from '@designliquido/delegua/lexador/palavras-reservadas';
+import { palavrasReservadasDelegua } from '@designliquido/delegua/lexador/palavras-reservadas';
 
 import { DeleguaTempoExecucaoRemoto } from '../remota/delegua-tempo-execucao-remoto';
 import { DeleguaPontoParada } from '../delegua-ponto-parada';
@@ -394,7 +394,7 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
     ): void {
         switch (args.context) {
             case 'hover':
-                if (Object.keys(palavrasReservadas).includes(args.expression)) {
+                if (Object.keys(palavrasReservadasDelegua).includes(args.expression)) {
                     return;
                 }
 

@@ -55,7 +55,7 @@ export async function gerarFluxogramaWeb(uri: vscode.Uri | undefined, context: v
                 const importador = new ImportadorExtensao(lexador);
 
                 const conteudoArquivo = await vscode.workspace.fs.readFile(fileUri);
-                const funcaoImportadorLeituraArquivo = () => new TextDecoder('utf-8').decode(conteudoArquivo)
+                const funcaoImportadorLeituraArquivo = () => new TextDecoder('utf-8').decode(conteudoArquivo);
                 const retornoImportador = importador.importarViaFuncaoConteudoDocumento(
                     funcaoImportadorLeituraArquivo, 
                     fileUri.fsPath
@@ -63,7 +63,7 @@ export async function gerarFluxogramaWeb(uri: vscode.Uri | undefined, context: v
 
                 progress.report({ increment: 30, message: 'Analisando código...' });
 
-                const retornoAvaliadorSintatico = avaliadorSintatico.analisar(
+                const retornoAvaliadorSintatico = await avaliadorSintatico.analisar(
                     retornoImportador?.retornoLexador as RetornoLexador<SimboloInterface<string>>, 
                     -1
                 );
@@ -72,7 +72,7 @@ export async function gerarFluxogramaWeb(uri: vscode.Uri | undefined, context: v
 
                 // Gera diagrama Mermaid
                 const tradutor = new TradutorMermaidJs();
-                const diagramaMermaid = tradutor.traduzir(retornoAvaliadorSintatico.declaracoes);
+                const diagramaMermaid = await tradutor.traduzir(retornoAvaliadorSintatico.declaracoes);
 
                 if (!diagramaMermaid || diagramaMermaid.trim() === '') {
                     vscode.window.showWarningMessage(

@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.23.0",
+    "version": "0.23.1",
     "engines": {
         "vscode": "^1.80.0"
     },
@@ -69,18 +69,21 @@
         "lint": "yarn eslint depuracao --ext ts",
         "typecheck": "tsc -p tsconfig.json --noEmit",
         "build-base": "esbuild ./fontes/extensao.ts --bundle --sources-content=true --tsconfig=./tsconfig.json --external:vscode --format=cjs --platform=node --outfile=dist/extensao.js",
-        "watch": "npm run -S build-base -- --sourcemap --watch",
+        "build-continuo": "npm run -S build-base -- --sourcemap --watch",
         "compilar-web": "webpack --mode development",
         "watch-web": "webpack --mode development --watch",
         "montar": "npm run -S build-base -- --sourcemap --sources-content=true && npm run -S build-web -- --sourcemap",
         "empacotar": "yarn build-base && yarn pre-empacotar-web && yarn copy-files-from-to && yarn vsce package --yarn",
+        "pre-empacotar-web": "webpack --mode production --devtool hidden-source-map",
         "publicar": "yarn vsce publish",
         "publicar-pre-lancamento": "vsce publish --pre-release",
         "vscode:pre-publicar": "rimraf dist && npm run -S build-base -- --minify && npm run -S build-web -- --minify",
-        "testar": "yarn typecheck",
+        "testar-tipagem": "yarn typecheck",
+        "testes-unitarios": "jest --coverage",
+        "testes-unitarios:continuo": "jest --watch",
+        "testes-unitarios:verboso": "jest --verbose",
         "testar-web": "yarn compilar-web && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. .",
-        "vscode:pre-empacotar-web": "yarn pre-empacotar",
-        "pre-empacotar-web": "webpack --mode production --devtool hidden-source-map"
+        "vscode:pre-empacotar-web": "yarn pre-empacotar"
     },
     "activationEvents": [
         "onDebugResolve:designliquido",
@@ -682,6 +685,8 @@
         }
     },
     "devDependencies": {
+        "@jest/globals": "^30.2.0",
+        "@types/jest": "^30.0.0",
         "@types/node": "^22.15.21",
         "@types/vscode": "^1.68.0",
         "@typescript-eslint/eslint-plugin": "^5.28.0",
@@ -698,8 +703,10 @@
         "copy-files-from-to": "^3.9.0",
         "esbuild": "^0.25.11",
         "eslint": "^8.18.0",
+        "jest": "^30.2.0",
         "process": "^0.11.10",
         "timers-browserify": "^2.0.12",
+        "ts-jest": "^29.4.6",
         "ts-loader": "^9.5.2",
         "typescript": "^5.8.3",
         "url": "^0.11.4",
@@ -707,8 +714,8 @@
         "webpack-cli": "^6.0.1"
     },
     "dependencies": {
-        "@designliquido/birl": "^0.5.4",
-        "@designliquido/delegua": "^1.3.2",
+        "@designliquido/birl": "^0.5.5",
+        "@designliquido/delegua": "^1.4.0",
         "@designliquido/delegua-arquivos": "^0.0.3",
         "@designliquido/delegua-criptografia": "^0.3.3",
         "@designliquido/delegua-estatistica": "^0.1.0",
@@ -720,10 +727,10 @@
         "@designliquido/foles": "^0.12.0",
         "@designliquido/lincones-js": "^0.1.0",
         "@designliquido/lmht-js": "^0.6.0",
-        "@designliquido/mapler": "^0.6.4",
-        "@designliquido/portugol-studio": "^0.9.4",
-        "@designliquido/potigol": "^0.8.4",
-        "@designliquido/visualg": "^0.8.5",
+        "@designliquido/mapler": "^0.6.5",
+        "@designliquido/portugol-studio": "^0.9.5",
+        "@designliquido/potigol": "^0.8.5",
+        "@designliquido/visualg": "^0.8.6",
         "@xterm/addon-fit": "^0.10.0",
         "@xterm/xterm": "5.5.0",
         "lodash": "^4.17.21",

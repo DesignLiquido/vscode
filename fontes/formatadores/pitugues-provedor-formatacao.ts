@@ -14,8 +14,8 @@ export class PituguesProvedorFormatacao implements vscode.DocumentFormattingEdit
         const avaliadorSintatico = new AvaliadorSintatico(false);
 
         // Definição de final da linha.
-        // const caracterFimDaLinha = documento.eol === vscode.EndOfLine.CRLF ? '\r\n' : '\n';
-        const formatador = new FormatadorPitugues(); // TODO: Atualizar formatador, colocando o caracter de fim de linha como parâmetro.
+        const caracterFimDaLinha = documento.eol === vscode.EndOfLine.CRLF ? '\r\n' : '\n';
+        const formatador = new FormatadorPitugues(caracterFimDaLinha);
 
         const resultadoLexador = lexador.mapear(documento.getText().split('\n'), -1);
         const resultadoAvaliacaoSintatica = await avaliadorSintatico.analisar(resultadoLexador, -1);

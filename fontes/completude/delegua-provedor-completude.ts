@@ -381,7 +381,7 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
 
             // Verifica se é um método ou propriedade que trabalha com encadeamento.
             const metodo = tipoAtual.metodos?.find(m => m.nome === propriedadeNome);
-            if (metodo && metodo.permiteChaining && metodo.tipoRetorno) {
+            if (metodo && metodo.permiteEncadeamento && metodo.tipoRetorno) {
                 // Continue com o tipo de retorno
                 tipoAtual = this.tiposParametrosLiquido.find(t => t.nome === metodo.tipoRetorno) || tipoAtual;
                 continue;
