@@ -1,5 +1,13 @@
 # Histórico de Modificações
 
+## 0.23.1
+
+- Correções diversas no mecanismo de tradução e geração de fluxogramas para Web;
+- Simplificação da sintaxe de exibição de tuplas em Delégua de `[()]` para `()`: https://github.com/DesignLiquido/delegua/pull/1054;
+- Implementação de métodos de primitiva `limpar`, `contar`, `estender`, `inserir` e `indice` para vetores em Pituguês: https://github.com/DesignLiquido/delegua/pull/1055;
+- Implementação de formatação de pontos flutuantes em _f-string_ e usando o método `formatar()` em Pituguês: https://github.com/DesignLiquido/delegua/pull/1061;
+- Implementação do tipo `longo` em Delégua e Pituguês: https://github.com/DesignLiquido/delegua/pull/1058.
+
 ## 0.23.0
 
 - Novos tradutores: Delégua para Elixir e Ruby;
