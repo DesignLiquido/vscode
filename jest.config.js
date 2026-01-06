@@ -68,7 +68,7 @@ module.exports = {
     coverageDirectory: 'coverage',
 
     // Reporters de cobertura
-    coverageReporters: ['text', 'lcov', 'html'],
+    coverageReporters: ['text', 'lcov', 'html', 'text-summary'],
 
     // Limites de cobertura (opcional)
     coverageThreshold: {

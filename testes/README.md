@@ -10,16 +10,19 @@ Este diretório contém os testes unitários para a extensão VSCode da Design L
 ## Como executar os testes
 
 ### Executar todos os testes
+
 ```bash
 yarn testes-unitarios
 ```
 
 ### Executar testes em modo contínuo (desenvolvimento)
+
 ```bash
 yarn testes-unitarios:continuo
 ```
 
 ### Executar um arquivo de teste específico
+
 ```bash
 yarn testes-unitarios extensao.test.ts
 ```
