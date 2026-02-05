@@ -39,6 +39,7 @@ import { MaplerProvedorFormatacao } from './formatadores/mapler-provedor-formata
 import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-formatacao';
 import { gerarFluxograma } from './visoes/fluxogramas/geracao-fluxogramas';
 import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-visoes-fluxograma';
+import { DeleguaProvedorAcoesCodigo } from './acoes-codigo';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -121,6 +122,15 @@ export function activate(context: vscode.ExtensionContext) {
             async (uri: vscode.Uri) => {
                 await gerarFluxograma(uri, context);
             }
+        )
+    );
+
+    // Ações de código
+    context.subscriptions.push(
+        vscode.languages.registerCodeActionsProvider(
+            { language: 'delegua', scheme: 'file' },
+            new DeleguaProvedorAcoesCodigo(),
+            { providedCodeActionKinds: DeleguaProvedorAcoesCodigo.tiposAcoesRapidas }
         )
     );
 

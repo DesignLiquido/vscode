@@ -1,5 +1,12 @@
 # Histórico de Modificações
 
+## 0.24.0
+
+- Adição de mecanismo de ações rápidas, para atualizações no código sugeridas pelo núcleo de Delégua;
+- Atualização de FolEs;
+- Operadores `ou`, `e`, `&`, `|` e `^` passam a trabalhar de forma transparente bit a bit em Delégua e Pituguês;
+- Implementação das funções globais `entrada()`, `arredondar()` e `tipo()` para Pituguês.
+
 ## 0.23.1
 
 - Correções diversas no mecanismo de tradução e geração de fluxogramas para Web;

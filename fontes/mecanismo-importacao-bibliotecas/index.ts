@@ -4,16 +4,17 @@
  */
 const MODULOS_DELEGUA: { [key: string]: string } = {
     'arquivos': '@designliquido/delegua-arquivos',
-    'matematica': '@designliquido/delegua-matematica',
-    'matemática': '@designliquido/delegua-matematica',
-    'tempo': '@designliquido/delegua-tempo',
-    'http': '@designliquido/delegua-http',
-    'json': '@designliquido/delegua-json',
     'criptografia': '@designliquido/delegua-criptografia',
+    'csv': '@designliquido/delegua-csv',
     'estatistica': '@designliquido/delegua-estatistica',
     'estatística': '@designliquido/delegua-estatistica',
     'fisica': '@designliquido/delegua-fisica',
-    'física': '@designliquido/delegua-fisica'
+    'física': '@designliquido/delegua-fisica',
+    'http': '@designliquido/delegua-http',
+    'json': '@designliquido/delegua-json',
+    'matematica': '@designliquido/delegua-matematica',
+    'matemática': '@designliquido/delegua-matematica',
+    'tempo': '@designliquido/delegua-tempo',
 };
 
 /**

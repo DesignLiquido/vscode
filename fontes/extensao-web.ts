@@ -33,6 +33,7 @@ import { FabricaAdaptadorDepuracaoWeb } from './depuracao/fabricas/fabrica-adapt
 import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-formatacao';
 import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-visoes-fluxograma';
 import { gerarFluxogramaWeb } from './visoes/fluxogramas/geracao-fluxogramas-web';
+import { DeleguaProvedorAcoesCodigo } from './acoes-codigo/delegua-provedor-acoes-codigo';
 
 let changeTimeout: NodeJS.Timeout | null = null;
 
@@ -65,23 +66,23 @@ export function activate(context: vscode.ExtensionContext) {
     // Análise de código em tempo real
     if (vscode.window.activeTextEditor) {
         executarAnalises(vscode.window.activeTextEditor.document, diagnosticosDelegua).catch(erro => {
-			console.error('Erro ao executar análises:', erro);
-		});
+            console.error('Erro ao executar análises:', erro);
+        });
     }
 
     context.subscriptions.push(
         vscode.workspace.onDidOpenTextDocument(doc => {
             if (['birl', 'delegua', 'mapler', 'visualg', 'portugol-studio'].includes(doc.languageId)) {
                 executarAnalises(doc, diagnosticosDelegua).catch(erro => {
-					console.error('Erro ao executar análises:', erro);
-				});
+                    console.error('Erro ao executar análises:', erro);
+                });
             }
         }),
         vscode.window.onDidChangeActiveTextEditor(editor => {
             if (editor && ['birl', 'delegua', 'mapler', 'visualg', 'portugol-studio'].includes(editor.document.languageId)) {
                 executarAnalises(editor.document, diagnosticosDelegua).catch(erro => {
-					console.error('Erro ao executar análises:', erro);
-				});
+                    console.error('Erro ao executar análises:', erro);
+                });
             }
         }),
         vscode.workspace.onDidChangeTextDocument((evento) => {
@@ -100,8 +101,8 @@ export function activate(context: vscode.ExtensionContext) {
                         }
                         changeTimeout = null;
                         executarAnalises(evento.document, diagnosticosDelegua).catch(erro => {
-							console.error('Erro ao executar análises:', erro);
-						});
+                            console.error('Erro ao executar análises:', erro);
+                        });
                     }, 500);
                     break;
                 case 'lmht':
@@ -115,6 +116,15 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.workspace.onDidCloseTextDocument(doc => diagnosticosDelegua.delete(doc.uri))
+    );
+
+    // Ações de código
+    context.subscriptions.push(
+        vscode.languages.registerCodeActionsProvider(
+            { language: 'delegua', scheme: 'file' },
+            new DeleguaProvedorAcoesCodigo(),
+            { providedCodeActionKinds: DeleguaProvedorAcoesCodigo.tiposAcoesRapidas }
+        )
     );
 
     // Traduções
@@ -146,7 +156,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     // Comandos de menu
-    
+
     context.subscriptions.push(
         vscode.commands.registerCommand(
             'extension.designliquido.verFluxograma',
@@ -230,7 +240,7 @@ export function activate(context: vscode.ExtensionContext) {
     const provedorEntradaSaida = new ProvedorVisaoEntradaSaida(context.extensionUri);
     context.subscriptions.push(
         vscode.window.registerWebviewViewProvider(
-            ProvedorVisaoEntradaSaida.viewType, 
+            ProvedorVisaoEntradaSaida.viewType,
             provedorEntradaSaida,
             {
                 webviewOptions: {
@@ -269,11 +279,11 @@ export function activate(context: vscode.ExtensionContext) {
             }
 
             const uri = vscode.Uri.joinPath(workspaceFolders[0].uri, `${nomeArquivo}.pitugues`);
-            
+
             try {
                 await vscode.workspace.fs.writeFile(uri, new Uint8Array());
                 vscode.window.showInformationMessage(`Arquivo criado: ${nomeArquivo}.pitugues`);
-                
+
                 const doc = await vscode.workspace.openTextDocument(uri);
                 await vscode.window.showTextDocument(doc);
             } catch (error) {

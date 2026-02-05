@@ -1,3 +1,4 @@
 {
-    "debug.javascript.unmapMissingSources": false
+    "debug.javascript.unmapMissingSources": false,
+    "cmake.sourceDirectory": "D:/Delegua/vscode/node_modules/bare-fs"
 }

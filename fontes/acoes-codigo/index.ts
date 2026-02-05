@@ -1,0 +1,1 @@
+export * from './delegua-provedor-acoes-codigo';

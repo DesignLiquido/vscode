@@ -14,7 +14,7 @@
         },
         {
             "type": "npm",
-            "script": "watch",
+            "script": "build-continuo",
             "group": "build",
             "problemMatcher": "$esbuild-watch",
             "isBackground": true,
