@@ -16,6 +16,7 @@ export interface TempoExecucaoInterface {
     escreverEmSaidaMesmaLinha(mensagem: string): void;
     obterVariavel(nome: string): any;
     passo(): void;
+    pausar(): void;
     pilhaExecucao(): ElementoPilhaVsCode[];
     sairEscopo(): void;
     variaveis(): { valor: any; nome: string; tipo: string; }[];

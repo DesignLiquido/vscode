@@ -385,6 +385,13 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
         return this.interpretador?.obterVariavel(nome);
     }
 
+    pausar() {
+        if (this.interpretador) {
+            this.interpretador.comando = 'pausar';
+            this.enviarEvento('pararEmPasso');
+        }
+    }
+
     passo() {
         if (this.interpretador) {
             this.interpretador.comando = 'proximo';

@@ -1,5 +1,12 @@
 # Histórico de Modificações
 
+## 0.24.1
+
+- Correção de _bug_ em Pituguês em declaração de vetores com elementos separados por vírgula, conforme reportado em https://github.com/DesignLiquido/pitugues-web/issues/16;
+- Diversos ajustes no tradutor de Delégua para AssemblyScript;
+- Pituguês passa a trabalhar com tipagem explícita, da mesma forma que Delégua;
+- Otimizações em vários dialetos, redução do código, melhor cobertura de testes.
+
 ## 0.24.0
 
 - Adição de mecanismo de ações rápidas, para atualizações no código sugeridas pelo núcleo de Delégua;

@@ -382,11 +382,10 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
         });
     }
 
-    // TODO: Recolocar quando comando 'pausar' estiver devidamente implementado em Delégua.
-    /* pausar() {
+    pausar() {
         this.interpretador.comando = 'pausar';
         this.enviarEvento('pararEmPasso');
-    } */
+    }
 
     pilhaExecucao(): ElementoPilhaVsCode[] {
         // O primeiro elemento da pilha é apenas onde fica o ambiente global.

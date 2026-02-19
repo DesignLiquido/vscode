@@ -273,10 +273,10 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         args: DebugProtocol.BreakpointLocationsArguments,
         request?: DebugProtocol.Request
     ): void {
-        // TODO: Terminar
-        // const pontosParada = this.interpretador.pontosParada;
+        // TODO: Para estruturas como `para`, `enquanto` e `fazer...enquanto`,
+        // retornar posições adicionais para o incremento e a condição.
         response.body = {
-            breakpoints: [],
+            breakpoints: [{ line: args.line }],
         };
         this.sendResponse(response);
     }
@@ -384,14 +384,13 @@ export abstract class DeleguaSessaoDepuracaoBase extends LoggingDebugSession {
         this.sendResponse(response);
     }
 
-    // TODO: Descomentar quando comando de pausa estiver devidamente implementado em Delégua.
-    /* protected pauseRequest(
-        response: DebugProtocol.PauseResponse, 
-        args: DebugProtocol.PauseArguments, request?: DebugProtocol.Request
+    protected pauseRequest(
+        response: DebugProtocol.PauseResponse,
+        args: DebugProtocol.PauseArguments, _request?: DebugProtocol.Request
     ): void {
         this.tempoExecucao.pausar();
         super.pauseRequest(response, args);
-    } */
+    }
 
     /**
      * Aparentemente necessário para exibir as variáveis no painel de
