@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 
-import { Classe, Const, FuncaoDeclaracao, Var } from '@designliquido/delegua/declaracoes';
+import { Classe, Const, FuncaoDeclaracao, InterfaceDeclaracao, Var } from '@designliquido/delegua/declaracoes';
+import { ComentarioComoConstruto } from '@designliquido/delegua/construtos';
 
 import { obterResultado } from '../analise-codigo/cache-analise';
 import { 
@@ -16,7 +17,7 @@ import {
  * Provedor de documentação para `hover` (ponteiro do _mouse_ por cima do elemento de código.)
  */
 export class DeleguaProvedorDocumentacaoEmEditor
-    implements vscode.HoverProvider 
+    implements vscode.HoverProvider
 {
     provideHover(
         documento: vscode.TextDocument,
@@ -28,124 +29,186 @@ export class DeleguaProvedorDocumentacaoEmEditor
         const palavra = documento.getText(intervalo);
         const linhaTexto = documento.lineAt(posicao).text;
         const textoAntesPosicao = linhaTexto.substring(0, posicao.character);
+        const todasDeclaracoes = resultadoAnalise?.avaliadorSintatico.declaracoes || [];
 
-        const declaracoesPertinentes = resultadoAnalise?.avaliadorSintatico.declaracoes.flatMap(declaracao => {
+        const declaracoesPertinentes = todasDeclaracoes.flatMap(declaracao => {
             if (declaracao instanceof Var) {
                 return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
             }
-
             if (declaracao instanceof Const) {
                 return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
             }
-
-            if (declaracao instanceof Classe) {
-                return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.simbolo.lexema }];
-            }
-
             if (declaracao instanceof FuncaoDeclaracao) {
                 return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
             }
-
             return [];
-        }) || [];
+        });
 
-        // Primeira tentativa: Há um ponto antes da `palavra`. Portanto, é uma chamada de método.
+        return this.hoverMetodoPrimitivo(textoAntesPosicao, palavra, declaracoesPertinentes)
+            ?? this.hoverFuncaoNativa(palavra)
+            ?? this.hoverVariavelOuConstante(palavra, declaracoesPertinentes)
+            ?? this.hoverFuncaoDocumentada(palavra, todasDeclaracoes)
+            ?? this.hoverClasseDocumentada(palavra, todasDeclaracoes, documento.getText())
+            ?? this.hoverInterfaceDocumentada(palavra, todasDeclaracoes, documento.getText());
+    }
+
+    private hoverMetodoPrimitivo(
+        textoAntesPosicao: string,
+        palavra: string,
+        declaracoesPertinentes: { nome: string; tipo: string }[]
+    ): vscode.Hover | undefined {
         const cadeiaTokens = textoAntesPosicao.trim().split(/[\s\(\)\[\]\{\};]+/).pop()?.split('.');
-        if (cadeiaTokens && cadeiaTokens.length >= 2) {
-            const objeto = cadeiaTokens[cadeiaTokens.length - 2];
+        if (!cadeiaTokens || cadeiaTokens.length < 2) {
+            return undefined;
+        }
 
-            const declaracao = declaracoesPertinentes.find(d => d.nome === objeto);
-            if (declaracao) {
-                const tipo = declaracao.tipo;
-                switch (tipo) {
-                    case 'dicionario':
-                    case 'dicionário':
-                        const metodoDicionario = primitivasDicionarioFormatadas.find(m => m.nome === palavra);
-                        if (metodoDicionario) {
-                            const documentacaoElemento = new vscode.MarkdownString(metodoDicionario.documentacao);
-                            if (metodoDicionario.exemploCodigo) {
-                                documentacaoElemento.appendCodeblock(metodoDicionario.exemploCodigo, 'delegua');
-                            }
-                            return new vscode.Hover(documentacaoElemento);
-                        }
+        const objeto = cadeiaTokens[cadeiaTokens.length - 2];
+        const declaracao = declaracoesPertinentes.find(d => d.nome === objeto);
+        if (!declaracao) {
+            return undefined;
+        }
 
-                        return undefined;
-                    case 'numero':
-                    case 'número':
-                        const metodoNumero = primitivasNumeroFormatadas.find(m => m.nome === palavra);
-                        if (metodoNumero) {
-                            const documentacaoElemento = new vscode.MarkdownString(metodoNumero.documentacao);
-                            if (metodoNumero.exemploCodigo) {
-                                documentacaoElemento.appendCodeblock(metodoNumero.exemploCodigo, 'delegua');
-                            }
-                            return new vscode.Hover(documentacaoElemento);
-                        }
+        const mapaMetodos: Record<string, typeof primitivasDicionarioFormatadas> = {
+            'dicionario':   primitivasDicionarioFormatadas,
+            'dicionário':   primitivasDicionarioFormatadas,
+            'numero':       primitivasNumeroFormatadas,
+            'número':       primitivasNumeroFormatadas,
+            'texto':        primitivasTextoFormatadas,
+            'vetor':        primitivasVetorFormatadas,
+            'dicionario[]': primitivasVetorFormatadas,
+            'dicionário[]': primitivasVetorFormatadas,
+            'numero[]':     primitivasVetorFormatadas,
+            'número[]':     primitivasVetorFormatadas,
+            'logico[]':     primitivasVetorFormatadas,
+            'lógico[]':     primitivasVetorFormatadas,
+            'qualquer[]':   primitivasVetorFormatadas,
+            'texto[]':      primitivasVetorFormatadas,
+        };
 
-                        return undefined;
-                    case 'texto':
-                        const metodoTexto = primitivasTextoFormatadas.find(m => m.nome === palavra);
-                        if (metodoTexto) {
-                            const documentacaoElemento = new vscode.MarkdownString(metodoTexto.documentacao);
-                            if (metodoTexto.exemploCodigo) {
-                                documentacaoElemento.appendCodeblock(metodoTexto.exemploCodigo, 'delegua');
-                            }
-                            return new vscode.Hover(documentacaoElemento);
-                        }
+        const listaPrimitivas = mapaMetodos[declaracao.tipo] ?? primitivas;
+        const metodo = listaPrimitivas.find(m => m.nome === palavra);
+        if (!metodo) {
+            return undefined;
+        }
 
-                        return undefined;
-                    case 'vetor':
-                    case 'dicionario[]':
-                    case 'dicionário[]':
-                    case 'numero[]':
-                    case 'número[]':
-                    case 'logico[]':
-                    case 'lógico[]':
-                    case 'qualquer[]':
-                    case 'texto[]':
-                        const metodoVetor = primitivasVetorFormatadas.find(m => m.nome === palavra);
-                        if (metodoVetor) {
-                            const documentacaoElemento = new vscode.MarkdownString(metodoVetor.documentacao);
-                            if (metodoVetor.exemploCodigo) {
-                                documentacaoElemento.appendCodeblock(metodoVetor.exemploCodigo, 'delegua');
-                            }
-                            return new vscode.Hover(documentacaoElemento);
-                        }
+        const doc = new vscode.MarkdownString(metodo.documentacao);
+        if (metodo.exemploCodigo) {
+            doc.appendCodeblock(metodo.exemploCodigo, 'delegua');
+        }
+        return new vscode.Hover(doc);
+    }
 
-                        return undefined;
-                    default:
-                        const metodoGlobal = primitivas.find(m => m.nome === palavra);
-                        if (metodoGlobal) {
-                            const documentacaoElemento = new vscode.MarkdownString(metodoGlobal.documentacao);
-                            if (metodoGlobal.exemploCodigo) {
-                                documentacaoElemento.appendCodeblock(metodoGlobal.exemploCodigo, 'delegua');
-                            }
-                            return new vscode.Hover(documentacaoElemento);
-                        }
+    private hoverFuncaoNativa(palavra: string): vscode.Hover | undefined {
+        const funcaoNativa = funcoesNativasDelegua.find(f => f.nome === palavra);
+        if (!funcaoNativa) {
+            return undefined;
+        }
 
-                        return undefined;
+        const doc = new vscode.MarkdownString(funcaoNativa.documentacao);
+        if (funcaoNativa.exemploCodigo) {
+            doc.appendCodeblock(funcaoNativa.exemploCodigo, 'delegua');
+        }
+        return new vscode.Hover(doc);
+    }
+
+    private hoverVariavelOuConstante(
+        palavra: string,
+        declaracoesPertinentes: { nome: string; tipo: string }[]
+    ): vscode.Hover | undefined {
+        const declaracao = declaracoesPertinentes.find(d => d.nome === palavra);
+        if (!declaracao) {
+            return undefined;
+        }
+
+        const doc = new vscode.MarkdownString();
+        doc.appendCodeblock(`${declaracao.nome}: ${declaracao.tipo}`, 'delegua');
+        return new vscode.Hover(doc);
+    }
+
+    private hoverFuncaoDocumentada(
+        palavra: string,
+        todasDeclaracoes: any[]
+    ): vscode.Hover | undefined {
+        let declaracaoFuncao = todasDeclaracoes.find(
+            d => d instanceof FuncaoDeclaracao && d.simbolo.lexema === palavra
+        ) as FuncaoDeclaracao | undefined;
+
+        if (!declaracaoFuncao) {
+            for (const declaracao of todasDeclaracoes) {
+                if (declaracao instanceof Classe) {
+                    const metodo = declaracao.metodos.find((m: FuncaoDeclaracao) => m.simbolo.lexema === palavra);
+                    if (metodo) {
+                        declaracaoFuncao = metodo;
+                        break;
+                    }
                 }
             }
         }
 
-        // Segunda tentativa: A `palavra` é uma função nativa.
-        const funcaoNativa = funcoesNativasDelegua.find(f => f.nome === palavra);
-        if (funcaoNativa) {
-            const documentacaoElemento = new vscode.MarkdownString(funcaoNativa.documentacao);
-            if (funcaoNativa.exemploCodigo) {
-                documentacaoElemento.appendCodeblock(funcaoNativa.exemploCodigo, 'delegua');
-            }
-            
-            return new vscode.Hover(documentacaoElemento);
+        if (!declaracaoFuncao?.documentacao) {
+            return undefined;
         }
 
-        // Terceira tentativa: variáveis ou constantes declaradas no código.
-        const declaracaoPertinenteCorrespondente = declaracoesPertinentes.find(declaracao => declaracao.nome === palavra);
+        const conteudo = declaracaoFuncao.documentacao as ComentarioComoConstruto;
+        const texto = Array.isArray(conteudo.conteudo) ? conteudo.conteudo.join('\n') : conteudo.conteudo;
+        return new vscode.Hover(new vscode.MarkdownString(texto));
+    }
 
-        if (declaracaoPertinenteCorrespondente) {
-            const documentacaoElemento = new vscode.MarkdownString();
-            const codigo = `${declaracaoPertinenteCorrespondente.nome}: ${declaracaoPertinenteCorrespondente.tipo}`;
-            documentacaoElemento.appendCodeblock(codigo, 'delegua');
-            return new vscode.Hover(documentacaoElemento);
+    private hoverClasseDocumentada(
+        palavra: string,
+        todasDeclaracoes: any[],
+        codigoFonte: string
+    ): vscode.Hover | undefined {
+        const existe = todasDeclaracoes.some(
+            d => d instanceof Classe && (d as Classe).simbolo.lexema === palavra
+        );
+        if (!existe) {
+            return undefined;
+        }
+
+        const regexDocClasse = /\/\*\*([\s\S]*?)\*\/\s*(?:abstrat[ao]\s+)?classe\s+/g;
+        let correspondencia: RegExpExecArray | null;
+        while ((correspondencia = regexDocClasse.exec(codigoFonte)) !== null) {
+            const posicaoAposComentario = correspondencia.index + correspondencia[0].length;
+            const nomeClasse = codigoFonte.slice(posicaoAposComentario).match(/^[\wÀ-úÇç]+/)?.[0];
+            if (nomeClasse === palavra) {
+                const conteudo = correspondencia[1]
+                    .split('\n')
+                    .map(l => l.replace(/^\s*\*\s?/, ''))
+                    .join('\n')
+                    .trim();
+                return new vscode.Hover(new vscode.MarkdownString(conteudo));
+            }
+        }
+
+        return undefined;
+    }
+
+    private hoverInterfaceDocumentada(
+        palavra: string,
+        todasDeclaracoes: any[],
+        codigoFonte: string
+    ): vscode.Hover | undefined {
+        const existe = todasDeclaracoes.some(
+            d => d instanceof InterfaceDeclaracao && (d as InterfaceDeclaracao).simbolo.lexema === palavra
+        );
+        if (!existe) {
+            return undefined;
+        }
+
+        const regexDocInterface = /\/\*\*([\s\S]*?)\*\/\s*interface\s+/g;
+        let correspondencia: RegExpExecArray | null;
+        while ((correspondencia = regexDocInterface.exec(codigoFonte)) !== null) {
+            const posicaoAposComentario = correspondencia.index + correspondencia[0].length;
+            const nomeInterface = codigoFonte.slice(posicaoAposComentario).match(/^[\wÀ-úÇç]+/)?.[0];
+            if (nomeInterface === palavra) {
+                const conteudo = correspondencia[1]
+                    .split('\n')
+                    .map(l => l.replace(/^\s*\*\s?/, ''))
+                    .join('\n')
+                    .trim();
+                return new vscode.Hover(new vscode.MarkdownString(conteudo));
+            }
         }
 
         return undefined;

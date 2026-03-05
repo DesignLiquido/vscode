@@ -18,10 +18,16 @@
 	],
 	"repository": {
 		"keywords": {
-			"patterns": [{
-				"name": "keyword.control.delegua",
-				"match": "\\b(caso|como|const|constante|enquanto|escolha|falhar|fazer|finalmente|fixo|fun[cç][aã]o|padr[aã]o|para|pegue|retorna|se|sen[aã]o|tente|tendo|var|vari[aá]vel)\\b"
-			}]
+			"patterns": [
+				{
+					"name": "keyword.control.delegua",
+					"match": "\\b(cada|caso|como|const|constante|continua|continuar|de|enquanto|escolha|falhar|fazer|fa[cç]a|finalmente|fixo|fun[cç][aã]o|import[ae]|importar|padr[aã]o|para|pegue|quebrar|quebre|retorna|retorne|retornar|se|sen[aã]o|sustar|tente|tendo|tentar|tipo|tudo|var|vari[aá]vel)\\b"
+				},
+				{
+					"name": "keyword.other.delegua",
+					"match": "\\b(abstrat[ao]|classe|construtor|est[aá]tic[ao]|extens[aã]o|herda|implementa|interface|isto|mescla|operador|privado|protegido|p[uú]blico|super)\\b"
+				}
+			]
 		},
 		"functions": {
 			"patterns": [{

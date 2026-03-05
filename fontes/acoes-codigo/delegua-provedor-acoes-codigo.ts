@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 
 import { obterResultado } from '../analise-codigo/cache-analise';
 import { CorrecaoSugeridaInterface } from '@designliquido/delegua/interfaces';
+import { CorrecaoImplementacaoInterface, MembroInterfaceFaltando } from '@designliquido/delegua/avaliador-sintatico';
 
 /**
  * Provedor de ações de código para Delégua.
@@ -61,6 +62,61 @@ export class DeleguaProvedorAcoesCodigo implements vscode.CodeActionProvider {
             }
         }
 
+        // Correções rápidas para implementação de interfaces (erros do avaliador sintático).
+        const errosSintaticos = resultado.avaliadorSintatico?.erros || [];
+        // Agrupa correções de interface por classe+interface para evitar ações duplicadas.
+        const correcoesPorInterface = new Map<string, { correcao: CorrecaoImplementacaoInterface; diagnosticos: vscode.Diagnostic[] }>();
+
+        for (const diagnosticoVscode of context.diagnostics) {
+            const erroSintatico = errosSintaticos.find(
+                e => e.message === diagnosticoVscode.message && e.correcaoSugerida?.tipo === 'implementar-interface'
+            );
+
+            if (erroSintatico?.correcaoSugerida) {
+                const correcao = erroSintatico.correcaoSugerida as CorrecaoImplementacaoInterface;
+                const chave = `${correcao.nomeClasse}::${correcao.nomeInterface}`;
+
+                if (!correcoesPorInterface.has(chave)) {
+                    correcoesPorInterface.set(chave, { correcao, diagnosticos: [] });
+                }
+                correcoesPorInterface.get(chave)!.diagnosticos.push(diagnosticoVscode);
+            }
+        }
+
+        for (const { correcao, diagnosticos } of correcoesPorInterface.values()) {
+            const linhaInsercao = correcao.linhaFinalClasse - 1;
+            const codigoStub = correcao.membrosFaltando.map(m => this.gerarStubMembro(m)).join('\n');
+
+            const acao = new vscode.CodeAction(
+                `Implementar membros de '${correcao.nomeInterface}' em '${correcao.nomeClasse}'`,
+                vscode.CodeActionKind.QuickFix
+            );
+
+            acao.edit = new vscode.WorkspaceEdit();
+            acao.edit.insert(
+                documento.uri,
+                new vscode.Position(linhaInsercao, 0),
+                codigoStub + '\n'
+            );
+
+            acao.diagnostics = diagnosticos;
+            acao.isPreferred = true;
+            acoes.push(acao);
+        }
+
         return acoes;
+    }
+
+    private gerarStubMembro(membro: MembroInterfaceFaltando): string {
+        if (membro.tipo === 'metodo') {
+            const parametros = (membro.parametros || [])
+                .map(p => p.tipoDado ? `${p.nome}: ${p.tipoDado}` : p.nome)
+                .join(', ');
+            const tipoRetorno = membro.tipoRetorno ? `: ${membro.tipoRetorno}` : '';
+            return `\tfuncao ${membro.nome}(${parametros})${tipoRetorno} {\n\t\t// TODO\n\t}`;
+        }
+
+        const tipo = membro.tipoPropriedade ? `: ${membro.tipoPropriedade}` : '';
+        return `\tvar ${membro.nome}${tipo}`;
     }
 }

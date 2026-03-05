@@ -36,7 +36,11 @@
         [
             "'",
             "'"
-        ]
+        ],
+        {
+            "open": "/**",
+            "close": " */"
+        }
     ],
     "surroundingPairs": [
         [
@@ -63,5 +67,36 @@
     "indentationRules": {
         "increaseIndentPattern": "^.*(faca|entao|senao|senaose|escolha).*$|^.*\\([^)]*$|^.*\\=\\s*$",
         "decreaseIndentPattern": "^\\s*(fim|senao|senaose|\\)).*$"
-    }
+    },
+    "onEnterRules": [
+        {
+            "beforeText": "^\\s*/\\*\\*(?!/)([^*]|\\*(?!/))*$",
+            "afterText": "^\\s*\\*/$",
+            "action": {
+                "indent": "indentOutdent",
+                "appendText": " * "
+            }
+        },
+        {
+            "beforeText": "^\\s*/\\*\\*(?!/)([^*]|\\*(?!/))*$",
+            "action": {
+                "indent": "none",
+                "appendText": " * "
+            }
+        },
+        {
+            "beforeText": "^(\\t|( {2}))*\\s*\\*[^/]",
+            "action": {
+                "indent": "none",
+                "appendText": "* "
+            }
+        },
+        {
+            "beforeText": "^(\\t|( {2}))*\\s*\\*/\\s*$",
+            "action": {
+                "indent": "none",
+                "removeText": 1
+            }
+        }
+    ]
 }
