@@ -34,6 +34,7 @@ import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-for
 import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-visoes-fluxograma';
 import { gerarFluxogramaWeb } from './visoes/fluxogramas/geracao-fluxogramas-web';
 import { DeleguaProvedorAcoesCodigo } from './acoes-codigo/delegua-provedor-acoes-codigo';
+import { DeleguaProvedorDefinicao } from './definicao';
 
 let changeTimeout: NodeJS.Timeout | null = null;
 
@@ -227,6 +228,14 @@ export function activate(context: vscode.ExtensionContext) {
             )
         );
     });
+
+    // Ir para definição
+    context.subscriptions.push(
+        vscode.languages.registerDefinitionProvider(
+            { language: 'delegua' },
+            new DeleguaProvedorDefinicao()
+        )
+    );
 
     // Assinaturas de métodos
     context.subscriptions.push(

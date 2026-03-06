@@ -85,7 +85,11 @@ export class DeleguaProvedorAcoesCodigo implements vscode.CodeActionProvider {
 
         for (const { correcao, diagnosticos } of correcoesPorInterface.values()) {
             const linhaInsercao = correcao.linhaFinalClasse - 1;
-            const codigoStub = correcao.membrosFaltando.map(m => this.gerarStubMembro(m)).join('\n');
+            const membrosOrdenados = [...correcao.membrosFaltando].sort((a, b) => {
+                if (a.tipo === b.tipo) return 0;
+                return a.tipo === 'propriedade' ? -1 : 1;
+            });
+            const codigoStub = membrosOrdenados.map(m => this.gerarStubMembro(m)).join('\n');
 
             const acao = new vscode.CodeAction(
                 `Implementar membros de '${correcao.nomeInterface}' em '${correcao.nomeClasse}'`,
@@ -113,10 +117,10 @@ export class DeleguaProvedorAcoesCodigo implements vscode.CodeActionProvider {
                 .map(p => p.tipoDado ? `${p.nome}: ${p.tipoDado}` : p.nome)
                 .join(', ');
             const tipoRetorno = membro.tipoRetorno ? `: ${membro.tipoRetorno}` : '';
-            return `\tfuncao ${membro.nome}(${parametros})${tipoRetorno} {\n\t\t// TODO\n\t}`;
+            return `\t${membro.nome}(${parametros})${tipoRetorno} {\n\t\t// AFAZER\n\t}`;
         }
 
         const tipo = membro.tipoPropriedade ? `: ${membro.tipoPropriedade}` : '';
-        return `\tvar ${membro.nome}${tipo}`;
+        return `\t${membro.nome}${tipo}`;
     }
 }

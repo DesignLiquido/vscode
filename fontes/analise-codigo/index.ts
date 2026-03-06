@@ -131,7 +131,9 @@ export async function executarAnalises(
             declaracoes: [],
             erros: [erro]
         } as RetornoAvaliadorSintatico<Declaracao>;
+    }
 
+    if (resultadoAvaliadorSintatico?.erros?.length) {
         listaOcorrencias = listaOcorrencias.concat(
             formatarDiagnosticosAvaliacaoSintatica(
                 resultadoAvaliadorSintatico.erros,

@@ -148,8 +148,12 @@
 					"match": "(\\b(super)\\b)|#[_a-zA-Z0-9]+"
 				},
 				{
-					"name": "entity.name.function",
-					"match": "((?<=classe\\s)|(?<=herda\\s))([_a-zA-Z0-9]+)"
+					"name": "entity.name.type.interface",
+					"match": "((?<=interface\\s)|(?<=implementa\\s))([_a-zA-Z0-9]+)"
+				},
+				{
+					"name": "entity.name.type.class",
+					"match": "((?<=classe\\s)|(?<=herda\\s)|(?<=mescla\\s))([_a-zA-Z0-9]+)"
 				},
 				{
 					"name":  "entity.name.function",

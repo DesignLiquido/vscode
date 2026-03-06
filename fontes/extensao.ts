@@ -40,6 +40,7 @@ import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-for
 import { gerarFluxograma } from './visoes/fluxogramas/geracao-fluxogramas';
 import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-visoes-fluxograma';
 import { DeleguaProvedorAcoesCodigo } from './acoes-codigo';
+import { DeleguaProvedorDefinicao } from './definicao';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -70,14 +71,14 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.workspace.onDidOpenTextDocument(doc => {
-            if (['birl', 'delegua', 'mapler', 'visualg', 'portugol-studio'].includes(doc.languageId)) {
+            if (['birl', 'delegua', 'mapler', 'visualg', 'portugolstudio', 'potigol'].includes(doc.languageId)) {
                 executarAnalises(doc, diagnosticosDelegua).catch(erro => {
 					console.error('Erro ao executar análises:', erro);
 				});
             }
         }),
         vscode.window.onDidChangeActiveTextEditor(editor => {
-            if (editor && ['birl', 'delegua', 'mapler', 'visualg', 'portugol-studio'].includes(editor.document.languageId)) {
+            if (editor && ['birl', 'delegua', 'mapler', 'visualg', 'portugolstudio', 'potigol'].includes(editor.document.languageId)) {
                 executarAnalises(editor.document, diagnosticosDelegua).catch(erro => {
 					console.error('Erro ao executar análises:', erro);
 				});
@@ -89,6 +90,8 @@ export function activate(context: vscode.ExtensionContext) {
                 case 'delegua':
                 case 'mapler':
                 case 'pitugues':
+                case 'portugolstudio':
+                case 'potigol':
                 case 'visualg':
                     if (changeTimeout !== null) {
                         clearTimeout(changeTimeout);
@@ -396,6 +399,17 @@ export function activate(context: vscode.ExtensionContext) {
                 { scheme: 'untitled', language: 'visualg' }
             ],
             new VisuAlgProvedorDocumentacaoEmEditor()
+        )
+    );
+
+    // Ir para definição
+    context.subscriptions.push(
+        vscode.languages.registerDefinitionProvider(
+            [
+                { scheme: 'file', language: 'delegua' },
+                { scheme: 'untitled', language: 'delegua' }
+            ],
+            new DeleguaProvedorDefinicao()
         )
     );
 

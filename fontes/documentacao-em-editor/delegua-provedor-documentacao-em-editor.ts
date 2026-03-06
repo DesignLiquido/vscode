@@ -159,12 +159,31 @@ export class DeleguaProvedorDocumentacaoEmEditor
         todasDeclaracoes: any[],
         codigoFonte: string
     ): vscode.Hover | undefined {
-        const existe = todasDeclaracoes.some(
+        const declaracaoClasse = todasDeclaracoes.find(
             d => d instanceof Classe && (d as Classe).simbolo.lexema === palavra
-        );
-        if (!existe) {
+        ) as Classe | undefined;
+        if (!declaracaoClasse) {
             return undefined;
         }
+
+        const prefixo = declaracaoClasse.abstrata ? '(classe abstrata)' : '(classe)';
+        let assinatura = `${prefixo} ${declaracaoClasse.simbolo.lexema}`;
+
+        if (declaracaoClasse.superClasses?.length) {
+            const nomes = declaracaoClasse.superClasses.map((sc: any) => sc.simbolo.lexema).join(', ');
+            assinatura += ` herda ${nomes}`;
+        }
+        if (declaracaoClasse.mesclas?.length) {
+            const nomes = declaracaoClasse.mesclas.map((m: any) => m.simbolo.lexema).join(', ');
+            assinatura += ` mescla ${nomes}`;
+        }
+        if (declaracaoClasse.implementa?.length) {
+            const nomes = declaracaoClasse.implementa.map((i: any) => i.lexema).join(', ');
+            assinatura += ` implementa ${nomes}`;
+        }
+
+        const doc = new vscode.MarkdownString();
+        doc.appendCodeblock(assinatura, 'delegua');
 
         const regexDocClasse = /\/\*\*([\s\S]*?)\*\/\s*(?:abstrat[ao]\s+)?classe\s+/g;
         let correspondencia: RegExpExecArray | null;
@@ -177,11 +196,12 @@ export class DeleguaProvedorDocumentacaoEmEditor
                     .map(l => l.replace(/^\s*\*\s?/, ''))
                     .join('\n')
                     .trim();
-                return new vscode.Hover(new vscode.MarkdownString(conteudo));
+                doc.appendMarkdown('\n\n' + conteudo);
+                break;
             }
         }
 
-        return undefined;
+        return new vscode.Hover(doc);
     }
 
     private hoverInterfaceDocumentada(

@@ -1,5 +1,21 @@
 # Histórico de Modificações
 
+## 0.25.0
+
+- Novo provedor de definição (_go to definition_) para Delégua, permitindo navegar até a declaração de classes, funções e variáveis;
+- Melhoria na documentação em editor de classes: exibe assinatura completa com herança (`herda`), mesclas (`mescla`) e interfaces implementadas (`implementa`);
+- Geração de _stubs_ de membros de interface corrigida: propriedades listadas antes de funções, sintaxe alinhada com Delégua (sem `funcao`, com `// AFAZER`);
+- Correção em análise de código: erros do avaliador sintático agora são sempre reportados, mesmo quando não há exceção lançada;
+- Gramática de colorização atualizada: distinção entre classes e interfaces, com suporte a `mescla` e `implementa`;
+- Análise de código expandida para os dialetos `portugolstudio` e `potigol`.
+- Núcleo de Delégua atualizado para a versão 1.13.0:
+  - Implementação do analisador de documentário, para auxiliar editores a produzir elementos visuais de ajuda ao programador;
+  - Suporte a decoradores com execução de função ao executar elementos decorados (v1.12.0);
+  - Avaliador sintático passa a sugerir correções no código, assim como o analisador semântico (v1.11.1);
+  - Correção: falha silenciosa em declarações incompletas no final do arquivo;
+  - Correção no lexador de Pituguês: mesclagem incorreta de decimais em nova linha;
+  - Cobertura de testes ampliada para primitivas de texto, vetor, tupla, dicionário e dialeto Pituguês.
+
 ## 0.24.1
 
 - Correção de _bug_ em Pituguês em declaração de vetores com elementos separados por vírgula, conforme reportado em https://github.com/DesignLiquido/pitugues-web/issues/16;
