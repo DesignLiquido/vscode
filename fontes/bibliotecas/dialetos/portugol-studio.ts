@@ -88,3 +88,93 @@ export const calendarioPortugolStudio: {
             '`nome = Calendario.dia_semana_abreviado(2, falso, falso)`',
     },
 ];
+
+export const matematicaPortugolStudio: {
+    nome: string;
+    descricao?: string;
+    documentacao: string;
+    exemploCodigo?: string;
+}[] = [
+    {
+        nome: 'PI',
+        descricao:
+            'Constante matemática que representa a relação entre o perímetro de uma circunferência e seu diâmetro.',
+        documentacao:
+            '# `Matematica.PI`\n Constante matemática que representa a relação entre o perímetro de uma circunferência e seu diâmetro (perímetro/diâmetro), aproximadamente 3.14159265.',
+        exemploCodigo: '`area = Matematica.PI * raio * raio`',
+    },
+    {
+        nome: 'potencia',
+        descricao:
+            'Realiza uma exponenciação através da multiplicação da base por ela mesma tantas vezes quanto indicar o expoente.',
+        documentacao:
+            '# `Matematica.potencia(base, expoente)`\n Realiza uma exponenciação através da multiplicação da `base` por ela mesma tantas vezes quanto indicar o `expoente`.\n\n **Retorno:** a exponenciação da base pelo expoente.',
+        exemploCodigo: '`area = Matematica.PI * Matematica.potencia(raio, 2.0)`',
+    },
+    {
+        nome: 'raiz',
+        descricao:
+            'Realiza a radiciação (extrai a raíz) de um número por um determinado índice.',
+        documentacao:
+            '# `Matematica.raiz(radicando, indice)`\n Realiza a radiciação (extrai a raíz) de um número por um determinado índice.\n\n **Parâmetros:**\n- `radicando`: o número do qual será extraída a raíz\n- `indice`: indica o grau da radiciação. Quando o índice é 2 a raíz é quadrada, quando é 3 a raíz é cúbica, e assim por diante\n\n **Retorno:** a raíz do número informado.',
+        exemploCodigo: '`resultado = Matematica.raiz(27, 3)`',
+    },
+    {
+        nome: 'arredondar',
+        descricao:
+            'Arredonda um número real para o número de casas decimais informadas.',
+        documentacao:
+            '# `Matematica.arredondar(numero, casas)`\n Arredonda um número real para o número de casas decimais informadas. Quando o último dígito for maior ou igual a 5, o número será arredondado para cima; quando for menor que 5, será arredondado para baixo.\n\n **Retorno:** o número arredondado.',
+        exemploCodigo: '`resultado = Matematica.arredondar(3.14159, 2)`',
+    },
+    {
+        nome: 'logaritmo',
+        descricao:
+            'Calcula o logaritmo de um número para uma determinada base.',
+        documentacao:
+            '# `Matematica.logaritmo(numero, base)`\n Calcula o logaritmo de um número para uma determinada base.\n\n **Parâmetros:**\n- `numero`: o número resultante da exponenciação\n- `base`: a base da exponenciação\n\n **Retorno:** o logaritmo.',
+        exemploCodigo: '`resultado = Matematica.logaritmo(2, 32)`',
+    },
+    {
+        nome: 'seno',
+        descricao: 'Calcula o seno do ângulo informado.',
+        documentacao:
+            '# `Matematica.seno(angulo)`\n Calcula o seno do `angulo` informado.\n\n **Retorno:** o seno do ângulo informado.',
+        exemploCodigo: '`resultado = Matematica.seno(1.5708)`',
+    },
+    {
+        nome: 'cosseno',
+        descricao: 'Calcula o cosseno do ângulo informado.',
+        documentacao:
+            '# `Matematica.cosseno(angulo)`\n Calcula o cosseno do `angulo` informado.\n\n **Retorno:** o cosseno do ângulo informado.',
+        exemploCodigo: '`resultado = Matematica.cosseno(0.0)`',
+    },
+    {
+        nome: 'tangente',
+        descricao: 'Calcula a tangente do ângulo informado.',
+        documentacao:
+            '# `Matematica.tangente(angulo)`\n Calcula a tangente do `angulo` informado.\n\n **Retorno:** a tangente do ângulo informado.',
+        exemploCodigo: '`resultado = Matematica.tangente(0.7854)`',
+    },
+    {
+        nome: 'valor_absoluto',
+        descricao: 'Calcula o valor absoluto do número informado.',
+        documentacao:
+            '# `Matematica.valor_absoluto(numero)`\n Calcula o valor absoluto do `numero` informado.\n\n **Retorno:** o valor absoluto do número informado.',
+        exemploCodigo: '`resultado = Matematica.valor_absoluto(-15)`',
+    },
+    {
+        nome: 'maior_numero',
+        descricao: 'Identifica o maior número entre os números informados.',
+        documentacao:
+            '# `Matematica.maior_numero(numeroA, numeroB)`\n Identifica o maior número entre os números informados.\n\n **Retorno:** o maior número.',
+        exemploCodigo: '`resultado = Matematica.maior_numero(10, 20)`',
+    },
+    {
+        nome: 'menor_numero',
+        descricao: 'Identifica o menor número entre os números informados.',
+        documentacao:
+            '# `Matematica.menor_numero(numeroA, numeroB)`\n Identifica o menor número entre os números informados.\n\n **Retorno:** o menor número.',
+        exemploCodigo: '`resultado = Matematica.menor_numero(10, 20)`',
+    },
+];
