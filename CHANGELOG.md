@@ -1,5 +1,16 @@
 # Histórico de Modificações
 
+## 0.25.1
+
+- Núcleo de Delégua atualizado para a versão 1.15.0:
+- `logico` e `lógico` passam a ser tratados como tipos compatíveis em atribuições quando o lado direito contém uma operação lógica;
+- Novos tradutores: Delégua para WebAssembly e para RISC-V Assembly
+- Correções diversas no tradutor de Delégua para AssemblyScript;
+- Suporte a decoradores em Pituguês;
+- Aviso ao comparar valores de tipos diferentes no analisador semântico;
+- Correções no bloco `para` na tradução de Delégua para x64;
+- Vetor com elemento nulo não descarta mais o valor: https://github.com/DesignLiquido/delegua/issues/1139.
+
 ## 0.25.0
 
 - Novo provedor de definição (_go to definition_) para Delégua, permitindo navegar até a declaração de classes, funções e variáveis;
