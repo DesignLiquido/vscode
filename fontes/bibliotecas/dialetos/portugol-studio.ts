@@ -109,7 +109,8 @@ export const matematicaPortugolStudio: {
             'Realiza uma exponenciação através da multiplicação da base por ela mesma tantas vezes quanto indicar o expoente.',
         documentacao:
             '# `Matematica.potencia(base, expoente)`\n Realiza uma exponenciação através da multiplicação da `base` por ela mesma tantas vezes quanto indicar o `expoente`.\n\n **Retorno:** a exponenciação da base pelo expoente.',
-        exemploCodigo: '`area = Matematica.PI * Matematica.potencia(raio, 2.0)`',
+        exemploCodigo:
+            '`area = Matematica.PI * Matematica.potencia(raio, 2.0)`',
     },
     {
         nome: 'raiz',
@@ -176,5 +177,76 @@ export const matematicaPortugolStudio: {
         documentacao:
             '# `Matematica.menor_numero(numeroA, numeroB)`\n Identifica o menor número entre os números informados.\n\n **Retorno:** o menor número.',
         exemploCodigo: '`resultado = Matematica.menor_numero(10, 20)`',
+    },
+];
+
+export const textoPortugolStudio: {
+    nome: string;
+    descricao?: string;
+    documentacao: string;
+    exemploCodigo?: string;
+}[] = [
+    {
+        nome: 'numero_caracteres',
+        descricao: 'Conta o número de caracteres existentes em uma cadeia.',
+        documentacao:
+            '# `Texto.numero_caracteres(cadeia)`\n Conta o número de caracteres existentes em uma cadeia.\n\n **Retorno:** o número de caracteres na cadeia.',
+        exemploCodigo: '`tamanho = Texto.numero_caracteres("Olá mundo")`',
+    },
+    {
+        nome: 'caixa_alta',
+        descricao:
+            'Transforma os caracteres de uma cadeia em caracteres maiúsculos.',
+        documentacao:
+            '# `Texto.caixa_alta(cad)`\n Transforma os caracteres de uma cadeia em caracteres maiúsculos.\n\n **Retorno:** a cadeia com os caracteres transformados.',
+        exemploCodigo: '`resultado = Texto.caixa_alta("olá mundo")`',
+    },
+    {
+        nome: 'caixa_baixa',
+        descricao:
+            'Transforma os caracteres de uma cadeia em caracteres minúsculos.',
+        documentacao:
+            '# `Texto.caixa_baixa(cad)`\n Transforma os caracteres de uma cadeia em caracteres minúsculos.\n\n **Retorno:** a cadeia com os caracteres transformados.',
+        exemploCodigo: '`resultado = Texto.caixa_baixa("OLÁ MUNDO")`',
+    },
+    {
+        nome: 'substituir',
+        descricao:
+            'Pesquisa por um determinado texto em uma cadeia e substitui todas as ocorrências por um texto alternativo.',
+        documentacao:
+            '# `Texto.substituir(cad, texto_pesquisa, texto_substituto)`\n Pesquisa por um determinado texto em uma cadeia e substitui **todas** as ocorrências por um texto alternativo.\n\n **Retorno:** a cadeia resultante da substituição.',
+        exemploCodigo:
+            '`resultado = Texto.substituir("Olá mundo mundo", "mundo", "Portugol")`',
+    },
+    {
+        nome: 'preencher_a_esquerda',
+        descricao:
+            'Concatena o caracter informado à esquerda da cadeia até que ela fique do tamanho indicado.',
+        documentacao:
+            '# `Texto.preencher_a_esquerda(car, tamanho, cad)`\n Concatena o `car` informado à esquerda da cadeia `cad` até que ela fique do `tamanho` indicado.\n\n Se o tamanho da cadeia for maior ou igual ao tamanho informado, nada é feito.\n\n **Retorno:** a cadeia transformada.',
+        exemploCodigo: '`resultado = Texto.preencher_a_esquerda("0", 5, "42")`',
+    },
+    {
+        nome: 'obter_caracter',
+        descricao: 'Obtém um caracter da cadeia a partir de seu índice.',
+        documentacao:
+            '# `Texto.obter_caracter(cad, indice)`\n Obtém um caracter da cadeia a partir de seu índice.\n\n O índice deve estar entre 0 e o número de caracteres da cadeia.\n\n **Retorno:** o caracter no índice informado.',
+        exemploCodigo: '`c = Texto.obter_caracter("Portugol", 0)`',
+    },
+    {
+        nome: 'posicao_texto',
+        descricao:
+            'Procura por um texto dentro de uma cadeia e retorna a posição da primeira ocorrência.',
+        documentacao:
+            '# `Texto.posicao_texto(cadeia, texto, posicao_inicial)`\n Procura por um `texto` dentro de uma `cadeia` e, caso encontrado, retorna a posição da primeira ocorrência. Para procurar a partir do início da cadeia informe `posicao_inicial` como 0.\n\n **Retorno:** a posição da primeira ocorrência do texto, ou -1 caso não seja encontrado.',
+        exemploCodigo: '`pos = Texto.posicao_texto("Olá mundo", "mundo", 0)`',
+    },
+    {
+        nome: 'extrair_subtexto',
+        descricao:
+            'Extrai uma parte da cadeia delimitada pela posição inicial e final.',
+        documentacao:
+            '# `Texto.extrair_subtexto(cadeia, posicao_inicial, posicao_final)`\n Extrai uma parte da cadeia delimitada pela posição inicial e final.\n\n **Exemplos:**\n- `extrair_subtexto("salgado", 0, 3)` → `"sal"`\n- `extrair_subtexto("salgado", 3, 7)` → `"gado"`\n- `extrair_subtexto("salgado", 1, 5)` → `"alga"`\n\n **Retorno:** uma cadeia contendo o subtexto.',
+        exemploCodigo: '`sub = Texto.extrair_subtexto("salgado", 0, 3)`',
     },
 ];
