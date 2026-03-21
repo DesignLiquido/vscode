@@ -250,3 +250,64 @@ export const textoPortugolStudio: {
         exemploCodigo: '`sub = Texto.extrair_subtexto("salgado", 0, 3)`',
     },
 ];
+
+export const utilPortugolStudio: {
+    nome: string;
+    descricao?: string;
+    documentacao: string;
+    exemploCodigo?: string;
+}[] = [
+    {
+        nome: 'obter_diretorio_usuario',
+        descricao:
+            'Obtém o caminho utilizado pelo Sistema Operacional como diretório do usuário atual.',
+        documentacao:
+            '# `Util.obter_diretorio_usuario()`\n Obtém o caminho utilizado pelo Sistema Operacional como diretório do usuário atual.\n\n **Retorno:** o diretório do usuário.',
+        exemploCodigo: '`dir = Util.obter_diretorio_usuario()`',
+    },
+    {
+        nome: 'numero_elementos',
+        descricao: 'Descobre o número de elementos existentes em um vetor.',
+        documentacao:
+            '# `Util.numero_elementos(vetor)`\n Descobre o número de elementos existentes em um vetor.\n\n **Retorno:** o número de elementos existentes no vetor.',
+        exemploCodigo: '`tamanho = Util.numero_elementos(meuVetor)`',
+    },
+    {
+        nome: 'numero_linhas',
+        descricao: 'Descobre o número de linhas existentes em uma matriz.',
+        documentacao:
+            '# `Util.numero_linhas(matriz)`\n Descobre o número de linhas existentes em uma matriz.\n\n **Retorno:** o número de linhas existentes na matriz.',
+        exemploCodigo: '`linhas = Util.numero_linhas(minhaMatriz)`',
+    },
+    {
+        nome: 'numero_colunas',
+        descricao: 'Descobre o número de colunas existentes em uma matriz.',
+        documentacao:
+            '# `Util.numero_colunas(matriz)`\n Descobre o número de colunas existentes em uma matriz.\n\n **Retorno:** o número de colunas existentes na matriz.',
+        exemploCodigo: '`colunas = Util.numero_colunas(minhaMatriz)`',
+    },
+    {
+        nome: 'sorteia',
+        descricao:
+            'Sorteia um número aleatório entre os valores mínimo e máximo especificados.',
+        documentacao:
+            '# `Util.sorteia(minimo, maximo)`\n Sorteia um número aleatório entre os valores mínimo e máximo especificados.\n\n **Parâmetros:**\n- `minimo`: o menor número que pode ser sorteado\n- `maximo`: o maior número que pode ser sorteado\n\n **Retorno:** o número sorteado.',
+        exemploCodigo: '`numero = Util.sorteia(1, 100)`',
+    },
+    {
+        nome: 'aguarde',
+        descricao:
+            'Pausa a execução do programa durante o intervalo de tempo especificado.',
+        documentacao:
+            '# `Util.aguarde(intervalo)`\n Pausa a execução do programa durante o intervalo de tempo especificado.\n\n **Parâmetro `intervalo`:** o intervalo de tempo (em milissegundos) durante o qual o programa ficará pausado.',
+        exemploCodigo: '`Util.aguarde(1000)`',
+    },
+    {
+        nome: 'tempo_decorrido',
+        descricao:
+            'Obtém o tempo decorrido (em milissegundos) desde que a biblioteca foi utilizada pela primeira vez.',
+        documentacao:
+            '# `Util.tempo_decorrido()`\n Obtém o tempo decorrido (em milissegundos) desde que a biblioteca foi utilizada pela primeira vez.\n\n **Retorno:** o tempo decorrido em milissegundos.',
+        exemploCodigo: '`ms = Util.tempo_decorrido()`',
+    },
+];
