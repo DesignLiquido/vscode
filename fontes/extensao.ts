@@ -18,6 +18,7 @@ import {
     DeleguaProvedorCompletude,
     FolesProvedorCompletude,
     LiquidoProvedorCompletude,
+    PituguesProvedorCompletude,
 } from './completude';
 import { DeleguaProvedorFormatacao, VisualgProvedorFormatacao } from './formatadores';
 
@@ -349,6 +350,17 @@ export function activate(context: vscode.ExtensionContext) {
                 { scheme: 'untitled', language: 'visualg' }
             ],
             new VisuAlgProvedorCompletude()
+        )
+    );
+
+    // IntelliSense para Pituguês
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider(
+            [
+                { scheme: 'file', language: 'pitugues' },
+                { scheme: 'untitled', language: 'pitugues' }
+            ],
+            new PituguesProvedorCompletude()
         )
     );
 

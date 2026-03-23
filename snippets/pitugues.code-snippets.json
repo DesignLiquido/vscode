@@ -1,0 +1,89 @@
+{
+	"Repetição Para": {
+		"prefix": "para",
+		"body": [
+			"para ${1:i} em range(${2:0}, ${3:5}):",
+			"\t${4:escreva(${1:i})}"
+		],
+		"description": "Laço de repetição para"
+	},
+	"Repetição Enquanto": {
+		"prefix": "enquanto",
+		"body": [
+			"enquanto ${1:condicao}:",
+			"\t${2:escreva('correspondente')}"
+		],
+		"description": "Laço de repetição enquanto"
+	},
+	"Declaração de Função": {
+		"prefix": "funcao",
+		"body": [
+			"funcao ${1:nome}(${2:}) :",
+			"\t${3:pass}"
+		],
+		"description": "Declaração de função"
+	},
+	"Declaração de Se": {
+		"prefix": "se",
+		"body": [
+			"se ${1:condicao}:",
+			"\t${2:escreva('sim')}"
+		],
+		"description": "Declaração de se"
+	},
+	"Declaração Se-Senao": {
+		"prefix": "se senao",
+		"body": [
+			"se ${1:condicao}:",
+			"\t${2:escreva('correspondente 1')}",
+			"senao:",
+			"\t${3:escreva('correspondente 2')}"
+		],
+		"description": "Declaração de se-senao"
+	},
+	"Declaração Se-Senaose-Senao": {
+		"prefix": "se senaose senao",
+		"body": [
+			"se ${1:condicao1}:",
+			"\t${2:escreva('correspondente 1')}",
+			"senao se ${3:condicao2}:",
+			"\t${4:escreva('correspondente 2')}",
+			"senao:",
+			"\t${5:escreva('sem valor correspondente')}"
+		],
+		"description": "Declaração de se-senaose-senao"
+	},
+	"Declaração Escolha": {
+		"prefix": "escolha",
+		"body": [
+			"escolha ${1:chave}:",
+			"\tcaso ${2:valor}:",
+			"\t\t${3:escreva('Olá Mundo!')}",
+			"\tpadrao:",
+			"\t\t${4:escreva('Valor padrão!')}"
+		],
+		"description": "Declaração de escolha"
+	},
+	"Declaração Tente-Pegue": {
+		"prefix": "tente pegue",
+		"body": [
+			"tente:",
+			"\t${1:escreva('sucesso')}",
+			"pegue ${2:erro}:",
+			"\t${3:escreva('pegue')}"
+		],
+		"description": "Declaração de tente-pega"
+	},
+	"Declaração Tente-Pegue-Finalmente": {
+		"prefix": "tente pegue finalmente",
+		"body": [
+			"tente:",
+			"\t${1:escreva('sucesso')}",
+			"pegue ${2:erro}:",
+			"\t${3:escreva('pegue')}",
+			"finalmente:",
+			"\t${4:escreva('pronto')}"
+		],
+		"description": "Declaração de tente-pega-finalmente"
+	}
+}
