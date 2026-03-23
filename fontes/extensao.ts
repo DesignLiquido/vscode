@@ -12,7 +12,8 @@ import {
 import {
     DeleguaProvedorDocumentacaoEmEditor,
     FolesProvedorDocumentacaoEmEditor,
-    LinConEsProvedorDocumentacaoEmEditor
+    LinConEsProvedorDocumentacaoEmEditor,
+    PituguesProvedorDocumentacaoEmEditor
 } from './documentacao-em-editor';
 import {
     DeleguaProvedorCompletude,
@@ -411,6 +412,16 @@ export function activate(context: vscode.ExtensionContext) {
                 { scheme: 'untitled', language: 'visualg' }
             ],
             new VisuAlgProvedorDocumentacaoEmEditor()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerHoverProvider(
+            [
+                { scheme: 'file', language: 'pitugues' },
+                { scheme: 'untitled', language: 'pitugues' }
+            ],
+            new PituguesProvedorDocumentacaoEmEditor()
         )
     );
 

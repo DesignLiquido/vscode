@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { Classe, Const, FuncaoDeclaracao, Var } from '@designliquido/delegua/declaracoes';
+import { Classe, FuncaoDeclaracao } from '@designliquido/delegua/declaracoes';
 
 import { primitivasMetodosLiquido, objetosEmRotaLiquido } from '../bibliotecas/primitivas-liquido';
 import { primitivas, primitivasDicionarioFormatadas, primitivasNumeroFormatadas, primitivasTextoFormatadas, primitivasVetorFormatadas, funcoesNativasDelegua } from '../bibliotecas';
@@ -126,14 +126,6 @@ export class PituguesProvedorCompletude implements vscode.CompletionItemProvider
         }
 
         const declaracoesPertinentes = resultadoAnalise?.avaliadorSintatico.declaracoes.flatMap(declaracao => {
-            if (declaracao instanceof Var) {
-                return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
-            }
-
-            if (declaracao instanceof Const) {
-                return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
-            }
-
             if (declaracao instanceof Classe) {
                 return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.simbolo.lexema }];
             }
