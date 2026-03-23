@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.25.0",
+    "version": "0.25.1",
     "engines": {
         "vscode": "^1.80.0"
     },
@@ -718,8 +718,8 @@
         "webpack-cli": "^6.0.1"
     },
     "dependencies": {
-        "@designliquido/birl": "^0.5.17",
-        "@designliquido/delegua": "^1.13.0",
+        "@designliquido/birl": "^0.5.18",
+        "@designliquido/delegua": "^1.15.0",
         "@designliquido/delegua-arquivos": "^0.0.3",
         "@designliquido/delegua-criptografia": "^0.3.3",
         "@designliquido/delegua-csv": "^0.0.2",
@@ -732,10 +732,10 @@
         "@designliquido/foles": "^0.14.0",
         "@designliquido/lincones-js": "^0.1.0",
         "@designliquido/lmht-js": "^0.6.0",
-        "@designliquido/mapler": "^0.6.17",
-        "@designliquido/portugol-studio": "^0.9.17",
-        "@designliquido/potigol": "^0.8.17",
-        "@designliquido/visualg": "^0.8.17",
+        "@designliquido/mapler": "^0.6.18",
+        "@designliquido/portugol-studio": "^0.9.18",
+        "@designliquido/potigol": "^0.8.18",
+        "@designliquido/visualg": "^0.8.18",
         "@xterm/addon-fit": "^0.10.0",
         "@xterm/xterm": "5.5.0",
         "lodash": "^4.17.21",
