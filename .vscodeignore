@@ -1,3 +1,4 @@
+.claude/
 .vscode/**
 .vscode-test/**
 .gitignore
@@ -5,4 +6,5 @@
 exemplos/
 fontes/
 
+CLAUDE.md
 vsc-extension-quickstart.md
