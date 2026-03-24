@@ -1,3 +1,46 @@
+import { DeleguaModulo, FuncaoPadrao } from '@designliquido/delegua/interpretador/estruturas';
+import { InfraestruturaWebView, InterfaceGrafica } from '@designliquido/delegua-interface-grafica';
+
+// Fábrica de WebviewPanel injetada pela extensão em activate()
+let _fabricaPainelWebView: (() => any) | null = null;
+
+/**
+ * Registra a fábrica de WebviewPanel do VS Code usada pela biblioteca InterfaceGrafica.
+ * Deve ser chamada em activate() antes de qualquer execução de programa Delégua.
+ */
+export const definirFabricaPainelWebView = (fabrica: () => any): void => {
+    _fabricaPainelWebView = fabrica;
+};
+
+function carregarBibliotecaInterfaceGrafica(): DeleguaModulo {
+    if (!_fabricaPainelWebView) {
+        throw new Error(
+            'InterfaceGrafica: fábrica de painel não registrada. ' +
+            'Chame definirFabricaPainelWebView() no activate() da extensão.'
+        );
+    }
+
+    const infraestrutura = new InfraestruturaWebView(_fabricaPainelWebView());
+    const ig = new InterfaceGrafica(infraestrutura);
+
+    const modulo = new DeleguaModulo('InterfaceGrafica');
+    modulo.componentes = {
+        janela:          new FuncaoPadrao(3, ig.janela.bind(ig)),
+        botao:           new FuncaoPadrao(2, ig.botao.bind(ig)),
+        rotulo:          new FuncaoPadrao(2, ig.rotulo.bind(ig)),
+        caixaTexto:      new FuncaoPadrao(2, ig.caixaTexto.bind(ig)),
+        caixaVertical:   new FuncaoPadrao(1, ig.caixaVertical.bind(ig)),
+        caixaHorizontal: new FuncaoPadrao(1, ig.caixaHorizontal.bind(ig)),
+        definirTexto:    new FuncaoPadrao(2, ig.definirTexto.bind(ig)),
+        obterTexto:      new FuncaoPadrao(1, ig.obterTexto.bind(ig)),
+        aoClicar:        new FuncaoPadrao(2, ig.aoClicar.bind(ig)),
+        aoAlterar:       new FuncaoPadrao(2, ig.aoAlterar.bind(ig)),
+        iniciar:         new FuncaoPadrao(0, ig.iniciar.bind(ig)),
+        encerrar:        new FuncaoPadrao(0, ig.encerrar.bind(ig)),
+    };
+    return modulo;
+}
+
 /**
  * Mapeamento de nomes de módulos Delégua para seus pacotes npm correspondentes.
  * Esta é uma versão simplificada para a extensão VSCode, limitada aos pacotes Delégua.
@@ -30,13 +73,6 @@ export function verificarModulosDelegua(nomeModulo: string): string | false {
 }
 
 /**
- * Interface que representa um módulo Delégua carregado.
- */
-export interface DeleguaModulo {
-    componentes: { [nome: string]: any };
-}
-
-/**
  * Carrega uma biblioteca Delégua.
  *
  * NOTA: Esta é uma implementação simplificada para a extensão VSCode.
@@ -52,6 +88,10 @@ export interface DeleguaModulo {
  * @throws Error indicando que bibliotecas externas não são suportadas na versão web
  */
 export function carregarBibliotecaDelegua(nome: string): DeleguaModulo {
+    if (nome.toLowerCase() === 'interfacegrafica') {
+        return carregarBibliotecaInterfaceGrafica();
+    }
+
     throw new Error(
         `Importação de bibliotecas externas ('${nome}') não é suportada na extensão VSCode para Web. ` +
         `Apenas arquivos .delegua podem ser importados no momento.`

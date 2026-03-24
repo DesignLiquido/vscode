@@ -41,6 +41,7 @@ import { gerarFluxograma } from './visoes/fluxogramas/geracao-fluxogramas';
 import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-visoes-fluxograma';
 import { DeleguaProvedorAcoesCodigo } from './acoes-codigo';
 import { DeleguaProvedorDefinicao } from './definicao';
+import { definirFabricaPainelWebView } from './mecanismo-importacao-bibliotecas';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -60,6 +61,15 @@ let changeTimeout;
  * @param context O contexto da extensão.
  */
 export function activate(context: vscode.ExtensionContext) {
+    definirFabricaPainelWebView(() =>
+        vscode.window.createWebviewPanel(
+            'delegua-interface-grafica',
+            'Interface Gráfica – Delégua',
+            vscode.ViewColumn.One,
+            { enableScripts: true }
+        )
+    );
+
     const diagnosticosDelegua = vscode.languages.createDiagnosticCollection("delegua");
 	context.subscriptions.push(diagnosticosDelegua);
 
