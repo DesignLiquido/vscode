@@ -1,5 +1,20 @@
 # Histórico de Modificações
 
+## 0.25.2
+
+- Núcleo de Delégua atualizado para a versão 1.15.3:
+  - Correções de _bugs_ no Pituguês reportados pela Camila Maia;
+  - Finalização do dialeto Prisma;
+  - Reformulação dos delimitadores de símbolos de tabulação e quebra de linha;
+  - Exposição de `executarChamavel`, permitindo executar funções vindas de gatilhos de eventos;
+  - Palavra reservada `em` passa a funcionar como operador equivalente a `contém` em comparações com textos;
+  - Constantes de mínimo e máximo para tipos numéricos;
+  - Variável inicializada com `nulo`, quando reatribuída com literal numérico, passa a ser inteira;
+  - Correção de _bug_ em atribuição composta que gerava chave inconsistente em dicionários;
+  - Escopo de variáveis e _shadowing_ em Pituguês.
+- Finalização de implementação do dialeto Portugol Studio;
+- Finalização de implementação do dialeto Potigol.
+
 ## 0.25.1
 
 - Núcleo de Delégua atualizado para a versão 1.15.0:
