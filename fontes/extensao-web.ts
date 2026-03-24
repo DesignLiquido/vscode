@@ -15,7 +15,8 @@ import {
     FolesProvedorCompletude,
     LiquidoProvedorCompletude,
     VisuAlgProvedorCompletude,
-    LmhtProvedorCompletude
+    LmhtProvedorCompletude,
+    PortugolStudioProvedorCompletude
 } from './completude';
 
 // Importações individuais dos formatadores
@@ -199,7 +200,8 @@ export function activate(context: vscode.ExtensionContext) {
         ['delegua', new DeleguaProvedorCompletude()],
         ['foles', new FolesProvedorCompletude()],
         ['lmht', new LmhtProvedorCompletude()],
-        ['visualg', new VisuAlgProvedorCompletude()]
+        ['visualg', new VisuAlgProvedorCompletude()],
+        ['portugolstudio', new PortugolStudioProvedorCompletude()]
     ];
 
     completudeProviders.forEach(([linguagem, provedor]) => {

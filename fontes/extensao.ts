@@ -18,6 +18,7 @@ import {
     DeleguaProvedorCompletude,
     FolesProvedorCompletude,
     LiquidoProvedorCompletude,
+    PortugolStudioProvedorCompletude,
 } from './completude';
 import { DeleguaProvedorFormatacao, VisualgProvedorFormatacao } from './formatadores';
 
@@ -359,6 +360,17 @@ export function activate(context: vscode.ExtensionContext) {
                 { scheme: 'untitled', language: 'visualg' }
             ],
             new VisuAlgProvedorCompletude()
+        )
+    );
+
+    // IntelliSense para Portugol Studio
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider(
+            [
+                { scheme: 'file', language: 'portugolstudio' },
+                { scheme: 'untitled', language: 'portugolstudio' }
+            ],
+            new PortugolStudioProvedorCompletude()
         )
     );
 
