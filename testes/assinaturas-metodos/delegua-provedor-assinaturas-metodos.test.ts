@@ -25,48 +25,7 @@ jest.mock('vscode', () => ({
 
 // Mock do módulo bibliotecas
 jest.mock('../../fontes/bibliotecas', () => ({
-    primitivas: [
-        {
-            nome: 'escrever',
-            documentacao: 'Escreve um valor na saída',
-            assinaturas: [
-                {
-                    formato: 'escrever(valor)',
-                    parametros: [
-                        { nome: 'valor', documentacao: 'Valor a ser escrito' }
-                    ]
-                }
-            ]
-        }
-    ],
-    primitivasDicionarioFormatadas: [],
-    primitivasNumeroFormatadas: [],
-    primitivasTextoFormatadas: [
-        {
-            nome: 'tamanho',
-            documentacao: 'Retorna o tamanho do texto',
-            assinaturas: [
-                {
-                    formato: 'tamanho()',
-                    parametros: []
-                }
-            ]
-        }
-    ],
-    primitivasVetorFormatadas: [
-        {
-            nome: 'adicionar',
-            documentacao: 'Adiciona um elemento ao vetor',
-            assinaturas: [
-                {
-                    formato: 'adicionar(elemento)',
-                    parametros: [
-                        { nome: 'elemento', documentacao: 'Elemento a ser adicionado' }
-                    ]
-                }
-            ]
-        }
-    ],
+    formatarPrimitivas: jest.fn().mockReturnValue([]),
     funcoesNativasDelegua: [
         {
             nome: 'escrever',
