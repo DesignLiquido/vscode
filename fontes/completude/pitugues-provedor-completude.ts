@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { Classe, FuncaoDeclaracao } from '@designliquido/delegua/declaracoes';
 
 import { primitivasMetodosLiquido, objetosEmRotaLiquido } from '../bibliotecas/primitivas-liquido';
-import { primitivas, primitivasDicionarioFormatadas, primitivasNumeroFormatadas, primitivasTextoFormatadas, primitivasVetorFormatadas, funcoesNativasDelegua } from '../bibliotecas';
+import { primitivas, primitivasDicionarioFormatadas, primitivasNumeroFormatadas, primitivasTextoFormatadas, primitivasVetorFormatadas, funcoesNativasPitugues } from '../bibliotecas/dialetos/pitugues';
 import { obterResultado } from '../analise-codigo/cache-analise';
 import { ParametroDetectado, TipoParametro } from './interfaces';
 
@@ -17,95 +17,7 @@ export class PituguesProvedorCompletude implements vscode.CompletionItemProvider
 
     // Definições de tipos de Líquido e seus parâmetros.
     private readonly tiposParametrosLiquido: TipoParametro[] = [
-        {
-            nome: 'requisicao',
-            propriedades: [
-                {
-                    nome: 'corpo',
-                    tipo: 'objeto',
-                    documentacao: 'Corpo da requisição HTTP contendo dados enviados pelo cliente',
-                    tipoCompletude: vscode.CompletionItemKind.Property
-                },
-                {
-                    nome: 'parametros',
-                    tipo: 'objeto',
-                    documentacao: 'Parâmetros da URL da requisição',
-                    tipoCompletude: vscode.CompletionItemKind.Property,
-                    propriedadesAninhadas: [
-                        {
-                            nome: 'id',
-                            tipo: 'texto',
-                            documentacao: 'ID comum em parâmetros de rota'
-                        },
-                        {
-                            nome: 'slug',
-                            tipo: 'texto',
-                            documentacao: 'Slug comum em parâmetros de rota'
-                        }
-                    ]
-                },
-                {
-                    nome: 'cabecalhos',
-                    tipo: 'objeto',
-                    documentacao: 'Cabeçalhos HTTP da requisição',
-                    tipoCompletude: vscode.CompletionItemKind.Property
-                },
-            ]
-        },
-        {
-            nome: 'resposta',
-            propriedades: [],
-            metodos: [
-                {
-                    nome: 'status',
-                    parametros: ['codigo: number'],
-                    tipoRetorno: 'resposta',
-                    documentacao: 'Define o código de status HTTP da resposta',
-                    snippet: 'status(${1:200})',
-                    permiteEncadeamento: true
-                },
-                {
-                    nome: 'json',
-                    parametros: ['dados: object'],
-                    tipoRetorno: 'void',
-                    documentacao: 'Envia uma resposta JSON',
-                    snippet: 'json(${1:{}})',
-                    permiteEncadeamento: false
-                },
-                {
-                    nome: 'enviar',
-                    parametros: ['texto: string'],
-                    tipoRetorno: 'void',
-                    documentacao: 'Envia uma resposta em texto plano',
-                    snippet: 'enviar("${1:texto}")',
-                    permiteEncadeamento: false
-                },
-                {
-                    nome: 'lmht',
-                    parametros: ['lmht: dicionário'],
-                    tipoRetorno: 'void',
-                    documentacao: 'Envia uma resposta HTML',
-                    snippet: 'lmht("${1:<html></html>}")',
-                    permiteEncadeamento: false
-                },
-                {
-                    nome: 'redirecionar',
-                    parametros: ['caminho: texto'],
-                    tipoRetorno: 'void',
-                    documentacao: 'Redireciona a requisição para outro caminho',
-                    snippet: 'redirecionar("${1:caminho}")',
-                    permiteEncadeamento: false
-                },
-                {
-                    nome: 'cabecalho',
-                    parametros: ['nome: texto', 'valor: texto'],
-                    tipoRetorno: 'resposta',
-                    documentacao: 'Define um cabeçalho HTTP na resposta',
-                    snippet: 'cabecalho("${1:nome}", "${2:valor}")',
-                    permiteEncadeamento: true
-                }
-            ]
-        }
+        
     ];
 
     provideCompletionItems(documento: vscode.TextDocument, posicao: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionList<vscode.CompletionItem> | vscode.CompletionItem[]> {
@@ -490,7 +402,7 @@ export class PituguesProvedorCompletude implements vscode.CompletionItemProvider
             }
         }
 
-        return funcoesNativasDelegua.map(funcaoNativa => {
+        return funcoesNativasPitugues.map(funcaoNativa => {
             let itemCompletude = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function);
             itemCompletude.documentation = new vscode.MarkdownString(funcaoNativa.documentacao);
             return itemCompletude;

@@ -363,6 +363,8 @@ export function activate(context: vscode.ExtensionContext) {
                 { scheme: 'untitled', language: 'pitugues' }
             ],
             new PituguesProvedorCompletude()
+        )
+    )
     // IntelliSense para Portugol Studio
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
@@ -373,7 +375,7 @@ export function activate(context: vscode.ExtensionContext) {
             new PortugolStudioProvedorCompletude()
         )
     );
-
+    
     // Hovers
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(

@@ -5,3 +5,4 @@ div = tex.dividir(" ")
 escreva(div)
 
 imprima("fecha")
+
