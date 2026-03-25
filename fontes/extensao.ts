@@ -11,15 +11,18 @@ import {
 } from './depuracao/fabricas/remotas';
 import {
     DeleguaProvedorDocumentacaoEmEditor,
+    DelpropsProvedorDocumentacaoEmEditor,
     FolesProvedorDocumentacaoEmEditor,
     LinConEsProvedorDocumentacaoEmEditor
 } from './documentacao-em-editor';
 import {
     DeleguaProvedorCompletude,
+    DelpropsProvedorCompletude,
     FolesProvedorCompletude,
     LiquidoProvedorCompletude,
     PortugolStudioProvedorCompletude,
 } from './completude';
+import { validarDelprops } from './linguagens/delprops/validador-delprops';
 import { DeleguaProvedorFormatacao, VisualgProvedorFormatacao } from './formatadores';
 
 import { LmhtProvedorCompletude } from './completude/lmht-provedor-completude';
@@ -74,10 +77,19 @@ export function activate(context: vscode.ExtensionContext) {
     const diagnosticosDelegua = vscode.languages.createDiagnosticCollection("delegua");
 	context.subscriptions.push(diagnosticosDelegua);
 
+    const diagnosticsDelprops = vscode.languages.createDiagnosticCollection("delprops");
+    context.subscriptions.push(diagnosticsDelprops);
+
     if (vscode.window.activeTextEditor) {
 		executarAnalises(vscode.window.activeTextEditor.document, diagnosticosDelegua).catch(erro => {
 			console.error('Erro ao executar análises:', erro);
 		});
+        if (vscode.window.activeTextEditor.document.languageId === 'delprops') {
+            diagnosticsDelprops.set(
+                vscode.window.activeTextEditor.document.uri,
+                validarDelprops(vscode.window.activeTextEditor.document)
+            );
+        }
 	}
 
     context.subscriptions.push(
@@ -87,12 +99,18 @@ export function activate(context: vscode.ExtensionContext) {
 					console.error('Erro ao executar análises:', erro);
 				});
             }
+            if (doc.languageId === 'delprops') {
+                diagnosticsDelprops.set(doc.uri, validarDelprops(doc));
+            }
         }),
         vscode.window.onDidChangeActiveTextEditor(editor => {
             if (editor && ['birl', 'delegua', 'mapler', 'visualg', 'portugolstudio', 'potigol'].includes(editor.document.languageId)) {
                 executarAnalises(editor.document, diagnosticosDelegua).catch(erro => {
 					console.error('Erro ao executar análises:', erro);
 				});
+            }
+            if (editor && editor.document.languageId === 'delprops') {
+                diagnosticsDelprops.set(editor.document.uri, validarDelprops(editor.document));
             }
         }),
         vscode.workspace.onDidChangeTextDocument((evento) => {
@@ -115,6 +133,9 @@ export function activate(context: vscode.ExtensionContext) {
 						});
                     }, 500);
                     break;
+                case 'delprops':
+                    diagnosticsDelprops.set(evento.document.uri, validarDelprops(evento.document));
+                    break;
                 case 'lmht':
                     tentarFecharTagLmht(evento);
                     break;
@@ -125,7 +146,10 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
 	context.subscriptions.push(
-		vscode.workspace.onDidCloseTextDocument(doc => diagnosticosDelegua.delete(doc.uri))
+		vscode.workspace.onDidCloseTextDocument(doc => {
+            diagnosticosDelegua.delete(doc.uri);
+            diagnosticsDelprops.delete(doc.uri);
+        })
 	);
 
     // Comandos de menu
@@ -320,6 +344,18 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
+    // IntelliSense para .delprops
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider(
+            [
+                { scheme: 'file', language: 'delprops' },
+                { scheme: 'untitled', language: 'delprops' }
+            ],
+            new DelpropsProvedorCompletude(),
+            '.' // acionado quando desenvolvedor/a digita '.'
+        )
+    );
+
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
             [
@@ -382,6 +418,16 @@ export function activate(context: vscode.ExtensionContext) {
                 { scheme: 'untitled', language: 'delegua' }
             ],
             new DeleguaProvedorDocumentacaoEmEditor()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerHoverProvider(
+            [
+                { scheme: 'file', language: 'delprops' },
+                { scheme: 'untitled', language: 'delprops' }
+            ],
+            new DelpropsProvedorDocumentacaoEmEditor()
         )
     );
 

@@ -21,6 +21,8 @@ import { FuncaoPadrao } from "@designliquido/delegua/interpretador/estruturas";
 
 import tiposDeSimbolos from "@designliquido/delegua/tipos-de-simbolos/delegua";
 
+import * as vscode from "vscode";
+
 import { ImportarBiblioteca, ModuloDeclaracoes } from "../construtos";
 import { carregarBibliotecaDelegua, verificarModulosDelegua } from "../mecanismo-importacao-bibliotecas";
 import { ClasseDeModulo } from "../interpretador/estruturas";
@@ -33,6 +35,7 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
     importador: ImportadorExtensao;
     arquivosImportados: string[];
     modoLair: boolean;
+    diagnosticos?: vscode.DiagnosticCollection;
 
     constructor(importador: ImportadorExtensao) {
         super();
@@ -438,6 +441,52 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
         }
 
         super.inicializarPilhaEscopos();
+    }
+
+    /**
+     * Pré-carrega classes marcadas com `@definicao` a partir de arquivos `.delegua`
+     * fornecidos por bibliotecas instaladas. Isso permite que superclasses como
+     * `Modelo` e `Migracao` sejam reconhecidas pelo avaliador sintático sem que o
+     * desenvolvedor precise importá-las explicitamente no código.
+     * @param caminhos Lista de caminhos absolutos para arquivos `.delegua` de definição.
+     */
+    async preCarregarDefinicoes(caminhos: string[]): Promise<void> {
+        for (const caminho of caminhos) {
+            try {
+                const resultadoImportacao = await this.importador.importar(caminho, 0);
+                if (resultadoImportacao.retornoLexador.erros.length > 0) {
+                    continue;
+                }
+
+                const avaliadorModulo = new AvaliadorSintaticoComImportacao(this.importador);
+                const resultadoAvaliacao = await avaliadorModulo.analisar(
+                    resultadoImportacao.retornoLexador,
+                    resultadoImportacao.hashArquivo,
+                    this.arquivosImportados
+                );
+
+                const classesDefinicao = resultadoAvaliacao.declaracoes.filter(
+                    (d) => d.constructor === Classe
+                ) as Classe[];
+
+                for (const classeDefinicao of classesDefinicao) {
+                    this.tiposDefinidosEmCodigo[classeDefinicao.simbolo.lexema] = classeDefinicao;
+                }
+            } catch (erro: any) {
+                // Erros ao pré-carregar definições não devem interromper a análise do arquivo atual.
+                if (this.diagnosticos) {
+                    const mensagem = erro?.message ?? String(erro);
+                    const uri = vscode.Uri.file(caminho);
+                    this.diagnosticos.set(uri, [
+                        new vscode.Diagnostic(
+                            new vscode.Range(0, 0, 0, 0),
+                            mensagem,
+                            vscode.DiagnosticSeverity.Warning
+                        )
+                    ]);
+                }
+            }
+        }
     }
 
     override async analisar(

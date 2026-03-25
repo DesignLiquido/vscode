@@ -459,6 +459,11 @@
     esprima "^4.0.1"
     lodash.clonedeep "^4.5.0"
 
+"@designliquido/delprops@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/delprops/-/delprops-0.0.1.tgz#9e6108dfd67062eb1649ef4c3741424167c79dc3"
+  integrity sha512-+jOfrR3oayDuuGtCjH9ZtWxz2XhJ5DyHE+z+paiPY2xREjzqEA1NK5eBNoJ834oO9+fjvWLltE45yovx291h8A==
+
 "@designliquido/foles@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.14.0.tgz#141a7c8d20c76a871f5c7658eeac302c356ca22b"

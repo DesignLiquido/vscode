@@ -279,6 +279,11 @@
                 "path": "./gramaticas/birl.tmLanguage.json"
             },
             {
+                "language": "delprops",
+                "scopeName": "source.delprops",
+                "path": "./gramaticas/delprops.tmLanguage.json"
+            },
+            {
                 "language": "delegua",
                 "scopeName": "source.delegua",
                 "path": "./gramaticas/delegua.tmLanguage.json"
@@ -345,6 +350,21 @@
                 "icon": {
                     "light": "./recursos/birl-logo.svg",
                     "dark": "./recursos/birl-logo.svg"
+                }
+            },
+            {
+                "id": "delprops",
+                "aliases": [
+                    "Delégua Propriedades",
+                    "delprops"
+                ],
+                "extensions": [
+                    ".delprops"
+                ],
+                "configuration": "./configuracoes/configuracao-delprops.json",
+                "icon": {
+                    "light": "./recursos/delprops-logo.svg",
+                    "dark": "./recursos/delprops-logo.svg"
                 }
             },
             {
@@ -726,6 +746,7 @@
         "@designliquido/delegua-json": "^0.2.1",
         "@designliquido/delegua-matematica": "^0.3.0",
         "@designliquido/delegua-tempo": "^1.0.1",
+        "@designliquido/delprops": "^0.0.1",
         "@designliquido/foles": "^0.14.0",
         "@designliquido/lincones-js": "^0.1.0",
         "@designliquido/lmht-js": "^0.6.0",
