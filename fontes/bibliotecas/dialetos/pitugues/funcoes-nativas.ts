@@ -185,4 +185,52 @@ export const funcoesNativasPitugues: FuncaoNativaOuMetodoPrimitiva[] = [
             '\n \n ### Formas de uso  \n',
         exemploCodigo: 'função inteiro("123")',
     },
+    {
+        nome: 'escreva',
+        assinaturas: [
+            {
+                formato: 'escreva(...argumentos: qualquer)',
+                parametros: [
+                    {
+                        nome: '...argumentos',
+                        documentacao:
+                            'Os argumentos para impressão, que podem ser literais, constantes ou variáveis de qualquer tipo.',
+                    },
+                ],
+            },
+        ],
+        documentacao:
+            '# `escreva()`\n' +
+            'Escreve um ou mais argumentos na saída padrão da aplicação.\n' +
+            '## Interpolação \n' +
+            'Delégua suporta interpolação de variáveis: \n\n' +
+            "```delegua\nvar comidaFavorita = 'strogonoff'\n" +
+            'escreva("Minha comida favorita é ${comidaFavorita}")\n```' +
+            '\n\n ### Formas de uso \n',
+        exemploCodigo: 'escreva(...argumentos)',
+    },
+    {
+          nome: 'imprima',
+        assinaturas: [
+            {
+                formato: 'imprima(...argumentos: qualquer)',
+                parametros: [
+                    {
+                        nome: '...argumentos',
+                        documentacao:
+                            'Os argumentos para impressão, que podem ser literais, constantes ou variáveis de qualquer tipo.',
+                    },
+                ],
+            },
+        ],
+        documentacao:
+            '# `imprima()`\n' +
+            'Escreve um ou mais argumentos na saída padrão da aplicação.\n' +
+            '## Interpolação \n' +
+            'Delégua suporta interpolação de variáveis: \n\n' +
+            "```delegua\nvar comidaFavorita = 'strogonoff'\n" +
+            'imprima("Minha comida favorita é ${comidaFavorita}")\n```' +
+            '\n\n ### Formas de uso \n',
+        exemploCodigo: 'imprima(...argumentos)',
+    }
 ]
