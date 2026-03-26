@@ -329,13 +329,6 @@
                 "path": "./gramaticas/visualg.tmLanguage.json"
             }
         ],
-        "iconThemes": [
-            {
-                "id": "designliquido",
-                "label": "Design Líquido",
-                "path": "./recursos/tema-icones.json"
-            }
-        ],
         "languages": [
             {
                 "id": "birl",
@@ -748,8 +741,8 @@
         "@designliquido/delegua-tempo": "^1.0.1",
         "@designliquido/delprops": "^0.0.1",
         "@designliquido/foles": "^0.14.0",
-        "@designliquido/lincones-js": "^0.1.0",
-        "@designliquido/lmht-js": "^0.6.0",
+        "@designliquido/lincones-js": "^0.2.1",
+        "@designliquido/lmht-js": "^0.6.2",
         "@designliquido/mapler": "^0.6.19",
         "@designliquido/portugol-studio": "^0.10.1",
         "@designliquido/potigol": "^0.9.0",

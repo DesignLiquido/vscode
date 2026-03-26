@@ -472,18 +472,18 @@
     commander "^14.0.0"
     vlq "^2.0.4"
 
-"@designliquido/lincones-js@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/lincones-js/-/lincones-js-0.1.0.tgz#f2f9a357ceb95f3e291b929f045122d3b2f9f4e4"
-  integrity sha512-SWt4Klpfyrrp8H9D+IVH62LwwFXJ8gbU8/eZnTm/RJwImr0t6GAqUei8qO1PVetwOcJznUgCCmn5L9AplKI8pg==
+"@designliquido/lincones-js@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/lincones-js/-/lincones-js-0.2.1.tgz#c3ddcf9951471a9bf14a239b1e15103f4b748cc1"
+  integrity sha512-L7Pq3CKvCre7IlkHW5Cn5a1lu94jGcIijyJxjqPIZIFEhp/CkQAMVAFJuKN6Qa/9DEOtLPivwefVVoq0FgK6+Q==
 
-"@designliquido/lmht-js@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/lmht-js/-/lmht-js-0.6.0.tgz#6f95216ff683cf3cf2bd0e870f44d65486110e7f"
-  integrity sha512-HsF2hiBtmtFyhMGrRjG/SePvoSJ3WTb0B0ZpnwCe+VbhoOMQB42NTNnJB/d+Io0+oBp8sn2P11qBM1x3iHjWpQ==
+"@designliquido/lmht-js@^0.6.2":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/@designliquido/lmht-js/-/lmht-js-0.6.2.tgz#6b31d4b32835f139adca0e54671588f61c13fa0f"
+  integrity sha512-/i+iadN59MzoJp3Nhomv0lfaRBrGu1lVsVB3maDA81syWfrpRj2FKtfr1UNI6wrmtY/39kN70N+HuyzjWa+b0w==
   dependencies:
     jsdom "^21.1.1"
-    xslt-processor "^3.0.1"
+    xslt-processor "^5.0.3"
 
 "@designliquido/mapler@^0.6.19":
   version "0.6.19"
@@ -3611,11 +3611,6 @@ hasown@^2.0.2:
   integrity sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==
   dependencies:
     function-bind "^1.1.2"
-
-he@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
-  integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
 hosted-git-info@^4.0.2:
   version "4.1.0"
@@ -6835,12 +6830,10 @@ xmlchars@^2.2.0:
   resolved "https://registry.yarnpkg.com/xmlchars/-/xmlchars-2.2.0.tgz#060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb"
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
 
-xslt-processor@^3.0.1:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/xslt-processor/-/xslt-processor-3.4.0.tgz#711f8d62a125b170fa7f476da7b6a72f8157aefd"
-  integrity sha512-hvsduzQNZSQD+ttrUSEg2wGOmmDekdo46IUis2s01l/4pNabNWAREEPoVEmzR3ZXbdcB5sR2q1AOTOyTtounAg==
-  dependencies:
-    he "^1.2.0"
+xslt-processor@^5.0.3:
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/xslt-processor/-/xslt-processor-5.0.7.tgz#7ae914dce3461800f11e45267270d7171b50ed75"
+  integrity sha512-ua0sWSeKOq9dXQ0Jb+yLfkC18a1teoZOv9YfNCkmSu/BvqdA6J9gJNKK4GXqA81zaROWhhqiG4lykcwY/2q7kw==
 
 xtend@~4.0.1:
   version "4.0.2"
