@@ -8,7 +8,8 @@ import {
     FolesProvedorDocumentacaoEmEditor,
     LinConEsProvedorDocumentacaoEmEditor,
     VisuAlgProvedorDocumentacaoEmEditor,
-    LmhtProvedorDocumentacaoEmEditor
+    LmhtProvedorDocumentacaoEmEditor,
+    PituguesProvedorDocumentacaoEmEditor
 } from './documentacao-em-editor';
 import {
     DeleguaProvedorCompletude,
@@ -219,7 +220,8 @@ export function activate(context: vscode.ExtensionContext) {
         ['foles', new FolesProvedorDocumentacaoEmEditor()],
         ['lincones', new LinConEsProvedorDocumentacaoEmEditor()],
         ['lmht', new LmhtProvedorDocumentacaoEmEditor()],
-        ['visualg', new VisuAlgProvedorDocumentacaoEmEditor()]
+        ['visualg', new VisuAlgProvedorDocumentacaoEmEditor()],
+        ['pitugues', new PituguesProvedorDocumentacaoEmEditor()]
     ];
 
     hoverProviders.forEach(([linguagem, provedor]) => {

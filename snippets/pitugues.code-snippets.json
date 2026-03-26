@@ -1,0 +1,165 @@
+{
+	"Repetição Para": {
+		"prefix": "para",
+		"body": [
+			"para cada ${1:i} em intervalo(${2:0}, ${3:5}):",
+			"\t${4:escreva(${1:i})}"
+		],
+		"description": "Laço de repetição para"
+	},
+	"Repetição Enquanto": {
+		"prefix": "enquanto",
+		"body": [
+			"enquanto ${1:condicao}:",
+			"\t${2:escreva('correspondente')}"
+		],
+		"description": "Laço de repetição enquanto"
+	},
+	"Declaração de Função": {
+		"prefix": "funcao",
+		"body": [
+			"funcao ${1:nome}(${2: parametros}):",
+			"\t${3:retorna}"
+		],
+		"description": "Declaração de função"
+	},
+	"Declaração de Se": {
+		"prefix": "se",
+		"body": [
+			"se ${1:condicao}:",
+			"\t${2:escreva('sim')}"
+		],
+		"description": "Declaração de se"
+	},
+	"Declaração Se-Senao": {
+		"prefix": "se senao",
+		"body": [
+			"se ${1:condicao}:",
+			"\t${2:escreva('correspondente 1')}",
+			"senao:",
+			"\t${3:escreva('correspondente 2')}"
+		],
+		"description": "Declaração de se-senao"
+	},
+	"Declaração Se-Senaose-Senao": {
+		"prefix": "se senaose senao",
+		"body": [
+			"se ${1:condicao1}:",
+			"\t${2:escreva('correspondente 1')}",
+			"senao se ${3:condicao2}:",
+			"\t${4:escreva('correspondente 2')}",
+			"senao:",
+			"\t${5:escreva('sem valor correspondente')}"
+		],
+		"description": "Declaração de se-senaose-senao"
+	},
+	"Declaração Escolha": {
+		"prefix": "escolha",
+		"body": [
+			"escolha ${1:chave}:",
+			"\tcaso ${2:valor}:",
+			"\t\t${3:escreva('Olá Mundo!')}",
+			"\tpadrao:",
+			"\t\t${4:escreva('Valor padrão!')}"
+		],
+		"description": "Declaração de escolha"
+	},
+	"Declaração Tente-Pegue": {
+		"prefix": "tente pegue",
+		"body": [
+			"tente:",
+			"\t${1:escreva('sucesso')}",
+			"pegue ${2:erro}:",
+			"\t${3:escreva('pegue')}"
+		],
+		"description": "Declaração de tente-pega"
+	},
+	"Declaração Tente-Pegue-Finalmente": {
+		"prefix": "tente pegue finalmente",
+		"body": [
+			"tente:",
+			"\t${1:escreva('sucesso')}",
+			"pegue ${2:erro}:",
+			"\t${3:escreva('pegue')}",
+			"finalmente:",
+			"\t${4:escreva('pronto')}"
+		],
+		"description": "Declaração de tente-pega-finalmente"
+	},
+	"Declaração Quebrar":{
+		"prefix": "quebrar",
+		"body": ["quebrar"],
+		"description": "Declaração de quebrar"
+	},
+	"Declaração Sustar":{
+		"prefix": "sustar",
+		"body": ["sustar"],
+		"description": "Declaração de sustar"
+	},
+	"Declaração importar":{
+		"prefix": "importar",
+		"body": ["importar"],
+		"description": "Declaração de importar"
+	},
+	"Ler Entrada": {
+		"prefix": "leia",
+		"body": ["leia(${1:\"Digite algo: \"})"],
+		"description": "Ler entrada do usuário"
+	},
+	"Retornar": {
+		"prefix": "retorna",
+		"body": ["retorna ${1:value}"],
+		"description": "Retornar valor de função"
+	},
+	"Classe": {
+		"prefix": "classe",
+		"body": [
+			"classe ${1:NomeClasse}(${2:Classe pai}):",
+			"\t${3: #Código}"			
+		],
+		"description": "Declaração de classe"
+	},
+	"Construtor": {
+		"prefix": "construtor",
+		"body": [
+			"construtor(${1:parametros}):",
+			"\t${2: #Código}"
+		],
+		"description": "Construtor de classe"
+	},
+	"Falhar": {
+		"prefix": "falhar",
+		"body": ["falhar ${1:#Erro}"],
+		"description": "Lançar exceção"
+	},
+	"Super": {
+		"prefix": "super",
+		"body": ["super.${1:método}(${2:argumentos})"],
+		"description": "Chamar método da superclasse"
+	},
+	"Tipo": {
+		"prefix": "tipo",
+		"body": ["tipo (${1:Objeto})"],
+		"description": "Declaração de tipo"
+	},
+	"Verdadeiro": {
+		"prefix": "verdadeiro",
+		"body": ["verdadeiro"],
+		"description": "Valor booleano verdadeiro"
+	},
+	"Falso": {
+		"prefix": "falso",
+		"body": ["falso"],
+		"description": "Valor booleano falso"
+	},
+	"Nulo": {
+		"prefix": "nulo",
+		"body": ["nulo"],
+		"description": "Valor nulo"
+	},
+	"Nada": {
+		"prefix": "nada",
+		"body": ["nada"],
+		"description": "Valor nada"
+	}
+}

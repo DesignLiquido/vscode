@@ -13,13 +13,15 @@ import {
     DeleguaProvedorDocumentacaoEmEditor,
     DelpropsProvedorDocumentacaoEmEditor,
     FolesProvedorDocumentacaoEmEditor,
-    LinConEsProvedorDocumentacaoEmEditor
+    LinConEsProvedorDocumentacaoEmEditor,
+    PituguesProvedorDocumentacaoEmEditor
 } from './documentacao-em-editor';
 import {
     DeleguaProvedorCompletude,
     DelpropsProvedorCompletude,
     FolesProvedorCompletude,
     LiquidoProvedorCompletude,
+    PituguesProvedorCompletude,
     PortugolStudioProvedorCompletude,
 } from './completude';
 import { validarDelprops } from './linguagens/delprops/validador-delprops';
@@ -399,6 +401,16 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
+    // IntelliSense para Pituguês
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider(
+            [
+                { scheme: 'file', language: 'pitugues' },
+                { scheme: 'untitled', language: 'pitugues' }
+            ],
+            new PituguesProvedorCompletude()
+        )
+    )
     // IntelliSense para Portugol Studio
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
@@ -409,7 +421,7 @@ export function activate(context: vscode.ExtensionContext) {
             new PortugolStudioProvedorCompletude()
         )
     );
-
+    
     // Hovers
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(
@@ -467,6 +479,16 @@ export function activate(context: vscode.ExtensionContext) {
                 { scheme: 'untitled', language: 'visualg' }
             ],
             new VisuAlgProvedorDocumentacaoEmEditor()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerHoverProvider(
+            [
+                { scheme: 'file', language: 'pitugues' },
+                { scheme: 'untitled', language: 'pitugues' }
+            ],
+            new PituguesProvedorDocumentacaoEmEditor()
         )
     );
 
