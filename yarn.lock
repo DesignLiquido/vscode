@@ -464,10 +464,10 @@
   resolved "https://registry.yarnpkg.com/@designliquido/delprops/-/delprops-0.0.1.tgz#9e6108dfd67062eb1649ef4c3741424167c79dc3"
   integrity sha512-+jOfrR3oayDuuGtCjH9ZtWxz2XhJ5DyHE+z+paiPY2xREjzqEA1NK5eBNoJ834oO9+fjvWLltE45yovx291h8A==
 
-"@designliquido/foles@^0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.14.0.tgz#141a7c8d20c76a871f5c7658eeac302c356ca22b"
-  integrity sha512-yPcsvWSOe1DbdEMBANDXE8y31V8V3+jxMS3kQn+Z6+B7zNQwnMUGNJritu6mT8HB/322doJNpxlPs/SPJs4ulQ==
+"@designliquido/foles@^0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.15.1.tgz#9876adcb4af43cd6418d6570c7748f17fb1f2f9d"
+  integrity sha512-otHTkJO8CPsbhOwHfp7YtD/YoJIuME4LQXX/fJj8Ejxw0OSIOv2HodRJ2XRDM0kiip9t49IUWrRKh9VKtBZMrw==
   dependencies:
     commander "^14.0.0"
     vlq "^2.0.4"
