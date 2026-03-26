@@ -1,5 +1,18 @@
 # Histórico de Modificações
 
+## 0.25.3
+
+- Suporte a arquivos de configuração de projetos Delégua (`.delprops`):
+  - Colorização de sintaxe;
+  - Validação de estrutura;
+  - Completude de propriedades;
+  - Documentação em editor (_hover_) para propriedades.
+- Pituguês:
+  - Novo provedor de completude com sugestões de funções nativas, primitivas e _snippets_;
+  - Documentação em editor (_hover_) para funções nativas, métodos de primitivas, variáveis tipadas, funções e classes documentadas.
+- Remoção do tema de ícones próprio da Design Líquido.
+- Atualização de FolEs, LinConEs, LMHT e pacotes periódicos.
+
 ## 0.25.2
 
 - Núcleo de Delégua atualizado para a versão 1.15.3:

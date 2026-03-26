@@ -1,16 +1,20 @@
+// @ts-nocheck - Ignora erros de tipo nos mocks complexos
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as vscode from 'vscode';
 
-// Mock do módulo vscode
 jest.mock('vscode', () => ({
     window: {
         activeTextEditor: undefined,
         showInformationMessage: jest.fn(),
         showErrorMessage: jest.fn(),
-        registerWebviewViewProvider: jest.fn()
+        showTextDocument: jest.fn(),
+        createWebviewPanel: jest.fn(() => ({ webview: {}, dispose: jest.fn() })),
+        registerWebviewViewProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        onDidChangeActiveTextEditor: jest.fn(() => ({ dispose: jest.fn() }))
     },
     workspace: {
         workspaceFolders: undefined,
+        openTextDocument: jest.fn(),
         onDidOpenTextDocument: jest.fn(() => ({ dispose: jest.fn() })),
         onDidChangeTextDocument: jest.fn(() => ({ dispose: jest.fn() })),
         onDidCloseTextDocument: jest.fn(() => ({ dispose: jest.fn() }))
@@ -25,7 +29,9 @@ jest.mock('vscode', () => ({
         registerCompletionItemProvider: jest.fn(() => ({ dispose: jest.fn() })),
         registerHoverProvider: jest.fn(() => ({ dispose: jest.fn() })),
         registerDocumentFormattingEditProvider: jest.fn(() => ({ dispose: jest.fn() })),
-        registerSignatureHelpProvider: jest.fn(() => ({ dispose: jest.fn() }))
+        registerSignatureHelpProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerCodeActionsProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerDefinitionProvider: jest.fn(() => ({ dispose: jest.fn() }))
     },
     commands: {
         registerCommand: jest.fn(() => ({ dispose: jest.fn() }))
@@ -34,19 +40,140 @@ jest.mock('vscode', () => ({
     Uri: {
         file: jest.fn((path: string) => ({ fsPath: path })),
         parse: jest.fn((path: string) => ({ fsPath: path }))
-    }
+    },
+    ViewColumn: { One: 1 }
 }), { virtual: true });
+
+jest.mock('../fontes/depuracao/configuracao-depuracao', () => ({
+    configurarDepuracao: jest.fn()
+}));
+
+jest.mock('../fontes/depuracao/fabricas', () => ({
+    FabricaAdaptadorDepuracaoEmbutido: class FabricaAdaptadorDepuracaoEmbutido {
+        constructor(...args: any[]) {}
+    }
+}));
+
+jest.mock('../fontes/depuracao/fabricas/remotas', () => ({
+    DeleguaAdapterServerDescriptorFactory: class {},
+    DeleguaAdapterNamedPipeServerDescriptorFactory: class {},
+    DeleguaDebugAdapterExecutableFactory: class {}
+}));
+
+jest.mock('../fontes/documentacao-em-editor', () => ({
+    DeleguaProvedorDocumentacaoEmEditor: class {},
+    DelpropsProvedorDocumentacaoEmEditor: class {},
+    FolesProvedorDocumentacaoEmEditor: class {},
+    LinConEsProvedorDocumentacaoEmEditor: class {},
+    PituguesProvedorDocumentacaoEmEditor: class {}
+}));
+
+jest.mock('../fontes/completude', () => ({
+    DeleguaProvedorCompletude: class {},
+    DelpropsProvedorCompletude: class {},
+    FolesProvedorCompletude: class {},
+    LiquidoProvedorCompletude: class {},
+    PituguesProvedorCompletude: class {},
+    PortugolStudioProvedorCompletude: class {}
+}));
+
+jest.mock('../fontes/linguagens/delprops/validador-delprops', () => ({
+    validarDelprops: jest.fn(() => [])
+}));
+
+jest.mock('../fontes/formatadores', () => ({
+    DeleguaProvedorFormatacao: class {
+        constructor(...args: any[]) {}
+    },
+    VisualgProvedorFormatacao: class {}
+}));
+
+jest.mock('../fontes/completude/lmht-provedor-completude', () => ({
+    LmhtProvedorCompletude: class {}
+}));
+
+jest.mock('../fontes/completude/visualg-provedor-completude', () => ({
+    VisuAlgProvedorCompletude: class {}
+}));
+
+jest.mock('../fontes/documentacao-em-editor/visualg-provedor-documentacao-em-editor', () => ({
+    VisuAlgProvedorDocumentacaoEmEditor: class {}
+}));
+
+jest.mock('../fontes/traducao', () => ({
+    traduzir: jest.fn()
+}));
+
+jest.mock('../fontes/analise-codigo', () => ({
+    executarAnalises: jest.fn(() => Promise.resolve())
+}));
+
+jest.mock('../fontes/assinaturas-metodos', () => ({
+    DeleguaProvedorAssinaturaMetodos: class {}
+}));
+
+jest.mock('../fontes/documentacao-em-editor/lmht-provedor-documentacao-em-editor', () => ({
+    LmhtProvedorDocumentacaoEmEditor: class {}
+}));
+
+jest.mock('../fontes/linguagens/lmht/fechamento-estruturas', () => ({
+    tentarFecharTagLmht: jest.fn()
+}));
+
+jest.mock('../fontes/formatadores/portugol-studio-provedor-formatacao', () => ({
+    PortugolStudioProvedorFormatacao: class {}
+}));
+
+jest.mock('../fontes/formatadores/potigol-provedor-formatacao', () => ({
+    PotigolProvedorFormatacao: class {}
+}));
+
+jest.mock('../fontes/visoes', () => ({
+    ProvedorVisaoEntradaSaida: class ProvedorVisaoEntradaSaida {
+        static viewType = 'delegua.entradaSaida';
+        constructor(...args: any[]) {}
+        ativarVisao() {}
+    }
+}));
+
+jest.mock('../fontes/formatadores/mapler-provedor-formatacao', () => ({
+    MaplerProvedorFormatacao: class {}
+}));
+
+jest.mock('../fontes/formatadores/pitugues-provedor-formatacao', () => ({
+    PituguesProvedorFormatacao: class {
+        constructor(...args: any[]) {}
+    }
+}));
+
+jest.mock('../fontes/visoes/fluxogramas/geracao-fluxogramas', () => ({
+    gerarFluxograma: jest.fn()
+}));
+
+jest.mock('../fontes/visoes/fluxogramas/gerenciador-visoes-fluxograma', () => ({
+    GerenciadorVisoesFluxograma: { descartar: jest.fn() }
+}));
+
+jest.mock('../fontes/acoes-codigo', () => ({
+    DeleguaProvedorAcoesCodigo: class DeleguaProvedorAcoesCodigo {
+        static tiposAcoesRapidas = [];
+    }
+}));
+
+jest.mock('../fontes/definicao', () => ({
+    DeleguaProvedorDefinicao: class {}
+}));
+
+jest.mock('../fontes/mecanismo-importacao-bibliotecas', () => ({
+    definirFabricaPainelWebView: jest.fn()
+}));
+
+import * as extensao from '../fontes/extensao';
 
 describe('Extensão VSCode - Design Líquido', () => {
     describe('Carregamento da extensão', () => {
-        // NOTA: Este teste está comentado porque a extensão tem dependências
-        // complexas que precisam ser mockadas adequadamente.
-        // Para testar a extensão completa, considere usar testes de integração.
-        it.skip('deve importar o módulo da extensão sem erros', async () => {
-            // Este teste verifica se o módulo pode ser importado sem erros de sintaxe
-            expect(() => {
-                require('../fontes/extensao');
-            }).not.toThrow();
+        it('deve importar o módulo da extensão sem erros', () => {
+            expect(extensao).toBeDefined();
         });
     });
 
@@ -54,83 +181,46 @@ describe('Extensão VSCode - Design Líquido', () => {
         let context: any;
 
         beforeEach(() => {
-            // Mock do contexto da extensão
+            jest.clearAllMocks();
+
             context = {
                 subscriptions: [],
                 extensionUri: vscode.Uri.file('/test/path'),
                 extensionPath: '/test/path'
             };
-
-            // Limpar mocks
-            jest.clearAllMocks();
         });
 
-        // NOTA: Os testes abaixo estão desabilitados (skip) porque a extensão possui
-        // dependências complexas que precisam de mocks mais sofisticados.
-        // Estes testes servem como exemplos de como você pode testar a extensão
-        // quando as dependências forem devidamente mockadas.
-
-        it.skip('deve ter uma função activate exportada', () => {
-            const extensao = require('../fontes/extensao');
+        it('deve ter uma função activate exportada', () => {
             expect(typeof extensao.activate).toBe('function');
         });
 
-        it.skip('deve ter uma função deactivate exportada', () => {
-            const extensao = require('../fontes/extensao');
+        it('deve ter uma função deactivate exportada', () => {
             expect(typeof extensao.deactivate).toBe('function');
         });
 
-        it.skip('deve registrar comandos durante a ativação', () => {
-            const extensao = require('../fontes/extensao');
-            const registerCommandMock = vscode.commands.registerCommand as jest.MockedFunction<any>;
-
+        it('deve registrar comandos durante a ativação', () => {
             extensao.activate(context);
 
-            // Verifica se algum comando foi registrado
-            expect(registerCommandMock).toHaveBeenCalled();
-
-            // Verifica se subscriptions foi populado
+            expect(vscode.commands.registerCommand).toHaveBeenCalled();
             expect(context.subscriptions.length).toBeGreaterThan(0);
         });
 
-        it.skip('deve criar coleção de diagnósticos', () => {
-            const extensao = require('../fontes/extensao');
-            const createDiagnosticCollectionMock =
-                vscode.languages.createDiagnosticCollection as jest.MockedFunction<any>;
-
+        it('deve criar coleção de diagnósticos', () => {
             extensao.activate(context);
 
-            // Verifica se a coleção de diagnósticos foi criada
-            expect(createDiagnosticCollectionMock).toHaveBeenCalledWith('delegua');
+            expect(vscode.languages.createDiagnosticCollection).toHaveBeenCalledWith('delegua');
         });
 
-        it.skip('deve registrar provedores de completude', () => {
-            const extensao = require('../fontes/extensao');
-            const registerCompletionMock =
-                vscode.languages.registerCompletionItemProvider as jest.MockedFunction<any>;
-
+        it('deve registrar provedores de completude', () => {
             extensao.activate(context);
 
-            // Verifica se provedores de completude foram registrados
-            expect(registerCompletionMock).toHaveBeenCalled();
+            expect(vscode.languages.registerCompletionItemProvider).toHaveBeenCalled();
         });
 
-        it.skip('deve registrar provedores de formatação', () => {
-            const extensao = require('../fontes/extensao');
-            const registerFormattingMock =
-                vscode.languages.registerDocumentFormattingEditProvider as jest.MockedFunction<any>;
-
+        it('deve registrar provedores de formatação', () => {
             extensao.activate(context);
 
-            // Verifica se provedores de formatação foram registrados
-            expect(registerFormattingMock).toHaveBeenCalled();
-        });
-
-        // Adicione aqui testes para módulos individuais da extensão
-        // Por exemplo, testes para provedores de completude, formatadores, etc.
-        it('deve ser possível testar módulos individuais', () => {
-            // Este é um placeholder para demonstrar como testar módulos específicos
-            expect(true).toBe(true);
+            expect(vscode.languages.registerDocumentFormattingEditProvider).toHaveBeenCalled();
         });
     });
 });

@@ -5,13 +5,13 @@ import { ComentarioComoConstruto } from '@designliquido/delegua/construtos';
 
 import { obterResultado } from '../analise-codigo/cache-analise';
 import { 
-    funcoesNativasDelegua,
+    funcoesNativasPitugues,
     primitivas, 
     primitivasDicionarioFormatadas, 
     primitivasNumeroFormatadas, 
     primitivasTextoFormatadas, 
     primitivasVetorFormatadas 
-} from '../bibliotecas';
+} from '../bibliotecas/dialetos/pitugues';
 
 /**
  * Provedor de documentação para `hover` (ponteiro do _mouse_ por cima do elemento de código.)
@@ -94,7 +94,7 @@ export class PituguesProvedorDocumentacaoEmEditor
     }
 
     private hoverFuncaoNativa(palavra: string): vscode.Hover | undefined {
-        const funcaoNativa = funcoesNativasDelegua.find(f => f.nome === palavra);
+        const funcaoNativa = funcoesNativasPitugues.find(f => f.nome === palavra);
         if (!funcaoNativa) {
             return undefined;
         }
