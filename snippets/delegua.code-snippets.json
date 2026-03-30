@@ -132,7 +132,7 @@
 	"ParaCada": {
 		"prefix": "paraCada",
 		"body": [
-			"paraCada (${1vetor}, ${2:funcao}) {",
+			"paraCada (${1:vetor}, ${2:funcao}) {",
 			"\t${3:// corpo}",
 			"}"
 
