@@ -241,7 +241,7 @@
 		"body": ["estático ${1:membro};"],
 		"description": "Modificador estático"
 	},
-	"Esttico": {
+	"Estatico": {
 		"prefix": "estatico",
 		"body": ["estatico ${1:membro};"],
 		"description": "Modificador estático"
