@@ -15,6 +15,17 @@
 		],
 		"description": "Laço de repetição enquanto"
 	},
+	"Repetição Fazer Enquanto": {
+		"prefix": "fazer enquanto",
+		"body": [
+			"i = 0",
+			"fazer:",
+			"\t${1:escreva(i)}",
+			"\ti = i + 1",
+			"enquanto(i < ${2:5})"
+		],
+		"description": "Laço de repetição fazer-enquanto"
+	},
 	"Declaração de Função": {
 		"prefix": "funcao",
 		"body": [
