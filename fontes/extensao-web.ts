@@ -8,7 +8,8 @@ import {
     FolesProvedorDocumentacaoEmEditor,
     LinConEsProvedorDocumentacaoEmEditor,
     VisuAlgProvedorDocumentacaoEmEditor,
-    LmhtProvedorDocumentacaoEmEditor
+    LmhtProvedorDocumentacaoEmEditor,
+    PortugolStudioProvedorDocumentacaoEmEditor
 } from './documentacao-em-editor';
 import {
     DeleguaProvedorCompletude,
@@ -74,14 +75,14 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.workspace.onDidOpenTextDocument(doc => {
-            if (['birl', 'delegua', 'mapler', 'visualg', 'portugol-studio'].includes(doc.languageId)) {
+            if (['birl', 'delegua', 'mapler', 'visualg', 'portugolstudio'].includes(doc.languageId)) {
                 executarAnalises(doc, diagnosticosDelegua).catch(erro => {
                     console.error('Erro ao executar análises:', erro);
                 });
             }
         }),
         vscode.window.onDidChangeActiveTextEditor(editor => {
-            if (editor && ['birl', 'delegua', 'mapler', 'visualg', 'portugol-studio'].includes(editor.document.languageId)) {
+            if (editor && ['birl', 'delegua', 'mapler', 'visualg', 'portugolstudio'].includes(editor.document.languageId)) {
                 executarAnalises(editor.document, diagnosticosDelegua).catch(erro => {
                     console.error('Erro ao executar análises:', erro);
                 });
@@ -94,6 +95,7 @@ export function activate(context: vscode.ExtensionContext) {
                 case 'mapler':
                 case 'pitugues':
                 case 'visualg':
+                case 'portugolstudio':
                     if (changeTimeout !== null) {
                         clearTimeout(changeTimeout);
                     }
@@ -219,7 +221,8 @@ export function activate(context: vscode.ExtensionContext) {
         ['foles', new FolesProvedorDocumentacaoEmEditor()],
         ['lincones', new LinConEsProvedorDocumentacaoEmEditor()],
         ['lmht', new LmhtProvedorDocumentacaoEmEditor()],
-        ['visualg', new VisuAlgProvedorDocumentacaoEmEditor()]
+        ['visualg', new VisuAlgProvedorDocumentacaoEmEditor()],
+        ['portugolstudio', new PortugolStudioProvedorDocumentacaoEmEditor()]
     ];
 
     hoverProviders.forEach(([linguagem, provedor]) => {
