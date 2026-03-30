@@ -15,7 +15,7 @@
 			"fazer { ",
 			"\t${1:escreva(i)};",
 			"\ti = i + 1;",
-			"} enquanto(i < ${5:5})"
+			"} enquanto(i < ${2:5})"
 		],
 		"description": "Laço de repetição \"fazer-enquanto\""
 	},
