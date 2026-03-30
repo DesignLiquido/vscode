@@ -7,8 +7,7 @@ escreva(div)
 imprima("fecha")
 
 i = 0
-i = 0
-fazer: 
+fazer:
     escreva(i)
     i = i + 1
-enquanto(i < 5) 
+enquanto(i < 5)
