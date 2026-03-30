@@ -19,7 +19,7 @@
 		"prefix": "fazer enquanto",
 		"body": [
 			"i = 0",
-			"fazer: ",
+			"fazer:",
 			"\t${1:escreva(i)}",
 			"\ti = i + 1",
 			"enquanto(i < ${2:5})"
