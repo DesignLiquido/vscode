@@ -1,5 +1,14 @@
 # Histórico de Modificações
 
+## 0.25.4
+
+- Núcleo de Delégua atualizado para a versão 1.15.5:
+  - Novo parâmetro de formatação `delegua.estilizador.delimitadorTexto`: permite escolher entre aspas simples, aspas duplas ou preservar o delimitador original de cada literal de texto;
+  - Correção de _bug_ em que comentários de bloco eram removidos durante a formatação de código;
+  - Reorganização de interfaces do Estilizador em submódulo próprio.
+- Novo parâmetro de configuração `delegua.estilizador.delimitadorTexto` exposto na extensão.
+- Quando o Estilizador está habilitado, a formatação agora ocorre em etapa única via `estilizarEFormatar`, respeitando o delimitador configurado.
+
 ## 0.25.3
 
 - Suporte a arquivos de configuração de projetos Delégua (`.delprops`):

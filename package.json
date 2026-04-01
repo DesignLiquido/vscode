@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.25.3",
+    "version": "0.25.4",
     "engines": {
         "vscode": "^1.80.0"
     },
@@ -683,6 +683,21 @@
                     "default": "caixaCamelo",
                     "description": "Convenção de nomenclatura para funções."
                 },
+                "delegua.estilizador.delimitadorTexto": {
+                    "type": "string",
+                    "enum": [
+                        "aspas-simples",
+                        "aspas-duplas",
+                        "preservar"
+                    ],
+                    "enumDescriptions": [
+                        "Sempre usar aspas simples para literais de texto (ex: 'olá')",
+                        "Sempre usar aspas duplas para literais de texto (ex: \"olá\")",
+                        "Preservar o delimitador original de cada literal de texto"
+                    ],
+                    "default": "preservar",
+                    "description": "Delimitador padrão para literais de texto ao formatar código Delégua."
+                },
                 "delegua.traducao.resultadoTraducao": {
                     "type": "string",
                     "enum": [
@@ -731,26 +746,29 @@
         "webpack-cli": "^6.0.1"
     },
     "dependencies": {
-        "@designliquido/birl": "^0.5.19",
-        "@designliquido/delegua": "^1.15.3",
+        "@designliquido/birl": "^0.5.20",
+        "@designliquido/delegua": "^1.15.5",
         "@designliquido/delegua-arquivos": "^0.0.3",
         "@designliquido/delegua-criptografia": "^0.3.3",
         "@designliquido/delegua-csv": "^0.0.2",
+        "@designliquido/delegua-dados": "^0.0.1",
         "@designliquido/delegua-estatistica": "^0.1.0",
         "@designliquido/delegua-fisica": "^0.1.0",
         "@designliquido/delegua-http": "^0.1.2",
+        "@designliquido/delegua-imagens": "^0.0.0",
         "@designliquido/delegua-interface-grafica": "^0.0.1",
         "@designliquido/delegua-json": "^0.2.1",
         "@designliquido/delegua-matematica": "^0.3.0",
         "@designliquido/delegua-tempo": "^1.0.1",
+        "@designliquido/delegua-yaml": "^0.0.0",
         "@designliquido/delprops": "^0.0.1",
         "@designliquido/foles": "^0.15.1",
         "@designliquido/lincones-js": "^0.2.1",
         "@designliquido/lmht-js": "^0.6.2",
-        "@designliquido/mapler": "^0.6.19",
-        "@designliquido/portugol-studio": "^0.10.1",
-        "@designliquido/potigol": "^0.9.0",
-        "@designliquido/visualg": "^0.8.19",
+        "@designliquido/mapler": "^0.6.20",
+        "@designliquido/portugol-studio": "^0.10.2",
+        "@designliquido/potigol": "^0.9.1",
+        "@designliquido/visualg": "^0.8.20",
         "@xterm/addon-fit": "^0.10.0",
         "@xterm/xterm": "5.5.0",
         "lodash": "^4.17.21",

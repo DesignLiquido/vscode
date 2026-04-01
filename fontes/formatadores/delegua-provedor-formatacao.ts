@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
 
 import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
-import { FormatadorDelegua } from '@designliquido/delegua/formatadores';
+import { FormatadorDelegua, DelimitadorTextoFormatacao, OpcoesFormatadorDelegua } from '@designliquido/delegua/formatadores';
 import { Lexador } from '@designliquido/delegua/lexador';
 import { EstilizadorDelegua } from '@designliquido/delegua';
 import { RegraFortalecerTipos, RegraConvencaoNomenclatura } from '@designliquido/delegua/estilizador/regras';
+import { OpcoesFormatacaoEstilizadorInterface } from '@designliquido/delegua/interfaces';
 
 import { formatarDiagnosticosAvaliacaoSintatica } from '../avaliacao-sintatica';
 
@@ -18,10 +19,12 @@ export class DeleguaProvedorFormatacao implements vscode.DocumentFormattingEditP
         // Ler configurações do estilizador
         const configuracao = vscode.workspace.getConfiguration('delegua.estilizador');
         const estilizadorHabilitado = configuracao.get<boolean>('habilitado', true);
+        const delimitadorTexto = configuracao.get<DelimitadorTextoFormatacao>('delimitadorTexto', 'preservar');
 
         // Definição de final da linha.
         const caracterFimDaLinha = documento.eol === vscode.EndOfLine.CRLF ? '\r\n' : '\n';
-        const formatador = new FormatadorDelegua(caracterFimDaLinha);
+        const opcoesFormatador: OpcoesFormatadorDelegua = { delimitadorTexto };
+        const formatador = new FormatadorDelegua(caracterFimDaLinha, 4, opcoesFormatador);
 
         const resultadoLexador = lexador.mapear(documento.getText().split('\n'), -1);
         const resultadoAvaliacaoSintatica = await avaliadorSintatico.analisar(resultadoLexador, -1);
@@ -41,34 +44,37 @@ export class DeleguaProvedorFormatacao implements vscode.DocumentFormattingEditP
 
         let declaracoesProcessadas = resultadoAvaliacaoSintatica.declaracoes;
 
-        // Aplicar estilizador se habilitado
-        if (estilizadorHabilitado) {
-            const estilizador = new EstilizadorDelegua();
-
-            // Adicionar regra de fortalecimento de tipos se habilitada
-            const fortalecerTiposHabilitado = configuracao.get<boolean>('fortalecerTipos.habilitado', false);
-            if (fortalecerTiposHabilitado) {
-                estilizador.adicionarRegra(new RegraFortalecerTipos());
-            }
-
-            // Adicionar regra de convenção de nomenclatura se habilitada
-            const convencaoNomenclaturaHabilitada = configuracao.get<boolean>('convencaoNomenclatura.habilitado', false);
-            if (convencaoNomenclaturaHabilitada) {
-                const opcoesConvencao = {
-                    variavel: configuracao.get<'caixaCamelo' | 'caixa_cobra' | 'CaixaPascal'>('convencaoNomenclatura.variaveis', 'caixaCamelo'),
-                    constante: configuracao.get<'CAIXA_ALTA' | 'caixaCamelo'>('convencaoNomenclatura.constantes', 'CAIXA_ALTA'),
-                    funcao: configuracao.get<'caixaCamelo' | 'caixa_cobra' | 'CaixaPascal'>('convencaoNomenclatura.funcoes', 'caixaCamelo')
-                };
-
-                estilizador.adicionarRegra(new RegraConvencaoNomenclatura(opcoesConvencao));
-            }
-
-            declaracoesProcessadas = estilizador.estilizar(declaracoesProcessadas);
-        }
-
         let codigoFormatado: string = documento.getText();
         try {
-            codigoFormatado = formatador.formatar(declaracoesProcessadas);
+            if (estilizadorHabilitado) {
+                const estilizador = new EstilizadorDelegua();
+
+                // Adicionar regra de fortalecimento de tipos se habilitada
+                const fortalecerTiposHabilitado = configuracao.get<boolean>('fortalecerTipos.habilitado', false);
+                if (fortalecerTiposHabilitado) {
+                    estilizador.adicionarRegra(new RegraFortalecerTipos());
+                }
+
+                // Adicionar regra de convenção de nomenclatura se habilitada
+                const convencaoNomenclaturaHabilitada = configuracao.get<boolean>('convencaoNomenclatura.habilitado', false);
+                if (convencaoNomenclaturaHabilitada) {
+                    const opcoesConvencao = {
+                        variavel: configuracao.get<'caixaCamelo' | 'caixa_cobra' | 'CaixaPascal'>('convencaoNomenclatura.variaveis', 'caixaCamelo'),
+                        constante: configuracao.get<'CAIXA_ALTA' | 'caixaCamelo'>('convencaoNomenclatura.constantes', 'CAIXA_ALTA'),
+                        funcao: configuracao.get<'caixaCamelo' | 'caixa_cobra' | 'CaixaPascal'>('convencaoNomenclatura.funcoes', 'caixaCamelo')
+                    };
+
+                    estilizador.adicionarRegra(new RegraConvencaoNomenclatura(opcoesConvencao));
+                }
+
+                const opcoesEstilizador: OpcoesFormatacaoEstilizadorInterface = {
+                    delimitadorTexto,
+                    quebraLinha: caracterFimDaLinha,
+                };
+                codigoFormatado = estilizador.estilizarEFormatar(declaracoesProcessadas, opcoesEstilizador);
+            } else {
+                codigoFormatado = formatador.formatar(declaracoesProcessadas);
+            }
         } catch (erro) {
             console.error(erro);
         }
