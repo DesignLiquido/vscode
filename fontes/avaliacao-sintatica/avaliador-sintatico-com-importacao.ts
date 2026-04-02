@@ -470,6 +470,7 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
                 ) as Classe[];
 
                 for (const classeDefinicao of classesDefinicao) {
+                    (classeDefinicao as any).caminhoArquivoDefinicao = caminho;
                     this.tiposDefinidosEmCodigo[classeDefinicao.simbolo.lexema] = classeDefinicao;
                 }
             } catch (erro: any) {

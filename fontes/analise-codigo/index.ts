@@ -67,6 +67,7 @@ export async function executarAnalises(
     let resultadoLexador: RetornoLexador<SimboloInterface>;
     let resultadoAvaliadorSintatico: RetornoAvaliadorSintatico<Declaracao>;
     let resultadoAnalisadorSemantico: RetornoAnalisadorSemantico | undefined = undefined;
+    let declaracoesPreCarregadas: Declaracao[] = [];
 
     switch (extensaoArquivo) {
         case "birl":
@@ -93,6 +94,7 @@ export async function executarAnalises(
             analisadorSemanticoDelegua.definirClassesExternasConhecidas?.(
                 Object.keys(avaliadorComImportacao.tiposDefinidosEmCodigo)
             );
+            declaracoesPreCarregadas = Object.values(avaliadorComImportacao.tiposDefinidosEmCodigo);
 
             avaliadorSintatico = avaliadorComImportacao;
             analisadorSemantico = analisadorSemanticoDelegua;
@@ -168,7 +170,8 @@ export async function executarAnalises(
     definirResultado(documento.uri.toString(), {
         lexador: resultadoLexador,
         avaliadorSintatico: resultadoAvaliadorSintatico,
-        analisadorSemantico: resultadoAnalisadorSemantico || { diagnosticos: [] }
+        analisadorSemantico: resultadoAnalisadorSemantico || { diagnosticos: [] },
+        declaracoesPreCarregadas
     });
 }
 

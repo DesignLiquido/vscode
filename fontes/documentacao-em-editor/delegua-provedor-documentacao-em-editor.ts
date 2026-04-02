@@ -41,7 +41,10 @@ export class DeleguaProvedorDocumentacaoEmEditor
         const palavra = documento.getText(intervalo);
         const linhaTexto = documento.lineAt(posicao).text;
         const textoAntesPosicao = linhaTexto.substring(0, posicao.character);
-        const todasDeclaracoes = resultadoAnalise?.avaliadorSintatico.declaracoes || [];
+        const todasDeclaracoes = [
+            ...(resultadoAnalise?.avaliadorSintatico.declaracoes || []),
+            ...(resultadoAnalise?.declaracoesPreCarregadas || [])
+        ];
 
         const declaracoesPertinentes = todasDeclaracoes.flatMap(declaracao => {
             if (declaracao instanceof Var) {
@@ -196,6 +199,16 @@ export class DeleguaProvedorDocumentacaoEmEditor
 
         const doc = new vscode.MarkdownString();
         doc.appendCodeblock(assinatura, 'delegua');
+
+        if (declaracaoClasse.documentacao) {
+            const conteudoComentario = declaracaoClasse.documentacao as unknown as ComentarioComoConstruto;
+            const textoDocumentacao = Array.isArray(conteudoComentario.conteudo)
+                ? conteudoComentario.conteudo.join('\n')
+                : conteudoComentario.conteudo;
+
+            doc.appendMarkdown(`\n\n${textoDocumentacao.trim()}`);
+            return new vscode.Hover(doc);
+        }
 
         const regexDocClasse = /\/\*\*([\s\S]*?)\*\/\s*(?:abstrat[ao]\s+)?classe\s+/g;
         let correspondencia: RegExpExecArray | null;

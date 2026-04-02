@@ -5,6 +5,7 @@ export interface ResultadoAnalise {
     lexador: RetornoLexador<any>;
     avaliadorSintatico: RetornoAvaliadorSintatico<any>;
     analisadorSemantico: RetornoAnalisadorSemantico;
+    declaracoesPreCarregadas?: any[];
 }
 
 const cache = new Map<string, ResultadoAnalise>();
