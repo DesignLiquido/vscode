@@ -69,8 +69,22 @@ jest.mock('../../fontes/bibliotecas/dialetos/portugol-studio', () => ({
     utilPortugolStudio: [
         { nome: 'sorteia', documentacao: 'Sorteia um número aleatório.' },
         { nome: 'aguarde', documentacao: 'Pausa a execução do programa.' }
-    ]
-}), { virtual: true });
+    ],
+    primitivasEntradaSaidaPortugolStudio: [
+        { nome: 'escreva', documentacao: 'Escreve na saída.' },
+        { nome: 'leia', documentacao: 'Lê da entrada.' },
+    ],
+    tiposPortugolStudio: [
+        { nome: 'inteiro', documentacao: 'Tipo inteiro.' },
+        { nome: 'real', documentacao: 'Tipo real.' },
+    ],
+    constantesPortugolStudio: [
+        { nome: 'verdadeiro', documentacao: 'Constante verdadeira.' },
+        { nome: 'falso', documentacao: 'Constante falsa.' },
+    ],
+    }),
+    { virtual: true }
+);
 
 describe('completude/provedores-simples', () => {
     let mockDocument: any;
@@ -486,7 +500,7 @@ describe('completude/provedores-simples', () => {
             expect(items.length).toBeGreaterThan(0);
         });
 
-        it('deve incluir funções de todas as 4 bibliotecas', () => {
+        it('deve incluir funções e palavras-chave de todas as coleções', () => {
             const items = provedor.provideCompletionItems(
                 mockDocument,
                 mockPosition,
@@ -494,8 +508,9 @@ describe('completude/provedores-simples', () => {
                 mockContext
             );
 
-            // 2 Calendario + 2 Matematica + 2 Texto + 2 Util = 8
-            expect(items.length).toBe(8);
+            // 2 Calendario + 2 Matematica + 2 Texto + 2 Util + 
+            // 2 Entrada/Saída + 2 Tipos + 2 Constantes = 14
+            expect(items.length).toBe(14);
         });
 
         it('deve criar itens com tipo Function', () => {
@@ -567,6 +582,65 @@ describe('completude/provedores-simples', () => {
 
             expect(itemSorteia).toBeDefined();
             expect(itemAguarde).toBeDefined();
+        });
+
+        it('deve incluir comandos de entrada e saída', () => {
+            const items = provedor.provideCompletionItems(
+                mockDocument,
+                mockPosition,
+                mockToken,
+                mockContext
+            );
+
+            const itemEscreva = items.find(
+                (item: any) => item.label === 'escreva'
+            );
+            const itemLeia = items.find((item: any) => item.label === 'leia');
+
+            expect(itemEscreva).toBeDefined();
+            expect(itemLeia).toBeDefined();
+            expect(itemEscreva.kind).toBe(vscode.CompletionItemKind.Function);
+            expect(itemLeia.kind).toBe(vscode.CompletionItemKind.Function);
+        });
+
+        it('deve incluir tipos', () => {
+            const items = provedor.provideCompletionItems(
+                mockDocument,
+                mockPosition,
+                mockToken,
+                mockContext
+            );
+
+            const itemInteiro = items.find(
+                (item: any) => item.label === 'inteiro'
+            );
+            const itemReal = items.find((item: any) => item.label === 'real');
+
+            expect(itemInteiro).toBeDefined();
+            expect(itemReal).toBeDefined();
+            expect(itemInteiro.kind).toBe(vscode.CompletionItemKind.Keyword);
+            expect(itemReal.kind).toBe(vscode.CompletionItemKind.Keyword);
+        });
+
+        it('deve incluir constantes', () => {
+            const items = provedor.provideCompletionItems(
+                mockDocument,
+                mockPosition,
+                mockToken,
+                mockContext
+            );
+
+            const itemVerdadeiro = items.find(
+                (item: any) => item.label === 'verdadeiro'
+            );
+            const itemFalso = items.find((item: any) => item.label === 'falso');
+
+            expect(itemVerdadeiro).toBeDefined();
+            expect(itemFalso).toBeDefined();
+            expect(itemVerdadeiro.kind).toBe(
+                vscode.CompletionItemKind.Constant
+            );
+            expect(itemFalso.kind).toBe(vscode.CompletionItemKind.Constant);
         });
 
         it('deve adicionar documentação às funções', () => {

@@ -14,6 +14,7 @@ import {
     DelpropsProvedorDocumentacaoEmEditor,
     FolesProvedorDocumentacaoEmEditor,
     LinConEsProvedorDocumentacaoEmEditor,
+    PortugolStudioProvedorDocumentacaoEmEditor
     PituguesProvedorDocumentacaoEmEditor
 } from './documentacao-em-editor';
 import {
@@ -479,6 +480,16 @@ export function activate(context: vscode.ExtensionContext) {
                 { scheme: 'untitled', language: 'visualg' }
             ],
             new VisuAlgProvedorDocumentacaoEmEditor()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerHoverProvider(
+            [
+                { scheme: 'file', language: 'portugolstudio' },
+                { scheme: 'untitled', language: 'portugolstudio' }
+            ],
+            new PortugolStudioProvedorDocumentacaoEmEditor()
         )
     );
 

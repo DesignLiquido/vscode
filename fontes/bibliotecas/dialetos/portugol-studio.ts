@@ -1,3 +1,86 @@
+export const primitivasEntradaSaidaPortugolStudio: {
+    nome: string;
+    descricao?: string;
+    documentacao: string;
+    exemploCodigo?: string;
+}[] = [
+    {
+        nome: 'escreva',
+        descricao: 'Escreve valores na saída padrão.',
+        documentacao:
+            '# `escreva()`\n Escreve no dispositivo de saída padrão os valores informados.',
+        exemploCodigo: '`escreva("Olá mundo")`',
+    },
+    {
+        nome: 'leia',
+        descricao: 'Lê valores de entrada e atribui em variáveis.',
+        documentacao:
+            '# `leia()`\n Lê valores digitados e atribui nas variáveis informadas.',
+        exemploCodigo: '`escreva("Digite sua idade:")`\n`leia(minhaIdade)`',
+    },
+];
+
+export const tiposPortugolStudio: {
+    nome: string;
+    descricao?: string;
+    documentacao: string;
+    exemploCodigo?: string;
+}[] = [
+    {
+        nome: 'inteiro',
+        descricao: 'Tipo numérico sem casas decimais.',
+        documentacao: '# `inteiro`\n Tipo numérico sem casas decimais.',
+        exemploCodigo: '`inteiro idade = 18`',
+    },
+    {
+        nome: 'real',
+        descricao: 'Tipo numérico com casas decimais.',
+        documentacao: '# `real`\n Tipo numérico com casas decimais.',
+        exemploCodigo: '`real media = 7.5`',
+    },
+    {
+        nome: 'cadeia',
+        descricao: 'Tipo textual para sequências de caracteres.',
+        documentacao: '# `cadeia`\n Tipo para armazenar textos.',
+        exemploCodigo: '`cadeia nome = "Maria"`',
+    },
+    {
+        nome: 'caracter',
+        descricao: 'Tipo para armazenar um caractere.',
+        documentacao: '# `caracter`\n Tipo para armazenar um caractere.',
+        exemploCodigo: "`caracter inicial = 'M'`",
+    },
+    {
+        nome: 'logico',
+        descricao: 'Tipo lógico booleano.',
+        documentacao:
+            '# `logico`\n Tipo lógico com valores `verdadeiro` e `falso`.',
+        exemploCodigo: '`logico ativo = verdadeiro`',
+    },
+];
+
+export const constantesPortugolStudio: {
+    nome: string;
+    descricao?: string;
+    documentacao: string;
+    exemploCodigo?: string;
+}[] = [
+    {
+        nome: 'verdadeiro',
+        descricao: 'Constante lógica para valor verdadeiro.',
+        documentacao:
+            '# `verdadeiro`\n Constante lógica que representa valor verdadeiro.',
+        exemploCodigo: '`logico condicao = verdadeiro`',
+    },
+    {
+        nome: 'falso',
+        descricao: 'Constante lógica para valor falso.',
+        documentacao:
+            '# `falso`\n Constante lógica que representa valor falso.',
+        exemploCodigo: '`logico condicao = falso`',
+    },
+];
+
 export const calendarioPortugolStudio: {
     nome: string;
     descricao?: string;
