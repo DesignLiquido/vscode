@@ -1,5 +1,15 @@
 # Histórico de Modificações
 
+## 0.25.5
+
+- Núcleo de Delégua atualizado para a versão 1.15.6:
+  - Expansão do analisador semântico para trabalhar com definições externas;
+  - Expansão da análise semântica para funções e blocos `se`;
+  - Correção de falso positivo em atribuições em Delégua;
+  - Correção de cenário com reutilização de variável de controle em laços `para`;
+  - Correção para avaliação de declarações dentro do corpo de `enquanto`;
+  - Expansão do formatador Delégua para funcionalidades recentes (incluindo extensões) e novos casos vindos do Beecrowd.
+
 ## 0.25.4
 
 - Núcleo de Delégua atualizado para a versão 1.15.5:
