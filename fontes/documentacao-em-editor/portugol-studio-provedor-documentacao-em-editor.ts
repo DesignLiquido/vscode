@@ -2,8 +2,11 @@ import * as vscode from 'vscode';
 
 import {
     calendarioPortugolStudio,
+    constantesPortugolStudio,
     matematicaPortugolStudio,
+    primitivasEntradaSaidaPortugolStudio,
     textoPortugolStudio,
+    tiposPortugolStudio,
     utilPortugolStudio,
 } from '../bibliotecas/dialetos/portugol-studio';
 
@@ -80,6 +83,57 @@ export class PortugolStudioProvedorDocumentacaoEmEditor
             );
             if (funcaoUtil.exemploCodigo) {
                 documentacaoElemento.appendCodeblock(funcaoUtil.exemploCodigo);
+            }
+
+            return new vscode.Hover(documentacaoElemento);
+        }
+
+        const comandoEntradaSaida = primitivasEntradaSaidaPortugolStudio.find(
+            (comando) => comando.nome === palavra
+        );
+
+        if (comandoEntradaSaida) {
+            const documentacaoElemento = new vscode.MarkdownString(
+                comandoEntradaSaida.documentacao
+            );
+            if (comandoEntradaSaida.exemploCodigo) {
+                documentacaoElemento.appendCodeblock(
+                    comandoEntradaSaida.exemploCodigo
+                );
+            }
+
+            return new vscode.Hover(documentacaoElemento);
+        }
+
+        const tipoPortugolStudio = tiposPortugolStudio.find(
+            (tipo) => tipo.nome === palavra
+        );
+
+        if (tipoPortugolStudio) {
+            const documentacaoElemento = new vscode.MarkdownString(
+                tipoPortugolStudio.documentacao
+            );
+            if (tipoPortugolStudio.exemploCodigo) {
+                documentacaoElemento.appendCodeblock(
+                    tipoPortugolStudio.exemploCodigo
+                );
+            }
+
+            return new vscode.Hover(documentacaoElemento);
+        }
+
+        const constantePortugolStudio = constantesPortugolStudio.find(
+            (constante) => constante.nome === palavra
+        );
+
+        if (constantePortugolStudio) {
+            const documentacaoElemento = new vscode.MarkdownString(
+                constantePortugolStudio.documentacao
+            );
+            if (constantePortugolStudio.exemploCodigo) {
+                documentacaoElemento.appendCodeblock(
+                    constantePortugolStudio.exemploCodigo
+                );
             }
 
             return new vscode.Hover(documentacaoElemento);
