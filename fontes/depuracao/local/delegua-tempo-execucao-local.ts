@@ -65,7 +65,6 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
     private _dialetoSelecionado: 'delegua' | 'pitugues' | 'birl' | 'mapler' | 'portugol-studio' | 'potigol' | 'visualg';
     private _arquivoInicial: string = '';
     private _conteudoArquivo: string[];
-    private _hashArquivoInicial = -1;
     private _pontosParada: PontoParada[] = [];
     
     interpretador: InterpretadorComDepuracaoInterface;
@@ -243,14 +242,12 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
         if (['delegua', 'pitugues'].includes(this._dialetoSelecionado)) {
             // Use document URI for more reliable path resolution
             retornoImportador = await this.importadorExtensao.importar(documento.uri.fsPath, -1);
-            this._hashArquivoInicial = retornoImportador.hashArquivo;
             this._conteudoArquivo = retornoImportador.conteudoArquivo;
         } else {
             retornoImportador = this.importadorExtensao.importarViaFuncaoConteudoDocumento(
                 this._documento.getText,
                 this._documento.fileName
             );
-            this._hashArquivoInicial = retornoImportador.hashArquivo;
             this._conteudoArquivo = retornoImportador.conteudoArquivo;
         }
 

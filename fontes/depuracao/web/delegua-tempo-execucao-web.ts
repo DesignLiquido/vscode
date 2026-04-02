@@ -62,12 +62,10 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
     interpretador: InterpretadorComDepuracaoInterface;
 
     private _documento: vscode.TextDocument;
-    private _dialetoSelecionado: 'delegua' | 'pitugues' | 'birl' | 'mapler' | 'portugol-studio' | 'potigol' | 'visualg';
     private _arquivoInicial: string = '';
     private _conteudoArquivo: string[];
     private _hashArquivoInicial = -1;
     private _pontosParada: PontoParada[] = [];
-    private _diretorioBase: string = '';
 
     // Armazena linhas de pontos de parada temporariamente até termos o hash do arquivo
     private _linhasPontosParada: number[] = [];
@@ -107,7 +105,6 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
         
         switch (extensao.toLowerCase()) {
             case "alg":
-                this._dialetoSelecionado = 'visualg';
                 this.lexador = new LexadorVisuAlg();
                 this.avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
@@ -120,7 +117,6 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
                 );
                 break;
             case "birl":
-                this._dialetoSelecionado = 'birl';
                 this.lexador = new LexadorBirl();
                 this.avaliadorSintatico = new AvaliadorSintaticoBirl();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
@@ -133,7 +129,6 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
                 break;
             case "pitu":
             case "pitugues":
-                this._dialetoSelecionado = 'pitugues';
                 this.lexador = new LexadorPitugues();
                 this.avaliadorSintatico = new AvaliadorSintaticoPitugues();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
@@ -146,7 +141,6 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
                 
                 break;
             case "mapler":
-                this._dialetoSelecionado = 'mapler';
                 this.lexador = new LexadorMapler();
                 this.avaliadorSintatico = new AvaliadorSintaticoMapler();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
@@ -158,7 +152,6 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
                 );
                 break;
             case "por":
-                this._dialetoSelecionado = 'portugol-studio';
                 this.lexador = new LexadorPortugolStudio();
                 this.avaliadorSintatico = new AvaliadorSintaticoPortugolStudio();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
@@ -172,7 +165,6 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
                 break;
             case "poti":
             case "potigol":
-                this._dialetoSelecionado = 'potigol';
                 this.lexador = new LexadorPotigol();
                 this.avaliadorSintatico = new AvaliadorSintaticoPotigol();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
@@ -184,7 +176,6 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
                 );
                 break;
             default:
-                this._dialetoSelecionado = 'delegua';
                 this.lexador = new Lexador();
                 this.avaliadorSintatico = new AvaliadorSintatico();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
@@ -237,7 +228,6 @@ export class DeleguaTempoExecucaoWeb extends EventEmitter implements TempoExecuc
             diretorioBase = diretorioBase.slice(1);
         }
         
-        this._diretorioBase = diretorioBase;
         this.selecionarDialetoPorExtensao(partesNomeArquivo.pop() || '.delegua');
 
         // Inicialização do interpretador pós escolha de dialeto.

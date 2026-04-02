@@ -1,0 +1,45 @@
+/**
+ * Definição gerada automaticamente — não edite manualmente.
+ * Gerado por: yarn gerar-definicoes
+ * Fonte: fontes/ilc/manifesto-definicoes.json
+ */
+
+/**
+ * Classe base para todos os modelos Delégua.
+ * Fornece operações de ORM para persistência e consultas.
+ * Não deve ser instanciada diretamente — use via herança: `classe MeuModelo herda Modelo { ...
+ * }`
+ */
+@definicao
+classe abstrata Modelo {
+    id: numero
+
+    /**
+     * Persiste o registro no banco de dados como uma nova inserção.
+     */
+    salvar() {}
+    /**
+     * Atualiza os campos do registro já existente no banco de dados.
+     */
+    modificar() {}
+    /**
+     * Exclui o registro do banco de dados.
+     */
+    remover() {}
+    /**
+     * Insere o registro se ainda não existe, ou atualiza se já existir (upsert).
+     */
+    salvarOuAtualizar() {}
+    /**
+     * Retorna todos os registros da tabela correspondente.
+     */
+    buscarTodos() {}
+    /**
+     * Retorna o registro correspondente ao identificador informado, ou nulo se não encontrado.
+     */
+    buscarPorId(id: numero) {}
+    /**
+     * Retorna um construtor de consultas para filtros e ordenações avançadas.
+     */
+    consulta() {}
+}

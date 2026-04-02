@@ -88,8 +88,14 @@ export async function executarAnalises(
             );
             avaliadorComImportacao.diagnosticos = diagnosticos;
             await avaliadorComImportacao.preCarregarDefinicoes(await descobrirDefinicoes());
+
+            const analisadorSemanticoDelegua = new AnalisadorSemantico();
+            analisadorSemanticoDelegua.definirClassesExternasConhecidas?.(
+                Object.keys(avaliadorComImportacao.tiposDefinidosEmCodigo)
+            );
+
             avaliadorSintatico = avaliadorComImportacao;
-            analisadorSemantico = new AnalisadorSemantico();
+            analisadorSemantico = analisadorSemanticoDelegua;
             break;
 
         case "pitu":

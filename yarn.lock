@@ -469,10 +469,18 @@
     "@designliquido/delegua" "^1.15.4"
     yaml "^2.6.1"
 
-"@designliquido/delegua@^1.15.4", "@designliquido/delegua@^1.15.5":
+"@designliquido/delegua@^1.15.4":
   version "1.15.5"
   resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-1.15.5.tgz#8b4e2795b15d801744a348f8dcbe3bce7fd3032a"
   integrity sha512-R2DX/+Xokf/0YYQzacHatAjqhnv773bxHc+O/7BFNMO+rZNLoge+JxOa4rAhclpRZpc6KUYr3fcDd/ZMzKrxFw==
+  dependencies:
+    antlr4ts "^0.5.0-alpha.4"
+    browser-process-hrtime "^1.0.0"
+    esprima "^4.0.1"
+    lodash.clonedeep "^4.5.0"
+
+"@designliquido/delegua@file:../delegua/dist":
+  version "1.15.5"
   dependencies:
     antlr4ts "^0.5.0-alpha.4"
     browser-process-hrtime "^1.0.0"

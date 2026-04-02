@@ -1,7 +1,50 @@
 import * as vscode from 'vscode';
 
-interface ManifestoDeleguaPacote {
-    definicoes: string;
+import { ManifestoDeleguaPacoteInterface } from '../interfaces';
+
+/**
+ * Ponto de entrada para o mecanismo de descoberta de definições. 
+ * Varre o projeto aberto e os pacotes instalados em busca de arquivos `.delegua` que possam conter definições 
+ * de classes, funções, etc. para o IntelliSense.
+ * @returns {string[]} Uma lista de caminhos absolutos para arquivos `.delegua` encontrados.
+ */
+export async function descobrirDefinicoes(): Promise<string[]> {
+    const promises = await Promise.all([
+        descobrirDefinicoesEmProjetoAberto(),
+        descobrirDefinicoesEmPacotes()
+    ]);
+
+    const definicoes = promises.flat();
+    return definicoes;
+}
+
+async function descobrirDefinicoesEmProjetoAberto(): Promise<string[]> {
+    if (!vscode.workspace.workspaceFolders?.length) {
+        return [];
+    }
+
+    const raizWorkspace = vscode.workspace.workspaceFolders[0].uri;
+    const arquivos: string[] = [];
+
+    // Ler o diretório `definicoes`
+    const caminhoDefinicoes = vscode.Uri.joinPath(raizWorkspace, 'definicoes');
+    let entradas: [string, vscode.FileType][];
+
+    try {
+        entradas = await vscode.workspace.fs.readDirectory(caminhoDefinicoes);
+    } catch (error) {
+        // Pasta definicoes não existe — nada a descobrir.
+        return [];
+    }
+
+    for (const [nomeArquivo, tipo] of entradas) {
+        if (tipo === vscode.FileType.File && nomeArquivo.endsWith('.delegua')) {
+            const caminhoCompleto = vscode.Uri.joinPath(caminhoDefinicoes, nomeArquivo);
+            arquivos.push(caminhoCompleto.fsPath);
+        }
+    }
+
+    return arquivos;
 }
 
 /**
@@ -14,7 +57,7 @@ interface ManifestoDeleguaPacote {
  * superclasses (`Modelo`, `Migracao`, etc.) para o IntelliSense sem que o
  * desenvolvedor precise importá-las explicitamente no código.
  */
-export async function descobrirDefinicoes(): Promise<string[]> {
+async function descobrirDefinicoesEmPacotes(): Promise<string[]> {
     if (!vscode.workspace.workspaceFolders?.length) {
         return [];
     }
@@ -26,7 +69,7 @@ export async function descobrirDefinicoes(): Promise<string[]> {
     let entradas: [string, vscode.FileType][];
     try {
         entradas = await vscode.workspace.fs.readDirectory(caminhoOrganizacao);
-    } catch {
+    } catch (error) {
         // Pasta node_modules/@designliquido não existe — nada a descobrir.
         return [];
     }
@@ -42,7 +85,7 @@ export async function descobrirDefinicoes(): Promise<string[]> {
             continue;
         }
 
-        const campoDelegua: ManifestoDeleguaPacote = manifestoPacote['delegua'];
+        const campoDelegua: ManifestoDeleguaPacoteInterface = manifestoPacote['delegua'];
         if (!campoDelegua?.definicoes) {
             continue;
         }
@@ -56,7 +99,7 @@ export async function descobrirDefinicoes(): Promise<string[]> {
         let arquivos: [string, vscode.FileType][];
         try {
             arquivos = await vscode.workspace.fs.readDirectory(caminhoDefinicoes);
-        } catch {
+        } catch (error) {
             continue;
         }
 

@@ -19,6 +19,19 @@
 			"preLaunchTask": "npm: watch"
         },
         {
+            "name": "Depurar Extensão no VSCode (delegua-entidades)",
+            "type": "extensionHost",
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "D:\\Delegua\\delegua-entidades"
+            ],
+			"outFiles": [
+			 	"${workspaceFolder}/dist/**/*.js"
+			],
+			"preLaunchTask": "npm: watch"
+        },
+        {
           "type": "chrome",
           "request": "launch",
           "name": "Testar Extensão no Navegador",

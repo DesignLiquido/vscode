@@ -20,7 +20,6 @@ import { DeleguaSessaoDepuracaoBase } from '../delegua-sessao-depuracao-base';
  */
 export class DeleguaSessaoDepuracaoWeb extends DeleguaSessaoDepuracaoBase {
     private _launchArgs: any;
-    private _launchResponse: DebugProtocol.LaunchResponse;
 
     constructor(
         provedorVisaoEntradaSaida: ProvedorVisaoEntradaSaida,
@@ -189,7 +188,6 @@ export class DeleguaSessaoDepuracaoWeb extends DeleguaSessaoDepuracaoBase {
             programPath: documento.fileName,
             stopOnEntry: !!args.stopOnEntry
         };
-        this._launchResponse = response;
         
         this.sendResponse(response);
     }

@@ -1,11 +1,13 @@
 import * as vscode from 'vscode';
 
 import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
-import { FormatadorDelegua, DelimitadorTextoFormatacao, OpcoesFormatadorDelegua } from '@designliquido/delegua/formatadores';
+import { FormatadorDelegua } from '@designliquido/delegua/formatadores';
 import { Lexador } from '@designliquido/delegua/lexador';
 import { EstilizadorDelegua } from '@designliquido/delegua';
 import { RegraFortalecerTipos, RegraConvencaoNomenclatura } from '@designliquido/delegua/estilizador/regras';
 import { OpcoesFormatacaoEstilizadorInterface } from '@designliquido/delegua/interfaces';
+import { OpcoesFormatadorDeleguaInterface } from '@designliquido/delegua/interfaces/formatador';
+import { DelimitadorTextoFormatacao } from '@designliquido/delegua/tipos';
 
 import { formatarDiagnosticosAvaliacaoSintatica } from '../avaliacao-sintatica';
 
@@ -23,7 +25,7 @@ export class DeleguaProvedorFormatacao implements vscode.DocumentFormattingEditP
 
         // Definição de final da linha.
         const caracterFimDaLinha = documento.eol === vscode.EndOfLine.CRLF ? '\r\n' : '\n';
-        const opcoesFormatador: OpcoesFormatadorDelegua = { delimitadorTexto };
+        const opcoesFormatador: OpcoesFormatadorDeleguaInterface = { delimitadorTexto };
         const formatador = new FormatadorDelegua(caracterFimDaLinha, 4, opcoesFormatador);
 
         const resultadoLexador = lexador.mapear(documento.getText().split('\n'), -1);
