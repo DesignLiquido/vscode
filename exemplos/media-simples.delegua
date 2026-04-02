@@ -13,3 +13,4 @@ senao se(media>=5 e media <7){
 senao{
     escreva("sua média foi "+media+ " voce esta reprovado")
 }
+

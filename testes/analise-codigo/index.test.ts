@@ -18,7 +18,22 @@ jest.mock('vscode', () => ({
     Range: jest.fn((startLine: number, startChar: number, endLine: number, endChar: number) => ({
         start: { line: startLine, character: startChar },
         end: { line: endLine, character: endChar }
-    }))
+    })),
+    Uri: {
+        file: jest.fn((path: string) => ({ fsPath: path })),
+        joinPath: jest.fn((...args: any[]) => ({ fsPath: args.map((a: any) => a.fsPath || a).join('/') }))
+    },
+    FileType: {
+        File: 1,
+        Directory: 2
+    },
+    workspace: {
+        workspaceFolders: [],
+        fs: {
+            readDirectory: jest.fn().mockResolvedValue([]),
+            readFile: jest.fn().mockResolvedValue(Buffer.from('{}'))
+        }
+    }
 }), { virtual: true });
 
 // Mock dos módulos de análise
@@ -203,7 +218,8 @@ jest.mock('../../fontes/avaliacao-sintatica/avaliador-sintatico-com-importacao',
         analisar: jest.fn().mockResolvedValue({
             declaracoes: [],
             erros: []
-        })
+        }),
+        preCarregarDefinicoes: jest.fn().mockResolvedValue(undefined)
     }))
 }), { virtual: true });
 

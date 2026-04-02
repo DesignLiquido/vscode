@@ -1,5 +1,42 @@
 # Histórico de Modificações
 
+## 0.25.4
+
+- Núcleo de Delégua atualizado para a versão 1.15.5:
+  - Novo parâmetro de formatação `delegua.estilizador.delimitadorTexto`: permite escolher entre aspas simples, aspas duplas ou preservar o delimitador original de cada literal de texto;
+  - Correção de _bug_ em que comentários de bloco eram removidos durante a formatação de código;
+  - Reorganização de interfaces do Estilizador em submódulo próprio.
+- Novo parâmetro de configuração `delegua.estilizador.delimitadorTexto` exposto na extensão.
+- Quando o Estilizador está habilitado, a formatação agora ocorre em etapa única via `estilizarEFormatar`, respeitando o delimitador configurado.
+
+## 0.25.3
+
+- Suporte a arquivos de configuração de projetos Delégua (`.delprops`):
+  - Colorização de sintaxe;
+  - Validação de estrutura;
+  - Completude de propriedades;
+  - Documentação em editor (_hover_) para propriedades.
+- Pituguês:
+  - Novo provedor de completude com sugestões de funções nativas, primitivas e _snippets_;
+  - Documentação em editor (_hover_) para funções nativas, métodos de primitivas, variáveis tipadas, funções e classes documentadas.
+- Remoção do tema de ícones próprio da Design Líquido.
+- Atualização de FolEs, LinConEs, LMHT e pacotes periódicos.
+
+## 0.25.2
+
+- Núcleo de Delégua atualizado para a versão 1.15.3:
+  - Correções de _bugs_ no Pituguês reportados pela Camila Maia;
+  - Finalização do dialeto Prisma;
+  - Reformulação dos delimitadores de símbolos de tabulação e quebra de linha;
+  - Exposição de `executarChamavel`, permitindo executar funções vindas de gatilhos de eventos;
+  - Palavra reservada `em` passa a funcionar como operador equivalente a `contém` em comparações com textos;
+  - Constantes de mínimo e máximo para tipos numéricos;
+  - Variável inicializada com `nulo`, quando reatribuída com literal numérico, passa a ser inteira;
+  - Correção de _bug_ em atribuição composta que gerava chave inconsistente em dicionários;
+  - Escopo de variáveis e _shadowing_ em Pituguês.
+- Finalização de implementação do dialeto Portugol Studio;
+- Finalização de implementação do dialeto Potigol.
+
 ## 0.25.1
 
 - Núcleo de Delégua atualizado para a versão 1.15.0:

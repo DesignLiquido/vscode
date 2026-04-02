@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 
 import { Classe } from '@designliquido/delegua/declaracoes/classe';
 import { Declaracao } from '@designliquido/delegua/declaracoes';
+
 import { obterResultado } from '../analise-codigo/cache-analise';
 
 export class DeleguaProvedorDefinicao implements vscode.DefinitionProvider {

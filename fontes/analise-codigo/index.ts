@@ -35,6 +35,7 @@ import { formatarDiagnosticosAvaliacaoSintatica } from '../avaliacao-sintatica';
 import { definirResultado } from './cache-analise';
 import { ImportadorExtensao } from '../importador';
 import { AvaliadorSintaticoComImportacao } from '../avaliacao-sintatica/avaliador-sintatico-com-importacao';
+import { descobrirDefinicoes } from '../descobridor-definicoes';
 
 const mapaSeveridadeDiagnosticos = {
     0: vscode.DiagnosticSeverity.Error,
@@ -82,10 +83,19 @@ export async function executarAnalises(
 
         case "delegua":
             lexador = new Lexador();
-            avaliadorSintatico = new AvaliadorSintaticoComImportacao(
+            const avaliadorComImportacao = new AvaliadorSintaticoComImportacao(
                 new ImportadorExtensao(lexador) as any
             );
-            analisadorSemantico = new AnalisadorSemantico();
+            avaliadorComImportacao.diagnosticos = diagnosticos;
+            await avaliadorComImportacao.preCarregarDefinicoes(await descobrirDefinicoes());
+
+            const analisadorSemanticoDelegua = new AnalisadorSemantico();
+            analisadorSemanticoDelegua.definirClassesExternasConhecidas?.(
+                Object.keys(avaliadorComImportacao.tiposDefinidosEmCodigo)
+            );
+
+            avaliadorSintatico = avaliadorComImportacao;
+            analisadorSemantico = analisadorSemanticoDelegua;
             break;
 
         case "pitu":

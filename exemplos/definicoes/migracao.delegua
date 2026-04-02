@@ -1,0 +1,70 @@
+/**
+ * Definição gerada automaticamente — não edite manualmente.
+ * Gerado por: yarn gerar-definicoes
+ * Fonte: fontes/ilc/manifesto-definicoes.json
+ */
+
+/**
+ * Classe base para todas as migrações Delégua.
+ * Não deve ser instanciada diretamente — use via herança: `classe MinhaMigracao herda Migracao { ...
+ * }`
+ */
+@definicao
+classe abstrata Migracao {
+    /**
+     * Retorna a versão (timestamp) desta migração.
+     */
+    versao(): texto {}
+    /**
+     * Retorna a descrição legível desta migração.
+     */
+    descricao(): texto {}
+    /**
+     * Executa as operações de migração para frente (aplicar).
+     */
+    acima() {}
+    /**
+     * Reverte as operações desta migração.
+     */
+    abaixo() {}
+    /**
+     * Registra uma operação de criação de tabela.
+     */
+    criarTabela(nome: texto, colunas: qualquer) {}
+    /**
+     * Registra uma operação de exclusão de tabela.
+     */
+    excluirTabela(nome: texto) {}
+    /**
+     * Registra a adição de uma coluna a uma tabela existente.
+     */
+    adicionarColuna(tabela: texto, coluna: qualquer) {}
+    /**
+     * Registra a remoção de uma coluna de uma tabela.
+     */
+    removerColuna(tabela: texto, nomeColuna: texto) {}
+    /**
+     * Registra a alteração de uma coluna existente.
+     */
+    alterarColuna(tabela: texto, coluna: qualquer) {}
+    /**
+     * Registra a criação de um índice em uma ou mais colunas.
+     */
+    adicionarIndice(tabela: texto, nomeIndice: texto, colunas: qualquer) {}
+    /**
+     * Registra a remoção de um índice.
+     */
+    removerIndice(tabela: texto, nomeIndice: texto) {}
+    /**
+     * Registra a adição de uma restrição CHECK a uma tabela.
+     */
+    adicionarRestricao(tabela: texto, nomeRestricao: texto, sql: texto) {}
+    /**
+     * Registra a remoção de uma restrição.
+     */
+    removerRestricao(tabela: texto, nomeRestricao: texto) {}
+    /**
+     * Registra a adição de uma coluna computada (gerada por expressão SQL).
+     */
+    adicionarColunaComputada(tabela: texto, nomeColuna: texto, tipoColuna: texto, expressaoColuna: texto) {}
+}

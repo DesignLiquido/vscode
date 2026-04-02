@@ -9,9 +9,6 @@ import {
     StoppedEvent,
     BreakpointEvent,
     OutputEvent,
-    ProgressStartEvent,
-    ProgressUpdateEvent,
-    ProgressEndEvent,
     InvalidatedEvent,
     Thread,
     StackFrame,
@@ -19,12 +16,10 @@ import {
     Source,
     Handles,
     Breakpoint,
-    MemoryEvent,
 } from '@vscode/debugadapter';
 import { DebugProtocol } from '@vscode/debugprotocol';
 import { Subject } from 'await-notify';
 import * as base64 from 'base64-js';
-import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 
 import { inferirTipoVariavel } from '@designliquido/delegua/inferenciador';
 import { palavrasReservadasDelegua } from '@designliquido/delegua/lexador/palavras-reservadas';
@@ -45,15 +40,12 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
     // valor único de _thread_.
     private static THREAD_ID = 1;
     private _tempoExecucao: DeleguaTempoExecucaoRemoto;
-    private _processoExecucaoDelegua: ChildProcessWithoutNullStreams;
     private _deleguaEstaPronto: Promise<any>;
 
     private _cancellationTokens = new Map<number, boolean>();
-    private _cancelledProgressId: string | undefined = undefined;
     private _configuracaoFinalizada = new Subject();
     private _variableHandles = new Handles<string>();
     private _escopoLocal = 0;
-    private _escopoGlobal = 0;
     private _arquivoInicial = '';
 
     /**
@@ -164,7 +156,7 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
         this._deleguaEstaPronto = new Promise<any>((resolve, reject) => {
             InvocacaoDelegua.localizarExecutavel()
                 .then((caminhoExecutavel: string) => { 
-                    this._processoExecucaoDelegua = InvocacaoDelegua.invocarDelegua(caminhoExecutavel, this._arquivoInicial, resolve, this._tempoExecucao);
+                    InvocacaoDelegua.invocarDelegua(caminhoExecutavel, this._arquivoInicial, resolve, this._tempoExecucao);
                 });
             // Comentar acima e descomentar abaixo quando estiver depurando a linguagem.
             // resolve(true);
@@ -218,9 +210,6 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
     protected cancelRequest(response: DebugProtocol.CancelResponse, args: DebugProtocol.CancelArguments) {
 		if (args.requestId) {
 			this._cancellationTokens.set(args.requestId, true);
-		}
-		if (args.progressId) {
-			this._cancelledProgressId = args.progressId;
 		}
 	}
 
@@ -516,8 +505,6 @@ export class DeleguaSessaoDepuracaoRemota extends LoggingDebugSession {
         );
 
         this._escopoLocal = scopes[0].variablesReference;
-        this._escopoGlobal = scopes[1].variablesReference;
-
         //console.log('Local: ' + this._localScope + '. Global: ' + this._globalScope);
 
         response.body = {

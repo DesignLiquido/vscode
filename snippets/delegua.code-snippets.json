@@ -2,8 +2,8 @@
 	"Repetição Para": {
 		"prefix": "para",
 		"body": [
-			"para (var ${1:i} = 0; ${1:i} < 5; ${1:i} = ${1:i} + 1) {",
-			"\tescreva(${1:i});",
+			"para (var ${1:i} = 0; ${1:i} < ${2:5}; ${1:i} = ${1:i} + 1) {",
+			"\t${3:escreva(${1:i})};",
 			"}"
 		],
 		"description": "Laço de repetição \"para\""
@@ -13,9 +13,9 @@
 		"body": [
 			"var i = 0;",
 			"fazer { ",
-			"\tescreva(i);",
+			"\t${1:escreva(i)};",
 			"\ti = i + 1;",
-			"} enquanto(i < 5)"
+			"} enquanto(i < ${2:5})"
 		],
 		"description": "Laço de repetição \"fazer-enquanto\""
 	},
@@ -23,7 +23,7 @@
 		"prefix": "funcao padrao",
 		"body": [
 			"funcao ${1:nome}() {",
-			"\tescreva(\"sim!\");",
+			"\t${2:escreva(\"sim!\")};",
 			"}"
 		],
 		"description": "Declaração de \"funcao-padrao\""
@@ -31,8 +31,8 @@
 	"Declaração de Funcao Anônima": {
 		"prefix": "funcao anonima",
 		"body": [
-			"var ${1:nome} = funcao(${2:variavel}) {",
-			"\tretorna ${2:variavel};",
+			"var ${1:nome} = funcao(${2:Parametro}) {",
+			"\t${3:retorna ${2:Parametro}};",
 			"}"
 		],
 		"description": "Declaração de \"funcao-padrao\""
@@ -41,7 +41,7 @@
 		"prefix": "se",
 		"body": [
 			"se (${1:condicao}) {",
-			"\tescreva('sim');",
+			"\t${2:escreva('sim')};",
 			"}"
 		],
 		"description": "Declaração de \"se\""
@@ -50,9 +50,9 @@
 		"prefix": "se senao",
 		"body": [
 			"se (${1:condicao}) {",
-			"\tescreva('correspondente 1');",
+			"\t${2:escreva('correspondente 1')};",
 			"} senao {",
-			"\tescreva('correspondente 2');",
+			"\t${3:escreva('correspondente 2')};",
 			"}"
 		],
 		"description": "Declaração \"se-senao\""
@@ -61,11 +61,11 @@
 		"prefix": "se senaose senao",
 		"body": [
 			"se (${1:condicao1}) {",
-			"\t$escreva('correspondente 1');",
+			"\t${3:escreva('correspondente 1')};",
 			"} senao se (${2:condicao2}) {",
-			"\tescreva('correspondente 2');",
+			"\t${4:escreva('correspondente 2')};",
 			"} senao {",
-			"\tescreva('sem valor correspondente');",
+			"\t${5:escreva('sem valor correspondente')};",
 			"}"
 		],
 		"description": "Declaração \"se-senaose-senao\""
@@ -75,9 +75,9 @@
 		"body": [
 			"escolha (${1:chave}) {",
 			"\tcaso ${2:valor}:",
-			"\t\tescreva(\"Olá Mundo!\");",
+			"\t\t${3:escreva(\"Olá Mundo!\")};",
 			"\tpadrao:",
-			"\t\tescreva(\"Valor padrão!\");",
+			"\t\t${4:escreva(\"Valor padrão!\")};",
 			"}"
 		],
 		"description": "Declaração \"escolha\""
@@ -86,9 +86,9 @@
 		"prefix": "tente pegue",
 		"body": [
 			"tente {",
-			"\tescreva(\"sucesso\");",
+			"\t${1:escreva(\"sucesso\")};",
 			"} pegue {",
-			"\tescreva(\"pegue\");",
+			"\t${2:escreva(\"pegue\")};",
 			"}"
 		],
 		"description": "Declaração \"tente-pegue\""
@@ -97,13 +97,449 @@
 		"prefix": "tente pegue finalmente",
 		"body": [
 			"tente {",
-			"\tescreva(\"sucesso\");",
+			"\t${1:escreva(\"sucesso\")};",
 			"} pegue {",
-			"\tescreva(\"pegue\");",
+			"\t${2:escreva(\"pegue\")};",
 			"} finalmente {",
-			"\tescreva(\"pronto\");",
+			"\t${3:escreva(\"pronto\")};",
 			"}"
 		],
 		"description": "Declaração \"tente-pegue-finalmente\""
+	},
+	"Abstrato": {
+		"prefix": "abstrato",
+		"body": [
+			"abstrato ${1:nome} {",
+			"\t${2:// corpo}",
+			"}"
+		],
+		"description": "Declaração de classe abstrata"
+	},
+	"Abstrata": {
+		"prefix": "abstrata",
+		"body": [
+			"abstrata ${1:nome} {",
+			"\t${2:// corpo}",
+			"}"
+		],
+		"description": "Declaração de classe abstrata"
+	},
+	"Ajuda": {
+		"prefix": "ajuda",
+		"body": ["ajuda(${1:comando});"],
+		"description": "Chamada de ajuda"
+	},
+	"ParaCada": {
+		"prefix": "paraCada",
+		"body": [
+			"paraCada (${1:vetor}, ${2:funcao}) {",
+			"\t${3:// corpo}",
+			"}"
+
+		],
+		"description": "Laço para cada"
+	},
+	"Caso": {
+		"prefix": "caso",
+		"body": ["caso ${1:valor}:"],
+		"description": "Caso de escolha"
+	},
+	"Classe": {
+		"prefix": "classe",
+		"body": [
+			"classe ${1:nome} {",
+			"\t${2:// corpo}",
+			"}"
+		],
+		"description": "Declaração de classe"
+	},
+	"Como": {
+		"prefix": "como",
+		"body": ["como ${1:tipo}"],
+		"description": "Expressão como"
+	},
+	"Construtor": {
+		"prefix": "construtor",
+		"body": [
+			"construtor(${1:argumentos}) {",
+			"\t${2:// corpo}",
+			"}"
+		],
+		"description": "Declaração de construtor"
+	},
+	"Constante": {
+		"prefix": "constante",
+		"body": ["constante ${1:nome} = ${2:valor};"],
+		"description": "Declaração de constante"
+	},
+	"Const": {
+		"prefix": "const",
+		"body": ["const ${1:nome} = ${2:valor};"],
+		"description": "Declaração de constante"
+	},
+	"Contem": {
+		"prefix": "contem",
+		"body": ["contem ${1:valor}"],
+		"description": "Operador contem"
+	},
+	"Contém": {
+		"prefix": "contém",
+		"body": ["contém ${1:valor}"],
+		"description": "Operador contém"
+	},
+	"Continua": {
+		"prefix": "continua",
+		"body": ["continua;"],
+		"description": "Comando continua"
+	},
+	"Continuar": {
+		"prefix": "continuar",
+		"body": ["continuar;"],
+		"description": "Comando continuar"
+	},
+	"De": {
+		"prefix": "de",
+		"body": ["de"],
+		"description": "Palavra reservada de"
+	},
+	"E": {
+		"prefix": "e",
+		"body": ["e"],
+		"description": "Operador e"
+	},
+	"Em": {
+		"prefix": "em",
+		"body": ["em"],
+		"description": "Palavra reservada em"
+	},
+	"Enquanto": {
+		"prefix": "enquanto",
+		"body": [
+			"enquanto (${1:condicao}) {",
+			"\t${2:// corpo}",
+			"}"
+		],
+		"description": "Laço enquanto"
+	},
+	"Extensao": {
+		"prefix": "extensao",
+		"body": ["extensao ${1:nome} {", "\t${2:// corpo}", "}"],
+		"description": "Declaração de extensão"
+	},
+	"Extensão": {
+		"prefix": "extensão",
+		"body": ["extensão ${1:nome} {", "\t${2:// corpo}", "}"],
+		"description": "Declaração de extensão"
+	},
+	"Estatica": {
+		"prefix": "estatica",
+		"body": ["estatica ${1:membro};"],
+		"description": "Modificador estático"
+	},
+	"Estático": {
+		"prefix": "estático",
+		"body": ["estático ${1:membro};"],
+		"description": "Modificador estático"
+	},
+	"Estatico": {
+		"prefix": "estatico",
+		"body": ["estatico ${1:membro};"],
+		"description": "Modificador estático"
+	},
+	"Escolher": {
+		"prefix": "escolher",
+		"body": [
+			"escolher (${1:chave}) {",
+			"\tcaso ${2:valor}:",
+			"\t\t${3:// corpo}",
+			"\tpadrao:",
+			"\t\t${4:// corpo}",
+			"}"
+		],
+		"description": "Declaração escolher"
+	},
+	"Escreva": {
+		"prefix": "escreva",
+		"body": ["escreva(${1:'texto'});"],
+		"description": "Chamada de escreva"
+	},
+	"Escrever": {
+		"prefix": "escrever",
+		"body": ["escrever(${1:'texto'});"],
+		"description": "Chamada de escrever"
+	},
+	"Falhar": {
+		"prefix": "falhar",
+		"body": ["falhar ${1:erro};"],
+		"description": "Lançar falha"
+	},
+	"Falso": {
+		"prefix": "falso",
+		"body": ["falso"],
+		"description": "Valor booleano falso"
+	},
+	"Faca enquanto": {
+		"prefix": "faca enquanto",
+		"body": [
+			"fazer {",
+			"\t${1:// corpo}",
+			"} enquanto (${2:condicao})"
+		],
+		"description": "Laço faça enquanto"
+	},
+	"Fazer enquanto": {
+		"prefix": "fazer enquanto",
+		"body": [
+			"fazer {",
+			"\t${1:// corpo}",
+			"} enquanto (${2:condicao})"
+		],
+		"description": "Laço fazer enquanto"
+	},
+	"Faça enquanto": {
+		"prefix": "faça enquanto",
+		"body": [
+			"faça {",
+			"\t${1:// corpo}",
+			"} enquanto (${2:condicao})"
+		],
+		"description": "Laço faça enquanto"
+	},
+	"Finalmente": {
+		"prefix": "finalmente",
+		"body": [
+			"finalmente {",
+			"\t${1:// corpo}",
+			"}"
+		],
+		"description": "Bloco finalmente"
+	},
+	"Fixo": {
+		"prefix": "fixo",
+		"body": ["fixo ${1:nome} = ${2:valor};"],
+		"description": "Declaração de fixo"
+	},
+	"Funcao": {
+		"prefix": "funcao",
+		"body": [
+			"funcao ${1:nome}(${2:argumentos}) {",
+			"\t${3:// corpo}",
+			"}"
+		],
+		"description": "Declaração de função"
+	},
+	"Função": {
+		"prefix": "função",
+		"body": [
+			"função ${1:nome}(${2:argumentos}) {",
+			"\t${3:// corpo}",
+			"}"
+		],
+		"description": "Declaração de função"
+	},
+	"Herda": {
+		"prefix": "herda",
+		"body": ["herda ${1:classe}"],
+		"description": "Herança de classe"
+	},
+	"Implementa": {
+		"prefix": "implementa",
+		"body": ["implementa ${1:interface}"],
+		"description": "Implementação de interface"
+	},
+	"Mescla": {
+		"prefix": "mescla",
+		"body": ["mescla ${1:mixina}"],
+		"description": "Declaração de mescla"
+	},
+	"Importar": {
+		"prefix": "importar",
+		"body": ["importar ${1:'modulo'};"],
+		"description": "Importar módulo"
+	},
+	"Importe": {
+		"prefix": "importe",
+		"body": ["importe ${1:'modulo'};"],
+		"description": "Importar módulo"
+	},
+	"Interface": {
+		"prefix": "interface",
+		"body": [
+			"interface ${1:nome} {",
+			"\t${2:// corpo}",
+			"}"
+		],
+		"description": "Declaração de interface"
+	},
+	"Isto": {
+		"prefix": "isto",
+		"body": ["isto"],
+		"description": "Palavra reservada isto"
+	},
+	"Leia": {
+		"prefix": "leia",
+		"body": ["leia(${1:\"Digite algo:\"});"],
+		"description": "Leitura de entrada"
+	},
+	"Ler": {
+		"prefix": "ler",
+		"body": ["ler(${1:\"Digite algo:\"});"],
+		"description": "Leitura de entrada"
+	},
+	"Nao": {
+		"prefix": "nao",
+		"body": ["nao"],
+		"description": "Operador nao"
+	},
+	"NaoAcento": {
+		"prefix": "não",
+		"body": ["não"],
+		"description": "Operador não"
+	},
+	"Operador": {
+		"prefix": "operador",
+		"body": ["operador ${1:simbolo}"],
+		"description": "Declaração de operador"
+	},
+	"Padrao": {
+		"prefix": "padrao",
+		"body": ["padrao:"],
+		"description": "Caso padrão"
+	},
+	"Padrão": {
+		"prefix": "padrão",
+		"body": ["padrão:"],
+		"description": "Caso padrão"
+	},
+	"Pegar": {
+		"prefix": "pegar",
+		"body": ["pegar ${1:valor};"],
+		"description": "Comando pegar"
+	},
+	"Pegue": {
+		"prefix": "pegue",
+		"body": ["pegue ${1:valor};"],
+		"description": "Comando pegue"
+	},
+	"Privado": {
+		"prefix": "privado",
+		"body": ["privado ${1:membro};"],
+		"description": "Modificador privado"
+	},
+	"Protegido": {
+		"prefix": "protegido",
+		"body": ["protegido ${1:membro};"],
+		"description": "Modificador protegido"
+	},
+	"Publico": {
+		"prefix": "publico",
+		"body": ["publico ${1:membro};"],
+		"description": "Modificador público"
+	},
+	"Público": {
+		"prefix": "público",
+		"body": ["público ${1:membro};"],
+		"description": "Modificador público"
+	},
+	"Quebrar": {
+		"prefix": "quebrar",
+		"body": ["quebrar;"],
+		"description": "Comando quebrar"
+	},
+	"Quebre": {
+		"prefix": "quebre",
+		"body": ["quebre;"],
+		"description": "Comando quebre"
+	},
+	"Retorna": {
+		"prefix": "retorna",
+		"body": ["retorna ${1:valor};"],
+		"description": "Comando retorna"
+	},
+	"Retorne": {
+		"prefix": "retorne",
+		"body": ["retorne ${1:valor};"],
+		"description": "Comando retorne"
+	},
+	"Retornar": {
+		"prefix": "retornar",
+		"body": ["retornar ${1:valor};"],
+		"description": "Comando retornar"
+	},
+	"Senao": {
+		"prefix": "senao",
+		"body": [
+			"senao {",
+			"\t${1:// corpo}",
+			"}"
+		],
+		"description": "Bloco senao"
+	},
+	"Senão": {
+		"prefix": "senão",
+		"body": [
+			"senão {",
+			"\t${1:// corpo}",
+			"}"
+		],
+		"description": "Bloco senão"
+	},
+	"Super": {
+		"prefix": "super",
+		"body": ["super.${1:metodo}(${2:args});"],
+		"description": "Chamada super"
+	},
+	"Sustar": {
+		"prefix": "sustar",
+		"body": ["sustar;"],
+		"description": "Comando sustar"
+	},
+	"Tendo": {
+		"prefix": "tendo",
+		"body": [
+			"tendo (${1:condicao}) {",
+			"\t${2:// corpo}",
+			"}"
+		],
+		"description": "Bloco tendo"
+	},
+	"Tentar": {
+		"prefix": "tentar",
+		"body": [
+			"tentar {",
+			"\t${1:// corpo}",
+			"}"
+		],
+		"description": "Bloco tentar"
+	},
+	"Tipo": {
+		"prefix": "tipo",
+		"body": ["tipo ${1:nome};"],
+		"description": "Declaração de tipo"
+	},
+	"Tudo": {
+		"prefix": "tudo",
+		"body": ["tudo"],
+		"description": "Palavra reservada tudo"
+	},
+	"Var": {
+		"prefix": "var",
+		"body": ["var ${1:nome} = ${2:valor};"],
+		"description": "Declaração de variável"
+	},
+	"Variavel": {
+		"prefix": "variavel",
+		"body": ["variavel ${1:nome} = ${2:valor};"],
+		"description": "Declaração de variável"
+	},
+	"Variável": {
+		"prefix": "variável",
+		"body": ["variável ${1:nome} = ${2:valor};"],
+		"description": "Declaração de variável"
+	},
+	"Verdadeiro": {
+		"prefix": "verdadeiro",
+		"body": ["verdadeiro"],
+		"description": "Valor booleano verdadeiro"
 	}
 }

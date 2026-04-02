@@ -1,6 +1,29 @@
 // @ts-nocheck - Ignora erros de tipo nos mocks complexos
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 
+// Mock do módulo vscode
+jest.mock('vscode', () => ({
+    DiagnosticSeverity: {
+        Error: 0,
+        Warning: 1,
+        Information: 2,
+        Hint: 3
+    },
+    Diagnostic: jest.fn((range: any, message: string, severity: any) => ({
+        range,
+        message,
+        severity
+    })),
+    Range: jest.fn((startLine: number, startChar: number, endLine: number, endChar: number) => ({
+        start: { line: startLine, character: startChar },
+        end: { line: endLine, character: endChar }
+    })),
+    Uri: {
+        file: jest.fn((path: string) => ({ fsPath: path })),
+        joinPath: jest.fn((...args: any[]) => ({ fsPath: args.map((a: any) => a.fsPath || a).join('/') }))
+    }
+}), { virtual: true });
+
 // Mock das dependências do Delegua
 jest.mock('@designliquido/delegua', () => ({
     AvaliadorSintatico: class AvaliadorSintatico {

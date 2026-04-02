@@ -10,6 +10,7 @@ import {
     VisuAlgProvedorDocumentacaoEmEditor,
     LmhtProvedorDocumentacaoEmEditor,
     PortugolStudioProvedorDocumentacaoEmEditor
+    PituguesProvedorDocumentacaoEmEditor
 } from './documentacao-em-editor';
 import {
     DeleguaProvedorCompletude,
@@ -223,6 +224,7 @@ export function activate(context: vscode.ExtensionContext) {
         ['lmht', new LmhtProvedorDocumentacaoEmEditor()],
         ['visualg', new VisuAlgProvedorDocumentacaoEmEditor()],
         ['portugolstudio', new PortugolStudioProvedorDocumentacaoEmEditor()]
+        ['pitugues', new PituguesProvedorDocumentacaoEmEditor()]
     ];
 
     hoverProviders.forEach(([linguagem, provedor]) => {

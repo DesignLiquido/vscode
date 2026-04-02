@@ -54,9 +54,6 @@ export class DeleguaTempoExecucaoRemoto extends EventEmitter {
         return this._arquivoFonte;
     }
 
-    // As linhas do arquivo sendo interpretado.
-    private _conteudoFonte: string[];
-
     // A próxima linha a ser interpretada.
     private _originalLine = 0;
 
@@ -316,39 +313,6 @@ export class DeleguaTempoExecucaoRemoto extends EventEmitter {
         }
     }
 
-    private emitirEventosParaLinha(linha: number, stepEvent?: string): boolean {
-        if (linha >= this._conteudoFonte.length) {
-            return false;
-        }
-
-        const line = this._conteudoFonte[linha].trim();
-
-        // Se a linha é um comentário, pula para a próxima linha.
-        if (line.startsWith('//')) {
-            this._originalLine++;
-            return this.emitirEventosParaLinha(this._originalLine, stepEvent);
-        }
-
-        // É um ponto de parada?
-        let pontoParada = this.obterPontoParada(linha);
-        if (pontoParada) {
-            this.enviarEvento('pararEmPontoParada');
-            if (!pontoParada.verificado) {
-                pontoParada.verificado = true;
-                this.enviarEvento('pontoDeParadaValidado', pontoParada);
-            }
-            return true;
-        }
-
-        if (stepEvent && line.length > 0) {
-            this.enviarEvento(stepEvent);
-            this.printDebugMsg('sent event ' + stepEvent + ', ln:' + linha);
-            return true;
-        }
-
-        return false;
-    }
-
     public getLocalVariable(name: string): any {
 		return null;
 	}
@@ -420,17 +384,6 @@ export class DeleguaTempoExecucaoRemoto extends EventEmitter {
 		} */
 		return true;
 	}
-
-    private obterPontoParada(linha: number): DeleguaPontoParada | undefined {
-        let pathname = Path.resolve(this._arquivoFonte);
-        let lower = pathname.toLowerCase();
-        let mapaPontosParada = this._mapaPontosParada.get(lower);
-        if (!mapaPontosParada) {
-            return undefined;
-        }
-        let pontoParada = mapaPontosParada.get(linha);
-        return pontoParada;
-    }
 
     public static obterInstancia(recarregar = false): DeleguaTempoExecucaoRemoto {
         let delegua = DeleguaTempoExecucaoRemoto._instancia;
@@ -669,10 +622,6 @@ export class DeleguaTempoExecucaoRemoto extends EventEmitter {
 
             linhaAtual++;
         }
-    }
-
-    private executarUmaVez(stepEvent?: string) {
-        this.emitirEventosParaLinha(this._originalLine, stepEvent);
     }
 
     /**

@@ -96,27 +96,6 @@ function verificarCaracterFechamentoTagNoVSCode_1_8(eventoMudancaConteudo: vscod
         && !eventoMudancaConteudo.range.end.isEqual(new vscode.Position(0, 0));
 }
 
-function inserirFechamentoEstrutura(): void {
-    let editor = vscode.window.activeTextEditor;
-    if (!editor) {
-        return;
-    }
-
-    let selection = editor.selection;
-    let originalPosition = selection.start;
-    let config = vscode.workspace.getConfiguration('designliquido-vscode', editor.document.uri);
-    let excludedTags = config.get<string[]>("estruturasExcluidas", []);
-    let text = editor.document.getText(new vscode.Range(new vscode.Position(0, 0), originalPosition));
-    if (text.length > 2) {
-        let closeTag = obterEstruturaFechamento(text, excludedTags);
-        if (closeTag) {
-            editor.edit((editBuilder) => {
-                editBuilder.insert(originalPosition, closeTag);
-            });
-        }
-    }
-}
-
 function obterProximoCaracter(editor: vscode.TextEditor, posicao: vscode.Position): string {
     let proximaPosicao = posicao.translate(0, 1);
     let texto = editor.document.getText(new vscode.Range(posicao, proximaPosicao));

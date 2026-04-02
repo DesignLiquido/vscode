@@ -27,21 +27,15 @@ jest.mock('vscode', () => ({
 
 // Mock das bibliotecas
 jest.mock('../../fontes/bibliotecas', () => ({
-    primitivas: [
-        { nome: 'escreva', documentacao: 'Escreve na saída' }
-    ],
-    primitivasDicionarioFormatadas: [
-        { nome: 'chaves', documentacao: 'Retorna as chaves do dicionário' }
-    ],
-    primitivasNumeroFormatadas: [
-        { nome: 'arredondar', documentacao: 'Arredonda um número' }
-    ],
-    primitivasTextoFormatadas: [
-        { nome: 'maiuscula', documentacao: 'Converte para maiúsculas' }
-    ],
-    primitivasVetorFormatadas: [
-        { nome: 'empurrar', documentacao: 'Adiciona elemento ao vetor' }
-    ],
+    formatarPrimitivas: jest.fn().mockImplementation((modulo) => {
+        if (!modulo) return [];
+        const chaves = Object.keys(modulo);
+        if (chaves.includes('chaves')) return [{ nome: 'chaves', documentacao: 'Retorna as chaves do dicionário' }];
+        if (chaves.includes('absoluto')) return [{ nome: 'arredondar', documentacao: 'Arredonda um número' }];
+        if (chaves.includes('aparar')) return [{ nome: 'maiuscula', documentacao: 'Converte para maiúsculas' }];
+        if (chaves.includes('adicionar')) return [{ nome: 'empurrar', documentacao: 'Adiciona elemento ao vetor' }];
+        return [];
+    }),
     funcoesNativasDelegua: [
         { nome: 'escreva', documentacao: 'Escreve na saída' },
         { nome: 'leia', documentacao: 'Lê da entrada' }

@@ -4,14 +4,26 @@ import { Classe, Const, FuncaoDeclaracao, InterfaceDeclaracao, Var } from '@desi
 import { ComentarioComoConstruto } from '@designliquido/delegua/construtos';
 
 import { obterResultado } from '../analise-codigo/cache-analise';
-import { 
-    funcoesNativasDelegua,
-    primitivas, 
-    primitivasDicionarioFormatadas, 
-    primitivasNumeroFormatadas, 
-    primitivasTextoFormatadas, 
-    primitivasVetorFormatadas 
-} from '../bibliotecas';
+import primitivasDicionario from '@designliquido/delegua/bibliotecas/primitivas-dicionario';
+import primitivasNumero from '@designliquido/delegua/bibliotecas/primitivas-numero';
+import primitivasTexto from '@designliquido/delegua/bibliotecas/primitivas-texto';
+import primitivasVetor from '@designliquido/delegua/bibliotecas/primitivas-vetor';
+import { formatarPrimitivas, funcoesNativasDelegua } from '../bibliotecas';
+
+const primitivasDicionarioFormatadas = formatarPrimitivas(primitivasDicionario);
+const primitivasNumeroFormatadas = formatarPrimitivas(primitivasNumero);
+const primitivasTextoFormatadas = formatarPrimitivas(primitivasTexto);
+const primitivasVetorFormatadas = formatarPrimitivas(primitivasVetor);
+const primitivas = [
+    ...primitivasDicionarioFormatadas,
+    ...primitivasNumeroFormatadas,
+    ...primitivasTextoFormatadas,
+    ...primitivasVetorFormatadas
+].sort((a, b) => {
+    const nome1 = a.nome.toUpperCase();
+    const nome2 = b.nome.toUpperCase();
+    return nome1 > nome2 ? 1 : nome1 < nome2 ? -1 : 0;
+});
 
 /**
  * Provedor de documentação para `hover` (ponteiro do _mouse_ por cima do elemento de código.)

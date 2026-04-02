@@ -386,10 +386,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@designliquido/birl@^0.5.18":
-  version "0.5.18"
-  resolved "https://registry.yarnpkg.com/@designliquido/birl/-/birl-0.5.18.tgz#0cd30324c8043fe2f2ec9575e0a20fe6129f596f"
-  integrity sha512-k7zfvv1gPgEc6Sx5KKE89iq7/rDzGnEBADNBzfJicQS2HxNCN1UyYyJuaK3s1KuqycrkAPPEewdDlAV8iYOwUw==
+"@designliquido/birl@^0.5.20":
+  version "0.5.20"
+  resolved "https://registry.yarnpkg.com/@designliquido/birl/-/birl-0.5.20.tgz#2d750463bd74d80689dd5bc29019cf7da0c36856"
+  integrity sha512-CrWgoJD4kyXeYCDIFyQmQp4b5cCCLxpiCbzBmPqBk8Ng7VMmrAo+hXv7B+UKJ7SnvH7tbCGNijwkd34PJh0vRQ==
   dependencies:
     lodash "^4.17.21"
 
@@ -407,6 +407,13 @@
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@designliquido/delegua-csv/-/delegua-csv-0.0.2.tgz#40ffd4db445f12b56c90d4df87661b7b8470f146"
   integrity sha512-4ndNhqFwkIe7LtVQ0aYurqq6ejOHrMfNZeKCnjvxZAuDDT8j9swTXbHbC87Qbex1a9dMnK5IZdU9VxThOq0TrA==
+
+"@designliquido/delegua-dados@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-dados/-/delegua-dados-0.0.1.tgz#a35c035cc99de80f3c861bd90c2d5b9e724ebc4a"
+  integrity sha512-uvablMBhNezD0xoXDBpijOWKTp8ofTV+ewR+fdQC1iBMiA2m1DNw4b2SgHARUjoPskRXymWPzCNq9hV5Q4Mp7A==
+  dependencies:
+    "@designliquido/delegua-csv" "^0.0.2"
 
 "@designliquido/delegua-estatistica@^0.1.0":
   version "0.1.0"
@@ -427,6 +434,16 @@
   dependencies:
     axios "^1.8.4"
 
+"@designliquido/delegua-imagens@^0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-imagens/-/delegua-imagens-0.0.0.tgz#26c008ec3a2beaafa32980338d9b303238d17f61"
+  integrity sha512-LnOEcOcDDIqqj+/Q/WAO1z7oWeQl3qwoAVhJf4YX/TXzEq3bewHIjF7z5WKOcQgs6Di+Yz/RfsJoV8CejeDJ0A==
+
+"@designliquido/delegua-interface-grafica@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-interface-grafica/-/delegua-interface-grafica-0.0.1.tgz#ac52a6e540e6ff8aab878f04709970c91ab4a337"
+  integrity sha512-mxJIyyoPu+Uow9+YzUiztFRL7Lcn+FqGtQbyMBHt+Kk8lWLTvTmrl/AI1e1a76dr1l38HRa4vRYaKZMpxhWFsA==
+
 "@designliquido/delegua-json@^0.2.1":
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/@designliquido/delegua-json/-/delegua-json-0.2.1.tgz#57c2e9dc45525ebdf1b4ee6038b11b6a18d3181c"
@@ -444,65 +461,78 @@
   dependencies:
     dayjs "^1.11.13"
 
-"@designliquido/delegua@^1.15.0":
-  version "1.15.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-1.15.0.tgz#f174394dfda0daec83a60a3bb82311aabf56d49c"
-  integrity sha512-lvVuujz3CESMouPupiZ73/1wsmx+sb41X8mEehlJS0nT5zpxsknRILHg90yTwqKmhPpgf/NNRtYkmOCPb3G07g==
+"@designliquido/delegua-yaml@^0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-yaml/-/delegua-yaml-0.0.0.tgz#baa099923c65ece711a3989dc12512b2f0dd5f0f"
+  integrity sha512-xD4h5FsHPHhmOSeUt90wKe34b2YPaKoZwkUdxteEx4mQXskWAzIMta4kvOXJTWUaPl4gNO3nUFkfXSSY6Bx+rw==
+  dependencies:
+    "@designliquido/delegua" "^1.15.4"
+    yaml "^2.6.1"
+
+"@designliquido/delegua@^1.15.4", "@designliquido/delegua@^1.15.5":
+  version "1.15.5"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-1.15.5.tgz#8b4e2795b15d801744a348f8dcbe3bce7fd3032a"
+  integrity sha512-R2DX/+Xokf/0YYQzacHatAjqhnv773bxHc+O/7BFNMO+rZNLoge+JxOa4rAhclpRZpc6KUYr3fcDd/ZMzKrxFw==
   dependencies:
     antlr4ts "^0.5.0-alpha.4"
     browser-process-hrtime "^1.0.0"
     esprima "^4.0.1"
     lodash.clonedeep "^4.5.0"
 
-"@designliquido/foles@^0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.14.0.tgz#141a7c8d20c76a871f5c7658eeac302c356ca22b"
-  integrity sha512-yPcsvWSOe1DbdEMBANDXE8y31V8V3+jxMS3kQn+Z6+B7zNQwnMUGNJritu6mT8HB/322doJNpxlPs/SPJs4ulQ==
+"@designliquido/delprops@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/delprops/-/delprops-0.0.1.tgz#9e6108dfd67062eb1649ef4c3741424167c79dc3"
+  integrity sha512-+jOfrR3oayDuuGtCjH9ZtWxz2XhJ5DyHE+z+paiPY2xREjzqEA1NK5eBNoJ834oO9+fjvWLltE45yovx291h8A==
+
+"@designliquido/foles@^0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/foles/-/foles-0.15.1.tgz#9876adcb4af43cd6418d6570c7748f17fb1f2f9d"
+  integrity sha512-otHTkJO8CPsbhOwHfp7YtD/YoJIuME4LQXX/fJj8Ejxw0OSIOv2HodRJ2XRDM0kiip9t49IUWrRKh9VKtBZMrw==
   dependencies:
     commander "^14.0.0"
     vlq "^2.0.4"
 
-"@designliquido/lincones-js@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/lincones-js/-/lincones-js-0.1.0.tgz#f2f9a357ceb95f3e291b929f045122d3b2f9f4e4"
-  integrity sha512-SWt4Klpfyrrp8H9D+IVH62LwwFXJ8gbU8/eZnTm/RJwImr0t6GAqUei8qO1PVetwOcJznUgCCmn5L9AplKI8pg==
+"@designliquido/lincones-js@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/lincones-js/-/lincones-js-0.2.1.tgz#c3ddcf9951471a9bf14a239b1e15103f4b748cc1"
+  integrity sha512-L7Pq3CKvCre7IlkHW5Cn5a1lu94jGcIijyJxjqPIZIFEhp/CkQAMVAFJuKN6Qa/9DEOtLPivwefVVoq0FgK6+Q==
 
-"@designliquido/lmht-js@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/lmht-js/-/lmht-js-0.6.0.tgz#6f95216ff683cf3cf2bd0e870f44d65486110e7f"
-  integrity sha512-HsF2hiBtmtFyhMGrRjG/SePvoSJ3WTb0B0ZpnwCe+VbhoOMQB42NTNnJB/d+Io0+oBp8sn2P11qBM1x3iHjWpQ==
+"@designliquido/lmht-js@^0.6.2":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/@designliquido/lmht-js/-/lmht-js-0.6.2.tgz#6b31d4b32835f139adca0e54671588f61c13fa0f"
+  integrity sha512-/i+iadN59MzoJp3Nhomv0lfaRBrGu1lVsVB3maDA81syWfrpRj2FKtfr1UNI6wrmtY/39kN70N+HuyzjWa+b0w==
   dependencies:
     jsdom "^21.1.1"
-    xslt-processor "^3.0.1"
+    xslt-processor "^5.0.3"
 
-"@designliquido/mapler@^0.6.18":
-  version "0.6.18"
-  resolved "https://registry.yarnpkg.com/@designliquido/mapler/-/mapler-0.6.18.tgz#2f0e78d01abe29373af5da5221f240dbd2a612b8"
-  integrity sha512-xg4XSlT4KXgnEZ9B98CXThRK88NRtH7uPtMf+mdZMP43nz8cBLDaKQj8/wtjuq6qaiu0MoEbaSs0D59JjNTf1g==
+"@designliquido/mapler@^0.6.20":
+  version "0.6.20"
+  resolved "https://registry.yarnpkg.com/@designliquido/mapler/-/mapler-0.6.20.tgz#baa1b648175857d52cce3894adf6087f127321f6"
+  integrity sha512-YA+w0uBZ5OIVbShh6sxumBTXd/+rYJmtpT4Z8SrRmd+DsOUiG+abysQtiEtqkpAHp9JhKdTSUzZ2tBqdnFSxRw==
   dependencies:
     lodash "^4.17.21"
     node-fetch "2"
 
-"@designliquido/portugol-studio@^0.9.18":
-  version "0.9.18"
-  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.9.18.tgz#a463578cf20ea643355b4e66b5632a7504981015"
-  integrity sha512-Hzr5tb7M/apvfbuXk77yEhFB/eRvfvK4jrC7Kpf1LWFBx20pVljrzX8wq63QpnyQBl1YrQk+TPGkwHgGBoHoyw==
+"@designliquido/portugol-studio@^0.10.2":
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.10.2.tgz#8ede484dba68d1795b190d9165d1ef7b98452109"
+  integrity sha512-JNEnr+2bfg5TtoxQswjOhTBbdx+XcURDLwR6u9jUA6/hRvIiMXbEMiGDt1/cj2W3dQror5wao5uo+ntC+8/qoA==
   dependencies:
     lodash "^4.17.21"
     node-fetch "2"
     xml2js "^0.6.2"
 
-"@designliquido/potigol@^0.8.18":
-  version "0.8.18"
-  resolved "https://registry.yarnpkg.com/@designliquido/potigol/-/potigol-0.8.18.tgz#d105e3f375f2ed1f58066c2bb7bd77f2d979765b"
-  integrity sha512-Mu3WujK5FlW/PGfvNpJhmVXU1c2zgLmLAl1X+ItV0zHfbripV1YZ+FZOcRjSt8Q2EohqwO+QOGISgLVerprZGQ==
+"@designliquido/potigol@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/potigol/-/potigol-0.9.1.tgz#a7faef2126b68f89865fee62b5d0eb6e356bf5c5"
+  integrity sha512-yfrayKnj/DfzvK6SF/+W8lHjJnLz0uw5vBnmG8LBpgEn8tmxVgoN6u73wdpbZ7C+YetJodmXR1src9/mZjob3A==
   dependencies:
     lodash "^4.17.21"
 
-"@designliquido/visualg@^0.8.18":
-  version "0.8.18"
-  resolved "https://registry.yarnpkg.com/@designliquido/visualg/-/visualg-0.8.18.tgz#64b61859602a48b936ad74eb31409481f6eae72e"
-  integrity sha512-NwTKq7cQHYjOoonxJDISyXJhQ52ugHbEwl4sW3ZmjtKm0JYKx/2a6Wwt3oDrI53xLEFnInWEBliD/jqYcdtqaw==
+"@designliquido/visualg@^0.8.20":
+  version "0.8.20"
+  resolved "https://registry.yarnpkg.com/@designliquido/visualg/-/visualg-0.8.20.tgz#1cefd06a7b76656d47895c15c3b1d7614b16a6c6"
+  integrity sha512-szC6E0nUMbCds/KYUWgosiaqbLymKMNNNaFJ6GNYZp/CdWieGcjyPB/1Mi6mwYP+cREycRY0qH4zfLunI+smfA==
   dependencies:
     lodash "^4.17.21"
 
@@ -3601,11 +3631,6 @@ hasown@^2.0.2:
   integrity sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==
   dependencies:
     function-bind "^1.1.2"
-
-he@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
-  integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
 hosted-git-info@^4.0.2:
   version "4.1.0"
@@ -6825,12 +6850,10 @@ xmlchars@^2.2.0:
   resolved "https://registry.yarnpkg.com/xmlchars/-/xmlchars-2.2.0.tgz#060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb"
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
 
-xslt-processor@^3.0.1:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/xslt-processor/-/xslt-processor-3.4.0.tgz#711f8d62a125b170fa7f476da7b6a72f8157aefd"
-  integrity sha512-hvsduzQNZSQD+ttrUSEg2wGOmmDekdo46IUis2s01l/4pNabNWAREEPoVEmzR3ZXbdcB5sR2q1AOTOyTtounAg==
-  dependencies:
-    he "^1.2.0"
+xslt-processor@^5.0.3:
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/xslt-processor/-/xslt-processor-5.0.7.tgz#7ae914dce3461800f11e45267270d7171b50ed75"
+  integrity sha512-ua0sWSeKOq9dXQ0Jb+yLfkC18a1teoZOv9YfNCkmSu/BvqdA6J9gJNKK4GXqA81zaROWhhqiG4lykcwY/2q7kw==
 
 xtend@~4.0.1:
   version "4.0.2"
@@ -6851,6 +6874,11 @@ yallist@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
   integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
+
+yaml@^2.6.1:
+  version "2.8.3"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.8.3.tgz#a0d6bd2efb3dd03c59370223701834e60409bd7d"
+  integrity sha512-AvbaCLOO2Otw/lW5bmh9d/WEdcDFdQp2Z2ZUH3pX9U2ihyUY0nvLv7J6TrWowklRGPYbB/IuIMfYgxaCPg5Bpg==
 
 yargs-parser@^21.1.1:
   version "21.1.1"
