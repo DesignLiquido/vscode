@@ -1,0 +1,3 @@
+var x = inteiro(leia("Digite x: "))
+var area = (x * x) * 3.14159
+escreva("A=${area}")

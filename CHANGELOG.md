@@ -9,6 +9,11 @@
   - Correção de cenário com reutilização de variável de controle em laços `para`;
   - Correção para avaliação de declarações dentro do corpo de `enquanto`;
   - Expansão do formatador Delégua para funcionalidades recentes (incluindo extensões) e novos casos vindos do Beecrowd.
+- Suporte ampliado para definições externas e uso do diretório de definições do projeto no editor;
+- Ajustes para o editor trabalhar com definições de forma mais consistente;
+- Redução de código não utilizado e melhoria de organização interna;
+- Atualização de snippets de Delégua e Pituguês, incluindo evolução do provedor de completude de Pituguês;
+- Preparação de empacotamento e lançamento de versão.
 
 ## 0.25.4
 

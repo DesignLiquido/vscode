@@ -108,6 +108,28 @@
 				"match": "\\b(<\\=|>\\=|\\=\\=|<|>|\\<\\>)\\b"
 			}]
 		},
+		"string-interpolation": {
+			"name": "meta.embedded.expression.delegua",
+			"begin": "\\$\\{",
+			"beginCaptures": {
+				"0": { "name": "punctuation.definition.template-expression.begin.delegua" }
+			},
+			"end": "\\}",
+			"endCaptures": {
+				"0": { "name": "punctuation.definition.template-expression.end.delegua" }
+			},
+			"patterns": [
+				{ "include": "#keywords" },
+				{ "include": "#functions" },
+				{ "include": "#constants" },
+				{ "include": "#numbers" },
+				{ "include": "#logical" },
+				{ "include": "#types" },
+				{ "include": "#arithmetic" },
+				{ "include": "#comparison" },
+				{ "include": "#identifiers" }
+			]
+		},
 		"strings": {
 			"patterns": [
 				{
@@ -115,6 +137,7 @@
 					"begin": "\\'",
 					"end": "\\'",
 					"patterns": [
+						{ "include": "#string-interpolation" },
 						{
 							"name": "constant.character.escape.delegua",
 							"match": "\\\\."
@@ -126,6 +149,7 @@
 					"begin": "\"",
 					"end": "\"",
 					"patterns": [
+						{ "include": "#string-interpolation" },
 						{
 							"name": "constant.character.escape.delegua",
 							"match": "\\\\."
