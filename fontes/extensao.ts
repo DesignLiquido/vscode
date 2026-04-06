@@ -14,7 +14,7 @@ import {
     DelpropsProvedorDocumentacaoEmEditor,
     FolesProvedorDocumentacaoEmEditor,
     LinConEsProvedorDocumentacaoEmEditor,
-    PortugolStudioProvedorDocumentacaoEmEditor
+    PortugolStudioProvedorDocumentacaoEmEditor,
     PituguesProvedorDocumentacaoEmEditor
 } from './documentacao-em-editor';
 import {
