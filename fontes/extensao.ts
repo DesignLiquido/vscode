@@ -411,7 +411,8 @@ export function activate(context: vscode.ExtensionContext) {
             ],
             new PituguesProvedorCompletude()
         )
-    )
+    );
+    
     // IntelliSense para Portugol Studio
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(

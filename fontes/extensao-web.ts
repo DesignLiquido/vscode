@@ -9,7 +9,7 @@ import {
     LinConEsProvedorDocumentacaoEmEditor,
     VisuAlgProvedorDocumentacaoEmEditor,
     LmhtProvedorDocumentacaoEmEditor,
-    PortugolStudioProvedorDocumentacaoEmEditor
+    PortugolStudioProvedorDocumentacaoEmEditor,
     PituguesProvedorDocumentacaoEmEditor
 } from './documentacao-em-editor';
 import {
@@ -223,7 +223,7 @@ export function activate(context: vscode.ExtensionContext) {
         ['lincones', new LinConEsProvedorDocumentacaoEmEditor()],
         ['lmht', new LmhtProvedorDocumentacaoEmEditor()],
         ['visualg', new VisuAlgProvedorDocumentacaoEmEditor()],
-        ['portugolstudio', new PortugolStudioProvedorDocumentacaoEmEditor()]
+        ['portugolstudio', new PortugolStudioProvedorDocumentacaoEmEditor()],
         ['pitugues', new PituguesProvedorDocumentacaoEmEditor()]
     ];
 
