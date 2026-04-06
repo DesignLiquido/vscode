@@ -1,5 +1,12 @@
 # Histórico de Modificações
 
+## 0.25.6
+
+- Delégua passa a trabalhar com classes estrangeiras. Classes estrangeiras se comportam como classes abstratas, mas são implementadas por código externo, como JavaScript ou C. Elas são úteis para trabalhar com bibliotecas externas, como as de manipulação de arquivos, ou para usar funcionalidades específicas de cada ambiente de execução;
+- Adiciona provedor de documentação para Portugol Studio com suporte a hover
+  - Adiciona tipos e constantes para Portugol Studio, incluindo `inteiro`, `real`, `cadeia`, `caracter`, `logico`, `verdadeiro` e `falso`, e comandos de entrada e saída (`escreva` e `leia`);
+  - Adiciona suporte a comandos de entrada e saída, tipos e constantes no provedores de completude e documentação em código do Portugol Studio.
+
 ## 0.25.5
 
 - Núcleo de Delégua atualizado para a versão 1.15.6:
