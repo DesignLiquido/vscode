@@ -1,5 +1,21 @@
 # Histórico de Modificações
 
+## 0.25.7
+
+- Extensão passa a reconhecer pacote `@designliquido/delegua-entidades`;
+- Núcleo de Delégua atualizado para a versão 1.16.3:
+  - Estilizador passa a trabalhar com limite de caracteres por linha (resolve https://github.com/DesignLiquido/delegua/issues/1179);
+  - Adição de `funcaoVerificarIteracao` para verificação opcional de _loops_ infinitos durante certas execuções;
+  - Adiciona propriedade `tiposDeFerramentasExternas` na classe `AvaliadorSintaticoPitugues`;
+  - Correção do uso de variável com `fazer ... enquanto`, conforme reportado em https://github.com/DesignLiquido/delegua-web/issues/72;
+  - Correção de _bug_ de chamada encadeada a `leia()`;
+  - Finalização do tradutor reverso de Calango;
+  - Expansão do tradutor reverso de Python: operadores de comparação e lógicos, operações matemáticas, mapeamento de tipos, operações com vetores e listas, laços de repetição, estruturas de saída de laço, definições de funções e classes, subscrição de listas, lógica `tente ... pegue`, lambdas e argumentos variáveis.
+- Pituguês
+  - `retorna` dentro de `para cada` dentro de uma `funcao` passa a encerrar a função (resolve https://github.com/DesignLiquido/delegua/issues/1180);
+- Potigol
+  - Adição do tradutor reverso de Potigol, para converter código de Potigol para Delégua.
+
 ## 0.25.6
 
 - Delégua passa a trabalhar com classes estrangeiras. Classes estrangeiras se comportam como classes abstratas, mas são implementadas por código externo, como JavaScript ou C. Elas são úteis para trabalhar com bibliotecas externas, como as de manipulação de arquivos, ou para usar funcionalidades específicas de cada ambiente de execução;

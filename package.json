@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.25.6",
+    "version": "0.25.7",
     "engines": {
         "vscode": "^1.80.0"
     },
@@ -746,12 +746,13 @@
         "webpack-cli": "^6.0.1"
     },
     "dependencies": {
-        "@designliquido/birl": "^0.5.22",
-        "@designliquido/delegua": "^1.16.0",
+        "@designliquido/birl": "^0.5.24",
+        "@designliquido/delegua": "^1.16.3",
         "@designliquido/delegua-arquivos": "^0.0.3",
         "@designliquido/delegua-criptografia": "^0.3.3",
         "@designliquido/delegua-csv": "^0.0.2",
         "@designliquido/delegua-dados": "^0.0.1",
+        "@designliquido/delegua-entidades": "^0.0.6",
         "@designliquido/delegua-estatistica": "^0.1.0",
         "@designliquido/delegua-fisica": "^0.1.0",
         "@designliquido/delegua-http": "^0.1.2",
@@ -765,10 +766,10 @@
         "@designliquido/foles": "^0.15.1",
         "@designliquido/lincones-js": "^0.2.1",
         "@designliquido/lmht-js": "^0.6.2",
-        "@designliquido/mapler": "^0.6.22",
-        "@designliquido/portugol-studio": "^0.10.3",
-        "@designliquido/potigol": "^0.9.3",
-        "@designliquido/visualg": "^0.8.22",
+        "@designliquido/mapler": "^0.6.24",
+        "@designliquido/portugol-studio": "^0.10.6",
+        "@designliquido/potigol": "^0.10.0",
+        "@designliquido/visualg": "^0.8.24",
         "@xterm/addon-fit": "^0.10.0",
         "@xterm/xterm": "5.5.0",
         "lodash": "^4.17.21",

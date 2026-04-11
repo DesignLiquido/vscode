@@ -7,8 +7,10 @@ import { AvaliadorSintaticoInterface, Lexador, PlataformaAlvo, PlataformaAlvoARM
 import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
 import { TradutorInterface } from './tradutor-interface';
 import { AvaliadorSintaticoJavaScript } from '@designliquido/delegua/avaliador-sintatico/traducao/avaliador-sintatico-javascript';
+import { TradutorReversoPotigol } from '@designliquido/potigol/tradutores/tradutor-reverso-potigol';
 import { AvaliadorSintaticoVisuAlg } from '@designliquido/visualg/avaliador-sintatico';
 import { TradutorReversoVisuAlg } from '@designliquido/visualg/tradutores';
+import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sintatico';
 
 /**
  * Ponto de entrada para todas as traduções desta extensão.
@@ -158,6 +160,10 @@ async function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: strin
         case 'javascript':
             avaliadorSintatico = new AvaliadorSintaticoJavaScript();
             tradutor = new TradutorReversoJavaScript();
+            break;
+        case 'potigol':
+            avaliadorSintatico = new AvaliadorSintaticoPotigol();
+            tradutor = new TradutorReversoPotigol();
             break;
         case 'alg':
         case 'visualg':
