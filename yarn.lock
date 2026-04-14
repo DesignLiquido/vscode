@@ -386,10 +386,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@designliquido/birl@^0.5.24":
-  version "0.5.24"
-  resolved "https://registry.yarnpkg.com/@designliquido/birl/-/birl-0.5.24.tgz#aa223429fd66f58e08cab1fd417ce3a2ae96dc4c"
-  integrity sha512-poccyh4L4NULQk0UGuOcBKdJh7UFPoqahzp8AVyyoFDeW7aonUVN72oNcBQv8j4E7hwphxPzDqp7eiDsSqCRMQ==
+"@designliquido/birl@^0.5.25":
+  version "0.5.25"
+  resolved "https://registry.yarnpkg.com/@designliquido/birl/-/birl-0.5.25.tgz#bd0af87b72c244eb3ef879375a21e5ffe6db8638"
+  integrity sha512-gt9cAeHRf5s9E75Td7AwEkWrnAXkHKbJp8jnIeBBQfLVHOs9G3iWASI6lKjmoXtXpjdgmKppryDt/E+VUP3v5g==
   dependencies:
     lodash "^4.17.21"
 
@@ -489,10 +489,10 @@
     esprima "^4.0.1"
     lodash.clonedeep "^4.5.0"
 
-"@designliquido/delegua@^1.16.3":
-  version "1.16.3"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-1.16.3.tgz#b8b777127f56cf7b445dc0fa70189dfef380d851"
-  integrity sha512-j904FVHPxc5CSwqXi2V4KSpofrW1hJBlJM1AtXhqhrA5VkBGMRper1MRqWgcwHj475L6mZOTcNRaN7tlEEOWPg==
+"@designliquido/delegua@^1.17.1":
+  version "1.17.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-1.17.1.tgz#6873e1505ef166737f43667d6ad6fddbd4a48113"
+  integrity sha512-U0cEqtpnVwr0iLDylxIpytIfmxIlzKjb6/UARRRSxNDY+1csKxSBTSWeFGbtJqHA0a9h7P9hmfSRYA+flO4kJA==
   dependencies:
     antlr4ts "^0.5.0-alpha.4"
     browser-process-hrtime "^1.0.0"
@@ -544,34 +544,34 @@
     jsdom "^21.1.1"
     xslt-processor "^5.0.3"
 
-"@designliquido/mapler@^0.6.24":
-  version "0.6.24"
-  resolved "https://registry.yarnpkg.com/@designliquido/mapler/-/mapler-0.6.24.tgz#c31dd125bfb989a775ae34da3d6f7445167a1915"
-  integrity sha512-tQCcAbxmqMlnda5NP30AjS9tq5z/tIVCzNVL/4UdCxu4P90lcC/yHRxodnw6F40vX71zQikerwNQmzXZjcwCuw==
+"@designliquido/mapler@^0.6.25":
+  version "0.6.25"
+  resolved "https://registry.yarnpkg.com/@designliquido/mapler/-/mapler-0.6.25.tgz#149c1be0c3d01aa7128384577da7171db9612f6e"
+  integrity sha512-YgADYn8q9fcBo1zmNLCa2Zty5H73EHQKPQ97eRITmvywwa8O7iB04Nq6KSY82ZpBRPpymn7FcbZvmgJNauykEg==
   dependencies:
     lodash "^4.17.21"
     node-fetch "2"
 
-"@designliquido/portugol-studio@^0.10.6":
-  version "0.10.6"
-  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.10.6.tgz#aaa0a5a05dcd57d52f3dff1ddbe5abd339090054"
-  integrity sha512-UQZFEKQTGKV1fsV6/g2iQz3/q10iSZXKxESQ9NpHZKttEKYB3aOgeY5yN5cZhzAHz8TSMBOs+yqegn9Vj0lSMw==
+"@designliquido/portugol-studio@^0.10.7":
+  version "0.10.7"
+  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.10.7.tgz#abddad56f9ac3a9da37249675d026e8b31150d9a"
+  integrity sha512-VMgUfVKTMujAF5osFgB+L/n7yVYuwIt45sAPMCDr+NZ6r9x8wNgLojKTj1BJZUjzoj9iCps4mJ1JsJWtfFE+Vw==
   dependencies:
     lodash "^4.17.21"
     node-fetch "2"
     xml2js "^0.6.2"
 
-"@designliquido/potigol@^0.10.0":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/potigol/-/potigol-0.10.0.tgz#af44a915a5eae4543de3be71e20b5f276ea9e8a4"
-  integrity sha512-8Ntgpy68cJmzceYex5HAx01+1ul3O64G9hBd3Brh7ER9QuDmVzUtNxtBxrkjswHUyMCpeqF6QBm9GKAatWRO1Q==
+"@designliquido/potigol@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/potigol/-/potigol-0.10.1.tgz#10d49924a81e9be02b3b3ed515926bc075d0cb9e"
+  integrity sha512-omWy32QyblXXaLAKsPsf2+LmPK3hJ565BOUssA+xzDfozngmzPP108G/q0s25qgT+8YUk1s6neg5fx6X3OwuIw==
   dependencies:
     lodash "^4.17.21"
 
-"@designliquido/visualg@^0.8.24":
-  version "0.8.24"
-  resolved "https://registry.yarnpkg.com/@designliquido/visualg/-/visualg-0.8.24.tgz#bb08af24f7a4192f873c29e5d130ca220953a277"
-  integrity sha512-q0KX5y8KJ99kZYKVz+5U5KUPWIQlcuGOm78v/0XFp3kt8QzygOIOzeza+VZ8YVT3PhvTtK+in7zXiYOs2jUqtg==
+"@designliquido/visualg@^0.8.25":
+  version "0.8.25"
+  resolved "https://registry.yarnpkg.com/@designliquido/visualg/-/visualg-0.8.25.tgz#9940afb9a5f3a44819a60f559719468e81f0725b"
+  integrity sha512-vewfDtjUouM+C6iPKgqG9fSquUIUuUF3PBoXX82lm0BUUSSx5ExLh7TApaqxjrBAaCLPBnQ+K1f4JWyo7BbSXQ==
   dependencies:
     lodash "^4.17.21"
 

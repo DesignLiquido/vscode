@@ -4,8 +4,8 @@ import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
 import { FormatadorDelegua } from '@designliquido/delegua/formatadores';
 import { Lexador } from '@designliquido/delegua/lexador';
 import { EstilizadorDelegua } from '@designliquido/delegua';
-import { RegraFortalecerTipos, RegraConvencaoNomenclatura } from '@designliquido/delegua/estilizador/regras';
-import { OpcoesFormatacaoEstilizadorInterface } from '@designliquido/delegua/interfaces';
+import { RegraFortalecerTipos, RegraConvencaoNomenclatura, RegraExplicitarTiposParametros } from '@designliquido/delegua/estilizador/regras';
+import { OpcoesFormatacaoEstilizadorInterface } from '@designliquido/delegua/interfaces/estilizador';
 import { OpcoesFormatadorDeleguaInterface } from '@designliquido/delegua/interfaces/formatador';
 import { DelimitadorTextoFormatacao } from '@designliquido/delegua/tipos';
 
@@ -55,6 +55,11 @@ export class DeleguaProvedorFormatacao implements vscode.DocumentFormattingEditP
                 const fortalecerTiposHabilitado = configuracao.get<boolean>('fortalecerTipos.habilitado', false);
                 if (fortalecerTiposHabilitado) {
                     estilizador.adicionarRegra(new RegraFortalecerTipos());
+                }
+
+                const explicitarTiposParametrosHabilitado = configuracao.get<boolean>('explicitarTiposParametros.habilitado', false);
+                if (explicitarTiposParametrosHabilitado) {
+                    estilizador.adicionarRegra(new RegraExplicitarTiposParametros());
                 }
 
                 // Adicionar regra de convenção de nomenclatura se habilitada

@@ -635,6 +635,11 @@
                     "default": false,
                     "description": "Habilitar regra de fortalecimento de tipos. Converte declarações com tipo 'qualquer' para tipos inferidos (número, texto, lógico, etc.)."
                 },
+                "delegua.estilizador.explicitarTiposParametros.habilitado": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Habilitar regra de explicitação de tipos em parâmetros sem anotação. Materializa ': qualquer' em parâmetros de função e método."
+                },
                 "delegua.estilizador.convencaoNomenclatura.habilitado": {
                     "type": "boolean",
                     "default": false,
@@ -746,8 +751,8 @@
         "webpack-cli": "^6.0.1"
     },
     "dependencies": {
-        "@designliquido/birl": "^0.5.24",
-        "@designliquido/delegua": "^1.16.3",
+        "@designliquido/birl": "^0.5.25",
+        "@designliquido/delegua": "^1.17.1",
         "@designliquido/delegua-arquivos": "^0.0.3",
         "@designliquido/delegua-criptografia": "^0.3.3",
         "@designliquido/delegua-csv": "^0.0.2",
@@ -766,10 +771,10 @@
         "@designliquido/foles": "^0.15.1",
         "@designliquido/lincones-js": "^0.2.1",
         "@designliquido/lmht-js": "^0.6.2",
-        "@designliquido/mapler": "^0.6.24",
-        "@designliquido/portugol-studio": "^0.10.6",
-        "@designliquido/potigol": "^0.10.0",
-        "@designliquido/visualg": "^0.8.24",
+        "@designliquido/mapler": "^0.6.25",
+        "@designliquido/portugol-studio": "^0.10.7",
+        "@designliquido/potigol": "^0.10.1",
+        "@designliquido/visualg": "^0.8.25",
         "@xterm/addon-fit": "^0.10.0",
         "@xterm/xterm": "5.5.0",
         "lodash": "^4.17.21",

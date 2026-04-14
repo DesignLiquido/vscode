@@ -94,6 +94,20 @@ Você pode configurar o Estilizador acessando as configurações do VS Code (`Ct
 - `var nome = "João"` → `var nome: texto = "João"`
 - `constante PI = 3.14` → `constante PI: número = 3.14`
 
+#### Explicitação de Tipos de Parâmetros
+
+```json
+{
+  "delegua.estilizador.explicitarTiposParametros.habilitado": false
+}
+```
+
+**Valor padrão:** `false`
+**Descrição:** Materializa `: qualquer` em parâmetros de função e método que não tenham anotação explícita.
+
+**Exemplo:**
+- `funcao calcularPerimetro(altura, largura)` → `funcao calcularPerimetro(altura: qualquer, largura: qualquer)`
+
 #### Convenção de Nomenclatura
 
 ```json
@@ -123,6 +137,7 @@ Você pode configurar o Estilizador acessando as configurações do VS Code (`Ct
 {
   "delegua.estilizador.habilitado": true,
   "delegua.estilizador.fortalecerTipos.habilitado": true,
+  "delegua.estilizador.explicitarTiposParametros.habilitado": false,
   "delegua.estilizador.convencaoNomenclatura.habilitado": true,
   "delegua.estilizador.convencaoNomenclatura.variaveis": "caixaCamelo",
   "delegua.estilizador.convencaoNomenclatura.constantes": "CAIXA_ALTA",
