@@ -65,6 +65,7 @@ jest.mock('../fontes/documentacao-em-editor', () => ({
     DelpropsProvedorDocumentacaoEmEditor: class {},
     FolesProvedorDocumentacaoEmEditor: class {},
     LinConEsProvedorDocumentacaoEmEditor: class {},
+    PortugolStudioProvedorDocumentacaoEmEditor: class {},
     PituguesProvedorDocumentacaoEmEditor: class {}
 }));
 

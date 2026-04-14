@@ -219,7 +219,8 @@ jest.mock('../../fontes/avaliacao-sintatica/avaliador-sintatico-com-importacao',
             declaracoes: [],
             erros: []
         }),
-        preCarregarDefinicoes: jest.fn().mockResolvedValue(undefined)
+        preCarregarDefinicoes: jest.fn().mockResolvedValue(undefined),
+        tiposDefinidosEmCodigo: {}
     }))
 }), { virtual: true });
 

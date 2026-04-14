@@ -780,6 +780,9 @@
         "lodash": "^4.17.21",
         "real-executable-path": "^3.0.0"
     },
+    "resolutions": {
+        "@designliquido/delegua": "1.17.1"
+    },
     "copyFiles": [
         {
             "from": "node_modules/@designliquido/lmht-js/especificacao/lmht-reverso-xml10.xslt",
