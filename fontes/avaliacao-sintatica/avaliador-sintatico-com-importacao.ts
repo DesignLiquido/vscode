@@ -36,12 +36,18 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
     arquivosImportados: string[];
     modoLair: boolean;
     diagnosticos?: vscode.DiagnosticCollection;
+    contextoLiquidoHabilitado: boolean;
 
     constructor(importador: ImportadorExtensao) {
         super();
         this.tiposDefinidosPorBibliotecas = {};
         this.arquivosImportados = [];
         this.importador = importador;
+        this.contextoLiquidoHabilitado = false;
+    }
+
+    definirContextoLiquido(habilitado: boolean): void {
+        this.contextoLiquidoHabilitado = habilitado;
     }
 
     override async finalizarChamada(entidadeChamada: Construto, tipoPrimitiva?: string | undefined): Promise<Chamada> {
@@ -441,6 +447,22 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
         }
 
         super.inicializarPilhaEscopos();
+
+        if (this.contextoLiquidoHabilitado) {
+            this.tiposDeFerramentasExternas = {
+                ...this.tiposDeFerramentasExternas,
+                liquido: {
+                    lincones: 'módulo',
+                    liquido: 'módulo',
+                    requisicao: 'módulo',
+                    resposta: 'módulo'
+                }
+            };
+
+            this.pilhaEscopos.definirInformacoesVariavel('liquido', new InformacaoElementoSintatico('liquido', 'módulo'));
+            this.pilhaEscopos.definirInformacoesVariavel('requisicao', new InformacaoElementoSintatico('requisicao', 'módulo'));
+            this.pilhaEscopos.definirInformacoesVariavel('resposta', new InformacaoElementoSintatico('resposta', 'módulo'));
+        }
     }
 
     /**

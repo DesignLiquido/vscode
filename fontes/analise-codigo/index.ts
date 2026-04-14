@@ -87,6 +87,8 @@ export async function executarAnalises(
             const avaliadorComImportacao = new AvaliadorSintaticoComImportacao(
                 new ImportadorExtensao(lexador) as any
             );
+            const arquivoDeRotaLiquido = /[\\\/]rotas[\\\/]/i.test(documento.fileName);
+            avaliadorComImportacao.definirContextoLiquido(arquivoDeRotaLiquido);
             avaliadorComImportacao.diagnosticos = diagnosticos;
             await avaliadorComImportacao.preCarregarDefinicoes(await descobrirDefinicoes());
 

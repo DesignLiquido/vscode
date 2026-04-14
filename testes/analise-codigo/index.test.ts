@@ -220,6 +220,7 @@ jest.mock('../../fontes/avaliacao-sintatica/avaliador-sintatico-com-importacao',
             erros: []
         }),
         preCarregarDefinicoes: jest.fn().mockResolvedValue(undefined),
+        definirContextoLiquido: jest.fn(),
         tiposDefinidosEmCodigo: {}
     }))
 }), { virtual: true });
