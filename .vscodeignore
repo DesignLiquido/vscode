@@ -3,8 +3,13 @@
 .vscode-test/**
 .gitignore
 
+coverage/
 exemplos/
 fontes/
+testes/
 
 CLAUDE.md
+jest.config.js
+tsconfig.json
+tsconfig.browser.json
 vsc-extension-quickstart.md
