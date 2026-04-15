@@ -32,21 +32,21 @@ export class ImportadorExtensao implements ImportadorInterface<SimboloInterface>
     async importar(nomeArquivo: string, _: number): Promise<RetornoImportador<SimboloInterface>> {
         let fileUri: vscode.Uri;
 
-        // Check if the path is already an absolute URI or file system path
+        // Verificando se o caminho é um URI absoluto ou um caminho de sistema de arquivos
         try {
-            // Try to parse as URI first (handles file:// URIs)
+            // Tenta interpretar como URI primeiro (lida com URIs file://)
             if (nomeArquivo.startsWith('file://') || nomeArquivo.startsWith('vscode-')) {
                 fileUri = vscode.Uri.parse(nomeArquivo);
             }
-            // Check if it's an absolute file path (Windows: C:\, D:\, etc. or Unix: /)
+            // Verifica se é um caminho de arquivo absoluto (Windows: C:\, D:\, etc. ou Unix: /)
             else if (
-                nomeArquivo.match(/^[a-zA-Z]:[/\\]/) || // Windows absolute path
-                nomeArquivo.startsWith('/') || // Unix absolute path
-                nomeArquivo.startsWith('\\\\') // UNC path
+                nomeArquivo.match(/^[a-zA-Z]:[/\\]/) || // Windows
+                nomeArquivo.startsWith('/') || // Unix
+                nomeArquivo.startsWith('\\\\') // UNC
             ) {
                 fileUri = vscode.Uri.file(nomeArquivo);
             }
-            // Otherwise, treat as relative path
+            // Caso contrário, trata como caminho relativo
             else {
                 if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
                     throw new Error("Não há espaços de trabalho abertos válidos.");
@@ -58,7 +58,7 @@ export class ImportadorExtensao implements ImportadorInterface<SimboloInterface>
             const bufferArquivo = await vscode.workspace.fs.readFile(fileUri);
             const conteudoArquivo = Buffer.from(bufferArquivo).toString('utf8').split('\n').map(linha => linha + '\0');
 
-            // Store the content in conteudoArquivosAbertos for potential reuse
+            // Armazena o conteúdo em conteudoArquivosAbertos para possível reutilização
             const hashArquivo = cyrb53(nomeArquivo.toLowerCase());
             this.conteudoArquivosAbertos[hashArquivo] = conteudoArquivo;
 

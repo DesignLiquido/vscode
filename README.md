@@ -200,12 +200,6 @@ Esta extensão está disponível tanto na versão desktop quanto na versão web 
 - **Painel de Entrada e Saída** interativo
 - **Suporte a depuração** para todas as linguagens
 - **Criação de arquivos** Pituguês diretamente do navegador
-
-### ❌ Limitações da Versão Web
-
-Devido a restrições do ambiente de navegador, os seguintes recursos não estão disponíveis:
-
-- **Tradução de código** entre linguagens (requer ambiente Node.js)
   
 > 💡 **Dica:** Para acesso completo a todos os recursos, instale a extensão na versão _desktop_ do VS Code.
 

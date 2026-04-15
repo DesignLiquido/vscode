@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+
 import { Subject } from 'await-notify';
 
 /**

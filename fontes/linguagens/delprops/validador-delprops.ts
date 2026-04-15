@@ -1,11 +1,5 @@
 import * as vscode from 'vscode';
-
-type TipoValor = 'logico' | 'texto' | 'numero';
-
-interface EsquemaPropriedade {
-    tipo: TipoValor;
-    valoresPermitidos?: string[];
-}
+import { EsquemaPropriedade, TipoValor } from '../../interfaces';
 
 /**
  * Propriedades conhecidas do namespace `liquido.roteador`.

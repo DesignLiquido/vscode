@@ -2,8 +2,9 @@ import * as vscode from 'vscode';
 
 import { Lexador } from '@designliquido/delegua/lexador';
 import { TradutorMermaidJs } from '@designliquido/delegua/tradutores';
-import { ImportadorExtensao } from '../../importador';
 import { AvaliadorSintatico, RetornoLexador, SimboloInterface } from '@designliquido/delegua';
+
+import { ImportadorExtensao } from '../../importador';
 import { GerenciadorVisoesFluxograma } from './gerenciador-visoes-fluxograma';
 
 /**

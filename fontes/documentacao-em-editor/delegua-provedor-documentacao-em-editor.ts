@@ -2,12 +2,12 @@ import * as vscode from 'vscode';
 
 import { Classe, Const, FuncaoDeclaracao, InterfaceDeclaracao, Var } from '@designliquido/delegua/declaracoes';
 import { ComentarioComoConstruto } from '@designliquido/delegua/construtos';
-
-import { obterResultado } from '../analise-codigo/cache-analise';
 import primitivasDicionario from '@designliquido/delegua/bibliotecas/primitivas-dicionario';
 import primitivasNumero from '@designliquido/delegua/bibliotecas/primitivas-numero';
 import primitivasTexto from '@designliquido/delegua/bibliotecas/primitivas-texto';
 import primitivasVetor from '@designliquido/delegua/bibliotecas/primitivas-vetor';
+
+import { obterResultado } from '../analise-codigo/cache-analise';
 import { formatarPrimitivas, funcoesNativasDelegua } from '../bibliotecas';
 
 const primitivasDicionarioFormatadas = formatarPrimitivas(primitivasDicionario);

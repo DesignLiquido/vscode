@@ -66,7 +66,7 @@ export class GerenciadorVisoesFluxograma {
     }
 
     /**
-     * Updates the content of an existing webview
+     * Atualiza o conteúdo de uma webview existente
      */
     public static atualizarConteudo(codigoNotacaoMermaid: string, nomeArquivo: string, localizadorExtensao: vscode.Uri): void {
         if (GerenciadorVisoesFluxograma.painelAtual) {

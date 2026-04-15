@@ -1,5 +1,21 @@
 # Histórico de Modificações
 
+## 0.25.8
+
+- Núcleo de Delégua atualizado para a versão 1.17.2:
+  - Correção de falso positivo de variável não usada em blocos `para cada` (resolve https://github.com/DesignLiquido/delegua/issues/1183);
+  - Operador de espalhamento e guardas de tipos;
+  - `função[]` passa a ser um tipo válido;
+  - Correção de _bug_ com encadeamento de operações de dicionários (ex.: `dicionario.chaves().tamanho()`);
+  - Movendo regra de explicitação de parâmetros do Formatador para o Estilizador;
+  - Implementação da função `enumerar`;
+  - Finalização da implementação do dialeto Portugol IPT, incluindo Lexador, Avaliador Sintático, Interpretador e tradutor de Portugol IPT para Delégua;
+  - Funções nativas passam a ser consideradas nas análises semânticas de Delégua e Pituguês;
+  - Consumindo ponto-e-vírgula opcional depois de `fazer ... enquanto`;
+  - Atualização para TypeScript 6;
+- Pituguês:
+  - Novas funcionalidades na formatação de _strings_ com interpolação (_f-strings_).
+
 ## 0.25.7
 
 - Extensão passa a reconhecer pacote `@designliquido/delegua-entidades`;
