@@ -193,6 +193,7 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
 
     protected async logicaComumImportacaoModulo(literalCaminho: Literal, simboloReferencia: SimboloInterface): Promise<ModuloDeclaracoes> {
         const caminhoTexto = String(literalCaminho.valor);
+        const diretorioBaseAnterior = this.importador.diretorioBase;
         const resultadoImportacao = await this.importador.importar(
             caminhoTexto,
             literalCaminho.hashArquivo
@@ -262,6 +263,8 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
                 );
             }
         }
+
+        this.importador.diretorioBase = diretorioBaseAnterior;
 
         return new ModuloDeclaracoes(
             simboloReferencia.linha,

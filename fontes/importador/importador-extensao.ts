@@ -48,17 +48,24 @@ export class ImportadorExtensao implements ImportadorInterface<SimboloInterface>
             }
             // Caso contrário, trata como caminho relativo
             else {
-                if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
-                    throw new Error("Não há espaços de trabalho abertos válidos.");
+                if (this.diretorioBase) {
+                    fileUri = vscode.Uri.joinPath(vscode.Uri.file(this.diretorioBase), nomeArquivo);
+                } else {
+                    if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
+                        throw new Error("Não há espaços de trabalho abertos válidos.");
+                    }
+                    const folderUri = vscode.workspace.workspaceFolders[0].uri;
+                    fileUri = vscode.Uri.joinPath(folderUri, nomeArquivo);
                 }
-                const folderUri = vscode.workspace.workspaceFolders[0].uri;
-                fileUri = vscode.Uri.joinPath(folderUri, nomeArquivo);
             }
 
             const bufferArquivo = await vscode.workspace.fs.readFile(fileUri);
             const conteudoArquivo = Buffer.from(bufferArquivo).toString('utf8').split('\n').map(linha => linha + '\0');
 
-            // Armazena o conteúdo em conteudoArquivosAbertos para possível reutilização
+            const caminhoResolvido = fileUri.fsPath;
+            const separador = caminhoResolvido.lastIndexOf('/') !== -1 ? '/' : '\\';
+            this.diretorioBase = caminhoResolvido.substring(0, caminhoResolvido.lastIndexOf(separador));
+
             const hashArquivo = cyrb53(nomeArquivo.toLowerCase());
             this.conteudoArquivosAbertos[hashArquivo] = conteudoArquivo;
 

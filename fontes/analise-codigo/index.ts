@@ -84,8 +84,11 @@ export async function executarAnalises(
 
         case "delegua":
             lexador = new Lexador();
+            const importador = new ImportadorExtensao(lexador);
+            const separador = documento.fileName.lastIndexOf('/') !== -1 ? '/' : '\\';
+            importador.diretorioBase = documento.fileName.substring(0, documento.fileName.lastIndexOf(separador));
             const avaliadorComImportacao = new AvaliadorSintaticoComImportacao(
-                new ImportadorExtensao(lexador) as any
+                importador as any
             );
             const arquivoDeRotaLiquido = /[\\\/]rotas[\\\/]/i.test(documento.fileName);
             avaliadorComImportacao.definirContextoLiquido(arquivoDeRotaLiquido);
