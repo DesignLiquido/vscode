@@ -9,6 +9,7 @@ import primitivasVetor from '@designliquido/delegua/bibliotecas/primitivas-vetor
 
 import { obterResultado } from '../analise-codigo/cache-analise';
 import { formatarPrimitivas, funcoesNativasDelegua } from '../bibliotecas';
+import { extrairTextoDocumentacao, formatarDocumentacaoDocumentario } from './formatador-documentacao';
 
 const primitivasDicionarioFormatadas = formatarPrimitivas(primitivasDicionario);
 const primitivasNumeroFormatadas = formatarPrimitivas(primitivasNumero);
@@ -34,15 +35,19 @@ export class DeleguaProvedorDocumentacaoEmEditor
     provideHover(
         documento: vscode.TextDocument,
         posicao: vscode.Position,
-        token: vscode.CancellationToken
+        _token: vscode.CancellationToken
     ): vscode.ProviderResult<vscode.Hover> {
         const resultadoAnalise = obterResultado(documento.uri.toString());
         const intervalo = documento.getWordRangeAtPosition(posicao);
+        if (!intervalo) {
+            return undefined;
+        }
+
         const palavra = documento.getText(intervalo);
         const linhaTexto = documento.lineAt(posicao).text;
         const textoAntesPosicao = linhaTexto.substring(0, posicao.character);
         const todasDeclaracoes = [
-            ...(resultadoAnalise?.avaliadorSintatico.declaracoes || []),
+            ...(resultadoAnalise?.avaliadorSintatico?.declaracoes || []),
             ...(resultadoAnalise?.declaracoesPreCarregadas || [])
         ];
 
@@ -61,8 +66,8 @@ export class DeleguaProvedorDocumentacaoEmEditor
 
         return this.hoverMetodoPrimitivo(textoAntesPosicao, palavra, declaracoesPertinentes)
             ?? this.hoverFuncaoNativa(palavra)
-            ?? this.hoverVariavelOuConstante(palavra, declaracoesPertinentes)
             ?? this.hoverFuncaoDocumentada(palavra, todasDeclaracoes)
+            ?? this.hoverVariavelOuConstante(palavra, declaracoesPertinentes)
             ?? this.hoverClasseDocumentada(palavra, todasDeclaracoes, documento.getText())
             ?? this.hoverInterfaceDocumentada(palavra, todasDeclaracoes, documento.getText());
     }
@@ -165,8 +170,10 @@ export class DeleguaProvedorDocumentacaoEmEditor
         }
 
         const conteudo = declaracaoFuncao.documentacao as ComentarioComoConstruto;
-        const texto = Array.isArray(conteudo.conteudo) ? conteudo.conteudo.join('\n') : conteudo.conteudo;
-        return new vscode.Hover(new vscode.MarkdownString(texto));
+        const doc = new vscode.MarkdownString();
+        return new vscode.Hover(
+            formatarDocumentacaoDocumentario(doc, extrairTextoDocumentacao(conteudo.conteudo))
+        );
     }
 
     private hoverClasseDocumentada(
@@ -202,11 +209,7 @@ export class DeleguaProvedorDocumentacaoEmEditor
 
         if (declaracaoClasse.documentacao) {
             const conteudoComentario = declaracaoClasse.documentacao as unknown as ComentarioComoConstruto;
-            const textoDocumentacao = Array.isArray(conteudoComentario.conteudo)
-                ? conteudoComentario.conteudo.join('\n')
-                : conteudoComentario.conteudo;
-
-            doc.appendMarkdown(`\n\n${textoDocumentacao.trim()}`);
+            formatarDocumentacaoDocumentario(doc, extrairTextoDocumentacao(conteudoComentario.conteudo));
             return new vscode.Hover(doc);
         }
 
@@ -221,7 +224,7 @@ export class DeleguaProvedorDocumentacaoEmEditor
                     .map(l => l.replace(/^\s*\*\s?/, ''))
                     .join('\n')
                     .trim();
-                doc.appendMarkdown('\n\n' + conteudo);
+                formatarDocumentacaoDocumentario(doc, conteudo);
                 break;
             }
         }
@@ -252,7 +255,9 @@ export class DeleguaProvedorDocumentacaoEmEditor
                     .map(l => l.replace(/^\s*\*\s?/, ''))
                     .join('\n')
                     .trim();
-                return new vscode.Hover(new vscode.MarkdownString(conteudo));
+                return new vscode.Hover(
+                    formatarDocumentacaoDocumentario(new vscode.MarkdownString(), conteudo)
+                );
             }
         }
 

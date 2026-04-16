@@ -28,6 +28,7 @@ jest.mock('vscode', () => ({
         })),
         registerCompletionItemProvider: jest.fn(() => ({ dispose: jest.fn() })),
         registerHoverProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerDocumentLinkProvider: jest.fn(() => ({ dispose: jest.fn() })),
         registerDocumentFormattingEditProvider: jest.fn(() => ({ dispose: jest.fn() })),
         registerSignatureHelpProvider: jest.fn(() => ({ dispose: jest.fn() })),
         registerCodeActionsProvider: jest.fn(() => ({ dispose: jest.fn() })),
@@ -62,6 +63,7 @@ jest.mock('../fontes/depuracao/fabricas/remotas', () => ({
 
 jest.mock('../fontes/documentacao-em-editor', () => ({
     DeleguaProvedorDocumentacaoEmEditor: class {},
+    DeleguaProvedorLinksDocumentacao: class {},
     DelpropsProvedorDocumentacaoEmEditor: class {},
     FolesProvedorDocumentacaoEmEditor: class {},
     LinConEsProvedorDocumentacaoEmEditor: class {},
@@ -218,10 +220,29 @@ describe('Extensão VSCode - Design Líquido', () => {
             expect(vscode.languages.registerCompletionItemProvider).toHaveBeenCalled();
         });
 
+        it('deve registrar completude de Delégua com gatilho @', () => {
+            extensao.activate(context);
+
+            expect(vscode.languages.registerCompletionItemProvider).toHaveBeenCalledWith(
+                [
+                    { scheme: 'file', language: 'delegua' },
+                    { scheme: 'untitled', language: 'delegua' }
+                ],
+                expect.anything(),
+                '@'
+            );
+        });
+
         it('deve registrar provedores de formatação', () => {
             extensao.activate(context);
 
             expect(vscode.languages.registerDocumentFormattingEditProvider).toHaveBeenCalled();
+        });
+
+        it('deve registrar provedores de links em documentários', () => {
+            extensao.activate(context);
+
+            expect(vscode.languages.registerDocumentLinkProvider).toHaveBeenCalled();
         });
     });
 });

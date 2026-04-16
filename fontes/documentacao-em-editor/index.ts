@@ -6,3 +6,4 @@ export * from './visualg-provedor-documentacao-em-editor';
 export * from './lmht-provedor-documentacao-em-editor';
 export * from './portugol-studio-provedor-documentacao-em-editor';
 export * from './pitugues-provedor-documentacao-em-editor';
+export * from './delegua-provedor-links-documentacao';

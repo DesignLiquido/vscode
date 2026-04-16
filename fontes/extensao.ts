@@ -11,6 +11,7 @@ import {
 } from './depuracao/fabricas/remotas';
 import {
     DeleguaProvedorDocumentacaoEmEditor,
+    DeleguaProvedorLinksDocumentacao,
     DelpropsProvedorDocumentacaoEmEditor,
     FolesProvedorDocumentacaoEmEditor,
     LinConEsProvedorDocumentacaoEmEditor,
@@ -365,7 +366,8 @@ export function activate(context: vscode.ExtensionContext) {
                 { scheme: 'file', language: 'delegua' },
                 { scheme: 'untitled', language: 'delegua' }
             ],
-            new DeleguaProvedorCompletude()
+            new DeleguaProvedorCompletude(),
+            '@'
         )
     );
 
@@ -501,6 +503,16 @@ export function activate(context: vscode.ExtensionContext) {
                 { scheme: 'untitled', language: 'pitugues' }
             ],
             new PituguesProvedorDocumentacaoEmEditor()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentLinkProvider(
+            [
+                { scheme: 'file', language: 'delegua' },
+                { scheme: 'untitled', language: 'delegua' }
+            ],
+            new DeleguaProvedorLinksDocumentacao()
         )
     );
 

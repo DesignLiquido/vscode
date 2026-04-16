@@ -191,7 +191,14 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
     });
 
     it('retorna Hover para função documentada com FuncaoDeclaracao', () => {
-        const comentario = { conteudo: 'Documentação da função' };
+        const comentario = {
+            conteudo: [
+                'Documentação da função',
+                '@param {texto} nome Nome da pessoa',
+                '@returns {texto} Saudação formatada',
+                '@see ./exemplos/saudacao.delegua'
+            ]
+        };
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
                 declaracoes: [
@@ -206,10 +213,13 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
         });
         const result = provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
         expect(result).toBeDefined();
+        expect(result.contents.value).toContain('**Parametros**');
+        expect(result.contents.value).toContain('**Retorna**');
+        expect(result.contents.value).toContain('**Veja tambem**');
     });
 
     it('retorna Hover para função documentada com conteúdo array', () => {
-        const comentario = { conteudo: ['linha 1', 'linha 2'] };
+        const comentario = { conteudo: ['linha 1', '@summary resumo curto', 'linha 2'] };
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
                 declaracoes: [
@@ -224,6 +234,7 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
         });
         const result = provedor.provideHover(doc, { line: 0, character: 4 }, mockToken);
         expect(result).toBeDefined();
+        expect(result.contents.value).toContain('**Resumo**');
     });
 
     it('retorna Hover para classe documentada (encontra via regex no fonte)', () => {

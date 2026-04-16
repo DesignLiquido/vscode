@@ -1,3 +1,8 @@
+/**
+ * Exemplo de classe vazia.
+ * 
+ * @
+ */
 classe Teste {}
 var teste: Teste;
 escreva(teste); 

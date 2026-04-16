@@ -5,6 +5,7 @@ import tradutorWeb from './traducao/index-web';
 import { configurarDepuracao } from './depuracao/configuracao-depuracao';
 import {
     DeleguaProvedorDocumentacaoEmEditor,
+    DeleguaProvedorLinksDocumentacao,
     FolesProvedorDocumentacaoEmEditor,
     LinConEsProvedorDocumentacaoEmEditor,
     VisuAlgProvedorDocumentacaoEmEditor,
@@ -211,7 +212,8 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(
             vscode.languages.registerCompletionItemProvider(
                 { language: linguagem as string },
-                provedor as any
+                provedor as any,
+                ...(linguagem === 'delegua' ? ['@'] : [])
             )
         );
     });
@@ -235,6 +237,13 @@ export function activate(context: vscode.ExtensionContext) {
             )
         );
     });
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentLinkProvider(
+            { language: 'delegua' },
+            new DeleguaProvedorLinksDocumentacao()
+        )
+    );
 
     // Ir para definição
     context.subscriptions.push(

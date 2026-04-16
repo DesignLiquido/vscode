@@ -25,6 +25,7 @@ const primitivas = [
 });
 import { obterResultado } from '../analise-codigo/cache-analise';
 import { ParametroDetectado, TipoParametro } from './interfaces';
+import { definicoesTagsDocumentario } from '../documentacao-em-editor/etiquetas-documentarios';
 
 /**
  * Classe de provedor de completude de Delégua. 
@@ -33,6 +34,16 @@ import { ParametroDetectado, TipoParametro } from './interfaces';
  * ponto e/ou Ctrl + espaço.
  */
 export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider {
+    private readonly completudesDocumentario = definicoesTagsDocumentario.map(definicao => {
+        const itemCompletude = new vscode.CompletionItem(definicao.canonica, vscode.CompletionItemKind.Interface);
+        itemCompletude.detail = `${definicao.titulo} do documentário`;
+        itemCompletude.documentation = new vscode.MarkdownString(
+            `Etiqueta canônica: \`${definicao.canonica}\`${definicao.aliases.length > 1 ? `\n\nAliases: ${definicao.aliases.map(alias => `\`${alias}\``).join(', ')}` : ''}`
+        );
+        itemCompletude.insertText = new vscode.SnippetString(`${definicao.canonica} $0`);
+        itemCompletude.sortText = `0-${definicao.canonica}`;
+        return itemCompletude;
+    });
 
     // Definições de tipos de Liquido e seus parâmetros.
     private readonly tiposParametrosLiquido: TipoParametro[] = [
@@ -208,6 +219,13 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
         const linhaTexto = documento.lineAt(posicao).text;
         const textoAntesPosicao = linhaTexto.substring(0, posicao.character);
 
+        if (this.estaEmDocumentario(documento, posicao)) {
+            const completudesDocumentario = this.obterCompletudesDocumentario(textoAntesPosicao);
+            if (completudesDocumentario.length > 0) {
+                return completudesDocumentario;
+            }
+        }
+
         const detalhesEscopo = this.obterDetalhesEscopo(documento, posicao);
         const parametrosDetectados = this.detectarParametrosDaFuncao(documento, posicao);
 
@@ -283,6 +301,48 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
                     this.completudesParaDelegua(textoAntesPosicao, palavraAntesPonto, parametrosDetectados, declaracaoCorrespondente)
                 );
         }
+    }
+
+    private estaEmDocumentario(documento: vscode.TextDocument, posicao: vscode.Position): boolean {
+        let emComentarioDocumentario = false;
+
+        for (let linha = 0; linha <= posicao.line; linha++) {
+            const textoLinha = documento.lineAt(linha).text;
+            const limite = linha === posicao.line ? textoLinha.substring(0, posicao.character) : textoLinha;
+
+            if (limite.includes('/**')) {
+                emComentarioDocumentario = true;
+            }
+
+            if (limite.includes('*/')) {
+                emComentarioDocumentario = false;
+            }
+        }
+
+        return emComentarioDocumentario;
+    }
+
+    private obterCompletudesDocumentario(textoAntesPosicao: string): vscode.CompletionItem[] {
+        const correspondencia = textoAntesPosicao.match(/(^|\s)@(\w*)$/);
+        if (!correspondencia) {
+            return [];
+        }
+
+        const prefixo = `@${(correspondencia[2] || '').toLowerCase()}`;
+        return this.completudesDocumentario
+            .filter(item => item.label.toString().toLowerCase().startsWith(prefixo))
+            .map(item => {
+                const itemCompletude = new vscode.CompletionItem(item.label, item.kind);
+                itemCompletude.detail = item.detail;
+                itemCompletude.documentation = item.documentation;
+                itemCompletude.sortText = item.sortText;
+
+                const textoEtiqueta = item.label.toString();
+                const restanteEtiqueta = textoEtiqueta.slice(prefixo.length);
+                itemCompletude.insertText = new vscode.SnippetString(`${restanteEtiqueta} $0`);
+
+                return itemCompletude;
+            });
     }
 
     /**

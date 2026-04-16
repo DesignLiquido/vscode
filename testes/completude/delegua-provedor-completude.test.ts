@@ -59,6 +59,14 @@ jest.mock('../../fontes/analise-codigo/cache-analise', () => ({
     obterResultado: jest.fn().mockReturnValue(null)
 }), { virtual: true });
 
+jest.mock('../../fontes/documentacao-em-editor/etiquetas-documentarios', () => ({
+    definicoesTagsDocumentario: [
+        { canonica: '@param', aliases: ['@param', '@arg'], titulo: 'Parametros' },
+        { canonica: '@veja', aliases: ['@veja', '@see'], titulo: 'Veja tambem' },
+        { canonica: '@retorna', aliases: ['@retorna', '@returns'], titulo: 'Retorna' }
+    ]
+}), { virtual: true });
+
 // Mock das declarações do Delegua
 jest.mock('@designliquido/delegua/declaracoes', () => ({
     Var: class Var {
@@ -150,6 +158,55 @@ describe('completude/DeleguaProvedorCompletude', () => {
 
             expect(Array.isArray(items)).toBe(true);
             expect(items.length).toBeGreaterThan(0);
+        });
+
+        it('deve sugerir etiquetas de documentário após @ dentro de /** */', () => {
+            mockDocument.lineAt = jest.fn((linhaOuPosicao: number | { line: number }) => {
+                const linhas = ['/**', ' * @', ' */'];
+                const linha = typeof linhaOuPosicao === 'number' ? linhaOuPosicao : linhaOuPosicao.line;
+                return { text: linhas[linha] };
+            });
+            mockDocument.lineCount = 3;
+            mockPosition.line = 1;
+            mockPosition.character = 4;
+            obterResultado.mockReturnValue({ avaliadorSintatico: { declaracoes: [] } });
+
+            const items = provedor.provideCompletionItems(
+                mockDocument,
+                mockPosition,
+                mockToken,
+                mockContext
+            );
+
+            expect(Array.isArray(items)).toBe(true);
+            expect(items.some((item: any) => item.label === '@param')).toBe(true);
+            expect(items.some((item: any) => item.label === '@veja')).toBe(true);
+
+            const itemParam = items.find((item: any) => item.label === '@param');
+            expect(itemParam.insertText.value).toBe('param $0');
+        });
+
+        it('deve filtrar etiquetas de documentário pelo prefixo digitado', () => {
+            mockDocument.lineAt = jest.fn((linhaOuPosicao: number | { line: number }) => {
+                const linhas = ['/**', ' * @v', ' */'];
+                const linha = typeof linhaOuPosicao === 'number' ? linhaOuPosicao : linhaOuPosicao.line;
+                return { text: linhas[linha] };
+            });
+            mockDocument.lineCount = 3;
+            mockPosition.line = 1;
+            mockPosition.character = 5;
+            obterResultado.mockReturnValue({ avaliadorSintatico: { declaracoes: [] } });
+
+            const items = provedor.provideCompletionItems(
+                mockDocument,
+                mockPosition,
+                mockToken,
+                mockContext
+            );
+
+            expect(items).toHaveLength(1);
+            expect(items[0].label).toBe('@veja');
+            expect(items[0].insertText.value).toBe('eja $0');
         });
 
         it('deve retornar sugestões de métodos Liquido após "liquido."', () => {

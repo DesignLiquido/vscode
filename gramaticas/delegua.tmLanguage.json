@@ -67,7 +67,11 @@
 						}
 					},
 					"end": "\\*/",
-					"name": "comment.block.documentation.delegua"
+					"name": "comment.block.documentation.delegua",
+					"patterns": [
+						{ "include": "#documentation-links" },
+						{ "include": "#documentation-tags" }
+					]
 				},
 				{
 					"begin": "/\\*",
@@ -87,6 +91,25 @@
 					},
 					"match": "(//).*$\\n?",
 					"name": "comment.line.double-slash.delegua"
+				}
+			]
+		},
+		"documentation-links": {
+			"patterns": [
+				{
+					"match": "(@(?:veja|see))\\s+(\"[^\"]+\"|'[^']+'|<[^>]+>|\\S+)",
+					"captures": {
+						"1": { "name": "storage.type.documentation.tag.delegua" },
+						"2": { "name": "markup.underline.link.path.delegua" }
+					}
+				}
+			]
+		},
+		"documentation-tags": {
+			"patterns": [
+				{
+					"name": "storage.type.documentation.tag.delegua",
+					"match": "@(abstrato|abstract|virtual|acesso|access|apelido|alias|assincrono|async|arquivo|file|fileoverview|overview|autor|author|cede|lends|classe|class|constructor|constante|constant|const|constroi|constructs|definicaodetipo|typedef|desde|since|descricao|description|desc|descricaodaclasse|classdesc|direitosautorais|copyright|dispara|fires|emits|enumeracao|enum|espacodenomes|namespace|estatico|static|estende|augments|extends|evento|event|exemplo|example|exporta|exports|externo|external|host|fazer|todo|funcao|function|func|method|gerador|generator|global|herdadoc|inheritdoc|ignorar|ignore|implementa|implements|instancia|instance|interface|interno|inner|isto|this|lanca|throws|exception|licenca|license|membro|member|var|membrode|memberof|mescla|mixes|mistura|mixin|modulo|module|nome|name|obsoleto|deprecated|ocultaconstrutor|hideconstructor|pacote|package|padrao|default|defaultvalue|param|arg|argument|privado|private|produz|yields|yield|propriedade|property|prop|protegido|protected|publico|public|requer|requires|retorna|returns|return|resumo|summary|sobrescreve|override|somenteleitura|readonly|tipo|type|tipoitem|kind|tutorial|variacao|variation|veja|see|versao|version|empresta|borrows|escuta|listens)\\b"
 				}
 			]
 		},
