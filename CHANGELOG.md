@@ -1,5 +1,22 @@
 # Histórico de Modificações
 
+## 0.25.9
+
+- Núcleo de Delégua atualizado para a versão 1.18.2:
+  - Preservação de mais elementos com erros sintáticos durante a avaliação sintática, melhorando a integração com a extensão do VS Code;
+  - Melhorias no analisador semântico: inferência de tipos mais precisa em `escolha`, regras baseadas em inicialização de variáveis e inferência para propriedades e métodos importados de classes em arquivos `.delegua`;
+  - Pituguês: correção de implementação de métodos em `snake_case` e adição de funções nativas no analisador semântico, com testes de validação de funções globais;
+  - Quando classe é usada como tipo de retorno, o analisador semântico passa a considerar a classe como usada;
+  - Correções em Égua Clássico e no tradutor para AssemblyScript;
+  - Ampliação de cobertura de testes unitários para ARM, RISC-V e biblioteca global de Tenda.
+- Melhoramentos na extensão para capacidades semânticas e provedores de código no editor;
+- Ajustes para trabalho com projetos modulares (como `delegua-delegua`) e melhor suporte a importações por diretórios relativos;
+- Capacidade de compreensão de etiquetas em documentários;
+- Atualização de contexto de Liquido ao abrir arquivos de rotas;
+- Nova configuração para adicionar tipos explícitos durante a estilização de código em Delégua;
+- Ampliação de testes unitários da extensão para tradução, LMHT, delprops, descobridor de definições, provedores de completude e formatação;
+- Atualizações periódicas de pacotes e ajustes internos de manutenção.
+
 ## 0.25.8
 
 - Núcleo de Delégua atualizado para a versão 1.17.2:
