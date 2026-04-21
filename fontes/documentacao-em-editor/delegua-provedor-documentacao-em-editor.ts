@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
-import { Classe, Const, FuncaoDeclaracao, InterfaceDeclaracao, Var } from '@designliquido/delegua/declaracoes';
-import { ComentarioComoConstruto } from '@designliquido/delegua/construtos';
+import { Classe, Const, FuncaoDeclaracao, InterfaceDeclaracao, ParaCada, Var } from '@designliquido/delegua/declaracoes';
+import { Chamada, ComentarioComoConstruto } from '@designliquido/delegua/construtos';
 import primitivasDicionario from '@designliquido/delegua/bibliotecas/primitivas-dicionario';
 import primitivasNumero from '@designliquido/delegua/bibliotecas/primitivas-numero';
 import primitivasTexto from '@designliquido/delegua/bibliotecas/primitivas-texto';
@@ -15,16 +15,11 @@ const primitivasDicionarioFormatadas = formatarPrimitivas(primitivasDicionario);
 const primitivasNumeroFormatadas = formatarPrimitivas(primitivasNumero);
 const primitivasTextoFormatadas = formatarPrimitivas(primitivasTexto);
 const primitivasVetorFormatadas = formatarPrimitivas(primitivasVetor);
-const primitivas = [
-    ...primitivasDicionarioFormatadas,
-    ...primitivasNumeroFormatadas,
-    ...primitivasTextoFormatadas,
-    ...primitivasVetorFormatadas
-].sort((a, b) => {
-    const nome1 = a.nome.toUpperCase();
-    const nome2 = b.nome.toUpperCase();
-    return nome1 > nome2 ? 1 : nome1 < nome2 ? -1 : 0;
-});
+
+function desembrulharTipoFuncao(tipo: string): string {
+    const correspondencia = tipo?.match(/^função<(.+)>$/);
+    return correspondencia ? correspondencia[1] : tipo;
+}
 
 /**
  * Provedor de documentação para `hover` (ponteiro do _mouse_ por cima do elemento de código.)
@@ -54,10 +49,16 @@ export class DeleguaProvedorDocumentacaoEmEditor
 
         const declaracoesPertinentes = todasDeclaracoes.flatMap(declaracao => {
             if (declaracao instanceof Var) {
-                return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
+                const tipo = declaracao.inicializador instanceof Chamada
+                    ? desembrulharTipoFuncao(declaracao.tipo)
+                    : declaracao.tipo;
+                return [{ nome: declaracao.simbolo.lexema, tipo }];
             }
             if (declaracao instanceof Const) {
-                return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
+                const tipo = declaracao.inicializador instanceof Chamada
+                    ? desembrulharTipoFuncao(declaracao.tipo)
+                    : declaracao.tipo;
+                return [{ nome: declaracao.simbolo.lexema, tipo }];
             }
             if (declaracao instanceof FuncaoDeclaracao) {
                 return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
@@ -66,6 +67,8 @@ export class DeleguaProvedorDocumentacaoEmEditor
         });
 
         return this.hoverPropriedadeClasse(palavra, textoAntesPalavra, posicao.line + 1, todasDeclaracoes)
+            ?? this.hoverVariavelParaCada(palavra, posicao.line + 1, todasDeclaracoes)
+            ?? this.hoverParametroFuncao(palavra, posicao.line + 1, todasDeclaracoes)
             ?? this.hoverMetodoPrimitivo(textoAntesPosicao, palavra, declaracoesPertinentes)
             ?? this.hoverFuncaoNativa(palavra)
             ?? this.hoverFuncaoDocumentada(palavra, todasDeclaracoes)
@@ -108,6 +111,114 @@ export class DeleguaProvedorDocumentacaoEmEditor
         return new vscode.Hover(doc);
     }
 
+    private elementoDeIteravel(tipoIteravel: string): string {
+        if (tipoIteravel === 'texto') {
+            return 'texto';
+        }
+        if (tipoIteravel.endsWith('[]')) {
+            return tipoIteravel.slice(0, -2);
+        }
+        return 'qualquer';
+    }
+
+    private encontrarParaCadaComVariavel(declaracoes: any[], palavra: string): ParaCada | undefined {
+        for (const decl of declaracoes) {
+            if (decl instanceof ParaCada && (decl.variavelIteracao as any).simbolo?.lexema === palavra) {
+                return decl;
+            }
+            const sub: any[] = (decl as any).corpo?.declaracoes
+                ?? (decl as any).caminhoEntao?.declaracoes
+                ?? (decl as any).caminhoSenao?.declaracoes
+                ?? [];
+            const encontrado = this.encontrarParaCadaComVariavel(sub, palavra);
+            if (encontrado) {
+                return encontrado;
+            }
+        }
+        return undefined;
+    }
+
+    private hoverVariavelParaCada(
+        palavra: string,
+        linhaAtual: number,
+        todasDeclaracoes: any[]
+    ): vscode.Hover | undefined {
+        const todasFuncoes: FuncaoDeclaracao[] = [];
+        for (const d of todasDeclaracoes) {
+            if (d instanceof FuncaoDeclaracao) {
+                todasFuncoes.push(d);
+            }
+            if (d instanceof Classe) {
+                todasFuncoes.push(...d.metodos);
+            }
+        }
+
+        const funcoesAnteriores = todasFuncoes.filter(f => Number(f.simbolo.linha) <= linhaAtual);
+        if (!funcoesAnteriores.length) {
+            return undefined;
+        }
+
+        const funcaoAtual = funcoesAnteriores.reduce((prev, curr) =>
+            Number(curr.simbolo.linha) > Number(prev.simbolo.linha) ? curr : prev
+        );
+
+        const corpoDeclaracoes: any[] = Array.isArray(funcaoAtual.funcao.corpo) ? funcaoAtual.funcao.corpo : [];
+        const paraCada = this.encontrarParaCadaComVariavel(corpoDeclaracoes, palavra);
+        if (!paraCada) {
+            return undefined;
+        }
+
+        const tipoIteravel = (paraCada.vetorOuDicionario as any).tipo
+            || funcaoAtual.funcao.parametros.find(
+                p => p.nome.lexema === (paraCada.vetorOuDicionario as any).simbolo?.lexema
+            )?.tipoDado
+            || 'qualquer';
+
+        const doc = new vscode.MarkdownString();
+        doc.appendCodeblock(`(Variável de iteração) ${palavra}: ${this.elementoDeIteravel(tipoIteravel)}`, 'delegua');
+        return new vscode.Hover(doc);
+    }
+
+    private hoverParametroFuncao(
+        palavra: string,
+        linhaAtual: number,
+        todasDeclaracoes: any[]
+    ): vscode.Hover | undefined {
+        const todasFuncoes: FuncaoDeclaracao[] = [];
+
+        for (const declaracao of todasDeclaracoes) {
+            if (declaracao instanceof FuncaoDeclaracao) {
+                todasFuncoes.push(declaracao);
+            }
+            if (declaracao instanceof Classe) {
+                todasFuncoes.push(...declaracao.metodos);
+            }
+        }
+
+        const funcoesAnteriores = todasFuncoes.filter(
+            f => Number(f.simbolo.linha) <= linhaAtual
+        );
+        if (!funcoesAnteriores.length) {
+            return undefined;
+        }
+
+        const funcaoAtual = funcoesAnteriores.reduce((prev, curr) =>
+            Number(curr.simbolo.linha) > Number(prev.simbolo.linha) ? curr : prev
+        );
+
+        const parametro = funcaoAtual.funcao.parametros.find(
+            p => p.nome.lexema === palavra
+        );
+        if (!parametro) {
+            return undefined;
+        }
+
+        const tipo = parametro.tipoDado || 'qualquer';
+        const doc = new vscode.MarkdownString();
+        doc.appendCodeblock(`(Parâmetro) ${palavra}: ${tipo}`, 'delegua');
+        return new vscode.Hover(doc);
+    }
+
     private hoverMetodoPrimitivo(
         textoAntesPosicao: string,
         palavra: string,
@@ -141,7 +252,10 @@ export class DeleguaProvedorDocumentacaoEmEditor
             'texto[]':      primitivasVetorFormatadas,
         };
 
-        const listaPrimitivas = mapaMetodos[declaracao.tipo] ?? primitivas;
+        const listaPrimitivas = mapaMetodos[declaracao.tipo];
+        if (!listaPrimitivas) {
+            return undefined;
+        }
         const metodo = listaPrimitivas.find(m => m.nome === palavra);
         if (!metodo) {
             return undefined;
@@ -172,7 +286,7 @@ export class DeleguaProvedorDocumentacaoEmEditor
         declaracoesPertinentes: { nome: string; tipo: string }[]
     ): vscode.Hover | undefined {
         const declaracao = declaracoesPertinentes.find(d => d.nome === palavra);
-        if (!declaracao) {
+        if (!declaracao || declaracao.nome === declaracao.tipo) {
             return undefined;
         }
 

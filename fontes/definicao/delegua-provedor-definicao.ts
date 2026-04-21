@@ -1,3 +1,4 @@
+import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { Classe } from '@designliquido/delegua/declaracoes/classe';
@@ -5,6 +6,9 @@ import { Declaracao } from '@designliquido/delegua/declaracoes';
 
 import { obterResultado } from '../analise-codigo/cache-analise';
 
+/**
+ * Provedor de definição para Delégua, permitindo que os usuários naveguem até a definição de símbolos no código-fonte.
+ */
 export class DeleguaProvedorDefinicao implements vscode.DefinitionProvider {
     private obterUriDeclaracao(declaracao: Declaracao, uriPadrao: vscode.Uri): vscode.Uri {
         const caminhoArquivoDefinicao = (declaracao as any).caminhoArquivoDefinicao as string | undefined;
@@ -41,6 +45,41 @@ export class DeleguaProvedorDefinicao implements vscode.DefinitionProvider {
         }
 
         return undefined;
+    }
+
+    private localizarSimboloImportado(
+        declaracoes: Declaracao[],
+        palavra: string,
+        linhaTexto: string,
+        uriDocumento: vscode.Uri
+    ): vscode.Location | undefined {
+        const correspondencia = linhaTexto.match(/importar\s*\{([^}]*)\}\s*de\s*(["'])([^"']+)\2/);
+        if (!correspondencia) {
+            return undefined;
+        }
+
+        const simbolosImportados = correspondencia[1].split(',').map(s => s.trim());
+        if (!simbolosImportados.includes(palavra)) {
+            return undefined;
+        }
+
+        const caminhoRelativo = correspondencia[3];
+        const caminhoAbsoluto = path.resolve(path.dirname(uriDocumento.fsPath), caminhoRelativo);
+
+        const declaracao = declaracoes.find(d => {
+            const simbolo = (d as any).simbolo;
+            const caminho = (d as any).caminhoArquivoDefinicao as string | undefined;
+            return simbolo?.lexema === palavra && caminho &&
+                path.resolve(caminho) === caminhoAbsoluto;
+        });
+
+        if (!declaracao) {
+            return undefined;
+        }
+
+        const uriDeclaracao = this.obterUriDeclaracao(declaracao, uriDocumento);
+        const simbolo = (declaracao as any).simbolo;
+        return new vscode.Location(uriDeclaracao, new vscode.Position(Number(simbolo.linha) - 1, simbolo.colunaInicio ?? 0));
     }
 
     private localizarPropriedadeClasse(
@@ -94,6 +133,12 @@ export class DeleguaProvedorDefinicao implements vscode.DefinitionProvider {
         }
 
         const linhaTexto = documento.lineAt(posicao).text;
+
+        const localizacaoImportado = this.localizarSimboloImportado(declaracoes, palavra, linhaTexto, documento.uri);
+        if (localizacaoImportado) {
+            return localizacaoImportado;
+        }
+
         const textoAntesPalavra = linhaTexto.substring(0, intervaloWord.start.character);
         if (textoAntesPalavra.trimEnd().endsWith('isto.')) {
             const localizacao = this.localizarPropriedadeClasse(

@@ -56,6 +56,17 @@ async function uriExiste(uri: vscode.Uri): Promise<boolean> {
     }
 }
 
+function extrairCaminhoImportacao(linha: string): { caminho: string; inicio: number } | undefined {
+    const correspondencia = linha.match(/\bde\s+(["'])([^"']+)\1/);
+    if (!correspondencia) {
+        return undefined;
+    }
+
+    const caminho = correspondencia[2];
+    const inicio = linha.indexOf(correspondencia[1], (correspondencia.index ?? 0) + correspondencia[0].indexOf(correspondencia[1])) + 1;
+    return { caminho, inicio };
+}
+
 async function resolverDestino(documento: vscode.TextDocument, caminhoOriginal: string): Promise<vscode.Uri | undefined> {
     const caminho = normalizarSeparadores(caminhoOriginal);
     if (!caminho) {
@@ -108,6 +119,20 @@ export class DeleguaProvedorLinksDocumentacao implements vscode.DocumentLinkProv
 
             if (textoLinha.includes('*/')) {
                 emComentarioDocumentario = false;
+            }
+
+            if (!emComentarioDocumentario) {
+                const importacao = extrairCaminhoImportacao(textoLinha);
+                if (importacao) {
+                    const destino = await resolverDestino(documento, importacao.caminho);
+                    if (destino) {
+                        const range = new vscode.Range(
+                            new vscode.Position(indiceLinha, importacao.inicio),
+                            new vscode.Position(indiceLinha, importacao.inicio + importacao.caminho.length)
+                        );
+                        links.push(new vscode.DocumentLink(range, destino));
+                    }
+                }
             }
         }
 

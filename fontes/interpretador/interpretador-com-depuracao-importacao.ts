@@ -10,6 +10,12 @@ import { ImportarBiblioteca, ModuloDeclaracoes } from '../construtos';
 
 import * as comum from './comum';
 
+/**
+ * Interpretador com depuração e suporte a importação para Delégua, estendendo a funcionalidade do interpretador com depuração 
+ * para incluir a capacidade de importar bibliotecas e módulos, permitindo uma execução mais flexível e modular do código-fonte. Utiliza
+ * as APIs do VSCode para resolver caminhos de arquivos e gerenciar o cache de importações, garantindo que as dependências sejam 
+ * corretamente carregadas.
+ */
 export class InterpretadorComDepuracaoImportacao
     extends InterpretadorComDepuracao
     implements InterpretadorComImportacaoInterface

@@ -13,16 +13,7 @@ const primitivasDicionarioFormatadas = formatarPrimitivas(primitivasDicionario);
 const primitivasNumeroFormatadas = formatarPrimitivas(primitivasNumero);
 const primitivasTextoFormatadas = formatarPrimitivas(primitivasTexto);
 const primitivasVetorFormatadas = formatarPrimitivas(primitivasVetor);
-const primitivas = [
-    ...primitivasDicionarioFormatadas,
-    ...primitivasNumeroFormatadas,
-    ...primitivasTextoFormatadas,
-    ...primitivasVetorFormatadas
-].sort((a, b) => {
-    const nome1 = a.nome.toUpperCase();
-    const nome2 = b.nome.toUpperCase();
-    return nome1 > nome2 ? 1 : nome1 < nome2 ? -1 : 0;
-});
+
 import { obterResultado } from '../analise-codigo/cache-analise';
 import { ParametroDetectado, TipoParametro } from '../interfaces/completude';
 import { definicoesTagsDocumentario } from '../documentacao-em-editor/etiquetas-documentarios';
@@ -198,13 +189,11 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
                             return itemCompletude;
                         });
                     default:
-                        return primitivas.map(funcaoNativa => {
-                            let itemCompletude = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function);
-                            itemCompletude.documentation = new vscode.MarkdownString(funcaoNativa.documentacao);
-                            return itemCompletude;
-                        });
+                        return [];
                 }
             }
+
+            return [];
         }
 
         return funcoesNativasDelegua.map(funcaoNativa => {
@@ -212,108 +201,6 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
             itemCompletude.documentation = new vscode.MarkdownString(funcaoNativa.documentacao);
             return itemCompletude;
         });
-    }
-
-    provideCompletionItems(documento: vscode.TextDocument, posicao: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionList<vscode.CompletionItem> | vscode.CompletionItem[]> {
-        const resultadoAnalise = obterResultado(documento.uri.toString());
-        const linhaTexto = documento.lineAt(posicao).text;
-        const textoAntesPosicao = linhaTexto.substring(0, posicao.character);
-
-        if (this.estaEmDocumentario(documento, posicao)) {
-            const completudesDocumentario = this.obterCompletudesDocumentario(textoAntesPosicao);
-            if (completudesDocumentario.length > 0) {
-                return completudesDocumentario;
-            }
-        }
-
-        const detalhesEscopo = this.obterDetalhesEscopo(documento, posicao);
-        const parametrosDetectados = this.detectarParametrosDaFuncao(documento, posicao);
-
-        // console.log('Detalhes do escopo:', detalhesEscopo);
-        // console.log('Parâmetros detectados:', parametrosDetectados);
-
-        const caminhoCompleto = this.analisarCadeiaChamadasEmCodigo(textoAntesPosicao);
-        // console.log('Caminho completo:', caminhoCompleto);
-
-        if (caminhoCompleto.length > 0) {
-            const completudes = this.obterCompletudesParaCaminho(caminhoCompleto, parametrosDetectados, detalhesEscopo);
-            if (completudes && completudes.length > 0) {
-                return completudes;
-            }
-        }
-
-        const declaracoesPertinentes = resultadoAnalise?.avaliadorSintatico.declaracoes.flatMap(declaracao => {
-            if (declaracao instanceof Var) {
-                return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
-            }
-
-            if (declaracao instanceof Const) {
-                return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
-            }
-
-            if (declaracao instanceof Classe) {
-                return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.simbolo.lexema }];
-            }
-
-            if (declaracao instanceof FuncaoDeclaracao) {
-                return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
-            }
-
-            return [];
-        }) || [];
-
-        const completudesDeVariaveisEConstantes = declaracoesPertinentes.map(v => {
-            let itemCompletude = new vscode.CompletionItem(v.nome, vscode.CompletionItemKind.Variable);
-            itemCompletude.detail = `(${v.tipo}) ${v.nome}`;
-            return itemCompletude;
-        });
-
-        const palavraAntesPonto = this.obterPalavraAntesPonto(textoAntesPosicao);
-        const declaracaoCorrespondente = declaracoesPertinentes.find(v => v.nome === palavraAntesPonto);
-
-        if (palavraAntesPonto === 'isto') {
-            const nomeClasse = this.obterClasseEnvolvente(documento, posicao);
-            if (nomeClasse) {
-                const classeDeclarada = resultadoAnalise?.avaliadorSintatico.declaracoes.find(
-                    d => d instanceof Classe && (d as Classe).simbolo.lexema === nomeClasse
-                ) as Classe | undefined;
-                if (classeDeclarada) {
-                    return this.obterCompletudesDeClasse(classeDeclarada);
-                }
-                return this.obterCompletudesDeClasseDeTexto(documento, nomeClasse);
-            }
-        }
-
-        // Propriedades com um parâmetro com tipo definido.
-        const tipoParametro = this.obterTipoParametroComDeteccao(palavraAntesPonto, parametrosDetectados);
-        if (tipoParametro && this.estaNoContextoCorreto(detalhesEscopo, palavraAntesPonto)) {
-            return this.criarCompletudesCompletas(tipoParametro);
-        }
-
-        switch (detalhesEscopo.tipoEscopo) {
-            case 'rotaGet':
-            case 'rotaPost':
-                // Objetos válidos apenas dentro de um escopo de rota de Liquido.
-                return objetosEmRotaLiquido.map(objeto => {
-                    let itemCompletude = new vscode.CompletionItem(objeto.nome, vscode.CompletionItemKind.Function);
-                    itemCompletude.documentation = new vscode.MarkdownString(objeto.documentacao);
-                    return itemCompletude;
-                });
-            default:
-                // Primitivas de Liquido
-                if (palavraAntesPonto === 'liquido') {
-                    return primitivasMetodosLiquido.map(funcaoNativa => {
-                        let itemCompletude = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function);
-                        itemCompletude.insertText = new vscode.SnippetString(`${funcaoNativa.nome}(requisicao, resposta) {\n\t$0\n}`);
-                        itemCompletude.documentation = new vscode.MarkdownString(funcaoNativa.documentacao);
-                        return itemCompletude;
-                    });
-                }
-
-                return completudesDeVariaveisEConstantes.concat(
-                    this.completudesParaDelegua(textoAntesPosicao, palavraAntesPonto, parametrosDetectados, declaracaoCorrespondente)
-                );
-        }
     }
 
     private estaEmDocumentario(documento: vscode.TextDocument, posicao: vscode.Position): boolean {
@@ -693,6 +580,54 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
         return completudes;
     }
 
+    private coletarVarsEConsts(declaracoes: any[]): { nome: string; tipo: string }[] {
+        const resultado: { nome: string; tipo: string }[] = [];
+        for (const d of declaracoes) {
+            if (d instanceof Var) {
+                resultado.push({ nome: d.simbolo.lexema, tipo: d.tipo });
+            } else if (d instanceof Const) {
+                resultado.push({ nome: d.simbolo.lexema, tipo: d.tipo });
+            }
+            // Enquanto/ParaCada: corpo é um Bloco com .declaracoes
+            if ((d as any).corpo?.declaracoes) {
+                resultado.push(...this.coletarVarsEConsts((d as any).corpo.declaracoes));
+            }
+            // Se: caminhoEntao e caminhoSenao são Blocos com .declaracoes
+            if ((d as any).caminhoEntao?.declaracoes) {
+                resultado.push(...this.coletarVarsEConsts((d as any).caminhoEntao.declaracoes));
+            }
+            if ((d as any).caminhoSenao?.declaracoes) {
+                resultado.push(...this.coletarVarsEConsts((d as any).caminhoSenao.declaracoes));
+            }
+        }
+        return resultado;
+    }
+
+    private coletarVariaveisLocais(todasDeclaracoes: any[], linhaAtual: number): { nome: string; tipo: string }[] {
+        const todasFuncoes: FuncaoDeclaracao[] = [];
+        for (const d of todasDeclaracoes) {
+            if (d instanceof FuncaoDeclaracao) {
+                todasFuncoes.push(d);
+            }
+            if (d instanceof Classe) {
+                todasFuncoes.push(...d.metodos);
+            }
+        }
+
+        const funcoesAnteriores = todasFuncoes.filter(f => Number(f.simbolo.linha) <= linhaAtual);
+        if (!funcoesAnteriores.length) {
+            return [];
+        }
+
+        const funcaoAtual = funcoesAnteriores.reduce((prev, curr) =>
+            Number(curr.simbolo.linha) > Number(prev.simbolo.linha) ? curr : prev
+        );
+
+        // FuncaoConstruto.corpo é diretamente um array de declarações
+        const corpo: any[] = Array.isArray(funcaoAtual.funcao.corpo) ? funcaoAtual.funcao.corpo : [];
+        return this.coletarVarsEConsts(corpo);
+    }
+
     private obterCompletudesDeClasse(classeDeclarada: Classe): vscode.CompletionItem[] {
         const completudes: vscode.CompletionItem[] = [];
 
@@ -711,5 +646,125 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
         }
 
         return completudes;
+    }
+
+    /**
+     * Ponto de entrada para fornecer sugestões de completude. Analisa o contexto atual, incluindo o texto antes do cursor, o 
+     * escopo de código, e os parâmetros detectados para gerar sugestões relevantes e contextuais para o desenvolvedor.
+     * @param {vscode.TextDocument} documento O documento de código-fonte onde a completude está sendo solicitada.
+     * @param {vscode.Position} posicao A posição do cursor no documento, usada para determinar o contexto da completude.
+     * @param {vscode.CancellationToken} token A token de cancelamento para lidar com solicitações de completude assíncronas, 
+     * permitindo que sejam canceladas se o usuário continuar digitando.
+     * @param {vscode.CompletionContext} context O contexto da solicitação de completude, fornecendo informações adicionais 
+     * sobre a origem da solicitação.
+     * @returns {vscode.ProviderResult<vscode.CompletionList<vscode.CompletionItem> | vscode.CompletionItem[]>} Uma lista de 
+     * itens de completude relevantes para o contexto atual, ou uma promessa que resolve para essa lista.
+     */
+    provideCompletionItems(documento: vscode.TextDocument, posicao: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionList<vscode.CompletionItem> | vscode.CompletionItem[]> {
+        const resultadoAnalise = obterResultado(documento.uri.toString());
+        const linhaTexto = documento.lineAt(posicao).text;
+        const textoAntesPosicao = linhaTexto.substring(0, posicao.character);
+
+        if (this.estaEmDocumentario(documento, posicao)) {
+            const completudesDocumentario = this.obterCompletudesDocumentario(textoAntesPosicao);
+            if (completudesDocumentario.length > 0) {
+                return completudesDocumentario;
+            }
+        }
+
+        const detalhesEscopo = this.obterDetalhesEscopo(documento, posicao);
+        const parametrosDetectados = this.detectarParametrosDaFuncao(documento, posicao);
+        const caminhoCompleto = this.analisarCadeiaChamadasEmCodigo(textoAntesPosicao);
+
+        if (caminhoCompleto.length > 0) {
+            const completudes = this.obterCompletudesParaCaminho(caminhoCompleto, parametrosDetectados, detalhesEscopo);
+            if (completudes && completudes.length > 0) {
+                return completudes;
+            }
+        }
+
+        const todasDeclaracoes = [
+            ...(resultadoAnalise?.declaracoesPreCarregadas || []),
+            ...(resultadoAnalise?.avaliadorSintatico?.declaracoes || [])
+        ];
+        const variaveisLocais = this.coletarVariaveisLocais(todasDeclaracoes, posicao.line + 1);
+
+        const declaracoesPertinentes = [
+            ...variaveisLocais,
+            ...(resultadoAnalise?.avaliadorSintatico.declaracoes.flatMap(declaracao => {
+                if (declaracao instanceof Var) {
+                    return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
+                }
+
+                if (declaracao instanceof Const) {
+                    return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
+                }
+
+                if (declaracao instanceof Classe) {
+                    return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.simbolo.lexema }];
+                }
+
+                if (declaracao instanceof FuncaoDeclaracao) {
+                    return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
+                }
+
+                return [];
+            }) || [])
+        ];
+
+        const completudesDeVariaveisEConstantes = declaracoesPertinentes
+            .filter(v => /^[a-zA-ZÀ-úÇç_]/.test(v.nome))
+            .map(v => {
+            let itemCompletude = new vscode.CompletionItem(v.nome, vscode.CompletionItemKind.Variable);
+            itemCompletude.detail = `(${v.tipo}) ${v.nome}`;
+            return itemCompletude;
+        });
+
+        const palavraAntesPonto = this.obterPalavraAntesPonto(textoAntesPosicao);
+        const declaracaoCorrespondente = declaracoesPertinentes.find(v => v.nome === palavraAntesPonto);
+
+        if (palavraAntesPonto === 'isto') {
+            const nomeClasse = this.obterClasseEnvolvente(documento, posicao);
+            if (nomeClasse) {
+                const classeDeclarada = resultadoAnalise?.avaliadorSintatico.declaracoes.find(
+                    d => d instanceof Classe && (d as Classe).simbolo.lexema === nomeClasse
+                ) as Classe | undefined;
+                if (classeDeclarada) {
+                    return this.obterCompletudesDeClasse(classeDeclarada);
+                }
+                return this.obterCompletudesDeClasseDeTexto(documento, nomeClasse);
+            }
+        }
+
+        // Propriedades com um parâmetro com tipo definido.
+        const tipoParametro = this.obterTipoParametroComDeteccao(palavraAntesPonto, parametrosDetectados);
+        if (tipoParametro && this.estaNoContextoCorreto(detalhesEscopo, palavraAntesPonto)) {
+            return this.criarCompletudesCompletas(tipoParametro);
+        }
+
+        switch (detalhesEscopo.tipoEscopo) {
+            case 'rotaGet':
+            case 'rotaPost':
+                // Objetos válidos apenas dentro de um escopo de rota de Liquido.
+                return objetosEmRotaLiquido.map(objeto => {
+                    let itemCompletude = new vscode.CompletionItem(objeto.nome, vscode.CompletionItemKind.Function);
+                    itemCompletude.documentation = new vscode.MarkdownString(objeto.documentacao);
+                    return itemCompletude;
+                });
+            default:
+                // Primitivas de Liquido
+                if (palavraAntesPonto === 'liquido') {
+                    return primitivasMetodosLiquido.map(funcaoNativa => {
+                        let itemCompletude = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function);
+                        itemCompletude.insertText = new vscode.SnippetString(`${funcaoNativa.nome}(requisicao, resposta) {\n\t$0\n}`);
+                        itemCompletude.documentation = new vscode.MarkdownString(funcaoNativa.documentacao);
+                        return itemCompletude;
+                    });
+                }
+
+                return completudesDeVariaveisEConstantes.concat(
+                    this.completudesParaDelegua(textoAntesPosicao, palavraAntesPonto, parametrosDetectados, declaracaoCorrespondente)
+                );
+        }
     }
 }

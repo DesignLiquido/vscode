@@ -89,7 +89,7 @@ export class DeleguaProvedorAcoesCodigo implements vscode.CodeActionProvider {
                 if (a.tipo === b.tipo) return 0;
                 return a.tipo === 'propriedade' ? -1 : 1;
             });
-            const codigoStub = membrosOrdenados.map(m => this.gerarStubMembro(m)).join('\n');
+            const esbocoCodigo = membrosOrdenados.map(m => this.gerarEsbocoMembro(m)).join('\n');
 
             const acao = new vscode.CodeAction(
                 `Implementar membros de '${correcao.nomeInterface}' em '${correcao.nomeClasse}'`,
@@ -100,7 +100,7 @@ export class DeleguaProvedorAcoesCodigo implements vscode.CodeActionProvider {
             acao.edit.insert(
                 documento.uri,
                 new vscode.Position(linhaInsercao, 0),
-                codigoStub + '\n'
+                esbocoCodigo + '\n'
             );
 
             acao.diagnostics = diagnosticos;
@@ -111,7 +111,7 @@ export class DeleguaProvedorAcoesCodigo implements vscode.CodeActionProvider {
         return acoes;
     }
 
-    private gerarStubMembro(membro: MembroInterfaceFaltando): string {
+    private gerarEsbocoMembro(membro: MembroInterfaceFaltando): string {
         if (membro.tipo === 'metodo') {
             const parametros = (membro.parametros || [])
                 .map(p => p.tipoDado ? `${p.nome}: ${p.tipoDado}` : p.nome)
