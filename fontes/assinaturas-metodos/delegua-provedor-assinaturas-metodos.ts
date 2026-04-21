@@ -171,25 +171,22 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
         }
     }
 
-    protected assinaturaParaFuncaoDefinidaEmCodigo(
-        declaracao: FuncaoDeclaracao,
+    protected assinaturaParaConstrutorClasse(
+        classe: Classe,
+        construtor: FuncaoDeclaracao,
         parametroAtivo?: number
-    ) {
+    ): vscode.SignatureHelp {
         const assinaturaFuncao = new vscode.SignatureHelp();
 
-        const parametros = declaracao.funcao.parametros.map(parametro => ({
-            nome: parametro.nome,
-            // documentacao: parametro.documentacao || ''
+        const parametros = construtor.funcao.parametros.map(parametro => ({
+            rotulo: `${parametro.nome.lexema}: ${parametro.tipoDado || 'qualquer'}`,
         }));
 
-        const subtipoMatch = declaracao.tipo?.match(/<\s*([^>]+)\s*>/);
-        const subtipo = subtipoMatch ? subtipoMatch[1].trim() : 'qualquer';
         const assinaturaMetodo = new vscode.SignatureInformation(
-            `${declaracao.simbolo.lexema}(${parametros.map(p => p.nome.lexema).join(', ')})`,
+            `${classe.simbolo.lexema}(${parametros.map(p => p.rotulo).join(', ')})`,
             new vscode.MarkdownString(
-                (declaracao.tipo ? `Retorna: ${subtipo}\n\n` : '') +
                 '```delegua\n' +
-                `${declaracao.simbolo.lexema}(${parametros.map(p => p.nome.lexema).join(', ')})` +
+                `${classe.simbolo.lexema}(${parametros.map(p => p.rotulo).join(', ')})` +
                 '\n```'
             )
         );
@@ -198,7 +195,49 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
         for (let parametro of parametros) {
             assinaturaMetodo.parameters.push(
                 new vscode.ParameterInformation(
-                    parametro.nome.lexema,
+                    parametro.rotulo,
+                    new vscode.MarkdownString("")
+                )
+            );
+        }
+
+        assinaturaFuncao.signatures = [assinaturaMetodo];
+
+        if (parametroAtivo !== undefined) {
+            assinaturaFuncao.activeParameter = parametroAtivo;
+            assinaturaFuncao.activeSignature = 0;
+        }
+
+        return assinaturaFuncao;
+    }
+
+    protected assinaturaParaFuncaoDefinidaEmCodigo(
+        declaracao: FuncaoDeclaracao,
+        parametroAtivo?: number
+    ) {
+        const assinaturaFuncao = new vscode.SignatureHelp();
+
+        const parametros = declaracao.funcao.parametros.map(parametro => ({
+            rotulo: `${parametro.nome.lexema}: ${parametro.tipoDado || 'qualquer'}`,
+        }));
+
+        const subtipoMatch = declaracao.tipo?.match(/<\s*([^>]+)\s*>/);
+        const subtipo = subtipoMatch ? subtipoMatch[1].trim() : 'qualquer';
+        const assinaturaMetodo = new vscode.SignatureInformation(
+            `${declaracao.simbolo.lexema}(${parametros.map(p => p.rotulo).join(', ')})`,
+            new vscode.MarkdownString(
+                (declaracao.tipo ? `Retorna: ${subtipo}\n\n` : '') +
+                '```delegua\n' +
+                `${declaracao.simbolo.lexema}(${parametros.map(p => p.rotulo).join(', ')})` +
+                '\n```'
+            )
+        );
+
+        assinaturaMetodo.parameters = [];
+        for (let parametro of parametros) {
+            assinaturaMetodo.parameters.push(
+                new vscode.ParameterInformation(
+                    parametro.rotulo,
                     new vscode.MarkdownString("")
                 )
             );
@@ -272,8 +311,25 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
             const funcaoDeclaracao = possivelFuncaoDefinidaEmCodigo.declaracao as FuncaoDeclaracao;
             return this.assinaturaParaFuncaoDefinidaEmCodigo(funcaoDeclaracao, parametroAtivo);
         }
-        
-        // Terceiro caso: A `palavra` é uma função nativa global.
+
+        // Terceiro caso: A `palavra` é um construtor de uma classe (local ou importada).
+        const todasAsClasses: Classe[] = [
+            ...(resultadoAnalise?.avaliadorSintatico.declaracoes.filter(d => d instanceof Classe) as Classe[] || []),
+            ...(resultadoAnalise?.declaracoesPreCarregadas?.filter(d => d instanceof Classe) as Classe[] || [])
+        ];
+
+        const possivelClasse = todasAsClasses.find(
+            (classe) => classe.simbolo.lexema === resultadoRegexFuncaoOuMetodo[1]
+        );
+
+        if (possivelClasse) {
+            const construtor = possivelClasse.metodos.find(m => m.simbolo.lexema === 'construtor');
+            if (construtor) {
+                return this.assinaturaParaConstrutorClasse(possivelClasse, construtor, parametroAtivo);
+            }
+        }
+
+        // Quarto caso: A `palavra` é uma função nativa global.
         const possivelFuncaoNativa: FuncaoNativaOuMetodoPrimitiva | undefined = funcoesNativasDelegua.find(
             (funcaoNativa) => funcaoNativa.nome === resultadoRegexFuncaoOuMetodo[1]
         );

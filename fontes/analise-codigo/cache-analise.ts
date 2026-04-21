@@ -1,19 +1,11 @@
-import { RetornoLexador, RetornoAvaliadorSintatico } from '@designliquido/delegua/interfaces/retornos';
-import { RetornoAnalisadorSemantico } from '@designliquido/delegua/interfaces/retornos/retorno-analisador-semantico';
+import { ResultadoAnaliseInterface } from '../interfaces';
 
-export interface ResultadoAnalise {
-    lexador: RetornoLexador<any>;
-    avaliadorSintatico: RetornoAvaliadorSintatico<any>;
-    analisadorSemantico: RetornoAnalisadorSemantico;
-    declaracoesPreCarregadas?: any[];
-}
+const cache = new Map<string, ResultadoAnaliseInterface>();
 
-const cache = new Map<string, ResultadoAnalise>();
-
-export function definirResultado(uri: string, resultado: ResultadoAnalise) {
+export function definirResultado(uri: string, resultado: ResultadoAnaliseInterface) {
     cache.set(uri, resultado);
 }
 
-export function obterResultado(uri: string): ResultadoAnalise | undefined {
+export function obterResultado(uri: string): ResultadoAnaliseInterface | undefined {
     return cache.get(uri);
 }

@@ -230,9 +230,12 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
                 (d) => d.constructor === Classe
             ) as Classe[];
 
+        for (const declaracao of resultadoAvaliacaoSintaticaModulo.declaracoes) {
+            (declaracao as any).caminhoArquivoDefinicao = resultadoImportacao.caminhoAbsoluto;
+        }
+
         for (const definicaoClasse of definicoesClasse) {
-            this.tiposDefinidosEmCodigo[definicaoClasse.simbolo.lexema] =
-                definicaoClasse;
+            this.tiposDefinidosEmCodigo[definicaoClasse.simbolo.lexema] = definicaoClasse;
         }
 
         // Referências de funções registradas no avaliador sintático do módulo importado
@@ -412,6 +415,8 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
                 simboloImportacao.lexema,
                 simboloImportacao
             );
+
+            this.tiposDefinidosEmCodigo[simboloImportacao.lexema] = declaracaoCorrespondente[1];
 
             this.pilhaEscopos.definirInformacoesVariavel(
                 simboloImportacao.lexema,

@@ -5,7 +5,7 @@ import { Classe, FuncaoDeclaracao } from '@designliquido/delegua/declaracoes';
 import { primitivasMetodosLiquido, objetosEmRotaLiquido } from '../bibliotecas/primitivas-liquido';
 import { primitivas, primitivasDicionarioFormatadas, primitivasNumeroFormatadas, primitivasTextoFormatadas, primitivasVetorFormatadas, funcoesNativasPitugues } from '../bibliotecas/dialetos/pitugues';
 import { obterResultado } from '../analise-codigo/cache-analise';
-import { ParametroDetectado, TipoParametro } from './interfaces';
+import { ParametroDetectado, TipoParametro } from '../interfaces/completude';
 
 /**
  * Classe de provedor de completude de Pituguês.

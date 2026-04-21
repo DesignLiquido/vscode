@@ -35,7 +35,9 @@ import { formatarDiagnosticosAvaliacaoSintatica } from '../avaliacao-sintatica';
 import { definirResultado } from './cache-analise';
 import { ImportadorExtensao } from '../importador';
 import { AvaliadorSintaticoComImportacao } from '../avaliacao-sintatica/avaliador-sintatico-com-importacao';
+import { AnalisadorSemanticoPituguesLiquido } from '../avaliacao-sintatica/analisador-semantico-pitugues-liquido';
 import { descobrirDefinicoes } from '../descobridor-definicoes';
+import { cyrb53 } from '@designliquido/delegua';
 
 const mapaSeveridadeDiagnosticos = {
     0: vscode.DiagnosticSeverity.Error,
@@ -86,21 +88,16 @@ export async function executarAnalises(
             lexador = new Lexador();
             const importador = new ImportadorExtensao(lexador);
             const separador = documento.fileName.lastIndexOf('/') !== -1 ? '/' : '\\';
+
             importador.diretorioBase = documento.fileName.substring(0, documento.fileName.lastIndexOf(separador));
-            const avaliadorComImportacao = new AvaliadorSintaticoComImportacao(
-                importador as any
-            );
+            const avaliadorComImportacao = new AvaliadorSintaticoComImportacao(importador);
             const arquivoDeRotaLiquido = /[\\\/]rotas[\\\/]/i.test(documento.fileName);
+            
             avaliadorComImportacao.definirContextoLiquido(arquivoDeRotaLiquido);
             avaliadorComImportacao.diagnosticos = diagnosticos;
             await avaliadorComImportacao.preCarregarDefinicoes(await descobrirDefinicoes());
 
             const analisadorSemanticoDelegua = new AnalisadorSemantico();
-            analisadorSemanticoDelegua.definirClassesExternasConhecidas?.(
-                Object.keys(avaliadorComImportacao.tiposDefinidosEmCodigo)
-            );
-            declaracoesPreCarregadas = Object.values(avaliadorComImportacao.tiposDefinidosEmCodigo);
-
             avaliadorSintatico = avaliadorComImportacao;
             analisadorSemantico = analisadorSemanticoDelegua;
             break;
@@ -109,7 +106,9 @@ export async function executarAnalises(
         case "pitugues":
             lexador = new LexadorPitugues();
             avaliadorSintatico = new AvaliadorSintaticoPitugues();
-            analisadorSemantico = new AnalisadorSemanticoPitugues();
+            analisadorSemantico = /[\\\/]rotas[\\\/]/i.test(documento.fileName)
+                ? new AnalisadorSemanticoPituguesLiquido()
+                : new AnalisadorSemanticoPitugues();
             break;
 
         case "poti":
@@ -137,39 +136,51 @@ export async function executarAnalises(
     }
 
     linhas = documento.getText().split('\n').map(l => l + '\0');
-    resultadoLexador = lexador.mapear(linhas, -1);
+    const hashArquivo = cyrb53(documento.uri.toString());
+    resultadoLexador = lexador.mapear(linhas, hashArquivo);
     let listaOcorrencias: vscode.Diagnostic[] = [];
 
     // TODO: Mudar isso quando avaliadores sintáticos não mais emitirem `throw` de erros.
-    try {
-        resultadoAvaliadorSintatico = await avaliadorSintatico.analisar(resultadoLexador, -1);
-    } catch (erro: any) {
+    // try {
+    resultadoAvaliadorSintatico = await avaliadorSintatico.analisar(resultadoLexador, hashArquivo);
+    /* } catch (erro: any) {
         resultadoAvaliadorSintatico = {
             declaracoes: [],
             erros: [erro]
         } as RetornoAvaliadorSintatico<Declaracao>;
-    }
+    } */
 
-    if (resultadoAvaliadorSintatico?.erros?.length) {
-        listaOcorrencias = listaOcorrencias.concat(
-            formatarDiagnosticosAvaliacaoSintatica(
-                resultadoAvaliadorSintatico.erros,
-                documento
-            )
+    if (avaliadorSintatico instanceof AvaliadorSintaticoComImportacao) {
+        analisadorSemantico?.definirClassesExternasConhecidas?.(
+            Object.keys(avaliadorSintatico.tiposDefinidosEmCodigo)
         );
+        declaracoesPreCarregadas = Object.values(avaliadorSintatico.tiposDefinidosEmCodigo);
     }
 
-    if (analisadorSemantico !== undefined) {
-        try {
-            resultadoAnalisadorSemantico = await analisadorSemantico.analisar(resultadoAvaliadorSintatico.declaracoes);
-            listaOcorrencias = listaOcorrencias.concat(formatarDiagnosticosAnaliseSemantica(resultadoAnalisadorSemantico.diagnosticos, documento));
-            diagnosticos.set(documento.uri, listaOcorrencias);
-        } catch (erro: any) {
-            resultadoAnalisadorSemantico = {
-                diagnosticos: []
-            } as RetornoAnalisadorSemantico;
-            console.error(`Erro ao executar análise semântica para arquivo de extensão ${extensaoArquivo}`, erro);
+    try {
+        if (resultadoAvaliadorSintatico?.erros?.length) {
+            listaOcorrencias = listaOcorrencias.concat(
+                formatarDiagnosticosAvaliacaoSintatica(
+                    resultadoAvaliadorSintatico.erros,
+                    documento
+                )
+            );
         }
+
+        if (analisadorSemantico !== undefined) {
+            try {
+                resultadoAnalisadorSemantico = await analisadorSemantico.analisar(resultadoAvaliadorSintatico.declaracoes);
+                listaOcorrencias = listaOcorrencias.concat(formatarDiagnosticosAnaliseSemantica(resultadoAnalisadorSemantico.diagnosticos, documento));
+                diagnosticos.set(documento.uri, listaOcorrencias);
+            } catch (erro: any) {
+                resultadoAnalisadorSemantico = {
+                    diagnosticos: []
+                } as RetornoAnalisadorSemantico;
+                console.error(`Erro ao executar análise semântica para arquivo de extensão ${extensaoArquivo}`, erro);
+            }
+        }
+    } catch (erro: any) {
+        console.error(`Erro ao formatar diagnósticos para arquivo de extensão ${extensaoArquivo}`, erro);
     }
 
     definirResultado(documento.uri.toString(), {

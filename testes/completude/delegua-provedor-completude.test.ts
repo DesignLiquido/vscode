@@ -76,10 +76,21 @@ jest.mock('@designliquido/delegua/declaracoes', () => ({
         constructor(public simbolo: any, public tipo: string) {}
     },
     Classe: class Classe {
-        constructor(public simbolo: any) {}
+        metodos: any[];
+        propriedades: any[];
+        constructor(public simbolo: any, superClasses?: any[], metodos?: any[], propriedades?: any[]) {
+            this.metodos = metodos ?? [];
+            this.propriedades = propriedades ?? [];
+        }
     },
     FuncaoDeclaracao: class FuncaoDeclaracao {
         constructor(public simbolo: any, public tipo: string) {}
+    }
+}), { virtual: true });
+
+jest.mock('@designliquido/delegua/declaracoes/propriedade-classe', () => ({
+    PropriedadeClasse: class PropriedadeClasse {
+        constructor(public nome: any, public tipo?: string) {}
     }
 }), { virtual: true });
 
@@ -610,6 +621,284 @@ describe('completude/DeleguaProvedorCompletude', () => {
             // Deve incluir objetos disponíveis em rotas (requisicao, resposta)
             expect(Array.isArray(items)).toBe(true);
             expect(items.length).toBeGreaterThan(0);
+        });
+    });
+
+    describe('obterClasseEnvolvente', () => {
+        it('deve retornar nome da classe quando cursor está dentro de um método', () => {
+            mockDocument.lineAt = jest.fn((linha: number) => {
+                const linhas = [
+                    'classe Lexador {',
+                    '    funcao mapear(texto) {',
+                    '        isto.',
+                ];
+                return { text: linhas[linha] ?? '' };
+            });
+            mockPosition.line = 2;
+            mockPosition.character = 13;
+
+            const nome = provedor.obterClasseEnvolvente(mockDocument, mockPosition);
+
+            expect(nome).toBe('Lexador');
+        });
+
+        it('deve retornar null quando cursor não está dentro de uma classe', () => {
+            mockDocument.lineAt = jest.fn((linha: number) => {
+                const linhas = [
+                    'funcao teste() {',
+                    '    isto.',
+                ];
+                return { text: linhas[linha] ?? '' };
+            });
+            mockPosition.line = 1;
+            mockPosition.character = 9;
+
+            const nome = provedor.obterClasseEnvolvente(mockDocument, mockPosition);
+
+            expect(nome).toBeNull();
+        });
+
+        it('deve ignorar blocos aninhados e encontrar a classe correta', () => {
+            mockDocument.lineAt = jest.fn((linha: number) => {
+                const linhas = [
+                    'classe Lexador {',
+                    '    funcao mapear() {',
+                    '        se (verdadeiro) {',
+                    '            var x = 0',
+                    '        }',
+                    '        isto.',
+                ];
+                return { text: linhas[linha] ?? '' };
+            });
+            mockPosition.line = 5;
+            mockPosition.character = 13;
+
+            const nome = provedor.obterClasseEnvolvente(mockDocument, mockPosition);
+
+            expect(nome).toBe('Lexador');
+        });
+
+        it('deve encontrar classe mesmo com múltiplos blocos aninhados entre ela e o cursor', () => {
+            mockDocument.lineAt = jest.fn((linha: number) => {
+                const linhas = [
+                    'classe Lexador {',
+                    '    analisarCaractere(c) {',
+                    '        escolha c {',
+                    '            padrão:',
+                    '                se isto.eDigito(c) {',
+                    '                    retorna 0',
+                    '                } senão se isto.eLetra(c) {',
+                    '                    isto.',
+                ];
+                return { text: linhas[linha] ?? '' };
+            });
+            mockPosition.line = 7;
+            mockPosition.character = 24;
+
+            const nome = provedor.obterClasseEnvolvente(mockDocument, mockPosition);
+
+            expect(nome).toBe('Lexador');
+        });
+
+        it('deve retornar null para arquivo sem classes', () => {
+            mockDocument.lineAt = jest.fn(() => ({ text: 'var x = 10' }));
+            mockPosition.line = 0;
+            mockPosition.character = 5;
+
+            const nome = provedor.obterClasseEnvolvente(mockDocument, mockPosition);
+
+            expect(nome).toBeNull();
+        });
+    });
+
+    describe('obterCompletudesDeClasse', () => {
+        it('deve retornar métodos da classe como CompletionItem', () => {
+            const { Classe } = require('@designliquido/delegua/declaracoes');
+            const metodos = [
+                { simbolo: { lexema: 'mapear' }, funcao: { parametros: [{ nome: { lexema: 'texto' } }] } },
+                { simbolo: { lexema: 'tokenizar' }, funcao: { parametros: [] } },
+            ];
+            const classe = new Classe({ lexema: 'Lexador' }, [], metodos, []);
+
+            const completudes = provedor.obterCompletudesDeClasse(classe);
+
+            expect(completudes.length).toBe(2);
+            expect(completudes.some((c: any) => c.label === 'mapear')).toBe(true);
+            expect(completudes.some((c: any) => c.label === 'tokenizar')).toBe(true);
+            expect(completudes.find((c: any) => c.label === 'mapear').kind).toBe(vscode.CompletionItemKind.Method);
+        });
+
+        it('deve incluir parâmetros no detalhe do método', () => {
+            const { Classe } = require('@designliquido/delegua/declaracoes');
+            const metodos = [
+                { simbolo: { lexema: 'mapear' }, funcao: { parametros: [{ nome: { lexema: 'linhas' } }, { nome: { lexema: 'hashArquivo' } }] } },
+            ];
+            const classe = new Classe({ lexema: 'Lexador' }, [], metodos, []);
+
+            const completudes = provedor.obterCompletudesDeClasse(classe);
+            const item = completudes.find((c: any) => c.label === 'mapear');
+
+            expect(item.detail).toContain('linhas');
+            expect(item.detail).toContain('hashArquivo');
+        });
+
+        it('deve gerar snippet com cursor entre parênteses para métodos', () => {
+            const { Classe } = require('@designliquido/delegua/declaracoes');
+            const metodos = [
+                { simbolo: { lexema: 'mapear' }, funcao: { parametros: [] } },
+            ];
+            const classe = new Classe({ lexema: 'Lexador' }, [], metodos, []);
+
+            const completudes = provedor.obterCompletudesDeClasse(classe);
+
+            expect(completudes[0].insertText.value).toBe('mapear($0)');
+        });
+
+        it('deve retornar propriedades da classe como CompletionItem', () => {
+            const { Classe } = require('@designliquido/delegua/declaracoes');
+            const propriedades = [
+                { nome: { lexema: 'simbolos' }, tipo: 'vetor' },
+                { nome: { lexema: 'erros' }, tipo: 'vetor' },
+            ];
+            const classe = new Classe({ lexema: 'Lexador' }, [], [], propriedades);
+
+            const completudes = provedor.obterCompletudesDeClasse(classe);
+
+            expect(completudes.length).toBe(2);
+            expect(completudes.find((c: any) => c.label === 'simbolos').kind).toBe(vscode.CompletionItemKind.Property);
+            expect(completudes.find((c: any) => c.label === 'simbolos').detail).toContain('vetor');
+        });
+
+        it('deve retornar tanto métodos quanto propriedades juntos', () => {
+            const { Classe } = require('@designliquido/delegua/declaracoes');
+            const metodos = [{ simbolo: { lexema: 'mapear' }, funcao: { parametros: [] } }];
+            const propriedades = [{ nome: { lexema: 'erros' }, tipo: 'vetor' }];
+            const classe = new Classe({ lexema: 'Lexador' }, [], metodos, propriedades);
+
+            const completudes = provedor.obterCompletudesDeClasse(classe);
+
+            expect(completudes.length).toBe(2);
+            expect(completudes.some((c: any) => c.label === 'mapear')).toBe(true);
+            expect(completudes.some((c: any) => c.label === 'erros')).toBe(true);
+        });
+
+        it('deve retornar array vazio para classe sem membros', () => {
+            const { Classe } = require('@designliquido/delegua/declaracoes');
+            const classe = new Classe({ lexema: 'Vazia' }, [], [], []);
+
+            const completudes = provedor.obterCompletudesDeClasse(classe);
+
+            expect(completudes).toEqual([]);
+        });
+    });
+
+    describe('provideCompletionItems - isto.', () => {
+        it('deve sugerir métodos da classe ao digitar isto.', () => {
+            const { Classe } = require('@designliquido/delegua/declaracoes');
+            const metodos = [
+                { simbolo: { lexema: 'mapear' }, funcao: { parametros: [] } },
+                { simbolo: { lexema: 'tokenizar' }, funcao: { parametros: [] } },
+            ];
+            const classe = new Classe({ lexema: 'Lexador' }, [], metodos, []);
+
+            mockDocument.lineAt = jest.fn((linhaOuPosicao: number | { line: number }) => {
+                const linhas = [
+                    'classe Lexador {',
+                    '    funcao mapear() {',
+                    '        isto.',
+                ];
+                const i = typeof linhaOuPosicao === 'number' ? linhaOuPosicao : linhaOuPosicao.line;
+                return { text: linhas[i] ?? '' };
+            });
+            mockPosition.line = 2;
+            mockPosition.character = 13;
+
+            obterResultado.mockReturnValue({
+                avaliadorSintatico: { declaracoes: [classe] }
+            });
+
+            const items = provedor.provideCompletionItems(
+                mockDocument, mockPosition, mockToken, mockContext
+            );
+
+            expect(items.some((item: any) => item.label === 'mapear')).toBe(true);
+            expect(items.some((item: any) => item.label === 'tokenizar')).toBe(true);
+        });
+
+        it('deve sugerir propriedades da classe ao digitar isto.', () => {
+            const { Classe } = require('@designliquido/delegua/declaracoes');
+            const propriedades = [{ nome: { lexema: 'erros' }, tipo: 'vetor' }];
+            const classe = new Classe({ lexema: 'Lexador' }, [], [], propriedades);
+
+            mockDocument.lineAt = jest.fn((linhaOuPosicao: number | { line: number }) => {
+                const linhas = [
+                    'classe Lexador {',
+                    '    funcao init() {',
+                    '        isto.',
+                ];
+                const i = typeof linhaOuPosicao === 'number' ? linhaOuPosicao : linhaOuPosicao.line;
+                return { text: linhas[i] ?? '' };
+            });
+            mockPosition.line = 2;
+            mockPosition.character = 13;
+
+            obterResultado.mockReturnValue({
+                avaliadorSintatico: { declaracoes: [classe] }
+            });
+
+            const items = provedor.provideCompletionItems(
+                mockDocument, mockPosition, mockToken, mockContext
+            );
+
+            expect(items.some((item: any) => item.label === 'erros')).toBe(true);
+        });
+
+        it('deve sugerir métodos via texto quando cache de análise é null', () => {
+            mockDocument.lineCount = 4;
+            mockDocument.lineAt = jest.fn((linhaOuPosicao: number | { line: number }) => {
+                const linhas = [
+                    'classe Lexador {',
+                    '    mapear(codigo) {',
+                    '        isto.',
+                    '}',
+                ];
+                const i = typeof linhaOuPosicao === 'number' ? linhaOuPosicao : linhaOuPosicao.line;
+                return { text: linhas[i] ?? '' };
+            });
+            mockPosition.line = 2;
+            mockPosition.character = 13;
+
+            obterResultado.mockReturnValue(null);
+
+            const items = provedor.provideCompletionItems(
+                mockDocument, mockPosition, mockToken, mockContext
+            );
+
+            expect(items.some((item: any) => item.label === 'mapear')).toBe(true);
+        });
+
+        it('não deve sugerir membros de classe quando isto. é usado fora de classe', () => {
+            mockDocument.lineAt = jest.fn((linhaOuPosicao: number | { line: number }) => {
+                const linhas = [
+                    'funcao solto() {',
+                    '    isto.',
+                ];
+                const i = typeof linhaOuPosicao === 'number' ? linhaOuPosicao : linhaOuPosicao.line;
+                return { text: linhas[i] ?? '' };
+            });
+            mockPosition.line = 1;
+            mockPosition.character = 9;
+
+            obterResultado.mockReturnValue({
+                avaliadorSintatico: { declaracoes: [] }
+            });
+
+            const items = provedor.provideCompletionItems(
+                mockDocument, mockPosition, mockToken, mockContext
+            );
+
+            // Should fall through to native functions, not crash
+            expect(Array.isArray(items)).toBe(true);
         });
     });
 

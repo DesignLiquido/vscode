@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { definirResultado, obterResultado, ResultadoAnalise } from '../../fontes/analise-codigo/cache-analise';
+import { definirResultado, obterResultado, ResultadoAnaliseInterface } from '../../fontes/analise-codigo/cache-analise';
 
 describe('cache-analise', () => {
-    // Mock de ResultadoAnalise para usar nos testes
-    const criarResultadoMock = (id: string): ResultadoAnalise => ({
+    // Mock de ResultadoAnaliseInterface para usar nos testes
+    const criarResultadoMock = (id: string): ResultadoAnaliseInterface => ({
         lexador: {
             simbolos: [],
             erros: []
@@ -154,7 +154,7 @@ describe('cache-analise', () => {
 
         it('deve lidar com resultados com estruturas vazias', () => {
             const uri = 'file:///test/vazio.delegua';
-            const resultadoVazio: ResultadoAnalise = {
+            const resultadoVazio: ResultadoAnaliseInterface = {
                 lexador: { simbolos: [], erros: [] },
                 avaliadorSintatico: { declaracoes: [], erros: [] },
                 analisadorSemantico: { diagnosticos: [] }

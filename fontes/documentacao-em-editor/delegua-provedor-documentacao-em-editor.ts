@@ -32,11 +32,11 @@ const primitivas = [
 export class DeleguaProvedorDocumentacaoEmEditor
     implements vscode.HoverProvider
 {
-    provideHover(
+    async provideHover(
         documento: vscode.TextDocument,
         posicao: vscode.Position,
         _token: vscode.CancellationToken
-    ): vscode.ProviderResult<vscode.Hover> {
+    ): Promise<vscode.Hover | undefined> {
         const resultadoAnalise = obterResultado(documento.uri.toString());
         const intervalo = documento.getWordRangeAtPosition(posicao);
         if (!intervalo) {
@@ -46,9 +46,10 @@ export class DeleguaProvedorDocumentacaoEmEditor
         const palavra = documento.getText(intervalo);
         const linhaTexto = documento.lineAt(posicao).text;
         const textoAntesPosicao = linhaTexto.substring(0, posicao.character);
+        const textoAntesPalavra = linhaTexto.substring(0, intervalo.start.character);
         const todasDeclaracoes = [
-            ...(resultadoAnalise?.avaliadorSintatico?.declaracoes || []),
-            ...(resultadoAnalise?.declaracoesPreCarregadas || [])
+            ...(resultadoAnalise?.declaracoesPreCarregadas || []),
+            ...(resultadoAnalise?.avaliadorSintatico?.declaracoes || [])
         ];
 
         const declaracoesPertinentes = todasDeclaracoes.flatMap(declaracao => {
@@ -64,12 +65,47 @@ export class DeleguaProvedorDocumentacaoEmEditor
             return [];
         });
 
-        return this.hoverMetodoPrimitivo(textoAntesPosicao, palavra, declaracoesPertinentes)
+        return this.hoverPropriedadeClasse(palavra, textoAntesPalavra, posicao.line + 1, todasDeclaracoes)
+            ?? this.hoverMetodoPrimitivo(textoAntesPosicao, palavra, declaracoesPertinentes)
             ?? this.hoverFuncaoNativa(palavra)
             ?? this.hoverFuncaoDocumentada(palavra, todasDeclaracoes)
             ?? this.hoverVariavelOuConstante(palavra, declaracoesPertinentes)
-            ?? this.hoverClasseDocumentada(palavra, todasDeclaracoes, documento.getText())
+            ?? await this.hoverClasseDocumentada(palavra, todasDeclaracoes, documento.getText())
             ?? this.hoverInterfaceDocumentada(palavra, todasDeclaracoes, documento.getText());
+    }
+
+    private hoverPropriedadeClasse(
+        palavra: string,
+        textoAntesPalavra: string,
+        linhaAtual: number,
+        todasDeclaracoes: any[]
+    ): vscode.Hover | undefined {
+        if (!textoAntesPalavra.trimEnd().endsWith('isto.')) {
+            return undefined;
+        }
+
+        const classesLocais = todasDeclaracoes.filter(
+            d => d instanceof Classe && !(d as any).caminhoArquivoDefinicao
+        ) as Classe[];
+
+        const classesAnteriores = classesLocais.filter(c => Number(c.simbolo.linha) <= linhaAtual);
+        if (!classesAnteriores.length) {
+            return undefined;
+        }
+
+        const classeAtual = classesAnteriores.reduce((prev, curr) =>
+            Number(curr.simbolo.linha) > Number(prev.simbolo.linha) ? curr : prev
+        );
+
+        const propriedade = classeAtual.propriedades.find(p => p.nome.lexema === palavra);
+        if (!propriedade) {
+            return undefined;
+        }
+
+        const tipo = propriedade.tipo || 'qualquer';
+        const doc = new vscode.MarkdownString();
+        doc.appendCodeblock(`(Propriedade de classe) ${palavra}: ${tipo}`, 'delegua');
+        return new vscode.Hover(doc);
     }
 
     private hoverMetodoPrimitivo(
@@ -176,11 +212,11 @@ export class DeleguaProvedorDocumentacaoEmEditor
         );
     }
 
-    private hoverClasseDocumentada(
+    private async hoverClasseDocumentada(
         palavra: string,
         todasDeclaracoes: any[],
         codigoFonte: string
-    ): vscode.Hover | undefined {
+    ): Promise<vscode.Hover | undefined> {
         const declaracaoClasse = todasDeclaracoes.find(
             d => d instanceof Classe && (d as Classe).simbolo.lexema === palavra
         ) as Classe | undefined;
@@ -188,7 +224,7 @@ export class DeleguaProvedorDocumentacaoEmEditor
             return undefined;
         }
 
-        const prefixo = declaracaoClasse.abstrata ? '(classe abstrata)' : '(classe)';
+        const prefixo = (declaracaoClasse as any).abstrata ? '(classe abstrata)' : '(classe)';
         let assinatura = `${prefixo} ${declaracaoClasse.simbolo.lexema}`;
 
         if (declaracaoClasse.superClasses?.length) {
@@ -213,11 +249,16 @@ export class DeleguaProvedorDocumentacaoEmEditor
             return new vscode.Hover(doc);
         }
 
+        const caminhoImportado = (declaracaoClasse as any).caminhoArquivoDefinicao as string | undefined;
+        const fonteParaPesquisar = caminhoImportado
+            ? await this.lerConteudoArquivo(caminhoImportado)
+            : codigoFonte;
+
         const regexDocClasse = /\/\*\*([\s\S]*?)\*\/\s*(?:abstrat[ao]\s+)?classe\s+/g;
         let correspondencia: RegExpExecArray | null;
-        while ((correspondencia = regexDocClasse.exec(codigoFonte)) !== null) {
+        while ((correspondencia = regexDocClasse.exec(fonteParaPesquisar)) !== null) {
             const posicaoAposComentario = correspondencia.index + correspondencia[0].length;
-            const nomeClasse = codigoFonte.slice(posicaoAposComentario).match(/^[\wÀ-úÇç]+/)?.[0];
+            const nomeClasse = fonteParaPesquisar.slice(posicaoAposComentario).match(/^[\wÀ-úÇç]+/)?.[0];
             if (nomeClasse === palavra) {
                 const conteudo = correspondencia[1]
                     .split('\n')
@@ -230,6 +271,15 @@ export class DeleguaProvedorDocumentacaoEmEditor
         }
 
         return new vscode.Hover(doc);
+    }
+
+    private async lerConteudoArquivo(caminho: string): Promise<string> {
+        try {
+            const buffer = await vscode.workspace.fs.readFile(vscode.Uri.file(caminho));
+            return Buffer.from(buffer).toString('utf8');
+        } catch {
+            return '';
+        }
     }
 
     private hoverInterfaceDocumentada(

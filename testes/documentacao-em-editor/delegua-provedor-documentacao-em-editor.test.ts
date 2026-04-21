@@ -96,7 +96,7 @@ function criarDocumento(overrides: Partial<any> = {}): any {
         uri: { toString: () => 'file:///teste.delegua' },
         lineAt: jest.fn().mockReturnValue({ text: '' }),
         getText: jest.fn().mockReturnValue(''),
-        getWordRangeAtPosition: jest.fn().mockReturnValue({}),
+        getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
         ...overrides,
     };
 }
@@ -112,49 +112,49 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
         provedor = new DeleguaProvedorDocumentacaoEmEditor();
     });
 
-    it('instância criada com sucesso', () => {
+    it('instância criada com sucesso', async () => {
         expect(provedor).toBeDefined();
         expect(typeof provedor.provideHover).toBe('function');
     });
 
-    it('retorna undefined quando palavra não encontrada em nada', () => {
+    it('retorna undefined quando palavra não encontrada em nada', async () => {
         const doc = criarDocumento({
             getText: jest.fn().mockReturnValue(''),
         });
-        const result = provedor.provideHover(doc, mockPos, mockToken);
+        const result = await provedor.provideHover(doc, mockPos, mockToken);
         expect(result).toBeUndefined();
     });
 
-    it('retorna Hover para função nativa "escreva"', () => {
+    it('retorna Hover para função nativa "escreva"', async () => {
         const doc = criarDocumento({
             getText: jest.fn().mockReturnValue('escreva'),
             lineAt: jest.fn().mockReturnValue({ text: 'escreva' }),
         });
-        const result = provedor.provideHover(doc, { line: 0, character: 3 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 3 }, mockToken);
         expect(result).toBeDefined();
         expect(result.contents).toBeDefined();
     });
 
-    it('função nativa com exemploCodigo chama appendCodeblock', () => {
+    it('função nativa com exemploCodigo chama appendCodeblock', async () => {
         const doc = criarDocumento({
             getText: jest.fn().mockReturnValue('escreva'),
             lineAt: jest.fn().mockReturnValue({ text: 'escreva' }),
         });
-        const hover = provedor.provideHover(doc, { line: 0, character: 3 }, mockToken);
+        const hover = await provedor.provideHover(doc, { line: 0, character: 3 }, mockToken);
         expect(hover).toBeDefined();
         expect(hover.contents.value).toContain('escreva("oi")');
     });
 
-    it('retorna Hover para função nativa "leia" (sem exemploCodigo)', () => {
+    it('retorna Hover para função nativa "leia" (sem exemploCodigo)', async () => {
         const doc = criarDocumento({
             getText: jest.fn().mockReturnValue('leia'),
             lineAt: jest.fn().mockReturnValue({ text: 'leia' }),
         });
-        const result = provedor.provideHover(doc, { line: 0, character: 2 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 2 }, mockToken);
         expect(result).toBeDefined();
     });
 
-    it('retorna Hover para variável declarada com Var', () => {
+    it('retorna Hover para variável declarada com Var', async () => {
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
                 declaracoes: [
@@ -167,12 +167,12 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
             getText: jest.fn().mockReturnValue('minhaVar'),
             lineAt: jest.fn().mockReturnValue({ text: 'minhaVar' }),
         });
-        const result = provedor.provideHover(doc, { line: 0, character: 4 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 4 }, mockToken);
         expect(result).toBeDefined();
         expect(result.contents.value).toContain('minhaVar');
     });
 
-    it('retorna Hover para constante declarada com Const', () => {
+    it('retorna Hover para constante declarada com Const', async () => {
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
                 declaracoes: [
@@ -185,12 +185,12 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
             getText: jest.fn().mockReturnValue('MINHA_CONST'),
             lineAt: jest.fn().mockReturnValue({ text: 'MINHA_CONST' }),
         });
-        const result = provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
         expect(result).toBeDefined();
         expect(result.contents.value).toContain('numero');
     });
 
-    it('retorna Hover para função documentada com FuncaoDeclaracao', () => {
+    it('retorna Hover para função documentada com FuncaoDeclaracao', async () => {
         const comentario = {
             conteudo: [
                 'Documentação da função',
@@ -211,14 +211,14 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
             getText: jest.fn().mockReturnValue('minhaFuncao'),
             lineAt: jest.fn().mockReturnValue({ text: 'minhaFuncao' }),
         });
-        const result = provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
         expect(result).toBeDefined();
         expect(result.contents.value).toContain('**Parametros**');
         expect(result.contents.value).toContain('**Retorna**');
         expect(result.contents.value).toContain('**Veja tambem**');
     });
 
-    it('retorna Hover para função documentada com conteúdo array', () => {
+    it('retorna Hover para função documentada com conteúdo array', async () => {
         const comentario = { conteudo: ['linha 1', '@summary resumo curto', 'linha 2'] };
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
@@ -232,12 +232,12 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
             getText: jest.fn().mockReturnValue('funcArray'),
             lineAt: jest.fn().mockReturnValue({ text: 'funcArray' }),
         });
-        const result = provedor.provideHover(doc, { line: 0, character: 4 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 4 }, mockToken);
         expect(result).toBeDefined();
         expect(result.contents.value).toContain('**Resumo**');
     });
 
-    it('retorna Hover para classe documentada (encontra via regex no fonte)', () => {
+    it('retorna Hover para classe documentada (encontra via regex no fonte)', async () => {
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
                 declaracoes: [
@@ -251,12 +251,12 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
             getText: jest.fn().mockReturnValue('MinhaClasse'),
             lineAt: jest.fn().mockReturnValue({ text: 'MinhaClasse' }),
         });
-        const result = provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
         expect(result).toBeDefined();
         expect(result.contents).toBeDefined();
     });
 
-    it('retorna Hover para classe abstrata', () => {
+    it('retorna Hover para classe abstrata', async () => {
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
                 declaracoes: [
@@ -269,13 +269,13 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
             getText: jest.fn().mockReturnValue('ClasseAbstrata'),
             lineAt: jest.fn().mockReturnValue({ text: 'ClasseAbstrata' }),
         });
-        const result = provedor.provideHover(doc, { line: 0, character: 7 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 7 }, mockToken);
         expect(result).toBeDefined();
         // Prefixo deve ser "(classe abstrata)"
         expect(result.contents.value).toContain('(classe abstrata)');
     });
 
-    it('retorna Hover para classe com herança', () => {
+    it('retorna Hover para classe com herança', async () => {
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
                 declaracoes: [
@@ -289,12 +289,12 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
             getText: jest.fn().mockReturnValue('ClasseFilha'),
             lineAt: jest.fn().mockReturnValue({ text: 'ClasseFilha' }),
         });
-        const result = provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
         expect(result).toBeDefined();
         expect(result.contents.value).toContain('herda ClassePai');
     });
 
-    it('retorna Hover para classe com mesclas', () => {
+    it('retorna Hover para classe com mesclas', async () => {
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
                 declaracoes: [
@@ -308,12 +308,12 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
             getText: jest.fn().mockReturnValue('ClasseMescla'),
             lineAt: jest.fn().mockReturnValue({ text: 'ClasseMescla' }),
         });
-        const result = provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
         expect(result).toBeDefined();
         expect(result.contents.value).toContain('mescla Mixin');
     });
 
-    it('retorna Hover para classe com implementa', () => {
+    it('retorna Hover para classe com implementa', async () => {
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
                 declaracoes: [
@@ -327,12 +327,12 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
             getText: jest.fn().mockReturnValue('ClasseImpl'),
             lineAt: jest.fn().mockReturnValue({ text: 'ClasseImpl' }),
         });
-        const result = provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
         expect(result).toBeDefined();
         expect(result.contents.value).toContain('implementa IInterface');
     });
 
-    it('retorna Hover para interface documentada via regex no código', () => {
+    it('retorna Hover para interface documentada via regex no código', async () => {
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
                 declaracoes: [
@@ -346,11 +346,11 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
             getText: jest.fn((range?: any) => range ? 'MinhaInterface' : codigoFonte),
             lineAt: jest.fn().mockReturnValue({ text: 'MinhaInterface' }),
         });
-        const result = provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
         expect(result).toBeDefined();
     });
 
-    it('hover em método primitivo (texto antes com "minhaVar.")', () => {
+    it('hover em método primitivo (texto antes com "minhaVar.")', async () => {
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
                 declaracoes: [
@@ -365,13 +365,13 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
             getText: jest.fn((range?: any) => 'absoluto'),
             lineAt: jest.fn().mockReturnValue({ text: 'minhaVar.absoluto' }),
         });
-        const result = provedor.provideHover(doc, { line: 0, character: 14 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 14 }, mockToken);
         // hoverVariavelOuConstante irá retornar 'absoluto' pois 'absoluto' não está em declaracoesPertinentes
         // hoverMetodoPrimitivo pode retornar hover se primitiva encontrada
         expect(result).toBeDefined();
     });
 
-    it('declaracoesPreCarregadas são incluídas', () => {
+    it('declaracoesPreCarregadas são incluídas', async () => {
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: { declaracoes: [] },
             declaracoesPreCarregadas: [
@@ -382,7 +382,7 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
             getText: jest.fn().mockReturnValue('varPreCarregada'),
             lineAt: jest.fn().mockReturnValue({ text: 'varPreCarregada' }),
         });
-        const result = provedor.provideHover(doc, { line: 0, character: 7 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 7 }, mockToken);
         expect(result).toBeDefined();
     });
 });

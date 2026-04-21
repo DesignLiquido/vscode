@@ -8,6 +8,7 @@ import { ImportadorInterface } from '../interfaces';
 export interface RetornoImportador<S extends SimboloInterface> {
     conteudoArquivo: string[];
     nomeArquivo: string;
+    caminhoAbsoluto: string;
     hashArquivo: number;
     retornoLexador: RetornoLexador<S>;
 }
@@ -74,6 +75,7 @@ export class ImportadorExtensao implements ImportadorInterface<SimboloInterface>
             return {
                 conteudoArquivo: conteudoArquivo,
                 nomeArquivo,
+                caminhoAbsoluto: caminhoResolvido,
                 hashArquivo,
                 retornoLexador
             } as RetornoImportador<SimboloInterface>;

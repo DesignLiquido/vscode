@@ -24,7 +24,7 @@ const primitivas = [
     return nome1 > nome2 ? 1 : nome1 < nome2 ? -1 : 0;
 });
 import { obterResultado } from '../analise-codigo/cache-analise';
-import { ParametroDetectado, TipoParametro } from './interfaces';
+import { ParametroDetectado, TipoParametro } from '../interfaces/completude';
 import { definicoesTagsDocumentario } from '../documentacao-em-editor/etiquetas-documentarios';
 
 /**
@@ -270,6 +270,19 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
 
         const palavraAntesPonto = this.obterPalavraAntesPonto(textoAntesPosicao);
         const declaracaoCorrespondente = declaracoesPertinentes.find(v => v.nome === palavraAntesPonto);
+
+        if (palavraAntesPonto === 'isto') {
+            const nomeClasse = this.obterClasseEnvolvente(documento, posicao);
+            if (nomeClasse) {
+                const classeDeclarada = resultadoAnalise?.avaliadorSintatico.declaracoes.find(
+                    d => d instanceof Classe && (d as Classe).simbolo.lexema === nomeClasse
+                ) as Classe | undefined;
+                if (classeDeclarada) {
+                    return this.obterCompletudesDeClasse(classeDeclarada);
+                }
+                return this.obterCompletudesDeClasseDeTexto(documento, nomeClasse);
+            }
+        }
 
         // Propriedades com um parâmetro com tipo definido.
         const tipoParametro = this.obterTipoParametroComDeteccao(palavraAntesPonto, parametrosDetectados);
@@ -594,5 +607,109 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
         }
 
         return parametrosDetectados;
+    }
+
+    private obterClasseEnvolvente(documento: vscode.TextDocument, posicao: vscode.Position): string | null {
+        let profundidade = 0;
+
+        for (let linha = posicao.line; linha >= 0; linha--) {
+            const textoLinha = documento.lineAt(linha).text;
+            const limite = linha === posicao.line ? posicao.character : textoLinha.length;
+
+            for (let col = limite - 1; col >= 0; col--) {
+                if (textoLinha[col] === '}') {
+                    profundidade++;
+                } else if (textoLinha[col] === '{') {
+                    if (profundidade === 0) {
+                        for (let busca = linha; busca >= Math.max(0, linha - 3); busca--) {
+                            const correspondencia = documento.lineAt(busca).text.match(/\bclasse\s+(\w+)/);
+                            if (correspondencia) {
+                                return correspondencia[1];
+                            }
+                        }
+                        // Not a class block — keep profundidade at 0 and continue outward
+                    } else {
+                        profundidade--;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private obterCompletudesDeClasseDeTexto(documento: vscode.TextDocument, nomeClasse: string): vscode.CompletionItem[] {
+        const completudes: vscode.CompletionItem[] = [];
+        let linhaInicio = -1;
+
+        for (let i = 0; i < documento.lineCount; i++) {
+            if (documento.lineAt(i).text.match(new RegExp(`\\bclasse\\s+${nomeClasse}\\b`))) {
+                linhaInicio = i;
+                break;
+            }
+        }
+
+        if (linhaInicio === -1) {
+            return completudes;
+        }
+
+        let profundidade = 0;
+        for (let i = linhaInicio; i < documento.lineCount; i++) {
+            const texto = documento.lineAt(i).text;
+            const profundidadeAntes = profundidade;
+            for (const char of texto) {
+                if (char === '{') profundidade++;
+                else if (char === '}') profundidade--;
+            }
+
+            if (profundidadeAntes === 1 && i > linhaInicio) {
+                const correspondenciaMetodo = texto.match(/^\s*([a-zA-ZÀ-ú_]\w*)\s*\(/);
+                if (correspondenciaMetodo && correspondenciaMetodo[1] !== 'construtor') {
+                    const nome = correspondenciaMetodo[1];
+                    if (!completudes.some(c => c.label === nome)) {
+                        const item = new vscode.CompletionItem(nome, vscode.CompletionItemKind.Method);
+                        item.detail = `(método) ${nome}`;
+                        item.insertText = new vscode.SnippetString(`${nome}($0)`);
+                        completudes.push(item);
+                    }
+                }
+
+                const correspondenciaPropriedade = texto.match(/^\s*([a-zA-ZÀ-ú_]\w*)\s*:/);
+                if (correspondenciaPropriedade) {
+                    const nome = correspondenciaPropriedade[1];
+                    if (!completudes.some(c => c.label === nome)) {
+                        const item = new vscode.CompletionItem(nome, vscode.CompletionItemKind.Property);
+                        item.detail = `(propriedade) ${nome}`;
+                        completudes.push(item);
+                    }
+                }
+            }
+
+            if (profundidade === 0 && i > linhaInicio) {
+                break;
+            }
+        }
+
+        return completudes;
+    }
+
+    private obterCompletudesDeClasse(classeDeclarada: Classe): vscode.CompletionItem[] {
+        const completudes: vscode.CompletionItem[] = [];
+
+        for (const metodo of classeDeclarada.metodos) {
+            const item = new vscode.CompletionItem(metodo.simbolo.lexema, vscode.CompletionItemKind.Method);
+            const params = metodo.funcao?.parametros?.map(p => p.nome?.lexema ?? '').join(', ') ?? '';
+            item.detail = `(método) ${metodo.simbolo.lexema}(${params})`;
+            item.insertText = new vscode.SnippetString(`${metodo.simbolo.lexema}($0)`);
+            completudes.push(item);
+        }
+
+        for (const prop of classeDeclarada.propriedades) {
+            const item = new vscode.CompletionItem(prop.nome.lexema, vscode.CompletionItemKind.Property);
+            item.detail = prop.tipo ? `(${prop.tipo}) ${prop.nome.lexema}` : `(propriedade) ${prop.nome.lexema}`;
+            completudes.push(item);
+        }
+
+        return completudes;
     }
 }

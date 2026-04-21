@@ -41,7 +41,8 @@ function criarDocumento(palavra: string, overrides: any = {}): any {
     return {
         uri: mockUri,
         getText: jest.fn((range?: any) => range ? palavra : ''),
-        getWordRangeAtPosition: jest.fn().mockReturnValue({}),
+        getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
+        lineAt: jest.fn().mockReturnValue({ text: palavra }),
         ...overrides,
     };
 }
