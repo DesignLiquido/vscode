@@ -36,6 +36,7 @@ import { definirResultado } from './cache-analise';
 import { ImportadorExtensao } from '../importador';
 import { AvaliadorSintaticoComImportacao } from '../avaliacao-sintatica/avaliador-sintatico-com-importacao';
 import { AnalisadorSemanticoPituguesLiquido } from '../avaliacao-sintatica/analisador-semantico-pitugues-liquido';
+import { AvaliadorSintaticoPituguesLiquido } from '../avaliacao-sintatica/avaliador-sintatico-pitugues-liquido';
 import { descobrirDefinicoes } from '../descobridor-definicoes';
 import { cyrb53 } from '@designliquido/delegua';
 
@@ -105,8 +106,11 @@ export async function executarAnalises(
         case "pitu":
         case "pitugues":
             lexador = new LexadorPitugues();
-            avaliadorSintatico = new AvaliadorSintaticoPitugues();
-            analisadorSemantico = /[\\\/]rotas[\\\/]/i.test(documento.fileName)
+            const emRotaLiquidoPitu = /[\\\/]rotas[\\\/]/i.test(documento.fileName);
+            avaliadorSintatico = emRotaLiquidoPitu
+                ? new AvaliadorSintaticoPituguesLiquido()
+                : new AvaliadorSintaticoPitugues();
+            analisadorSemantico = emRotaLiquidoPitu
                 ? new AnalisadorSemanticoPituguesLiquido()
                 : new AnalisadorSemanticoPitugues();
             break;
