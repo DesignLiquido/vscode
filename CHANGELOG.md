@@ -1,5 +1,15 @@
 # Histórico de Modificações
 
+## 0.25.10
+
+- Núcleo de Delégua atualizado para a versão 1.18.4:
+  - Correção em Pituguês: propriedades criadas dentro do método `construtor` agora podem ser acessadas;
+  - Melhorias no analisador semântico para reconhecer mais casos de variáveis usadas em estruturas `escolha`, laços `para cada` e fluxos com `retorna`;
+  - Verificação de tipagem de métodos chamados dentro de classes com `isto.`.
+- Novo provedor de referências para Delégua, com suporte a encontrar referências no código;
+- Renomeação de arquivos Delégua com atualização automática das importações relacionadas nos demais arquivos da solução;
+- Adição de suporte a Líquido para Pituguês.
+
 ## 0.25.9
 
 - Núcleo de Delégua atualizado para a versão 1.18.2:
