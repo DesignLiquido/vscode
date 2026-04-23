@@ -15,6 +15,10 @@ jest.mock('vscode', () => ({
     workspace: {
         workspaceFolders: undefined,
         openTextDocument: jest.fn(),
+        findFiles: jest.fn(() => Promise.resolve([])),
+        saveAll: jest.fn(() => Promise.resolve(true)),
+        onWillRenameFiles: jest.fn(() => ({ dispose: jest.fn() })),
+        onDidRenameFiles: jest.fn(() => ({ dispose: jest.fn() })),
         onDidOpenTextDocument: jest.fn(() => ({ dispose: jest.fn() })),
         onDidChangeTextDocument: jest.fn(() => ({ dispose: jest.fn() })),
         onDidCloseTextDocument: jest.fn(() => ({ dispose: jest.fn() }))
@@ -32,7 +36,8 @@ jest.mock('vscode', () => ({
         registerDocumentFormattingEditProvider: jest.fn(() => ({ dispose: jest.fn() })),
         registerSignatureHelpProvider: jest.fn(() => ({ dispose: jest.fn() })),
         registerCodeActionsProvider: jest.fn(() => ({ dispose: jest.fn() })),
-        registerDefinitionProvider: jest.fn(() => ({ dispose: jest.fn() }))
+        registerDefinitionProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerReferenceProvider: jest.fn(() => ({ dispose: jest.fn() }))
     },
     commands: {
         registerCommand: jest.fn(() => ({ dispose: jest.fn() }))
@@ -167,6 +172,14 @@ jest.mock('../fontes/definicao', () => ({
     DeleguaProvedorDefinicao: class {}
 }));
 
+jest.mock('../fontes/referencias', () => ({
+    DeleguaProvedorReferencias: class {}
+}));
+
+jest.mock('../fontes/renomeacao', () => ({
+    registrarRenomeacaoArquivosDelegua: jest.fn(() => ({ dispose: jest.fn() }))
+}));
+
 jest.mock('../fontes/mecanismo-importacao-bibliotecas', () => ({
     definirFabricaPainelWebView: jest.fn()
 }));
@@ -243,6 +256,12 @@ describe('Extensão VSCode - Design Líquido', () => {
             extensao.activate(context);
 
             expect(vscode.languages.registerDocumentLinkProvider).toHaveBeenCalled();
+        });
+
+        it('deve registrar ouvinte de renomeação de arquivos', () => {
+            extensao.activate(context);
+
+            expect(vscode.workspace.onDidRenameFiles).toHaveBeenCalled();
         });
     });
 });

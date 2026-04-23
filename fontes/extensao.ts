@@ -50,6 +50,9 @@ import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-vi
 import { DeleguaProvedorAcoesCodigo } from './acoes-codigo';
 import { DeleguaProvedorDefinicao } from './definicao';
 import { definirFabricaPainelWebView } from './mecanismo-importacao-bibliotecas';
+import { DeleguaProvedorReferencias } from './referencias';
+import { registrarRenomeacaoArquivosDelegua } from './renomeacao';
+import { ehArquivoDelegua } from './importacao/utilitarios-caminho-importacao-delegua';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -58,6 +61,20 @@ import { definirFabricaPainelWebView } from './mecanismo-importacao-bibliotecas'
  */
 const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
 let changeTimeout;
+
+async function reanalisarArquivosProjeto(
+    diagnosticosDelegua: vscode.DiagnosticCollection
+): Promise<void> {
+    const arquivos = await vscode.workspace.findFiles(
+        '**/*.{alg,birl,delegua,egua,mapler,pitu,pitugues,por,poti,potigol,visualg}',
+        '**/node_modules/**'
+    );
+
+    for (const arquivo of arquivos) {
+        const documento = await vscode.workspace.openTextDocument(arquivo);
+        await executarAnalises(documento, diagnosticosDelegua);
+    }
+}
 
 /**
  * O ponto de entrada da extensão. Aqui registramos tudo:
@@ -525,6 +542,40 @@ export function activate(context: vscode.ExtensionContext) {
             ],
             new DeleguaProvedorDefinicao()
         )
+    );
+
+    // Encontrar todas as referências
+    context.subscriptions.push(
+        vscode.languages.registerReferenceProvider(
+            [
+                { scheme: 'file', language: 'delegua' },
+                { scheme: 'untitled', language: 'delegua' }
+            ],
+            new DeleguaProvedorReferencias()
+        )
+    );
+
+    // Ajustar automaticamente caminhos de importação ao renomear arquivos Delégua
+    context.subscriptions.push(registrarRenomeacaoArquivosDelegua());
+
+    // Após renomear arquivos Delégua, salvamos tudo e reanalisamos para evitar diagnósticos desatualizados.
+    context.subscriptions.push(
+        vscode.workspace.onDidRenameFiles(async evento => {
+            const houveRenomeacaoDelgua = evento.files.some(arquivo =>
+                ehArquivoDelegua(arquivo.oldUri) || ehArquivoDelegua(arquivo.newUri)
+            );
+
+            if (!houveRenomeacaoDelgua) {
+                return;
+            }
+
+            try {
+                await vscode.workspace.saveAll(false);
+                await reanalisarArquivosProjeto(diagnosticosDelegua);
+            } catch (erro) {
+                console.error('Erro ao salvar e reanalisar após renomeação de arquivos Delégua:', erro);
+            }
+        })
     );
 
     // Assinaturas de funções e métodos

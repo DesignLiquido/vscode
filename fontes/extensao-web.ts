@@ -39,6 +39,7 @@ import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-vi
 import { gerarFluxogramaWeb } from './visoes/fluxogramas/geracao-fluxogramas-web';
 import { DeleguaProvedorAcoesCodigo } from './acoes-codigo/delegua-provedor-acoes-codigo';
 import { DeleguaProvedorDefinicao } from './definicao';
+import { DeleguaProvedorReferencias } from './referencias';
 
 let changeTimeout: NodeJS.Timeout | null = null;
 
@@ -250,6 +251,14 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerDefinitionProvider(
             { language: 'delegua' },
             new DeleguaProvedorDefinicao()
+        )
+    );
+
+    // Encontrar todas as referências
+    context.subscriptions.push(
+        vscode.languages.registerReferenceProvider(
+            { language: 'delegua' },
+            new DeleguaProvedorReferencias()
         )
     );
 

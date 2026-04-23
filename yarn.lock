@@ -386,10 +386,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@designliquido/birl@^0.5.29":
-  version "0.5.29"
-  resolved "https://registry.yarnpkg.com/@designliquido/birl/-/birl-0.5.29.tgz#1dbdb5340d6730b7e1823466fd822bc60ee21a34"
-  integrity sha512-B1nJsCSIHh3ye2kzk9XQGvVoktyo4pmtOa54gocem5YPTRDIbyAqcHYfoaC5P5ZyStn300Lw0HUTSoq2ptDiMw==
+"@designliquido/birl@^0.5.31":
+  version "0.5.31"
+  resolved "https://registry.yarnpkg.com/@designliquido/birl/-/birl-0.5.31.tgz#a855558f25a2f5baee41c83b99ad93d744ae706f"
+  integrity sha512-e9CFslbQjf6OHokjqZhtGCK5/+E7Gy/s3DVvNsAQMw/2wbP/zI1Ks8W1vGKYnCW47wYihSdR/ckOhTNBQnkcJw==
   dependencies:
     lodash "^4.17.21"
 
@@ -489,10 +489,10 @@
     esprima "^4.0.1"
     lodash.clonedeep "^4.5.0"
 
-"@designliquido/delegua@^1.18.2":
-  version "1.18.2"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-1.18.2.tgz#72f3c4ddc2bfe68d355562e315dbb3f562490aec"
-  integrity sha512-EUltNVRBgTBXaTryIzLJZ0RsIre6YljHapWkC7mkurPpeS95ej8QXs2PymmNCQJAaA3WoFFrP8dJQzAzroEUEw==
+"@designliquido/delegua@^1.18.4":
+  version "1.18.4"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-1.18.4.tgz#7ddac23543bf3e0d7d62a589cd23116b018868a3"
+  integrity sha512-41UlTZhPzt8oPGAvHUR6HMdFK9cCiJ2vNIsuyhH/bDHaRxE/PHt19ZEpjuuehIavxtnHPM3s5KDfRCOQyqzixA==
   dependencies:
     antlr4ts "^0.5.0-alpha.4"
     browser-process-hrtime "^1.0.0"
@@ -544,34 +544,34 @@
     jsdom "^21.1.1"
     xslt-processor "^5.0.3"
 
-"@designliquido/mapler@^0.6.29":
-  version "0.6.29"
-  resolved "https://registry.yarnpkg.com/@designliquido/mapler/-/mapler-0.6.29.tgz#e0e62625af42c8630375d6a1829b7e7dc12b99cb"
-  integrity sha512-PjM3D+UQQPN9D55i3pYKHTVB9DDwuuXjVqxfAe1NGoJuMqbYgLhTYpKBQQfJXrxsrP06g1AIN6O1Q0r3KGLN2Q==
+"@designliquido/mapler@^0.6.31":
+  version "0.6.31"
+  resolved "https://registry.yarnpkg.com/@designliquido/mapler/-/mapler-0.6.31.tgz#6492dad481ecba4b23945f6144ca5f34753a5e7f"
+  integrity sha512-sVNTHiR0h/9hIXjTpv/SHLRgReGdZ0z/qvwkx2OUqJitUJqskkllTdX63OWWbT++n2MTVWjaGbGpg0yKzGasOA==
   dependencies:
     lodash "^4.17.21"
     node-fetch "2"
 
-"@designliquido/portugol-studio@^0.10.11":
-  version "0.10.11"
-  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.10.11.tgz#90d68ecab396f7bc5096a47eaa0406e61897b88f"
-  integrity sha512-WE82kLoq/pOdWb3f3cTNYiVghVy0x0PcwcSga+ySjS4efXv9kzhe/ouP8/PUHSQgQtJoIRd667xp3eZG9WYK3A==
+"@designliquido/portugol-studio@^0.10.13":
+  version "0.10.13"
+  resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.10.13.tgz#dbfe7adc0ed61fd9c152afacb48db0dfb01a22b6"
+  integrity sha512-kpUSqEzvzQ/7VOeM7+oJRwFa1c+uiH4jWNC0DoVZp/GTc7opsJ875C35oIcSDgduA6Me7uzKmtpBVj9nmAYUqg==
   dependencies:
     lodash "^4.17.21"
     node-fetch "2"
     xml2js "^0.6.2"
 
-"@designliquido/potigol@^0.10.5":
-  version "0.10.5"
-  resolved "https://registry.yarnpkg.com/@designliquido/potigol/-/potigol-0.10.5.tgz#45d4588dcb8cef7eb05cb0040b15a19cea1c80e8"
-  integrity sha512-A0Ke4JzCUf8/BnN+nt7XZbghlGK/LYMKOqd0TK9/drcfZ6BVSAIdGFh6qDt9/PuXy8UWo7lEZPhGNuFN0er7UQ==
+"@designliquido/potigol@^0.10.7":
+  version "0.10.7"
+  resolved "https://registry.yarnpkg.com/@designliquido/potigol/-/potigol-0.10.7.tgz#6788d1e57302fdf58dc9ef3825824c5aaf489c75"
+  integrity sha512-wEipqxj+QmOcmjs/OGhw4JOqRjAkqej+ePDkC/8DfURfZAtykPukJUH9xacF3WlSP0aKVU/+nPS87aWW2f5Y3g==
   dependencies:
     lodash "^4.17.21"
 
-"@designliquido/visualg@^0.8.29":
-  version "0.8.29"
-  resolved "https://registry.yarnpkg.com/@designliquido/visualg/-/visualg-0.8.29.tgz#8fc4dc039e53cbe73cf15d9a018edd1beccc1ce9"
-  integrity sha512-SQo4XeNkJCUw1X0e6tzJj64VIdx4pRZ7nEsJT5MRRpUAh0oVNUhiTkYkCrEKjw5ShuCdVHLn9Vxt4d2KwaPEbw==
+"@designliquido/visualg@^0.8.31":
+  version "0.8.31"
+  resolved "https://registry.yarnpkg.com/@designliquido/visualg/-/visualg-0.8.31.tgz#b7289bce63c20859219762a1bbe677462a2e01d8"
+  integrity sha512-96q7uuaG0ikFqjTTQHgzVSYqUts+I+rGSC2KRMGK7cFPwJ6StdYTZGyBNfPgZjVGK+EkDD388O20JQRifjycKQ==
   dependencies:
     lodash "^4.17.21"
 
