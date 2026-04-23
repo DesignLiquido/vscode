@@ -473,4 +473,106 @@ describe('analise-codigo/index', () => {
             expect(resultado).toHaveProperty('analisadorSemantico');
         });
     });
+
+    describe('Aliases de contexto Líquido', () => {
+        function configurarAvaliadorComTipos(tipos: Record<string, any>) {
+            const avaliadorMod = require('../../fontes/avaliacao-sintatica/avaliador-sintatico-com-importacao');
+            // Usa 'function' + Object.assign(this, ...) para que instanceof AvaliadorSintaticoComImportacao
+            // retorne true — necessário para que o bloco de declaracoesPreCarregadas seja executado.
+            avaliadorMod.AvaliadorSintaticoComImportacao.mockImplementationOnce(function(this: any) {
+                Object.assign(this, {
+                    analisar: jest.fn().mockResolvedValue({ declaracoes: [], erros: [] }),
+                    preCarregarDefinicoes: jest.fn().mockResolvedValue(undefined),
+                    definirContextoLiquido: jest.fn(),
+                    tiposDefinidosEmCodigo: tipos,
+                });
+            });
+        }
+
+        function obterDeclaracoesPreCarregadas(): any[] {
+            const { definirResultado } = require('../../fontes/analise-codigo/cache-analise');
+            const [, resultado] = definirResultado.mock.calls[0];
+            return resultado.declaracoesPreCarregadas;
+        }
+
+        it('arquivo em /rotas/ com classe Liquido → alias liquido adicionado', async () => {
+            const mockLiquidoClasse = { simbolo: { lexema: 'Liquido' } };
+            configurarAvaliadorComTipos({ Liquido: mockLiquidoClasse });
+
+            mockDocumento.fileName = '/workspace/rotas/inicial.delegua';
+            await executarAnalises(mockDocumento, mockDiagnosticos);
+
+            const declaracoes = obterDeclaracoesPreCarregadas();
+            // Liquido (original) + liquido (alias) = 2 entradas
+            expect(declaracoes).toHaveLength(2);
+            expect(declaracoes).toContain(mockLiquidoClasse);
+        });
+
+        it('arquivo em /rotas/ com Requisicao e Resposta → aliases adicionados', async () => {
+            const mockRequisicao = { simbolo: { lexema: 'Requisicao' } };
+            const mockResposta = { simbolo: { lexema: 'Resposta' } };
+            configurarAvaliadorComTipos({ Requisicao: mockRequisicao, Resposta: mockResposta });
+
+            mockDocumento.fileName = '/workspace/rotas/inicial.delegua';
+            await executarAnalises(mockDocumento, mockDiagnosticos);
+
+            const declaracoes = obterDeclaracoesPreCarregadas();
+            // 2 originais (Requisicao, Resposta) + 2 aliases (requisicao, resposta) = 4
+            expect(declaracoes).toHaveLength(4);
+            expect(declaracoes).toContain(mockRequisicao);
+            expect(declaracoes).toContain(mockResposta);
+        });
+
+        it('arquivo em /rotas/ com todas as classes de contexto → todos os aliases adicionados', async () => {
+            const mockLiquido = { simbolo: { lexema: 'Liquido' } };
+            const mockRequisicao = { simbolo: { lexema: 'Requisicao' } };
+            const mockResposta = { simbolo: { lexema: 'Resposta' } };
+            configurarAvaliadorComTipos({
+                Liquido: mockLiquido,
+                Requisicao: mockRequisicao,
+                Resposta: mockResposta,
+            });
+
+            mockDocumento.fileName = '/workspace/rotas/inicial.delegua';
+            await executarAnalises(mockDocumento, mockDiagnosticos);
+
+            const declaracoes = obterDeclaracoesPreCarregadas();
+            // 3 originais + 3 aliases = 6
+            expect(declaracoes).toHaveLength(6);
+        });
+
+        it('arquivo fora de /rotas/ → nenhum alias adicionado', async () => {
+            const mockLiquidoClasse = { simbolo: { lexema: 'Liquido' } };
+            configurarAvaliadorComTipos({ Liquido: mockLiquidoClasse });
+
+            mockDocumento.fileName = '/workspace/controladores/inicio.delegua';
+            await executarAnalises(mockDocumento, mockDiagnosticos);
+
+            const declaracoes = obterDeclaracoesPreCarregadas();
+            // Apenas o original — sem alias
+            expect(declaracoes).toHaveLength(1);
+            expect(declaracoes[0]).toBe(mockLiquidoClasse);
+        });
+
+        it('arquivo em /rotas/ sem classes de contexto em tiposDefinidosEmCodigo → sem erro', async () => {
+            configurarAvaliadorComTipos({});
+
+            mockDocumento.fileName = '/workspace/rotas/inicial.delegua';
+            await expect(executarAnalises(mockDocumento, mockDiagnosticos)).resolves.not.toThrow();
+
+            const declaracoes = obterDeclaracoesPreCarregadas();
+            expect(declaracoes).toHaveLength(0);
+        });
+
+        it('alias aponta para o mesmo objeto que o original', async () => {
+            const mockLiquidoClasse = { simbolo: { lexema: 'Liquido' } };
+            configurarAvaliadorComTipos({ Liquido: mockLiquidoClasse });
+
+            mockDocumento.fileName = '/workspace/rotas/inicial.delegua';
+            await executarAnalises(mockDocumento, mockDiagnosticos);
+
+            const declaracoes = obterDeclaracoesPreCarregadas();
+            expect(declaracoes[0]).toBe(declaracoes[1]);
+        });
+    });
 });

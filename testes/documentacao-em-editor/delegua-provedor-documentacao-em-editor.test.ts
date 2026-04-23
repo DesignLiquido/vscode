@@ -40,6 +40,7 @@ jest.mock('@designliquido/delegua/declaracoes', () => ({
 }), { virtual: true });
 
 jest.mock('@designliquido/delegua/construtos', () => ({
+    Chamada: class Chamada {},
     ComentarioComoConstruto: class ComentarioComoConstruto {
         constructor(public conteudo: any) {}
     },

@@ -45,6 +45,19 @@
 			"preLaunchTask": "npm: watch"
         },
         {
+            "name": "Depurar Extensão no VSCode (testes-liquido)",
+            "type": "extensionHost",
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "D:\\Delegua\\testes-liquido"
+            ],
+			"outFiles": [
+			 	"${workspaceFolder}/dist/**/*.js"
+			],
+			"preLaunchTask": "npm: watch"
+        },
+        {
           "type": "chrome",
           "request": "launch",
           "name": "Testar Extensão no Navegador",

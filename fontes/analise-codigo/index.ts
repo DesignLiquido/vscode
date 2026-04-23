@@ -98,6 +98,20 @@ export async function executarAnalises(
             avaliadorComImportacao.diagnosticos = diagnosticos;
             await avaliadorComImportacao.preCarregarDefinicoes(await descobrirDefinicoes());
 
+            if (arquivoDeRotaLiquido) {
+                const aliasesContextoLiquido: Record<string, string> = {
+                    Liquido: 'liquido',
+                    Requisicao: 'requisicao',
+                    Resposta: 'resposta',
+                };
+                for (const [nomePascal, nomeVariavel] of Object.entries(aliasesContextoLiquido)) {
+                    const declaracaoClasse = avaliadorComImportacao.tiposDefinidosEmCodigo[nomePascal];
+                    if (declaracaoClasse) {
+                        avaliadorComImportacao.tiposDefinidosEmCodigo[nomeVariavel] = declaracaoClasse;
+                    }
+                }
+            }
+
             const analisadorSemanticoDelegua = new AnalisadorSemantico();
             avaliadorSintatico = avaliadorComImportacao;
             analisadorSemantico = analisadorSemanticoDelegua;

@@ -99,9 +99,9 @@ describe('VisualgProvedorFormatacao', () => {
         expect(edits.length).toBe(1);
     });
 
-    it.skip('deve retornar texto original em caso de erro', async () => {
+    it('deve retornar texto original em caso de erro', async () => {
         const { FormatadorVisuAlg } = jest.requireMock('@designliquido/visualg/formatador');
-        FormatadorVisuAlg.prototype.formatar = jest.fn().mockImplementation(() => {
+        jest.spyOn(FormatadorVisuAlg.prototype, 'formatar').mockImplementation(() => {
             throw new Error('Erro de formatação');
         });
 

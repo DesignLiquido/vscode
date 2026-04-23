@@ -47,35 +47,22 @@ async function descobrirDefinicoesEmProjetoAberto(): Promise<string[]> {
     return arquivos;
 }
 
-/**
- * Varre os pacotes instalados em `node_modules/@designliquido` buscando aqueles
- * que declaram o campo `"delegua"` no seu `package.json`.
- * Para cada pacote encontrado, coleta os caminhos absolutos dos arquivos `.delegua`
- * da pasta de definições indicada pelo campo `"delegua".definicoes`.
- *
- * Esse mecanismo permite que bibliotecas como `delegua-entidades` exponham
- * superclasses (`Modelo`, `Migracao`, etc.) para o IntelliSense sem que o
- * desenvolvedor precise importá-las explicitamente no código.
- */
-async function descobrirDefinicoesEmPacotes(): Promise<string[]> {
-    if (!vscode.workspace.workspaceFolders?.length) {
-        return [];
-    }
-
-    const raizWorkspace = vscode.workspace.workspaceFolders[0].uri;
-    const caminhoOrganizacao = vscode.Uri.joinPath(raizWorkspace, 'node_modules', '@designliquido');
+async function coletarDefinicoesDePastaNodeModules(pastaPacotes: vscode.Uri): Promise<string[]> {
     const caminhoArquivos: string[] = [];
 
     let entradas: [string, vscode.FileType][];
     try {
-        entradas = await vscode.workspace.fs.readDirectory(caminhoOrganizacao);
-    } catch (error) {
-        // Pasta node_modules/@designliquido não existe — nada a descobrir.
+        entradas = await vscode.workspace.fs.readDirectory(pastaPacotes);
+    } catch {
         return [];
     }
 
-    for (const [nomePacote] of entradas) {
-        const caminhoPackageJson = vscode.Uri.joinPath(caminhoOrganizacao, nomePacote, 'package.json');
+    for (const [nomePacote, tipo] of entradas) {
+        if (tipo !== vscode.FileType.Directory) {
+            continue;
+        }
+
+        const caminhoPackageJson = vscode.Uri.joinPath(pastaPacotes, nomePacote, 'package.json');
 
         let manifestoPacote: any;
         try {
@@ -90,21 +77,17 @@ async function descobrirDefinicoesEmPacotes(): Promise<string[]> {
             continue;
         }
 
-        const caminhoDefinicoes = vscode.Uri.joinPath(
-            caminhoOrganizacao,
-            nomePacote,
-            campoDelegua.definicoes
-        );
+        const caminhoDefinicoes = vscode.Uri.joinPath(pastaPacotes, nomePacote, campoDelegua.definicoes);
 
         let arquivos: [string, vscode.FileType][];
         try {
             arquivos = await vscode.workspace.fs.readDirectory(caminhoDefinicoes);
-        } catch (error) {
+        } catch {
             continue;
         }
 
-        for (const [nomeArquivo, tipo] of arquivos) {
-            if (tipo === vscode.FileType.File && nomeArquivo.endsWith('.delegua')) {
+        for (const [nomeArquivo, tipoArquivo] of arquivos) {
+            if (tipoArquivo === vscode.FileType.File && nomeArquivo.endsWith('.delegua')) {
                 const caminhoCompleto = vscode.Uri.joinPath(caminhoDefinicoes, nomeArquivo);
                 caminhoArquivos.push(caminhoCompleto.fsPath);
             }
@@ -112,4 +95,25 @@ async function descobrirDefinicoesEmPacotes(): Promise<string[]> {
     }
 
     return caminhoArquivos;
+}
+
+/**
+ * Varre os pacotes instalados em `node_modules` buscando aqueles que declaram o campo
+ * `"delegua"` no seu `package.json`. Cobre tanto pacotes sob `@designliquido` quanto
+ * pacotes de raiz (ex.: `liquido`).
+ */
+async function descobrirDefinicoesEmPacotes(): Promise<string[]> {
+    if (!vscode.workspace.workspaceFolders?.length) {
+        return [];
+    }
+
+    const raizWorkspace = vscode.workspace.workspaceFolders[0].uri;
+    const nodeModules = vscode.Uri.joinPath(raizWorkspace, 'node_modules');
+
+    const [deOrganizacao, deRaiz] = await Promise.all([
+        coletarDefinicoesDePastaNodeModules(vscode.Uri.joinPath(nodeModules, '@designliquido')),
+        coletarDefinicoesDePastaNodeModules(nodeModules),
+    ]);
+
+    return [...deOrganizacao, ...deRaiz];
 }

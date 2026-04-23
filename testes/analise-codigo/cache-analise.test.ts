@@ -1,5 +1,6 @@
+// @ts-nocheck
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { definirResultado, obterResultado, ResultadoAnaliseInterface } from '../../fontes/analise-codigo/cache-analise';
+import { definirResultado, obterResultado } from '../../fontes/analise-codigo/cache-analise';
 
 describe('cache-analise', () => {
     // Mock de ResultadoAnaliseInterface para usar nos testes

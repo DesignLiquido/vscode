@@ -94,9 +94,9 @@ describe('MaplerProvedorFormatacao', () => {
         expect(edits.length).toBe(1);
     });
 
-    it.skip('deve retornar texto original em caso de erro', async () => {
+    it('deve retornar texto original em caso de erro', async () => {
         const { FormatadorMapler } = jest.requireMock('@designliquido/mapler/formatador');
-        FormatadorMapler.prototype.formatar = jest.fn().mockImplementation(() => {
+        jest.spyOn(FormatadorMapler.prototype, 'formatar').mockImplementation(() => {
             throw new Error('Erro de formatação');
         });
 

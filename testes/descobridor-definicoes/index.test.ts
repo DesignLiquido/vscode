@@ -34,6 +34,12 @@ function setWorkspace(path: string) {
     ];
 }
 
+// Ordem das chamadas readDirectory em descobrirDefinicoes():
+//   Call 1 — pasta 'definicoes' do projeto
+//   Call 2 — node_modules/@designliquido  (scan de organização)
+//   Call 3 — node_modules  (scan de pacotes de raiz)
+//   Call 4+ — pasta de definicoes de cada pacote encontrado
+
 describe('descobrirDefinicoes', () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -61,10 +67,9 @@ describe('descobrirDefinicoes', () => {
 
     it('pasta definicoes com arquivo .delegua → retorna caminho', async () => {
         setWorkspace('/workspace');
-        mockReadDirectory.mockResolvedValueOnce([
-            ['modelo.delegua', 1], // FileType.File
-            ['outro.txt', 1],
-        ]).mockRejectedValue(new Error('ENOENT')); // node_modules/@designliquido não existe
+        mockReadDirectory
+            .mockResolvedValueOnce([['modelo.delegua', 1], ['outro.txt', 1]]) // Call 1: definicoes
+            .mockRejectedValue(new Error('ENOENT')); // Calls 2+: node_modules inexistente
         const resultado = await descobrirDefinicoes();
         expect(resultado).toHaveLength(1);
         expect(resultado[0]).toContain('modelo.delegua');
@@ -72,10 +77,9 @@ describe('descobrirDefinicoes', () => {
 
     it('pasta definicoes com diretório ignorado', async () => {
         setWorkspace('/workspace');
-        mockReadDirectory.mockResolvedValueOnce([
-            ['subdir', 2], // FileType.Directory
-            ['modelo.delegua', 1],
-        ]).mockRejectedValue(new Error('ENOENT'));
+        mockReadDirectory
+            .mockResolvedValueOnce([['subdir', 2], ['modelo.delegua', 1]]) // Call 1
+            .mockRejectedValue(new Error('ENOENT'));
         const resultado = await descobrirDefinicoes();
         expect(resultado).toHaveLength(1);
     });
@@ -83,8 +87,8 @@ describe('descobrirDefinicoes', () => {
     it('node_modules/@designliquido não existe → retorna arquivos de definicoes', async () => {
         setWorkspace('/workspace');
         mockReadDirectory
-            .mockResolvedValueOnce([['entidade.delegua', 1]]) // definicoes
-            .mockRejectedValue(new Error('ENOENT')); // node_modules
+            .mockResolvedValueOnce([['entidade.delegua', 1]]) // Call 1: definicoes
+            .mockRejectedValue(new Error('ENOENT')); // Calls 2, 3: node_modules inexistente
         const resultado = await descobrirDefinicoes();
         expect(resultado).toHaveLength(1);
     });
@@ -92,8 +96,9 @@ describe('descobrirDefinicoes', () => {
     it('pacote sem campo delegua no package.json é ignorado', async () => {
         setWorkspace('/workspace');
         mockReadDirectory
-            .mockResolvedValueOnce([]) // definicoes
-            .mockResolvedValueOnce([['delegua-http', 2]]); // node_modules
+            .mockResolvedValueOnce([])                     // Call 1: definicoes
+            .mockResolvedValueOnce([['delegua-http', 2]])  // Call 2: @designliquido
+            .mockResolvedValueOnce([]);                    // Call 3: node_modules raiz
         mockReadFile.mockResolvedValue(Buffer.from(JSON.stringify({ name: 'delegua-http' })));
         const resultado = await descobrirDefinicoes();
         expect(resultado).toEqual([]);
@@ -102,8 +107,9 @@ describe('descobrirDefinicoes', () => {
     it('pacote com campo delegua mas sem definicoes é ignorado', async () => {
         setWorkspace('/workspace');
         mockReadDirectory
-            .mockResolvedValueOnce([]) // definicoes
-            .mockResolvedValueOnce([['delegua-entidades', 2]]); // node_modules
+            .mockResolvedValueOnce([])                         // Call 1: definicoes
+            .mockResolvedValueOnce([['delegua-entidades', 2]]) // Call 2: @designliquido
+            .mockResolvedValueOnce([]);                        // Call 3: node_modules raiz
         mockReadFile.mockResolvedValue(Buffer.from(JSON.stringify({
             name: 'delegua-entidades',
             delegua: {},
@@ -115,9 +121,10 @@ describe('descobrirDefinicoes', () => {
     it('pacote com delegua.definicoes e arquivos .delegua → retorna caminhos', async () => {
         setWorkspace('/workspace');
         mockReadDirectory
-            .mockResolvedValueOnce([]) // definicoes do projeto
-            .mockResolvedValueOnce([['delegua-entidades', 2]]) // node_modules
-            .mockResolvedValueOnce([['modelo.delegua', 1], ['outro.txt', 1]]); // definicoes do pacote
+            .mockResolvedValueOnce([])                                         // Call 1: definicoes do projeto
+            .mockResolvedValueOnce([['delegua-entidades', 2]])                 // Call 2: @designliquido
+            .mockResolvedValueOnce([])                                         // Call 3: node_modules raiz
+            .mockResolvedValueOnce([['modelo.delegua', 1], ['outro.txt', 1]]); // Call 4: definicoes do pacote
         mockReadFile.mockResolvedValue(Buffer.from(JSON.stringify({
             name: 'delegua-entidades',
             delegua: { definicoes: 'definicoes' },
@@ -131,7 +138,8 @@ describe('descobrirDefinicoes', () => {
         setWorkspace('/workspace');
         mockReadDirectory
             .mockResolvedValueOnce([])
-            .mockResolvedValueOnce([['delegua-erro', 2]]);
+            .mockResolvedValueOnce([['delegua-erro', 2]])
+            .mockResolvedValueOnce([]);
         mockReadFile.mockRejectedValue(new Error('ENOENT'));
         const resultado = await descobrirDefinicoes();
         expect(resultado).toEqual([]);
@@ -142,11 +150,121 @@ describe('descobrirDefinicoes', () => {
         mockReadDirectory
             .mockResolvedValueOnce([])
             .mockResolvedValueOnce([['delegua-entidades', 2]])
-            .mockRejectedValue(new Error('ENOENT')); // leitura das definicoes falha
+            .mockRejectedValue(new Error('ENOENT')); // Call 3 (raiz) e Call 4 (definicoes) rejeitam
         mockReadFile.mockResolvedValue(Buffer.from(JSON.stringify({
             delegua: { definicoes: 'definicoes' },
         })));
         const resultado = await descobrirDefinicoes();
         expect(resultado).toEqual([]);
+    });
+});
+
+describe('descobrirDefinicoes — pacotes de raiz em node_modules', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockVscode.workspace.workspaceFolders = null;
+    });
+
+    it('pacote de raiz com delegua.definicoes e arquivo .delegua → retorna caminho', async () => {
+        setWorkspace('/workspace');
+        mockReadDirectory
+            .mockResolvedValueOnce([])                      // Call 1: definicoes do projeto
+            .mockResolvedValueOnce([])                      // Call 2: @designliquido (vazio)
+            .mockResolvedValueOnce([['liquido', 2]])        // Call 3: node_modules raiz
+            .mockResolvedValueOnce([['liquido.delegua', 1], ['outro.txt', 1]]); // Call 4: definicoes do pacote
+        mockReadFile.mockResolvedValue(Buffer.from(JSON.stringify({
+            name: 'liquido',
+            delegua: { definicoes: 'definicoes' },
+        })));
+        const resultado = await descobrirDefinicoes();
+        expect(resultado).toHaveLength(1);
+        expect(resultado[0]).toContain('liquido.delegua');
+    });
+
+    it('pacote de raiz sem campo delegua → ignorado', async () => {
+        setWorkspace('/workspace');
+        mockReadDirectory
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce([['algum-pacote', 2]]);
+        mockReadFile.mockResolvedValue(Buffer.from(JSON.stringify({ name: 'algum-pacote' })));
+        const resultado = await descobrirDefinicoes();
+        expect(resultado).toEqual([]);
+    });
+
+    it('pacote de raiz com campo delegua mas sem definicoes → ignorado', async () => {
+        setWorkspace('/workspace');
+        mockReadDirectory
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce([['algum-pacote', 2]]);
+        mockReadFile.mockResolvedValue(Buffer.from(JSON.stringify({
+            name: 'algum-pacote',
+            delegua: {},
+        })));
+        const resultado = await descobrirDefinicoes();
+        expect(resultado).toEqual([]);
+    });
+
+    it('entrada não-diretório em node_modules raiz → ignorada', async () => {
+        setWorkspace('/workspace');
+        mockReadDirectory
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce([
+                ['algum-arquivo.txt', 1], // FileType.File — deve ser ignorado
+                ['liquido', 2],           // FileType.Directory — deve ser processado
+            ])
+            .mockResolvedValueOnce([['liquido.delegua', 1]]);
+        mockReadFile.mockResolvedValue(Buffer.from(JSON.stringify({
+            name: 'liquido',
+            delegua: { definicoes: 'definicoes' },
+        })));
+        const resultado = await descobrirDefinicoes();
+        expect(resultado).toHaveLength(1);
+        expect(resultado[0]).toContain('liquido.delegua');
+    });
+
+    it('erro ao ler package.json de pacote de raiz → ignorado, continua', async () => {
+        setWorkspace('/workspace');
+        mockReadDirectory
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce([['liquido', 2]]);
+        mockReadFile.mockRejectedValue(new Error('ENOENT'));
+        const resultado = await descobrirDefinicoes();
+        expect(resultado).toEqual([]);
+    });
+
+    it('erro ao ler pasta de definicoes de pacote de raiz → ignorado, continua', async () => {
+        setWorkspace('/workspace');
+        mockReadDirectory
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce([['liquido', 2]])
+            .mockRejectedValue(new Error('ENOENT')); // definicoes do pacote falha
+        mockReadFile.mockResolvedValue(Buffer.from(JSON.stringify({
+            name: 'liquido',
+            delegua: { definicoes: 'definicoes' },
+        })));
+        const resultado = await descobrirDefinicoes();
+        expect(resultado).toEqual([]);
+    });
+
+    it('pacote de raiz e pacote @designliquido → retorna arquivos de ambos', async () => {
+        setWorkspace('/workspace');
+        mockReadDirectory
+            .mockResolvedValueOnce([])                             // Call 1: definicoes do projeto
+            .mockResolvedValueOnce([['delegua-entidades', 2]])     // Call 2: @designliquido
+            .mockResolvedValueOnce([['liquido', 2]])               // Call 3: node_modules raiz
+            .mockResolvedValueOnce([['modelo.delegua', 1]])        // Call 4: definicoes de delegua-entidades
+            .mockResolvedValueOnce([['liquido.delegua', 1]]);      // Call 5: definicoes de liquido
+        mockReadFile.mockResolvedValue(Buffer.from(JSON.stringify({
+            delegua: { definicoes: 'definicoes' },
+        })));
+        const resultado = await descobrirDefinicoes();
+        expect(resultado).toHaveLength(2);
+        expect(resultado.some(p => p.includes('modelo.delegua'))).toBe(true);
+        expect(resultado.some(p => p.includes('liquido.delegua'))).toBe(true);
     });
 });
