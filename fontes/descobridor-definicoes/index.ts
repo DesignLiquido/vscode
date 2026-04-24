@@ -2,28 +2,90 @@ import * as vscode from 'vscode';
 
 import { ManifestoDeleguaPacoteInterface } from '../interfaces';
 
-/**
- * Ponto de entrada para o mecanismo de descoberta de definições. 
- * Varre o projeto aberto e os pacotes instalados em busca de arquivos `.delegua` que possam conter definições 
- * de classes, funções, etc. para o IntelliSense.
- * @returns {string[]} Uma lista de caminhos absolutos para arquivos `.delegua` encontrados.
- */
-export async function descobrirDefinicoes(): Promise<string[]> {
-    const promises = await Promise.all([
-        descobrirDefinicoesEmProjetoAberto(),
-        descobrirDefinicoesEmPacotes()
-    ]);
+const TTL_CAMINHOS_MS = 60 * 60 * 1000;
 
-    const definicoes = promises.flat();
-    return definicoes;
+interface EntradaCacheCaminhos {
+    caminhos: string[];
+    expiraEm: number;
 }
 
-async function descobrirDefinicoesEmProjetoAberto(): Promise<string[]> {
+const cacheCaminhos = new Map<string, EntradaCacheCaminhos>();
+
+export function limparCacheCaminhosDefinicoes(): void {
+    cacheCaminhos.clear();
+}
+
+function obterChaveCacheDefinicoes(arquivoDeRotaLiquido: boolean): string {
+    const chaveWorkspace = vscode.workspace.workspaceFolders?.[0]?.uri.toString() || 'sem-workspace';
+    return `${chaveWorkspace}::${arquivoDeRotaLiquido ? 'liquido' : 'normal'}`;
+}
+
+function obterCaminhosCached(chave: string): string[] | undefined {
+    const entrada = cacheCaminhos.get(chave);
+    if (!entrada || Date.now() > entrada.expiraEm) {
+        cacheCaminhos.delete(chave);
+        return undefined;
+    }
+    return entrada.caminhos;
+}
+
+function definirCaminhosCache(chave: string, caminhos: string[]): void {
+    cacheCaminhos.set(chave, { caminhos, expiraEm: Date.now() + TTL_CAMINHOS_MS });
+}
+
+/**
+ * Ponto de entrada para o mecanismo de descoberta de definições.
+ * Varre o projeto aberto e pacotes npm selecionados buscando aqueles
+ * com o campo `delegua.definicoes` configurado.
+ *
+ * Pacotes selecionados:
+ * - Todos sob `@designliquido/*` que começam com `delegua-`
+ * - Pacote `liquido` (se contexto Líquido)
+ *
+ * @param arquivoDeRotaLiquido Se true, inclui definições do pacote 'liquido'
+ * @returns {string[]} Uma lista de caminhos absolutos para arquivos `.delegua` encontrados.
+ */
+export async function descobrirDefinicoes(arquivoDeRotaLiquido: boolean = false): Promise<string[]> {
     if (!vscode.workspace.workspaceFolders?.length) {
         return [];
     }
 
+    const chaveCacheDefinicoes = obterChaveCacheDefinicoes(arquivoDeRotaLiquido);
+    const definicoesEmCache = obterCaminhosCached(chaveCacheDefinicoes);
+    if (definicoesEmCache) {
+        return definicoesEmCache;
+    }
+
     const raizWorkspace = vscode.workspace.workspaceFolders[0].uri;
+    const diretorioNodeModulesDoProjeto = vscode.Uri.joinPath(raizWorkspace, 'node_modules');
+
+    const promisesAExecutar: Promise<string[]>[] = [
+        descobrirDefinicoesEmProjetoAberto(raizWorkspace),
+        // Descobre apenas pacotes padrão @designliquido/delegua-*
+        coletarDefinicoesDePastaNodeModules(
+            vscode.Uri.joinPath(diretorioNodeModulesDoProjeto, '@designliquido'),
+            nome => nome.startsWith('delegua-')
+        ),
+        // Descobre pacotes de raiz em node_modules (ex: liquido)
+        coletarDefinicoesDePacoteEspecifico(
+            diretorioNodeModulesDoProjeto,
+            'liquido'
+        )
+    ];
+
+    const promises = await Promise.all(promisesAExecutar);
+    const definicoes = promises.flat();
+
+    // Remove duplicatas mantendo ordem
+    const definicoesUnicas = Array.from(new Set(definicoes));
+    if (definicoesUnicas.length > 0) {
+        definirCaminhosCache(chaveCacheDefinicoes, definicoesUnicas);
+    }
+
+    return definicoesUnicas;
+}
+
+async function descobrirDefinicoesEmProjetoAberto(raizWorkspace: vscode.Uri): Promise<string[]> {
     const arquivos: string[] = [];
 
     // Ler o diretório `definicoes`
@@ -47,7 +109,46 @@ async function descobrirDefinicoesEmProjetoAberto(): Promise<string[]> {
     return arquivos;
 }
 
-async function coletarDefinicoesDePastaNodeModules(pastaPacotes: vscode.Uri): Promise<string[]> {
+async function coletarDefinicoesDePacoteEspecifico(
+    pastaPacotes: vscode.Uri,
+    nomePacote: string
+): Promise<string[]> {
+    const caminhoArquivos: string[] = [];
+    const caminhoPackageJson = vscode.Uri.joinPath(pastaPacotes, nomePacote, 'package.json');
+
+    let manifestoPacote: any;
+    try {
+        const buffer = await vscode.workspace.fs.readFile(caminhoPackageJson);
+        manifestoPacote = JSON.parse(Buffer.from(buffer).toString('utf-8'));
+    } catch {
+        return [];
+    }
+
+    const campoDelegua: ManifestoDeleguaPacoteInterface = manifestoPacote['delegua'];
+    const pastaDef = campoDelegua?.definicoes ?? 'definicoes';
+    const caminhoDefinicoes = vscode.Uri.joinPath(pastaPacotes, nomePacote, pastaDef);
+
+    let arquivos: [string, vscode.FileType][];
+    try {
+        arquivos = await vscode.workspace.fs.readDirectory(caminhoDefinicoes);
+    } catch {
+        return [];
+    }
+
+    for (const [nomeArquivo, tipoArquivo] of arquivos) {
+        if (tipoArquivo === vscode.FileType.File && nomeArquivo.endsWith('.delegua')) {
+            const caminhoCompleto = vscode.Uri.joinPath(caminhoDefinicoes, nomeArquivo);
+            caminhoArquivos.push(caminhoCompleto.fsPath);
+        }
+    }
+
+    return caminhoArquivos;
+}
+
+async function coletarDefinicoesDePastaNodeModules(
+    pastaPacotes: vscode.Uri,
+    filtro: (nome: string) => boolean
+): Promise<string[]> {
     const caminhoArquivos: string[] = [];
 
     let entradas: [string, vscode.FileType][];
@@ -58,62 +159,12 @@ async function coletarDefinicoesDePastaNodeModules(pastaPacotes: vscode.Uri): Pr
     }
 
     for (const [nomePacote, tipo] of entradas) {
-        if (tipo !== vscode.FileType.Directory) {
+        if (tipo !== vscode.FileType.Directory || !filtro(nomePacote)) {
             continue;
         }
 
-        const caminhoPackageJson = vscode.Uri.joinPath(pastaPacotes, nomePacote, 'package.json');
-
-        let manifestoPacote: any;
-        try {
-            const buffer = await vscode.workspace.fs.readFile(caminhoPackageJson);
-            manifestoPacote = JSON.parse(Buffer.from(buffer).toString('utf-8'));
-        } catch {
-            continue;
-        }
-
-        const campoDelegua: ManifestoDeleguaPacoteInterface = manifestoPacote['delegua'];
-        if (!campoDelegua?.definicoes) {
-            continue;
-        }
-
-        const caminhoDefinicoes = vscode.Uri.joinPath(pastaPacotes, nomePacote, campoDelegua.definicoes);
-
-        let arquivos: [string, vscode.FileType][];
-        try {
-            arquivos = await vscode.workspace.fs.readDirectory(caminhoDefinicoes);
-        } catch {
-            continue;
-        }
-
-        for (const [nomeArquivo, tipoArquivo] of arquivos) {
-            if (tipoArquivo === vscode.FileType.File && nomeArquivo.endsWith('.delegua')) {
-                const caminhoCompleto = vscode.Uri.joinPath(caminhoDefinicoes, nomeArquivo);
-                caminhoArquivos.push(caminhoCompleto.fsPath);
-            }
-        }
+        caminhoArquivos.push(...await coletarDefinicoesDePacoteEspecifico(pastaPacotes, nomePacote));
     }
 
     return caminhoArquivos;
-}
-
-/**
- * Varre os pacotes instalados em `node_modules` buscando aqueles que declaram o campo
- * `"delegua"` no seu `package.json`. Cobre tanto pacotes sob `@designliquido` quanto
- * pacotes de raiz (ex.: `liquido`).
- */
-async function descobrirDefinicoesEmPacotes(): Promise<string[]> {
-    if (!vscode.workspace.workspaceFolders?.length) {
-        return [];
-    }
-
-    const raizWorkspace = vscode.workspace.workspaceFolders[0].uri;
-    const nodeModules = vscode.Uri.joinPath(raizWorkspace, 'node_modules');
-
-    const [deOrganizacao, deRaiz] = await Promise.all([
-        coletarDefinicoesDePastaNodeModules(vscode.Uri.joinPath(nodeModules, '@designliquido')),
-        coletarDefinicoesDePastaNodeModules(nodeModules),
-    ]);
-
-    return [...deOrganizacao, ...deRaiz];
 }

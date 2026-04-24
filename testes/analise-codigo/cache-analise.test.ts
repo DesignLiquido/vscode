@@ -1,8 +1,22 @@
 // @ts-nocheck
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { definirResultado, obterResultado } from '../../fontes/analise-codigo/cache-analise';
+import {
+    definirResultado,
+    expirarResultado,
+    expirarResultadosPorDependenciaArquivo,
+    expirarTudo,
+    limparResultadosExpirados,
+    obterDiagnosticos,
+    obterResultado,
+    obterResultadoValido,
+} from '../../fontes/analise-codigo/cache-analise';
 
 describe('cache-analise', () => {
+    beforeEach(() => {
+        jest.useRealTimers();
+        expirarTudo();
+    });
+
     // Mock de ResultadoAnaliseInterface para usar nos testes
     const criarResultadoMock = (id: string): ResultadoAnaliseInterface => ({
         lexador: {
@@ -80,6 +94,115 @@ describe('cache-analise', () => {
             // Este teste verifica o comportamento básico
             const uriNaoDefinida = 'file:///test/nunca-definido.delegua';
             expect(obterResultado(uriNaoDefinida)).toBeUndefined();
+        });
+
+        it('deve expirar resultado após TTL informado', () => {
+            jest.useFakeTimers();
+            const uri = 'file:///test/ttl.delegua';
+            const resultado = criarResultadoMock('ttl');
+
+            definirResultado(uri, resultado, { ttlMs: 1000 });
+            expect(obterResultado(uri)).toBe(resultado);
+
+            jest.advanceTimersByTime(1001);
+            expect(obterResultado(uri)).toBeUndefined();
+        });
+    });
+
+    describe('invalidacao manual', () => {
+        it('deve expirar resultado por URI', () => {
+            const uri = 'file:///test/manual.delegua';
+            definirResultado(uri, criarResultadoMock('manual'));
+
+            expirarResultado(uri, 'teste');
+            expect(obterResultado(uri)).toBeUndefined();
+        });
+
+        it('deve limpar todos os resultados', () => {
+            definirResultado('file:///test/1.delegua', criarResultadoMock('1'));
+            definirResultado('file:///test/2.delegua', criarResultadoMock('2'));
+
+            expirarTudo('teste');
+
+            expect(obterResultado('file:///test/1.delegua')).toBeUndefined();
+            expect(obterResultado('file:///test/2.delegua')).toBeUndefined();
+        });
+
+        it('deve expirar entradas que dependem de arquivo alterado', () => {
+            const uriA = 'file:///test/a.delegua';
+            const uriB = 'file:///test/b.delegua';
+
+            definirResultado(uriA, criarResultadoMock('a'), {
+                dependenciasArquivos: ['C:/projeto/modelos/usuario.delegua']
+            });
+
+            definirResultado(uriB, criarResultadoMock('b'), {
+                dependenciasArquivos: ['C:/projeto/modelos/produto.delegua']
+            });
+
+            expirarResultadosPorDependenciaArquivo(['c:\\projeto\\modelos\\usuario.delegua']);
+
+            expect(obterResultado(uriA)).toBeUndefined();
+            expect(obterResultado(uriB)).toBeDefined();
+        });
+    });
+
+    describe('validacao de versao e hash', () => {
+        it('deve retornar resultado valido quando versao e hash corresponderem', () => {
+            const uri = 'file:///test/versao-hash.delegua';
+            const resultado = criarResultadoMock('vh');
+
+            definirResultado(uri, resultado, {
+                versaoDocumento: 7,
+                hashConteudo: 123,
+            });
+
+            expect(
+                obterResultadoValido(uri, {
+                    versaoDocumento: 7,
+                    hashConteudo: 123,
+                })
+            ).toBe(resultado);
+        });
+
+        it('deve retornar undefined quando versao nao corresponder', () => {
+            const uri = 'file:///test/versao-invalida.delegua';
+            definirResultado(uri, criarResultadoMock('vi'), { versaoDocumento: 1, hashConteudo: 123 });
+
+            expect(obterResultadoValido(uri, { versaoDocumento: 2, hashConteudo: 123 })).toBeUndefined();
+        });
+
+        it('deve retornar undefined quando hash nao corresponder', () => {
+            const uri = 'file:///test/hash-invalido.delegua';
+            definirResultado(uri, criarResultadoMock('hi'), { versaoDocumento: 1, hashConteudo: 123 });
+
+            expect(obterResultadoValido(uri, { versaoDocumento: 1, hashConteudo: 999 })).toBeUndefined();
+        });
+    });
+
+    describe('diagnosticos em cache', () => {
+        it('deve armazenar e recuperar diagnosticos', () => {
+            const uri = 'file:///test/diagnosticos.delegua';
+            const diagnosticos = [{ mensagem: 'erro teste' }];
+
+            definirResultado(uri, criarResultadoMock('diag'), { diagnosticos });
+            expect(obterDiagnosticos(uri)).toEqual(diagnosticos);
+        });
+    });
+
+    describe('limpeza de expirados', () => {
+        it('deve remover apenas entradas expiradas', () => {
+            jest.useFakeTimers();
+
+            definirResultado('file:///test/expira-rapido.delegua', criarResultadoMock('rapido'), { ttlMs: 1000 });
+            definirResultado('file:///test/expira-lento.delegua', criarResultadoMock('lento'), { ttlMs: 5000 });
+
+            jest.advanceTimersByTime(1500);
+            const removidos = limparResultadosExpirados();
+
+            expect(removidos).toBe(1);
+            expect(obterResultado('file:///test/expira-rapido.delegua')).toBeUndefined();
+            expect(obterResultado('file:///test/expira-lento.delegua')).toBeDefined();
         });
     });
 

@@ -1,3 +1,4 @@
+import * as vscode from "vscode";
 import {
     AcessoMetodo,
     AvaliadorSintatico,
@@ -15,13 +16,10 @@ import {
     Var,
     Variavel
 } from "@designliquido/delegua";
-
 import { InformacaoElementoSintatico } from "@designliquido/delegua/informacao-elemento-sintatico";
 import { FuncaoPadrao } from "@designliquido/delegua/interpretador/estruturas";
 
 import tiposDeSimbolos from "@designliquido/delegua/tipos-de-simbolos/delegua";
-
-import * as vscode from "vscode";
 
 import { ImportarBiblioteca, ModuloDeclaracoes } from "../construtos";
 import { carregarBibliotecaDelegua, verificarModulosDelegua } from "../mecanismo-importacao-bibliotecas";
@@ -495,13 +493,13 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
                     this.arquivosImportados
                 );
 
-                const classesDefinicao = resultadoAvaliacao.declaracoes.filter(
-                    (d) => d.constructor === Classe
-                ) as Classe[];
-
-                for (const classeDefinicao of classesDefinicao) {
-                    (classeDefinicao as any).caminhoArquivoDefinicao = caminho;
-                    this.tiposDefinidosEmCodigo[classeDefinicao.simbolo.lexema] = classeDefinicao;
+                for (const declaracao of resultadoAvaliacao.declaracoes) {
+                    const simbolo = (declaracao as any).simbolo;
+                    if (!simbolo?.lexema) {
+                        continue;
+                    }
+                    (declaracao as any).caminhoArquivoDefinicao = caminho;
+                    this.tiposDefinidosEmCodigo[simbolo.lexema] = declaracao;
                 }
             } catch (erro: any) {
                 // Erros ao pré-carregar definições não devem interromper a análise do arquivo atual.
@@ -526,6 +524,9 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
         arquivosImportados?: string[]
     ): Promise<RetornoAvaliadorSintatico<Declaracao>> {
         this.arquivosImportados = arquivosImportados || [];
-        return super.analisar(retornoLexador, hashArquivo);
+        const definicoesPreCarregadas = { ...this.tiposDefinidosEmCodigo };
+        const resultado = await super.analisar(retornoLexador, hashArquivo);
+        this.tiposDefinidosEmCodigo = { ...definicoesPreCarregadas, ...this.tiposDefinidosEmCodigo };
+        return resultado;
     }
 }

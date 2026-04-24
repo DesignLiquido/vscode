@@ -206,7 +206,12 @@ jest.mock('../../fontes/avaliacao-sintatica', () => ({
 }), { virtual: true });
 
 jest.mock('../../fontes/analise-codigo/cache-analise', () => ({
-    definirResultado: jest.fn()
+    definirResultado: jest.fn(),
+    obterResultadoValido: jest.fn().mockReturnValue(undefined),
+    obterDiagnosticos: jest.fn().mockReturnValue([]),
+    expirarResultado: jest.fn(),
+    expirarResultados: jest.fn(),
+    expirarTudo: jest.fn(),
 }), { virtual: true });
 
 jest.mock('../../fontes/importador', () => ({
@@ -355,7 +360,8 @@ describe('analise-codigo/index', () => {
                     lexador: expect.any(Object),
                     avaliadorSintatico: expect.any(Object),
                     analisadorSemantico: expect.any(Object)
-                })
+                }),
+                expect.any(Object)
             );
         });
     });
@@ -564,7 +570,7 @@ describe('analise-codigo/index', () => {
             expect(declaracoes).toHaveLength(0);
         });
 
-        it('alias aponta para o mesmo objeto que o original', async () => {
+        it('alias tem simbolo.lexema com nome minúsculo e é objeto distinto do original', async () => {
             const mockLiquidoClasse = { simbolo: { lexema: 'Liquido' } };
             configurarAvaliadorComTipos({ Liquido: mockLiquidoClasse });
 
@@ -572,7 +578,10 @@ describe('analise-codigo/index', () => {
             await executarAnalises(mockDocumento, mockDiagnosticos);
 
             const declaracoes = obterDeclaracoesPreCarregadas();
-            expect(declaracoes[0]).toBe(declaracoes[1]);
+            const alias = declaracoes.find(d => d !== mockLiquidoClasse);
+            expect(alias).toBeDefined();
+            expect(alias.simbolo.lexema).toBe('liquido');
+            expect(alias).not.toBe(mockLiquidoClasse);
         });
     });
 });

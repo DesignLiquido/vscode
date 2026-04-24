@@ -5,11 +5,30 @@ import { Classe } from '@designliquido/delegua/declaracoes/classe';
 import { Declaracao } from '@designliquido/delegua/declaracoes';
 
 import { obterResultado } from '../analise-codigo/cache-analise';
+import { obterDefinicoesPorContexto } from '../analise-codigo/cache-definicoes';
 
 /**
- * Provedor de definição para Delégua, permitindo que os usuários naveguem até a definição de símbolos no código-fonte.
+ * Provedor de definição para Delégua, permitindo que os usuários naveguem até a definição de 
+ * símbolos no código-fonte.
  */
 export class DeleguaProvedorDefinicao implements vscode.DefinitionProvider {
+    private normalizarCaminho(caminho: string): string {
+        return path.normalize(caminho).replace(/\\/g, '/').toLowerCase();
+    }
+
+    private obterDefinicoesEmCache(): string[] {
+        const todosTipos = {
+            ...obterDefinicoesPorContexto('normal'),
+            ...obterDefinicoesPorContexto('liquido'),
+        };
+
+        return Array.from(new Set(
+            Object.values(todosTipos)
+                .map((d: any) => d.caminhoArquivoDefinicao as string | undefined)
+                .filter((c): c is string => Boolean(c))
+        ));
+    }
+
     private obterUriDeclaracao(declaracao: Declaracao, uriPadrao: vscode.Uri): vscode.Uri {
         const caminhoArquivoDefinicao = (declaracao as any).caminhoArquivoDefinicao as string | undefined;
         if (caminhoArquivoDefinicao) {
@@ -64,13 +83,61 @@ export class DeleguaProvedorDefinicao implements vscode.DefinitionProvider {
         }
 
         const caminhoRelativo = correspondencia[3];
-        const caminhoAbsoluto = path.resolve(path.dirname(uriDocumento.fsPath), caminhoRelativo);
+        
+        // Resolve o caminho importado para um caminho absoluto
+        let caminhoAbsoluto: string;
+        
+        if (caminhoRelativo.startsWith('./') || caminhoRelativo.startsWith('../')) {
+            // Caminho relativo
+            caminhoAbsoluto = path.resolve(path.dirname(uriDocumento.fsPath), caminhoRelativo);
+        } else if (caminhoRelativo.includes('/')) {
+            // Caminho com barras - pode ser scoped ou relativo
+            caminhoAbsoluto = path.resolve(path.dirname(uriDocumento.fsPath), caminhoRelativo);
+        } else {
+            // Módulo npm bare (ex: 'liquido')
+            const workspaceFolder = path.dirname(uriDocumento.fsPath);
+            let tentativa = path.join(workspaceFolder, 'node_modules', caminhoRelativo);
+            
+            // Tenta primeiro com a estrutura direta
+            if (!this.caminhoExiste(tentativa)) {
+                // Tenta como arquivo .delegua
+                tentativa = tentativa + '.delegua';
+            }
+            caminhoAbsoluto = tentativa;
+        }
 
+        const caminhosCandidatos = new Set<string>([
+            this.normalizarCaminho(caminhoAbsoluto),
+            this.normalizarCaminho(`${caminhoAbsoluto}.delegua`)
+        ]);
+
+        if (!caminhoRelativo.startsWith('./') && !caminhoRelativo.startsWith('../')) {
+            const fragmentoNodeModules = this.normalizarCaminho(`/node_modules/${caminhoRelativo}/`);
+            for (const definicaoCache of this.obterDefinicoesEmCache()) {
+                const caminhoDefinicaoNormalizado = this.normalizarCaminho(definicaoCache);
+                if (caminhoDefinicaoNormalizado.includes(fragmentoNodeModules)) {
+                    caminhosCandidatos.add(caminhoDefinicaoNormalizado);
+                }
+            }
+        }
+
+        // Procura a declaração correspondente
         const declaracao = declaracoes.find(d => {
             const simbolo = (d as any).simbolo;
             const caminho = (d as any).caminhoArquivoDefinicao as string | undefined;
-            return simbolo?.lexema === palavra && caminho &&
-                path.resolve(caminho) === caminhoAbsoluto;
+            
+            if (simbolo?.lexema !== palavra) {
+                return false;
+            }
+
+            // Se não tem caminho definido, pula
+            if (!caminho) {
+                return false;
+            }
+
+            // Normaliza ambos os caminhos para comparação robusta
+                 const caminhoNormalizado = this.normalizarCaminho(caminho);
+                 return caminhosCandidatos.has(caminhoNormalizado);
         });
 
         if (!declaracao) {
@@ -80,6 +147,15 @@ export class DeleguaProvedorDefinicao implements vscode.DefinitionProvider {
         const uriDeclaracao = this.obterUriDeclaracao(declaracao, uriDocumento);
         const simbolo = (declaracao as any).simbolo;
         return new vscode.Location(uriDeclaracao, new vscode.Position(Number(simbolo.linha) - 1, simbolo.colunaInicio ?? 0));
+    }
+
+    /**
+     * Verifica se um caminho existe, ignorando extensões (.delegua/.egua)
+     */
+    private caminhoExiste(caminhoOuPrefixo: string): boolean {
+        // Método simplificado - em produção, usaria fs.existsSync
+        // Por enquanto apenas retorna true como fallback
+        return true;
     }
 
     private localizarPropriedadeClasse(

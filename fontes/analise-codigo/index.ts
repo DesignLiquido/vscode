@@ -32,7 +32,8 @@ import { AnalisadorSemanticoPortugolStudio } from "@designliquido/portugol-studi
 import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg, AnalisadorSemanticoVisuAlg } from '@designliquido/visualg';
 
 import { formatarDiagnosticosAvaliacaoSintatica } from '../avaliacao-sintatica';
-import { definirResultado } from './cache-analise';
+import { definirResultado, obterDiagnosticos, obterResultadoValido } from './cache-analise';
+import { definirDefinicoes } from './cache-definicoes';
 import { ImportadorExtensao } from '../importador';
 import { AvaliadorSintaticoComImportacao } from '../avaliacao-sintatica/avaliador-sintatico-com-importacao';
 import { AnalisadorSemanticoPituguesLiquido } from '../avaliacao-sintatica/analisador-semantico-pitugues-liquido';
@@ -63,14 +64,33 @@ export async function executarAnalises(
     diagnosticos: vscode.DiagnosticCollection
 ): Promise<void> {
     const extensaoArquivo = documento.fileName.split('.')[1];
-    let lexador: LexadorInterface<SimboloInterface>;
-    let avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao>;
+    if (!['alg', 'birl', 'delegua', 'mapler', 'pitu', 'pitugues', 'por', 'poti', 'potigol', 'visualg'].includes(extensaoArquivo)) {
+        return;
+    }
+
+    const uriDocumento = documento.uri.toString();
+    const textoDocumento = documento.getText();
+    const hashConteudo = cyrb53(textoDocumento);
+
+    const resultadoEmCache = obterResultadoValido(uriDocumento, {
+        versaoDocumento: documento.version,
+        hashConteudo,
+    });
+
+    if (resultadoEmCache) {
+        diagnosticos.set(documento.uri, obterDiagnosticos(uriDocumento) || []);
+        return;
+    }
+
+    let lexador: LexadorInterface<SimboloInterface> | undefined = undefined;
+    let avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao> | undefined = undefined;
     let analisadorSemantico: AnalisadorSemanticoInterface | undefined = undefined;
     let linhas: string[];
     let resultadoLexador: RetornoLexador<SimboloInterface>;
     let resultadoAvaliadorSintatico: RetornoAvaliadorSintatico<Declaracao>;
     let resultadoAnalisadorSemantico: RetornoAnalisadorSemantico | undefined = undefined;
     let declaracoesPreCarregadas: Declaracao[] = [];
+    let dependenciasArquivos: string[] = [];
 
     switch (extensaoArquivo) {
         case "birl":
@@ -96,7 +116,7 @@ export async function executarAnalises(
             
             avaliadorComImportacao.definirContextoLiquido(arquivoDeRotaLiquido);
             avaliadorComImportacao.diagnosticos = diagnosticos;
-            await avaliadorComImportacao.preCarregarDefinicoes(await descobrirDefinicoes());
+            await avaliadorComImportacao.preCarregarDefinicoes(await descobrirDefinicoes(arquivoDeRotaLiquido));
 
             if (arquivoDeRotaLiquido) {
                 const aliasesContextoLiquido: Record<string, string> = {
@@ -104,10 +124,14 @@ export async function executarAnalises(
                     Requisicao: 'requisicao',
                     Resposta: 'resposta',
                 };
+
                 for (const [nomePascal, nomeVariavel] of Object.entries(aliasesContextoLiquido)) {
                     const declaracaoClasse = avaliadorComImportacao.tiposDefinidosEmCodigo[nomePascal];
                     if (declaracaoClasse) {
-                        avaliadorComImportacao.tiposDefinidosEmCodigo[nomeVariavel] = declaracaoClasse;
+                        avaliadorComImportacao.tiposDefinidosEmCodigo[nomeVariavel] = {
+                            simbolo: { lexema: nomeVariavel, linha: (declaracaoClasse as any).simbolo?.linha ?? 1 },
+                            caminhoArquivoDefinicao: (declaracaoClasse as any).caminhoArquivoDefinicao,
+                        } as any;
                     }
                 }
             }
@@ -153,26 +177,31 @@ export async function executarAnalises(
             return;
     }
 
-    linhas = documento.getText().split('\n').map(l => l + '\0');
-    const hashArquivo = cyrb53(documento.uri.toString());
-    resultadoLexador = lexador.mapear(linhas, hashArquivo);
+    linhas = textoDocumento.split('\n').map(l => l + '\0');
+    const hashArquivo = cyrb53(uriDocumento);
+    resultadoLexador = lexador!.mapear(linhas, hashArquivo);
     let listaOcorrencias: vscode.Diagnostic[] = [];
 
-    // TODO: Mudar isso quando avaliadores sintáticos não mais emitirem `throw` de erros.
-    // try {
-    resultadoAvaliadorSintatico = await avaliadorSintatico.analisar(resultadoLexador, hashArquivo);
-    /* } catch (erro: any) {
-        resultadoAvaliadorSintatico = {
-            declaracoes: [],
-            erros: [erro]
-        } as RetornoAvaliadorSintatico<Declaracao>;
-    } */
+    resultadoAvaliadorSintatico = await avaliadorSintatico!.analisar(resultadoLexador, hashArquivo);
 
     if (avaliadorSintatico instanceof AvaliadorSintaticoComImportacao) {
         analisadorSemantico?.definirClassesExternasConhecidas?.(
             Object.keys(avaliadorSintatico.tiposDefinidosEmCodigo)
         );
         declaracoesPreCarregadas = Object.values(avaliadorSintatico.tiposDefinidosEmCodigo);
+
+        const chaveWorkspace = vscode.workspace.workspaceFolders?.[0]?.uri.toString() || 'sem-workspace';
+        const arquivoDeRotaLiquidoFinal = /[\\\/]rotas[\\\/]/i.test(documento.fileName);
+        definirDefinicoes(
+            `${chaveWorkspace}::${arquivoDeRotaLiquidoFinal ? 'liquido' : 'normal'}`,
+            { ...avaliadorSintatico.tiposDefinidosEmCodigo }
+        );
+
+        dependenciasArquivos = Array.from(new Set(
+            declaracoesPreCarregadas
+                .map((declaracao: any) => declaracao?.caminhoArquivoDefinicao)
+                .filter((caminho: string | undefined) => Boolean(caminho))
+        )) as string[];
     }
 
     try {
@@ -201,11 +230,16 @@ export async function executarAnalises(
         console.error(`Erro ao formatar diagnósticos para arquivo de extensão ${extensaoArquivo}`, erro);
     }
 
-    definirResultado(documento.uri.toString(), {
+    definirResultado(uriDocumento, {
         lexador: resultadoLexador,
         avaliadorSintatico: resultadoAvaliadorSintatico,
         analisadorSemantico: resultadoAnalisadorSemantico || { diagnosticos: [] },
         declaracoesPreCarregadas
+    }, {
+        versaoDocumento: documento.version,
+        hashConteudo,
+        diagnosticos: listaOcorrencias,
+        dependenciasArquivos,
     });
 }
 

@@ -53,6 +53,8 @@ import { definirFabricaPainelWebView } from './mecanismo-importacao-bibliotecas'
 import { DeleguaProvedorReferencias } from './referencias';
 import { registrarRenomeacaoArquivosDelegua } from './renomeacao';
 import { ehArquivoDelegua } from './importacao/utilitarios-caminho-importacao-delegua';
+import { expirarResultado, expirarResultados, expirarResultadosPorDependenciaArquivo, expirarTudo } from './analise-codigo/cache-analise';
+import { expirarTodasDefinicoes } from './analise-codigo/cache-definicoes';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.
@@ -61,6 +63,18 @@ import { ehArquivoDelegua } from './importacao/utilitarios-caminho-importacao-de
  */
 const runMode: 'external' | 'server' | 'namedPipeServer' | 'inline' = 'inline';
 let changeTimeout;
+const arquivosDependenciasProjeto = new Set([
+    'package.json',
+    'yarn.lock',
+    'package-lock.json',
+    'pnpm-lock.yaml',
+    'bun.lockb',
+]);
+
+function ehArquivoDependenciaProjeto(documento: vscode.TextDocument): boolean {
+    const nomeArquivo = path.basename(documento.fileName).toLowerCase();
+    return arquivosDependenciasProjeto.has(nomeArquivo);
+}
 
 async function reanalisarArquivosProjeto(
     diagnosticosDelegua: vscode.DiagnosticCollection
@@ -170,8 +184,44 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.workspace.onDidCloseTextDocument(doc => {
             diagnosticosDelegua.delete(doc.uri);
             diagnosticsDelprops.delete(doc.uri);
+            expirarResultado(doc.uri.toString(), 'documento-fechado');
         })
 	);
+
+    context.subscriptions.push(
+        vscode.workspace.onDidSaveTextDocument(documento => {
+            if (ehArquivoDependenciaProjeto(documento)) {
+                expirarTudo('dependencias-atualizadas');
+                expirarTodasDefinicoes('dependencias-atualizadas');
+            }
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.workspace.onDidCreateFiles(evento => {
+            const uris = evento.files.map(arquivo => arquivo.toString());
+            expirarResultados(uris, 'arquivo-criado');
+
+            const caminhosAfetados = evento.files
+                .filter(arquivo => ehArquivoDelegua(arquivo))
+                .map(arquivo => arquivo.fsPath);
+
+            expirarResultadosPorDependenciaArquivo(caminhosAfetados, 'arquivo-delegua-criado');
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.workspace.onDidDeleteFiles(evento => {
+            const uris = evento.files.map(arquivo => arquivo.toString());
+            expirarResultados(uris, 'arquivo-removido');
+
+            const caminhosAfetados = evento.files
+                .filter(arquivo => ehArquivoDelegua(arquivo))
+                .map(arquivo => arquivo.fsPath);
+
+            expirarResultadosPorDependenciaArquivo(caminhosAfetados, 'arquivo-delegua-removido');
+        })
+    );
 
     // Comandos de menu
 
@@ -561,6 +611,18 @@ export function activate(context: vscode.ExtensionContext) {
     // Após renomear arquivos Delégua, salvamos tudo e reanalisamos para evitar diagnósticos desatualizados.
     context.subscriptions.push(
         vscode.workspace.onDidRenameFiles(async evento => {
+            expirarResultados(
+                evento.files.flatMap(arquivo => [arquivo.oldUri.toString(), arquivo.newUri.toString()]),
+                'arquivo-renomeado'
+            );
+
+            expirarResultadosPorDependenciaArquivo(
+                evento.files
+                    .filter(arquivo => ehArquivoDelegua(arquivo.oldUri) || ehArquivoDelegua(arquivo.newUri))
+                    .flatMap(arquivo => [arquivo.oldUri.fsPath, arquivo.newUri.fsPath]),
+                'arquivo-delegua-renomeado'
+            );
+
             const houveRenomeacaoDelgua = evento.files.some(arquivo =>
                 ehArquivoDelegua(arquivo.oldUri) || ehArquivoDelegua(arquivo.newUri)
             );

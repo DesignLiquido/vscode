@@ -11,7 +11,85 @@ export function ehArquivoDelegua(uri: vscode.Uri): boolean {
 export function normalizarSeparadores(caminho: string): string {
     return caminho.replace(/\\/g, '/').trim();
 }
+/**
+ * Resolve um módulo npm em node_modules.
+ * Suporta tanto pacotes regulares quanto scoped.
+ * Ex: 'liquido', '@designliquido/delegua'
+ */
+async function resolverNoNodeModules(
+    documento: vscode.TextDocument,
+    nomePacote: string
+): Promise<vscode.Uri | undefined> {
+    const pastaAtual = vscode.workspace.getWorkspaceFolder(documento.uri);
+    if (!pastaAtual) {
+        return undefined;
+    }
 
+    const caminhoNodeModules = vscode.Uri.joinPath(pastaAtual.uri, 'node_modules');
+    const partes = nomePacote.split('/').filter(Boolean);
+
+    // Monta o caminho: node_modules/pacote ou node_modules/@escopo/pacote
+    const caminhoModulo = vscode.Uri.joinPath(caminhoNodeModules, ...partes);
+
+    // Tenta encontrar o módulo como diretório
+    if (await uriExiste(caminhoModulo)) {
+        // Se for um arquivo .delegua, retorna diretamente
+        if (nomePacote.endsWith('.delegua')) {
+            if (await uriExiste(caminhoModulo)) {
+                return caminhoModulo;
+            }
+        } else {
+            // Tenta encontrar definições conforme especificado no package.json do módulo
+            return await localizarDefinicaoDePacote(caminhoModulo);
+        }
+    }
+
+    // Tenta com extensões delegua
+    if (!nomePacote.endsWith('.delegua')) {
+        for (const extensao of EXTENSOES_DELEGUA) {
+            const comExtensao = caminhoModulo.with({ path: `${caminhoModulo.path}${extensao}` });
+            if (await uriExiste(comExtensao)) {
+                return comExtensao;
+            }
+        }
+    }
+
+    return undefined;
+}
+
+/**
+ * Localiza o arquivo de definição principal de um pacote.
+ * Verifica primeiro o package.json para ver se há configuração de arquivo principal.
+ */
+async function localizarDefinicaoDePacote(caminhoPacote: vscode.Uri): Promise<vscode.Uri | undefined> {
+    const caminhoPackageJson = vscode.Uri.joinPath(caminhoPacote, 'package.json');
+
+    try {
+        const buffer = await vscode.workspace.fs.readFile(caminhoPackageJson);
+        const packageJson = JSON.parse(Buffer.from(buffer).toString('utf-8'));
+
+        // Verifica campo delegua.main para arquivo principal de definições
+        const campoDelegua = packageJson['delegua'];
+        if (campoDelegua?.main) {
+            const caminhoMain = vscode.Uri.joinPath(caminhoPacote, campoDelegua.main);
+            if (await uriExiste(caminhoMain)) {
+                return caminhoMain;
+            }
+        }
+
+        // Fallback: tenta arquivo index
+        for (const nomeIndex of ['index.delegua', 'index.egua']) {
+            const caminhoIndex = vscode.Uri.joinPath(caminhoPacote, nomeIndex);
+            if (await uriExiste(caminhoIndex)) {
+                return caminhoIndex;
+            }
+        }
+    } catch {
+        // Package.json inválido ou não existe
+    }
+
+    return undefined;
+}
 export function extrairCaminhoImportacao(
     linha: string
 ): { caminho: string; inicio: number; fim: number } | undefined {
@@ -73,6 +151,7 @@ export async function resolverDestinoImportacao(
         return undefined;
     }
 
+    // Caso 1: Importação relativa (./ ou ../)
     if (caminho.startsWith('./') || caminho.startsWith('../')) {
         const destinoRelativo = criarUriRelativa(documento.uri, caminho);
         if (await uriExiste(destinoRelativo)) {
@@ -91,6 +170,14 @@ export async function resolverDestinoImportacao(
         return undefined;
     }
 
+    // Caso 2: Importação de pacote npm (sem ./ ou /)
+    // Tenta resolver como módulo npm em node_modules
+    const uriNodeModules = await resolverNoNodeModules(documento, caminho);
+    if (uriNodeModules) {
+        return uriNodeModules;
+    }
+
+    // Caso 3: Importação de arquivo no workspace (sem ./ ou ../)
     const pastaAtual = vscode.workspace.getWorkspaceFolder(documento.uri);
     const pastas = pastaAtual
         ? [

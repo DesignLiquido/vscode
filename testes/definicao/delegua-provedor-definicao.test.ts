@@ -32,8 +32,13 @@ jest.mock('../../fontes/analise-codigo/cache-analise', () => ({
     obterResultado: jest.fn().mockReturnValue(null),
 }), { virtual: true });
 
+jest.mock('../../fontes/analise-codigo/cache-definicoes', () => ({
+    obterDefinicoesPorContexto: jest.fn().mockReturnValue({}),
+}), { virtual: true });
+
 import { DeleguaProvedorDefinicao } from '../../fontes/definicao/delegua-provedor-definicao';
 import { obterResultado } from '../../fontes/analise-codigo/cache-analise';
+import { obterDefinicoesPorContexto } from '../../fontes/analise-codigo/cache-definicoes';
 
 const mockUri = { toString: () => 'file:///teste.delegua', path: '/teste.delegua' };
 
@@ -55,6 +60,7 @@ describe('DeleguaProvedorDefinicao', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         (obterResultado as jest.Mock).mockReturnValue(null);
+        (obterDefinicoesPorContexto as jest.Mock).mockReturnValue({});
         provedor = new DeleguaProvedorDefinicao();
     });
 
@@ -173,5 +179,37 @@ describe('DeleguaProvedorDefinicao', () => {
         });
         const result = provedor.provideDefinition(criarDocumento('minhaVar'), mockPos, mockToken);
         expect(result).toBeDefined();
+    });
+
+    it('consulta cache-definicoes para resolver import de modulo npm', () => {
+        const declaracaoImportada = Object.assign(
+            new DeclaracaoSimples({ lexema: 'rotaGet', linha: 12, colunaInicio: 2 }),
+            { caminhoArquivoDefinicao: '/workspace/node_modules/liquido/definicoes/liquido.delegua' }
+        );
+
+        (obterResultado as jest.Mock).mockReturnValue({
+            avaliadorSintatico: { declaracoes: [] },
+            declaracoesPreCarregadas: [declaracaoImportada],
+        });
+
+        (obterDefinicoesPorContexto as jest.Mock)
+            .mockImplementation((contexto: string) => contexto === 'liquido'
+                ? ['/workspace/node_modules/liquido/definicoes/liquido.delegua']
+                : []);
+
+        const docImport = criarDocumento('rotaGet', {
+            uri: {
+                toString: () => 'file:///workspace/rotas/blog/inicial.delegua',
+                path: '/workspace/rotas/blog/inicial.delegua',
+                fsPath: '/workspace/rotas/blog/inicial.delegua',
+            },
+            lineAt: jest.fn().mockReturnValue({ text: 'importar { rotaGet } de "liquido"' }),
+        });
+
+        const result = provedor.provideDefinition(docImport, mockPos, mockToken);
+
+        expect(result).toBeDefined();
+        expect(obterDefinicoesPorContexto).toHaveBeenCalledWith('normal');
+        expect(obterDefinicoesPorContexto).toHaveBeenCalledWith('liquido');
     });
 });

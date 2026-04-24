@@ -365,6 +365,7 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
         const doc = criarDocumento({
             getText: jest.fn((range?: any) => 'absoluto'),
             lineAt: jest.fn().mockReturnValue({ text: 'minhaVar.absoluto' }),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 9 } }),
         });
         const result = await provedor.provideHover(doc, { line: 0, character: 14 }, mockToken);
         // hoverVariavelOuConstante irá retornar 'absoluto' pois 'absoluto' não está em declaracoesPertinentes

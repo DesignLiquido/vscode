@@ -8,6 +8,7 @@ import primitivasTexto from '@designliquido/delegua/bibliotecas/primitivas-texto
 import primitivasVetor from '@designliquido/delegua/bibliotecas/primitivas-vetor';
 
 import { obterResultado } from '../analise-codigo/cache-analise';
+import { obterDefinicoesPorContexto } from '../analise-codigo/cache-definicoes';
 import { formatarPrimitivas, funcoesNativasDelegua } from '../bibliotecas';
 import { extrairTextoDocumentacao, formatarDocumentacaoDocumentario } from './formatador-documentacao';
 
@@ -66,12 +67,16 @@ export class DeleguaProvedorDocumentacaoEmEditor
             return [];
         });
 
-        return this.hoverPropriedadeClasse(palavra, textoAntesPalavra, posicao.line + 1, todasDeclaracoes)
-            ?? this.hoverVariavelParaCada(palavra, posicao.line + 1, todasDeclaracoes)
+        if (textoAntesPalavra.trimEnd().endsWith('.')) {
+            return this.hoverPropriedadeClasse(palavra, textoAntesPalavra, posicao.line + 1, todasDeclaracoes)
+                ?? this.hoverMetodoDePrimitiva(textoAntesPosicao, palavra, declaracoesPertinentes)
+                ?? this.hoverFuncaoOuMetodoDocumentado(palavra, textoAntesPalavra, todasDeclaracoes);
+        }
+
+        return this.hoverVariavelParaCada(palavra, posicao.line + 1, todasDeclaracoes)
             ?? this.hoverParametroFuncao(palavra, posicao.line + 1, todasDeclaracoes)
-            ?? this.hoverMetodoPrimitivo(textoAntesPosicao, palavra, declaracoesPertinentes)
             ?? this.hoverFuncaoNativa(palavra)
-            ?? this.hoverFuncaoDocumentada(palavra, todasDeclaracoes)
+            ?? this.hoverFuncaoOuMetodoDocumentado(palavra, textoAntesPalavra, todasDeclaracoes)
             ?? this.hoverVariavelOuConstante(palavra, declaracoesPertinentes)
             ?? await this.hoverClasseDocumentada(palavra, todasDeclaracoes, documento.getText())
             ?? this.hoverInterfaceDocumentada(palavra, todasDeclaracoes, documento.getText());
@@ -219,7 +224,7 @@ export class DeleguaProvedorDocumentacaoEmEditor
         return new vscode.Hover(doc);
     }
 
-    private hoverMetodoPrimitivo(
+    private hoverMetodoDePrimitiva(
         textoAntesPosicao: string,
         palavra: string,
         declaracoesPertinentes: { nome: string; tipo: string }[]
@@ -295,13 +300,41 @@ export class DeleguaProvedorDocumentacaoEmEditor
         return new vscode.Hover(doc);
     }
 
-    private hoverFuncaoDocumentada(
+    private hoverFuncaoOuMetodoDocumentado(
         palavra: string,
+        textoAntesPalavra: string,
         todasDeclaracoes: any[]
     ): vscode.Hover | undefined {
-        let declaracaoFuncao = todasDeclaracoes.find(
-            d => d instanceof FuncaoDeclaracao && d.simbolo.lexema === palavra
-        ) as FuncaoDeclaracao | undefined;
+        const tiposEmCache = { ...obterDefinicoesPorContexto('normal'), ...obterDefinicoesPorContexto('liquido') };
+        const declaracaoCache = tiposEmCache[palavra];
+        if (declaracaoCache && !todasDeclaracoes.includes(declaracaoCache)) {
+            todasDeclaracoes.push(declaracaoCache);
+        }
+
+        let declaracaoFuncao: FuncaoDeclaracao | undefined;
+
+        const correspondenciaReceptor = textoAntesPalavra.trimEnd().match(/(\w+)\.$/);
+        if (correspondenciaReceptor) {
+            const nomeReceptor = correspondenciaReceptor[1];
+            const classeReceptor = (todasDeclaracoes.find(
+                d => d instanceof Classe &&
+                    (d as Classe).simbolo.lexema.toLowerCase() === nomeReceptor.toLowerCase()
+            ) ?? Object.values(tiposEmCache).find(
+                d => d instanceof Classe &&
+                    (d as Classe).simbolo.lexema.toLowerCase() === nomeReceptor.toLowerCase()
+            )) as Classe | undefined;
+            if (classeReceptor) {
+                declaracaoFuncao = classeReceptor.metodos.find(
+                    (m: FuncaoDeclaracao) => m.simbolo.lexema === palavra
+                );
+            }
+        }
+
+        if (!declaracaoFuncao) {
+            declaracaoFuncao = todasDeclaracoes.find(
+                d => d instanceof FuncaoDeclaracao && d.simbolo.lexema === palavra
+            ) as FuncaoDeclaracao | undefined;
+        }
 
         if (!declaracaoFuncao) {
             for (const declaracao of todasDeclaracoes) {
@@ -331,8 +364,17 @@ export class DeleguaProvedorDocumentacaoEmEditor
         todasDeclaracoes: any[],
         codigoFonte: string
     ): Promise<vscode.Hover | undefined> {
+        const tiposEmCache = { ...obterDefinicoesPorContexto('normal'), ...obterDefinicoesPorContexto('liquido') };
+        const declaracaoCache = tiposEmCache[palavra];
+        if (declaracaoCache && !todasDeclaracoes.includes(declaracaoCache)) {
+            todasDeclaracoes.push(declaracaoCache);
+        }
+
         const declaracaoClasse = todasDeclaracoes.find(
-            d => d instanceof Classe && (d as Classe).simbolo.lexema === palavra
+            d => d instanceof Classe && (
+                (d as Classe).simbolo.lexema === palavra ||
+                (d as Classe).simbolo.lexema.toLowerCase() === palavra.toLowerCase()
+            )
         ) as Classe | undefined;
         if (!declaracaoClasse) {
             return undefined;

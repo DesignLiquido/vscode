@@ -21,7 +21,10 @@ jest.mock('vscode', () => ({
         onDidRenameFiles: jest.fn(() => ({ dispose: jest.fn() })),
         onDidOpenTextDocument: jest.fn(() => ({ dispose: jest.fn() })),
         onDidChangeTextDocument: jest.fn(() => ({ dispose: jest.fn() })),
-        onDidCloseTextDocument: jest.fn(() => ({ dispose: jest.fn() }))
+        onDidCloseTextDocument: jest.fn(() => ({ dispose: jest.fn() })),
+        onDidSaveTextDocument: jest.fn(() => ({ dispose: jest.fn() })),
+        onDidCreateFiles: jest.fn(() => ({ dispose: jest.fn() })),
+        onDidDeleteFiles: jest.fn(() => ({ dispose: jest.fn() }))
     },
     languages: {
         createDiagnosticCollection: jest.fn(() => ({

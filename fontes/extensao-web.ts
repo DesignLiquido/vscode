@@ -40,8 +40,32 @@ import { gerarFluxogramaWeb } from './visoes/fluxogramas/geracao-fluxogramas-web
 import { DeleguaProvedorAcoesCodigo } from './acoes-codigo/delegua-provedor-acoes-codigo';
 import { DeleguaProvedorDefinicao } from './definicao';
 import { DeleguaProvedorReferencias } from './referencias';
+import { expirarResultado, expirarResultados, expirarResultadosPorDependenciaArquivo, expirarTudo } from './analise-codigo/cache-analise';
+import { expirarTodasDefinicoes } from './analise-codigo/cache-definicoes';
 
 let changeTimeout: NodeJS.Timeout | null = null;
+const arquivosDependenciasProjeto = new Set([
+    'package.json',
+    'yarn.lock',
+    'package-lock.json',
+    'pnpm-lock.yaml',
+    'bun.lockb',
+]);
+
+function obterNomeArquivo(uri: vscode.Uri): string {
+    const partes = uri.path.toLowerCase().split('/');
+    return partes[partes.length - 1] || '';
+}
+
+function ehArquivoDependenciaProjeto(documento: vscode.TextDocument): boolean {
+    return arquivosDependenciasProjeto.has(obterNomeArquivo(documento.uri));
+}
+
+function ehArquivoLinguagemAnalise(uri: vscode.Uri): boolean {
+    const nomeArquivo = obterNomeArquivo(uri);
+    const extensao = nomeArquivo.split('.').pop() || '';
+    return ['alg', 'birl', 'delegua', 'egua', 'mapler', 'pitu', 'pitugues', 'por', 'poti', 'potigol', 'visualg'].includes(extensao);
+}
 
 /**
  * Versão simplificada de tradução que mostra aviso
@@ -122,7 +146,61 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.workspace.onDidCloseTextDocument(doc => diagnosticosDelegua.delete(doc.uri))
+        vscode.workspace.onDidCloseTextDocument(doc => {
+            diagnosticosDelegua.delete(doc.uri);
+            expirarResultado(doc.uri.toString(), 'documento-fechado');
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.workspace.onDidSaveTextDocument(documento => {
+            if (ehArquivoDependenciaProjeto(documento)) {
+                expirarTudo('dependencias-atualizadas');
+                expirarTodasDefinicoes('dependencias-atualizadas');
+            }
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.workspace.onDidCreateFiles(evento => {
+            const uris = evento.files.map(arquivo => arquivo.toString());
+            expirarResultados(uris, 'arquivo-criado');
+
+            const caminhosAfetados = evento.files
+                .filter(arquivo => ehArquivoLinguagemAnalise(arquivo))
+                .map(arquivo => arquivo.path);
+
+            expirarResultadosPorDependenciaArquivo(caminhosAfetados, 'arquivo-linguagem-criado');
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.workspace.onDidDeleteFiles(evento => {
+            const uris = evento.files.map(arquivo => arquivo.toString());
+            expirarResultados(uris, 'arquivo-removido');
+
+            const caminhosAfetados = evento.files
+                .filter(arquivo => ehArquivoLinguagemAnalise(arquivo))
+                .map(arquivo => arquivo.path);
+
+            expirarResultadosPorDependenciaArquivo(caminhosAfetados, 'arquivo-linguagem-removido');
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.workspace.onDidRenameFiles(evento => {
+            expirarResultados(
+                evento.files.flatMap(arquivo => [arquivo.oldUri.toString(), arquivo.newUri.toString()]),
+                'arquivo-renomeado'
+            );
+
+            expirarResultadosPorDependenciaArquivo(
+                evento.files
+                    .filter(arquivo => ehArquivoLinguagemAnalise(arquivo.oldUri) || ehArquivoLinguagemAnalise(arquivo.newUri))
+                    .flatMap(arquivo => [arquivo.oldUri.path, arquivo.newUri.path]),
+                'arquivo-linguagem-renomeado'
+            );
+        })
     );
 
     // Ações de código
