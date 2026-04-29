@@ -203,8 +203,8 @@ export const funcoesNativasPitugues: FuncaoNativaOuMetodoPrimitiva[] = [
             '# `escreva()`\n' +
             'Escreve um ou mais argumentos na saída padrão da aplicação.\n' +
             '## Interpolação \n' +
-            'Delégua suporta interpolação de variáveis: \n\n' +
-            "```delegua\nvar comidaFavorita = 'strogonoff'\n" +
+            'Pituguês suporta interpolação de variáveis: \n\n' +
+            "```pitugues\ncomidaFavorita = 'strogonoff'\n" +
             'escreva("Minha comida favorita é ${comidaFavorita}")\n```' +
             '\n\n ### Formas de uso \n',
         exemploCodigo: 'escreva(...argumentos)',
@@ -227,8 +227,8 @@ export const funcoesNativasPitugues: FuncaoNativaOuMetodoPrimitiva[] = [
             '# `imprima()`\n' +
             'Escreve um ou mais argumentos na saída padrão da aplicação.\n' +
             '## Interpolação \n' +
-            'Delégua suporta interpolação de variáveis: \n\n' +
-            "```delegua\nvar comidaFavorita = 'strogonoff'\n" +
+            'Pituguês suporta interpolação de variáveis: \n\n' +
+            "```pitugues\ncomidaFavorita = 'strogonoff'\n" +
             'imprima("Minha comida favorita é ${comidaFavorita}")\n```' +
             '\n\n ### Formas de uso \n',
         exemploCodigo: 'imprima(...argumentos)',
