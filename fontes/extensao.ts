@@ -51,7 +51,7 @@ import { DeleguaProvedorAcoesCodigo } from './acoes-codigo';
 import { DeleguaProvedorDefinicao } from './definicao';
 import { definirFabricaPainelWebView } from './mecanismo-importacao-bibliotecas';
 import { DeleguaProvedorReferencias } from './referencias';
-import { registrarRenomeacaoArquivosDelegua } from './renomeacao';
+import { DeleguaProvedorRenomeacao, registrarRenomeacaoArquivosDelegua } from './renomeacao';
 import { ehArquivoDelegua } from './importacao/utilitarios-caminho-importacao-delegua';
 import { expirarResultado, expirarResultados, expirarResultadosPorDependenciaArquivo, expirarTudo } from './analise-codigo/cache-analise';
 import { expirarTodasDefinicoes } from './analise-codigo/cache-definicoes';
@@ -602,6 +602,17 @@ export function activate(context: vscode.ExtensionContext) {
                 { scheme: 'untitled', language: 'delegua' }
             ],
             new DeleguaProvedorReferencias()
+        )
+    );
+
+    // Renomear símbolos
+    context.subscriptions.push(
+        vscode.languages.registerRenameProvider(
+            [
+                { scheme: 'file', language: 'delegua' },
+                { scheme: 'untitled', language: 'delegua' }
+            ],
+            new DeleguaProvedorRenomeacao()
         )
     );
 

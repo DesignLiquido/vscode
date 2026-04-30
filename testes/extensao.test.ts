@@ -40,7 +40,8 @@ jest.mock('vscode', () => ({
         registerSignatureHelpProvider: jest.fn(() => ({ dispose: jest.fn() })),
         registerCodeActionsProvider: jest.fn(() => ({ dispose: jest.fn() })),
         registerDefinitionProvider: jest.fn(() => ({ dispose: jest.fn() })),
-        registerReferenceProvider: jest.fn(() => ({ dispose: jest.fn() }))
+        registerReferenceProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerRenameProvider: jest.fn(() => ({ dispose: jest.fn() }))
     },
     commands: {
         registerCommand: jest.fn(() => ({ dispose: jest.fn() }))
@@ -180,6 +181,7 @@ jest.mock('../fontes/referencias', () => ({
 }));
 
 jest.mock('../fontes/renomeacao', () => ({
+    DeleguaProvedorRenomeacao: class {},
     registrarRenomeacaoArquivosDelegua: jest.fn(() => ({ dispose: jest.fn() }))
 }));
 
@@ -265,6 +267,12 @@ describe('Extensão VSCode - Design Líquido', () => {
             extensao.activate(context);
 
             expect(vscode.workspace.onDidRenameFiles).toHaveBeenCalled();
+        });
+
+        it('deve registrar provedor de renomeação de símbolos Delégua', () => {
+            extensao.activate(context);
+
+            expect(vscode.languages.registerRenameProvider).toHaveBeenCalled();
         });
     });
 });

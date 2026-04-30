@@ -40,6 +40,7 @@ import { gerarFluxogramaWeb } from './visoes/fluxogramas/geracao-fluxogramas-web
 import { DeleguaProvedorAcoesCodigo } from './acoes-codigo/delegua-provedor-acoes-codigo';
 import { DeleguaProvedorDefinicao } from './definicao';
 import { DeleguaProvedorReferencias } from './referencias';
+import { DeleguaProvedorRenomeacao } from './renomeacao';
 import { expirarResultado, expirarResultados, expirarResultadosPorDependenciaArquivo, expirarTudo } from './analise-codigo/cache-analise';
 import { expirarTodasDefinicoes } from './analise-codigo/cache-definicoes';
 
@@ -337,6 +338,14 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerReferenceProvider(
             { language: 'delegua' },
             new DeleguaProvedorReferencias()
+        )
+    );
+
+    // Renomear símbolos
+    context.subscriptions.push(
+        vscode.languages.registerRenameProvider(
+            { language: 'delegua' },
+            new DeleguaProvedorRenomeacao()
         )
     );
 

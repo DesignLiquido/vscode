@@ -1,5 +1,9 @@
 # Histórico de Modificações
 
+## 0.25.11
+
+- Novo provedor de renomeação de símbolos para Delégua, com suporte ao comando de renomear em funções, métodos e demais identificadores no editor;
+
 ## 0.25.10
 
 - Núcleo de Delégua atualizado para a versão 1.18.4:
