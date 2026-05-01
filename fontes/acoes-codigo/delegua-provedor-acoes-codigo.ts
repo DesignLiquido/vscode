@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 import { obterResultado } from '../analise-codigo/cache-analise';
 import { CorrecaoSugeridaInterface } from '@designliquido/delegua/interfaces';
-import { CorrecaoImplementacaoInterface, MembroInterfaceFaltando } from '@designliquido/delegua/interfaces/avaliador-sintatico';
+import { CorrecaoImplementacaoInterface, MembroInterfaceFaltandoInterface } from '@designliquido/delegua/interfaces/avaliador-sintatico';
 
 const CODIGOS_SIMBOLO_AUSENTE = new Set<string>([
     'SEMANTICO_TIPO_DESCONHECIDO',
@@ -429,7 +429,7 @@ export class DeleguaProvedorAcoesCodigo implements vscode.CodeActionProvider {
         return new vscode.Position(totalLinhas, 0);
     }
 
-    private gerarEsbocoMembro(membro: MembroInterfaceFaltando): string {
+    private gerarEsbocoMembro(membro: MembroInterfaceFaltandoInterface): string {
         if (membro.tipo === 'metodo') {
             const parametros = (membro.parametros || [])
                 .map(p => p.tipoDado ? `${p.nome}: ${p.tipoDado}` : p.nome)
