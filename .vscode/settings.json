@@ -1,4 +1,7 @@
 {
     "debug.javascript.unmapMissingSources": false,
-    "cmake.sourceDirectory": "D:/Delegua/vscode/node_modules/bare-fs"
+    "cmake.sourceDirectory": "D:/Delegua/vscode/node_modules/bare-fs",
+    "chat.tools.terminal.autoApprove": {
+        "yarn tsc": true
+    }
 }
