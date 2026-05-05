@@ -2,7 +2,18 @@
 
 ## 0.25.11
 
+- Núcleo de Delégua atualizado para a versão 1.21.0:
+  - Refatoração completa dos métodos globais de Pituguês;
+  - Correção das primitivas `contém` / `contem` em Pituguês;
+  - Correção de controle de fluxo em laços com depuração (`sustar`, `continua` e `retorne`);
+  - Declaração de vetores passa a ignorar comentários corretamente;
+  - Suporte ao decorador `@propriedade` em classes de Pituguês;
+  - Melhorias para precisão de análise e ações rápidas com tabelas de códigos de erros e avisos.
 - Novo provedor de renomeação de símbolos para Delégua, com suporte ao comando de renomear em funções, métodos e demais identificadores no editor;
+- Salvaguarda experimental para parâmetros de decoradores sem nome;
+- Correções no popup de suporte de sintaxe da função `imprima()` para Pituguês;
+- Melhorias no mecanismo de descoberta de definições, incluindo cache para definições de classes estrangeiras em pacotes Delégua;
+- Atualização periódica de pacotes e dependências.
 
 ## 0.25.10
 
