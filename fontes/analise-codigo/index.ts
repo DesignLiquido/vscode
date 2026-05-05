@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 import { AnalisadorSemantico } from '@designliquido/delegua/analisador-semantico';
 import { AvaliadorSintaticoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
-import { DiagnosticoAnalisadorSemantico } from '@designliquido/delegua/interfaces/erros';
+import { DiagnosticoAnalisadorSemanticoInterface } from '@designliquido/delegua/interfaces/erros';
 import { Declaracao } from '@designliquido/delegua/declaracoes';
 
 import { Lexador, LexadorPitugues } from '@designliquido/delegua/lexador';
@@ -18,8 +18,7 @@ import { LexadorMapler } from '@designliquido/mapler/lexador';
 import { AvaliadorSintaticoMapler } from '@designliquido/mapler/avaliador-sintatico';
 import { AnalisadorSemanticoMapler } from '@designliquido/mapler/analisador-semantico';
 
-import { RetornoAvaliadorSintatico, RetornoLexador } from '@designliquido/delegua/interfaces/retornos';
-import { RetornoAnalisadorSemantico } from '@designliquido/delegua/interfaces/retornos/retorno-analisador-semantico';
+import { RetornoAvaliadorSintaticoInterface, RetornoLexadorInterface, RetornoAnalisadorSemanticoInterface } from '@designliquido/delegua/interfaces/retornos';
 
 import { LexadorPotigol } from '@designliquido/potigol/lexador';
 import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sintatico';
@@ -86,9 +85,9 @@ export async function executarAnalises(
     let avaliadorSintatico: AvaliadorSintaticoInterface<SimboloInterface, Declaracao> | undefined = undefined;
     let analisadorSemantico: AnalisadorSemanticoInterface | undefined = undefined;
     let linhas: string[];
-    let resultadoLexador: RetornoLexador<SimboloInterface>;
-    let resultadoAvaliadorSintatico: RetornoAvaliadorSintatico<Declaracao>;
-    let resultadoAnalisadorSemantico: RetornoAnalisadorSemantico | undefined = undefined;
+    let resultadoLexador: RetornoLexadorInterface<SimboloInterface>;
+    let resultadoAvaliadorSintatico: RetornoAvaliadorSintaticoInterface<Declaracao>;
+    let resultadoAnalisadorSemantico: RetornoAnalisadorSemanticoInterface | undefined = undefined;
     let declaracoesPreCarregadas: Declaracao[] = [];
     let dependenciasArquivos: string[] = [];
 
@@ -222,7 +221,7 @@ export async function executarAnalises(
             } catch (erro: any) {
                 resultadoAnalisadorSemantico = {
                     diagnosticos: []
-                } as RetornoAnalisadorSemantico;
+                } as RetornoAnalisadorSemanticoInterface;
                 console.error(`Erro ao executar análise semântica para arquivo de extensão ${extensaoArquivo}`, erro);
             }
         }
@@ -250,7 +249,7 @@ export async function executarAnalises(
  * @returns {vscode.Diagnostic[]} Uma lista de diagnósticos formatados para o VSCode.
  */
 function formatarDiagnosticosAnaliseSemantica(
-    diagnosticosAnaliseSemantica: DiagnosticoAnalisadorSemantico[],
+    diagnosticosAnaliseSemantica: DiagnosticoAnalisadorSemanticoInterface[],
     documento: vscode.TextDocument
 ): vscode.Diagnostic[] {
     const listaOcorrenciasSemanticas: vscode.Diagnostic[] = diagnosticosAnaliseSemantica.map(diagnostico => {
