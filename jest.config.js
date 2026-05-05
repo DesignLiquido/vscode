@@ -18,6 +18,7 @@ module.exports = {
     // Configuração do TypeScript
     transform: {
         '^.+\\.ts$': ['ts-jest', {
+            diagnostics: false,
             tsconfig: {
                 baseUrl: '.',
                 module: 'commonjs',
