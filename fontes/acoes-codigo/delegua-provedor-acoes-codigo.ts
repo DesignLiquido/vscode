@@ -124,6 +124,39 @@ export class DeleguaProvedorAcoesCodigo implements vscode.CodeActionProvider {
             }
         }
 
+        // Quick Fix para implementação de métodos ausentes detectados pelo analisador semântico.
+        for (const diagnosticoVscode of context.diagnostics) {
+            const diagnosticoSemantico = (resultado?.analisadorSemantico?.diagnosticos || []).find(
+                (d: any) => d.mensagem === diagnosticoVscode.message && d.correcaoMetodo?.tipo === 'implementar-metodo'
+            );
+            if (!diagnosticoSemantico?.correcaoMetodo) {
+                continue;
+            }
+
+            const correcaoMetodo = diagnosticoSemantico.correcaoMetodo;
+            const docAlvo = await this.encontrarDocumentoClasse(documento, correcaoMetodo, resultado);
+            if (!docAlvo) {
+                continue;
+            }
+
+            const linhaFechamento = this.encontrarLinhaFechamentoClasse(docAlvo, correcaoMetodo.linhaDeclaracaoClasse);
+            if (linhaFechamento < 0) {
+                continue;
+            }
+
+            const esbocoMetodo = this.gerarEsbocoMembro({ tipo: 'metodo', nome: correcaoMetodo.nomeMetodo });
+            const acao = new vscode.CodeAction(
+                `Implementar método '${correcaoMetodo.nomeMetodo}' na classe '${correcaoMetodo.nomeClasse}'`,
+                vscode.CodeActionKind.QuickFix
+            );
+
+            acao.edit = new vscode.WorkspaceEdit();
+            acao.edit.insert(docAlvo.uri, new vscode.Position(linhaFechamento, 0), esbocoMetodo + '\n');
+            acao.diagnostics = [diagnosticoVscode];
+            acao.isPreferred = false;
+            acoes.push(acao);
+        }
+
         // Em alguns cenários (ex.: comando manual de Quick Fix), o contexto pode vir sem diagnósticos.
         if (!context.diagnostics?.length) {
             const acoesSemDiagnostico = await this.criarAcoesRapidasImportacaoSemDiagnostico(documento, range, resultado);
@@ -427,6 +460,56 @@ export class DeleguaProvedorAcoesCodigo implements vscode.CodeActionProvider {
         }
 
         return new vscode.Position(totalLinhas, 0);
+    }
+
+    private async encontrarDocumentoClasse(
+        documentoAtual: vscode.TextDocument,
+        correcaoMetodo: { nomeClasse: string; linhaDeclaracaoClasse: number; hashArquivoClasse?: number },
+        resultado: any
+    ): Promise<vscode.TextDocument | undefined> {
+        const declaracoes = [
+            ...(resultado?.declaracoesPreCarregadas || []),
+            ...(resultado?.avaliadorSintatico?.declaracoes || []),
+        ];
+
+        for (const declaracao of declaracoes) {
+            if ((declaracao as any)?.simbolo?.lexema !== correcaoMetodo.nomeClasse) {
+                continue;
+            }
+
+            const caminho = (declaracao as any)?.caminhoArquivoDefinicao;
+            if (!caminho) {
+                continue;
+            }
+
+            try {
+                return await vscode.workspace.openTextDocument(vscode.Uri.file(caminho));
+            } catch {
+                continue;
+            }
+        }
+
+        return undefined;
+    }
+
+    private encontrarLinhaFechamentoClasse(documento: vscode.TextDocument, linhaDeclaracao: number): number {
+        const linhaInicio = Math.max(0, linhaDeclaracao - 1);
+        let profundidade = 0;
+
+        for (let i = linhaInicio; i < documento.lineCount; i++) {
+            for (const char of documento.lineAt(i).text) {
+                if (char === '{') {
+                    profundidade++;
+                } else if (char === '}') {
+                    profundidade--;
+                    if (profundidade === 0) {
+                        return i;
+                    }
+                }
+            }
+        }
+
+        return -1;
     }
 
     private gerarEsbocoMembro(membro: MembroInterfaceFaltandoInterface): string {
