@@ -7,3 +7,4 @@ export * from './lmht-provedor-documentacao-em-editor';
 export * from './portugol-studio-provedor-documentacao-em-editor';
 export * from './pitugues-provedor-documentacao-em-editor';
 export * from './delegua-provedor-links-documentacao';
+export * from './delegua-testes-provedor-documentacao-em-editor';

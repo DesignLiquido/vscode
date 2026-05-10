@@ -44,6 +44,19 @@
 			],
 			"preLaunchTask": "npm: watch"
         },
+                {
+            "name": "Depurar Extensão no VSCode (delegua-node)",
+            "type": "extensionHost",
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "D:\\Delegua\\delegua-node"
+            ],
+			"outFiles": [
+			 	"${workspaceFolder}/dist/**/*.js"
+			],
+			"preLaunchTask": "npm: watch"
+        },
         {
             "name": "Depurar Extensão no VSCode (testes-liquido)",
             "type": "extensionHost",

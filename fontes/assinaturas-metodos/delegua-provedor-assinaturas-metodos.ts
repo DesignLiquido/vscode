@@ -35,7 +35,9 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
     protected calcularParametroAtivo(textoAntesCursor: string): number {
         // Encontra a última abertura de parêntese
         const ultimoParentese = textoAntesCursor.lastIndexOf('(');
-        if (ultimoParentese === -1) return 0;
+        if (ultimoParentese === -1) {
+            return 0;
+        }
 
         // Pega o texto dentro dos parênteses até o cursor
         const textoDentroParenteses = textoAntesCursor.substring(ultimoParentese + 1);
@@ -62,7 +64,9 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
             }
 
             // Se estamos dentro de uma string, ignora tudo
-            if (dentroString) continue;
+            if (dentroString) {
+                continue;
+            }
 
             // Gerencia parênteses aninhados
             if (char === '(') {
@@ -118,9 +122,11 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
     protected assinaturaParaChamadaMetodo(
         nomeObjeto: string,
         declaracoesPertinentes: { nome: string, tipo: string, declaracao: Declaracao }[],
-        parametroAtivo?: number
+        parametroAtivo?: number,
+        nomeMetodo?: string
     ): vscode.SignatureHelp | undefined {
         let tipoObjeto: string | undefined = undefined;
+        const nomeProcurado = nomeMetodo ?? nomeObjeto;
 
         const variavelOuConst = declaracoesPertinentes.find(
             (decl) => decl.nome === nomeObjeto
@@ -131,7 +137,7 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
             switch (tipoObjeto) {
                 case 'dicionario':
                 case 'dicionário':
-                    const metodoDicionario = primitivasDicionarioFormatadas.find(m => m.nome === nomeObjeto);
+                    const metodoDicionario = primitivasDicionarioFormatadas.find(m => m.nome === nomeProcurado);
                     if (metodoDicionario) {
                         return this.construirObjetoAssinatura(metodoDicionario, parametroAtivo);
                     }
@@ -139,21 +145,21 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
                     return undefined;
                 case 'numero':
                 case 'número':
-                    const metodoNumero = primitivasNumeroFormatadas.find(m => m.nome === nomeObjeto);
+                    const metodoNumero = primitivasNumeroFormatadas.find(m => m.nome === nomeProcurado);
                     if (metodoNumero) {
                         return this.construirObjetoAssinatura(metodoNumero, parametroAtivo);
                     }
 
                     return undefined;
                 case 'texto':
-                    const metodoTexto = primitivasTextoFormatadas.find(m => m.nome === nomeObjeto);
+                    const metodoTexto = primitivasTextoFormatadas.find(m => m.nome === nomeProcurado);
                     if (metodoTexto) {
                         return this.construirObjetoAssinatura(metodoTexto, parametroAtivo);
                     }
 
                     return undefined;
                 case 'vetor':
-                    const metodoVetor = primitivasVetorFormatadas.find(m => m.nome === nomeObjeto);
+                    const metodoVetor = primitivasVetorFormatadas.find(m => m.nome === nomeProcurado);
                     if (metodoVetor) {
                         return this.construirObjetoAssinatura(metodoVetor, parametroAtivo);
                     }
@@ -161,7 +167,7 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
                     return undefined;
 
                 default:
-                    const metodoQualquer = primitivas.find(m => m.nome === nomeObjeto);
+                    const metodoQualquer = primitivas.find(m => m.nome === nomeProcurado);
                     if (metodoQualquer) {
                         return this.construirObjetoAssinatura(metodoQualquer, parametroAtivo);
                     }
@@ -299,7 +305,12 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
 
         // Primeiro caso: A `palavra` é um método de um objeto.
         if (resultadoObjeto) {
-            return this.assinaturaParaChamadaMetodo(resultadoObjeto[1], declaracoesPertinentes, parametroAtivo);
+            return this.assinaturaParaChamadaMetodo(
+                resultadoObjeto[1],
+                declaracoesPertinentes,
+                parametroAtivo,
+                resultadoRegexFuncaoOuMetodo[1]
+            );
         }
 
         // Segundo caso: A `palavra` é uma função definida em código.

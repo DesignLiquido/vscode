@@ -39,6 +39,7 @@ import { AnalisadorSemanticoPituguesLiquido } from '../avaliacao-sintatica/anali
 import { AvaliadorSintaticoPituguesLiquido } from '../avaliacao-sintatica/avaliador-sintatico-pitugues-liquido';
 import { descobrirDefinicoes } from '../descobridor-definicoes';
 import { cyrb53 } from '@designliquido/delegua';
+import { AnalisadorSemanticoTestes } from './analisador-semantico-testes';
 
 const mapaSeveridadeDiagnosticos = {
     0: vscode.DiagnosticSeverity.Error,
@@ -62,7 +63,9 @@ export async function executarAnalises(
     documento: vscode.TextDocument,
     diagnosticos: vscode.DiagnosticCollection
 ): Promise<void> {
-    const extensaoArquivo = documento.fileName.split('.')[1];
+    const extensaoArquivo = documento.languageId === 'delegua-testes'
+        ? 'delegua'
+        : documento.fileName.split('.')[1];
     if (!['alg', 'birl', 'delegua', 'mapler', 'pitu', 'pitugues', 'por', 'poti', 'potigol', 'visualg'].includes(extensaoArquivo)) {
         return;
     }
@@ -203,8 +206,15 @@ export async function executarAnalises(
         )) as string[];
     }
 
+    // Arquivos de teste: o analisador semântico especializado pré-declara os símbolos
+    // do módulo `testes` (runtime). Erros sintáticos são suprimidos porque decorrem
+    // da impossibilidade de resolver `importar { ... } de "testes"` estaticamente.
+    if (documento.languageId === 'delegua-testes') {
+        analisadorSemantico = new AnalisadorSemanticoTestes();
+    }
+
     try {
-        if (resultadoAvaliadorSintatico?.erros?.length) {
+        if (resultadoAvaliadorSintatico?.erros?.length && documento.languageId !== 'delegua-testes') {
             listaOcorrencias = listaOcorrencias.concat(
                 formatarDiagnosticosAvaliacaoSintatica(
                     resultadoAvaliadorSintatico.erros,

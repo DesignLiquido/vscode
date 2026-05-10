@@ -72,6 +72,7 @@ jest.mock('../fontes/depuracao/fabricas/remotas', () => ({
 
 jest.mock('../fontes/documentacao-em-editor', () => ({
     DeleguaProvedorDocumentacaoEmEditor: class {},
+    DeleguaTestesProvedorDocumentacaoEmEditor: class {},
     DeleguaProvedorLinksDocumentacao: class {},
     DelpropsProvedorDocumentacaoEmEditor: class {},
     FolesProvedorDocumentacaoEmEditor: class {},
@@ -82,6 +83,7 @@ jest.mock('../fontes/documentacao-em-editor', () => ({
 
 jest.mock('../fontes/completude', () => ({
     DeleguaProvedorCompletude: class {},
+    DeleguaTestesProvedorCompletude: class {},
     DelpropsProvedorCompletude: class {},
     FolesProvedorCompletude: class {},
     LiquidoProvedorCompletude: class {},
@@ -121,7 +123,8 @@ jest.mock('../fontes/analise-codigo', () => ({
 }));
 
 jest.mock('../fontes/assinaturas-metodos', () => ({
-    DeleguaProvedorAssinaturaMetodos: class {}
+    DeleguaProvedorAssinaturaMetodos: class {},
+    DeleguaTestesProvedorAssinaturaMetodos: class {}
 }));
 
 jest.mock('../fontes/documentacao-em-editor/lmht-provedor-documentacao-em-editor', () => ({

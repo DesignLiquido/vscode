@@ -1,4 +1,5 @@
 export * from './delegua-provedor-completude';
+export * from './delegua-testes-provedor-completude';
 export * from './delprops-provedor-completude';
 export * from './foles-provedor-completude';
 export * from './liquido-provedor-completude';

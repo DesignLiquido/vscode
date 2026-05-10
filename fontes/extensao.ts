@@ -12,6 +12,7 @@ import {
 import {
     DeleguaProvedorDocumentacaoEmEditor,
     DeleguaProvedorLinksDocumentacao,
+    DeleguaTestesProvedorDocumentacaoEmEditor,
     DelpropsProvedorDocumentacaoEmEditor,
     FolesProvedorDocumentacaoEmEditor,
     LinConEsProvedorDocumentacaoEmEditor,
@@ -20,6 +21,7 @@ import {
 } from './documentacao-em-editor';
 import {
     DeleguaProvedorCompletude,
+    DeleguaTestesProvedorCompletude,
     DelpropsProvedorCompletude,
     FolesProvedorCompletude,
     LiquidoProvedorCompletude,
@@ -34,7 +36,7 @@ import { VisuAlgProvedorCompletude } from './completude/visualg-provedor-complet
 import { VisuAlgProvedorDocumentacaoEmEditor } from './documentacao-em-editor/visualg-provedor-documentacao-em-editor';
 import { traduzir } from './traducao';
 import { executarAnalises } from './analise-codigo';
-import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
+import { DeleguaProvedorAssinaturaMetodos, DeleguaTestesProvedorAssinaturaMetodos } from './assinaturas-metodos';
 
 import { LmhtProvedorDocumentacaoEmEditor } from './documentacao-em-editor/lmht-provedor-documentacao-em-editor';
 import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
@@ -129,7 +131,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.workspace.onDidOpenTextDocument(doc => {
-            if (['birl', 'delegua', 'mapler', 'visualg', 'portugolstudio', 'potigol'].includes(doc.languageId)) {
+            if (['birl', 'delegua', 'delegua-testes', 'mapler', 'visualg', 'portugolstudio', 'potigol'].includes(doc.languageId)) {
                 executarAnalises(doc, diagnosticosDelegua).catch(erro => {
 					console.error('Erro ao executar análises:', erro);
 				});
@@ -139,7 +141,7 @@ export function activate(context: vscode.ExtensionContext) {
             }
         }),
         vscode.window.onDidChangeActiveTextEditor(editor => {
-            if (editor && ['birl', 'delegua', 'mapler', 'visualg', 'portugolstudio', 'potigol'].includes(editor.document.languageId)) {
+            if (editor && ['birl', 'delegua', 'delegua-testes', 'mapler', 'visualg', 'portugolstudio', 'potigol'].includes(editor.document.languageId)) {
                 executarAnalises(editor.document, diagnosticosDelegua).catch(erro => {
 					console.error('Erro ao executar análises:', erro);
 				});
@@ -152,6 +154,7 @@ export function activate(context: vscode.ExtensionContext) {
             switch (evento.document.languageId) {
                 case 'birl':
                 case 'delegua':
+                case 'delegua-testes':
                 case 'mapler':
                 case 'pitugues':
                 case 'portugolstudio':
@@ -438,6 +441,17 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider(
+            [
+                { scheme: 'file', language: 'delegua-testes' },
+                { scheme: 'untitled', language: 'delegua-testes' }
+            ],
+            new DeleguaTestesProvedorCompletude(),
+            '@'
+        )
+    );
+
     // IntelliSense para FolEs
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
@@ -501,6 +515,16 @@ export function activate(context: vscode.ExtensionContext) {
                 { scheme: 'untitled', language: 'delegua' }
             ],
             new DeleguaProvedorDocumentacaoEmEditor()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerHoverProvider(
+            [
+                { scheme: 'file', language: 'delegua-testes' },
+                { scheme: 'untitled', language: 'delegua-testes' }
+            ],
+            new DeleguaTestesProvedorDocumentacaoEmEditor()
         )
     );
 
@@ -659,6 +683,16 @@ export function activate(context: vscode.ExtensionContext) {
                 { scheme: 'untitled', language: 'delegua' }
             ],
             new DeleguaProvedorAssinaturaMetodos()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerSignatureHelpProvider(
+            [
+                { scheme: 'file', language: 'delegua-testes' },
+                { scheme: 'untitled', language: 'delegua-testes' }
+            ],
+            new DeleguaTestesProvedorAssinaturaMetodos()
         )
     );
 

@@ -182,6 +182,9 @@
                 "language": "delegua"
             },
             {
+                "language": "delegua-testes"
+            },
+            {
                 "language": "mapler"
             },
             {
@@ -289,6 +292,11 @@
                 "path": "./gramaticas/delegua.tmLanguage.json"
             },
             {
+                "language": "delegua-testes",
+                "scopeName": "source.delegua",
+                "path": "./gramaticas/delegua.tmLanguage.json"
+            },
+            {
                 "language": "pitugues",
                 "scopeName": "source.pitugues",
                 "path": "./gramaticas/pitugues.tmLanguage.json"
@@ -373,6 +381,21 @@
                 "icon": {
                     "light": "./recursos/delegua-logo.svg",
                     "dark": "./recursos/delegua-logo.svg"
+                }
+            },
+            {
+                "id": "delegua-testes",
+                "aliases": [
+                    "Delégua Testes",
+                    "delegua-testes"
+                ],
+                "extensions": [
+                    ".teste.delegua"
+                ],
+                "configuration": "./configuracoes/configuracao-delegua.json",
+                "icon": {
+                    "light": "./recursos/delegua-testes-logo.svg",
+                    "dark": "./recursos/delegua-testes-logo.svg"
                 }
             },
             {
