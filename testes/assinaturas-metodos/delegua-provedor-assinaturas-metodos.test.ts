@@ -541,6 +541,86 @@ describe('DeleguaProvedorAssinaturaMetodos', () => {
             expect(() => resultado).not.toThrow();
         });
 
+        it('deve encaminhar nome do objeto e método para assinatura de chamada de método', () => {
+            const { Var } = require('@designliquido/delegua/declaracoes');
+            const { obterResultado } = require('../../fontes/analise-codigo/cache-analise');
+
+            const varDecl = new Var(
+                { lexema: 'meuTexto' },
+                'texto'
+            );
+
+            obterResultado.mockReturnValue({
+                avaliadorSintatico: {
+                    declaracoes: [varDecl]
+                }
+            });
+
+            const assinaturaEsperada = { signatures: [] };
+            const spyAssinaturaMetodo = jest
+                .spyOn(provedor, 'assinaturaParaChamadaMetodo')
+                .mockReturnValue(assinaturaEsperada as any);
+
+            mockDocument.lineAt.mockReturnValue({
+                text: 'meuTexto.tamanho('
+            });
+            mockPosition.character = 17;
+
+            const resultado = provedor.provideSignatureHelp(
+                mockDocument,
+                mockPosition,
+                mockToken,
+                mockContext
+            );
+
+            expect(spyAssinaturaMetodo).toHaveBeenCalledWith(
+                'meuTexto',
+                expect.any(Array),
+                expect.any(Number),
+                'tamanho'
+            );
+            expect(resultado).toBe(assinaturaEsperada);
+        });
+
+        it('deve fornecer assinatura para construtor de classe pre-carregada', () => {
+            const { Classe } = require('@designliquido/delegua/declaracoes');
+            const { obterResultado } = require('../../fontes/analise-codigo/cache-analise');
+
+            const classePreCarregada = new Classe({ lexema: 'Pessoa' });
+            classePreCarregada.metodos = [
+                {
+                    simbolo: { lexema: 'construtor' },
+                    funcao: {
+                        parametros: [
+                            { nome: { lexema: 'nome' }, tipoDado: 'texto' }
+                        ]
+                    }
+                }
+            ];
+
+            obterResultado.mockReturnValue({
+                avaliadorSintatico: {
+                    declaracoes: []
+                },
+                declaracoesPreCarregadas: [classePreCarregada]
+            });
+
+            mockDocument.lineAt.mockReturnValue({
+                text: 'Pessoa('
+            });
+            mockPosition.character = 7;
+
+            const resultado = provedor.provideSignatureHelp(
+                mockDocument,
+                mockPosition,
+                mockToken,
+                mockContext
+            );
+
+            expect(resultado).toBeDefined();
+            expect(resultado.signatures).toHaveLength(1);
+        });
+
         it('deve lidar com cache vazio', () => {
             const { obterResultado } = require('../../fontes/analise-codigo/cache-analise');
             obterResultado.mockReturnValue(undefined);
