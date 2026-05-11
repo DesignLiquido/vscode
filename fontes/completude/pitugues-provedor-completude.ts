@@ -1,11 +1,22 @@
 import * as vscode from 'vscode';
-
-import { Classe, FuncaoDeclaracao } from '@designliquido/delegua/declaracoes';
-
 import { primitivasMetodosLiquido, objetosEmRotaLiquido } from '../bibliotecas/primitivas-liquido';
-import { primitivas, primitivasDicionarioFormatadas, primitivasNumeroFormatadas, primitivasTextoFormatadas, primitivasVetorFormatadas, funcoesNativasPitugues } from '../bibliotecas/dialetos/pitugues';
+
 import { obterResultado } from '../analise-codigo/cache-analise';
 import { ParametroDetectado, TipoParametro } from '../interfaces/completude';
+
+import { Classe, FuncaoDeclaracao } from '@designliquido/delegua/declaracoes';
+import primitivasDicionario from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-dicionario';
+import primitivasNumero from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-numero';
+import primitivasTexto from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-texto';
+import primitivasVetor from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-vetor';
+import {funcoesNativasPitugues} from '../bibliotecas/dialetos/pitugues/funcoes-nativas';
+import { formatarPrimitivas } from '../bibliotecas';
+
+
+const primitivasDicionarioFormatadas = formatarPrimitivas(primitivasDicionario);
+const primitivasNumeroFormatadas = formatarPrimitivas(primitivasNumero);
+const primitivasTextoFormatadas = formatarPrimitivas(primitivasTexto);
+const primitivasVetorFormatadas = formatarPrimitivas(primitivasVetor);
 
 /**
  * Classe de provedor de completude de Pituguês.
@@ -393,11 +404,7 @@ export class PituguesProvedorCompletude implements vscode.CompletionItemProvider
                             return itemCompletude;
                         });
                     default:
-                        return primitivas.map(funcaoNativa => {
-                            let itemCompletude = new vscode.CompletionItem(funcaoNativa.nome, vscode.CompletionItemKind.Function);
-                            itemCompletude.documentation = new vscode.MarkdownString(funcaoNativa.documentacao);
-                            return itemCompletude;
-                        });
+                        return [];
                 }
             }
         }
