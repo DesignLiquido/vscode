@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { AnalisadorSemantico } from '@designliquido/delegua/analisador-semantico';
 import { AvaliadorSintaticoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
 import { DiagnosticoAnalisadorSemanticoInterface } from '@designliquido/delegua/interfaces/erros';
-import { Declaracao } from '@designliquido/delegua/declaracoes';
+import { Classe, Declaracao } from '@designliquido/delegua/declaracoes';
 
 import { Lexador, LexadorPitugues } from '@designliquido/delegua/lexador';
 import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sintatico';
@@ -187,10 +187,8 @@ export async function executarAnalises(
     resultadoAvaliadorSintatico = await avaliadorSintatico!.analisar(resultadoLexador, hashArquivo);
 
     if (avaliadorSintatico instanceof AvaliadorSintaticoComImportacao) {
-        analisadorSemantico?.definirClassesExternasConhecidas?.(
-            Object.keys(avaliadorSintatico.tiposDefinidosEmCodigo)
-        );
         declaracoesPreCarregadas = Object.values(avaliadorSintatico.tiposDefinidosEmCodigo);
+        (analisadorSemantico as any)?.registrarClassesExternas?.(declaracoesPreCarregadas.filter(d => d instanceof Classe));
 
         const chaveWorkspace = vscode.workspace.workspaceFolders?.[0]?.uri.toString() || 'sem-workspace';
         const arquivoDeRotaLiquidoFinal = /[\\\/]rotas[\\\/]/i.test(documento.fileName);

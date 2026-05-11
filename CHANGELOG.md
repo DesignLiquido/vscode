@@ -1,5 +1,23 @@
 # Histórico de Modificações
 
+## 0.26.0
+
+- Núcleo de Delégua atualizado para a versão 1.22.2:
+  - Funcionalidade de testes nativa para Delégua;
+  - Sugestão de implementação de método inexistente em classe;
+  - Analisador Semântico considera hierarquia de herança ao verificar métodos;
+  - Avaliador Sintático não falha quando tipo de parâmetro ainda é desconhecido;
+  - Melhor inferência de tipos para vetores;
+  - Lógica mais robusta de interpolação de textos (_strings_ com interpolação);
+  - Validação de quantidade mínima de argumentos em chamadas de função;
+  - Otimizações na inferência e reconhecimento implícito de tipos;
+  - Pituguês: refatoração dos métodos de primitivas de `vetor`.
+- Suporte a arquivos `.teste.delegua` para execução de testes unitários diretamente no editor;
+- Sugestão de implementação de métodos ausentes para Delégua;
+- Potigol:
+  - Correções de verificação de uso de variáveis e constantes pelo Analisador Semântico (resolve https://github.com/DesignLiquido/potigol/issues/177);
+- Ampliação da cobertura de testes unitários da extensão, incluindo testes para fluxogramas.
+
 ## 0.25.11
 
 - Núcleo de Delégua atualizado para a versão 1.21.0:

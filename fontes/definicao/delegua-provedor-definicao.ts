@@ -1,8 +1,7 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { Classe } from '@designliquido/delegua/declaracoes/classe';
-import { Declaracao } from '@designliquido/delegua/declaracoes';
+import { Classe, Const, Declaracao, Var } from '@designliquido/delegua/declaracoes';
 
 import { obterResultado } from '../analise-codigo/cache-analise';
 import { obterDefinicoesPorContexto } from '../analise-codigo/cache-definicoes';
@@ -158,6 +157,47 @@ export class DeleguaProvedorDefinicao implements vscode.DefinitionProvider {
         return true;
     }
 
+    private obterTipoVariavel(declaracoes: Declaracao[], nomeVariavel: string): string | undefined {
+        for (const declaracao of declaracoes) {
+            const simbolo = (declaracao as any).simbolo;
+            if (simbolo?.lexema !== nomeVariavel) {
+                continue;
+            }
+            if (declaracao instanceof Var || declaracao instanceof Const) {
+                return (declaracao as any).tipo as string | undefined;
+            }
+        }
+        return undefined;
+    }
+
+    private localizarMetodoEmClasse(
+        declaracoes: Declaracao[],
+        nomeClasse: string,
+        nomeMetodo: string,
+        uri: vscode.Uri
+    ): vscode.Location | undefined {
+        for (const declaracao of declaracoes) {
+            if (!(declaracao instanceof Classe)) {
+                continue;
+            }
+            const simbolo = (declaracao as any).simbolo;
+            if (simbolo?.lexema !== nomeClasse) {
+                continue;
+            }
+
+            const metodo = declaracao.metodos.find(m => m.simbolo.lexema === nomeMetodo);
+            if (!metodo) {
+                return undefined;
+            }
+
+            const uriDeclaracao = this.obterUriDeclaracao(declaracao, uri);
+            const linha = Number(metodo.simbolo.linha) - 1;
+            const coluna = metodo.simbolo.colunaInicio ?? 0;
+            return new vscode.Location(uriDeclaracao, new vscode.Position(linha, coluna));
+        }
+        return undefined;
+    }
+
     private localizarPropriedadeClasse(
         declaracoes: Declaracao[],
         palavra: string,
@@ -225,6 +265,15 @@ export class DeleguaProvedorDefinicao implements vscode.DefinitionProvider {
             );
             if (localizacao) {
                 return localizacao;
+            }
+        }
+
+        const correspondenciaObjeto = textoAntesPalavra.match(/(\w+)\s*\.\s*$/);
+        if (correspondenciaObjeto && correspondenciaObjeto[1] !== 'isto') {
+            const nomeObjeto = correspondenciaObjeto[1];
+            const tipoObjeto = this.obterTipoVariavel(declaracoes, nomeObjeto);
+            if (tipoObjeto) {
+                return this.localizarMetodoEmClasse(declaracoes, tipoObjeto, palavra, documento.uri);
             }
         }
 
