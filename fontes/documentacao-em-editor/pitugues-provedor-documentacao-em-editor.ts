@@ -1,18 +1,27 @@
 import * as vscode from 'vscode';
 
-import { Classe, FuncaoDeclaracao, InterfaceDeclaracao } from '@designliquido/delegua/declaracoes';
-import { ComentarioComoConstruto } from '@designliquido/delegua/construtos';
+import { Classe, Const, FuncaoDeclaracao, InterfaceDeclaracao, ParaCada, Var } from '@designliquido/delegua/declaracoes';
+import { Chamada, ComentarioComoConstruto } from '@designliquido/delegua/construtos';
 
 import { obterResultado } from '../analise-codigo/cache-analise';
-import { 
-    funcoesNativasPitugues,
-    primitivas, 
-    primitivasDicionarioFormatadas, 
-    primitivasNumeroFormatadas, 
-    primitivasTextoFormatadas, 
-    primitivasVetorFormatadas 
-} from '../bibliotecas/dialetos/pitugues';
+import { obterDefinicoesPorContexto } from '../analise-codigo/cache-definicoes';
+import primitivasDicionario from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-dicionario';
+import primitivasNumero from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-numero';
+import primitivasTexto from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-texto';
+import primitivasVetor from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-vetor';
+import {funcoesNativasPitugues} from '../bibliotecas/dialetos/pitugues/funcoes-nativas';
+import { formatarPrimitivas } from '../bibliotecas';
+import { extrairTextoDocumentacao, formatarDocumentacaoDocumentario } from './formatador-documentacao';
 
+const primitivasDicionarioFormatadas = formatarPrimitivas(primitivasDicionario);
+const primitivasNumeroFormatadas = formatarPrimitivas(primitivasNumero);
+const primitivasTextoFormatadas = formatarPrimitivas(primitivasTexto);
+const primitivasVetorFormatadas = formatarPrimitivas(primitivasVetor);
+
+function desembrulharTipoFuncao(tipo: string): string {
+    const correspondencia = tipo?.match(/^função<(.+)>$/);
+    return correspondencia ? correspondencia[1] : tipo;
+}
 /**
  * Provedor de documentação para `hover` (ponteiro do _mouse_ por cima do elemento de código.)
  * para Pituguês.
@@ -20,34 +29,205 @@ import {
 export class PituguesProvedorDocumentacaoEmEditor
     implements vscode.HoverProvider
 {
-    provideHover(
+    async provideHover(
         documento: vscode.TextDocument,
         posicao: vscode.Position,
-        token: vscode.CancellationToken
-    ): vscode.ProviderResult<vscode.Hover> {
+        _token: vscode.CancellationToken
+    ): Promise<vscode.Hover | undefined> {
         const resultadoAnalise = obterResultado(documento.uri.toString());
         const intervalo = documento.getWordRangeAtPosition(posicao);
+        if (!intervalo) {
+            return undefined;
+        }
+        
         const palavra = documento.getText(intervalo);
         const linhaTexto = documento.lineAt(posicao).text;
         const textoAntesPosicao = linhaTexto.substring(0, posicao.character);
-        const todasDeclaracoes = resultadoAnalise?.avaliadorSintatico.declaracoes || [];
-
+        const textoAntesPalavra = linhaTexto.substring(0, intervalo.start.character);
+        const todasDeclaracoes = [
+            ...(resultadoAnalise?.declaracoesPreCarregadas || []),
+            ...(resultadoAnalise?.avaliadorSintatico?.declaracoes || [])
+        ];
+        
         const declaracoesPertinentes = todasDeclaracoes.flatMap(declaracao => {
+            if (declaracao instanceof Var) {
+                const tipo = declaracao.inicializador instanceof Chamada
+                ? desembrulharTipoFuncao(declaracao.tipo)
+                : declaracao.tipo;
+                return [{ nome: declaracao.simbolo.lexema, tipo }];
+            }
+            if (declaracao instanceof Const) {
+                const tipo = declaracao.inicializador instanceof Chamada
+                ? desembrulharTipoFuncao(declaracao.tipo)
+                : declaracao.tipo;
+                return [{ nome: declaracao.simbolo.lexema, tipo }];
+            }
             if (declaracao instanceof FuncaoDeclaracao) {
                 return [{ nome: declaracao.simbolo.lexema, tipo: declaracao.tipo }];
             }
             return [];
         });
+        
+        if (textoAntesPalavra.trimEnd().endsWith('.')) {
+            return this.hoverPropriedadeClasse(palavra, textoAntesPalavra, posicao.line + 1, todasDeclaracoes)
+            ?? this.hoverMetodoDePrimitiva(textoAntesPosicao, palavra, declaracoesPertinentes)
+            ?? this.hoverFuncaoOuMetodoDocumentado(palavra, textoAntesPalavra, todasDeclaracoes);
+        }
+        
+        return this.hoverVariavelParaCada(palavra, posicao.line + 1, todasDeclaracoes)
+        ?? this.hoverParametroFuncao(palavra, posicao.line + 1, todasDeclaracoes)
+        ?? this.hoverFuncaoNativa(palavra)
+        ?? this.hoverFuncaoOuMetodoDocumentado(palavra, textoAntesPalavra, todasDeclaracoes)
+        ?? this.hoverVariavelOuConstante(palavra, declaracoesPertinentes)
+        ?? await this.hoverClasseDocumentada(palavra, todasDeclaracoes, documento.getText())
+        ?? this.hoverInterfaceDocumentada(palavra, todasDeclaracoes, documento.getText());
+    }
+    
+    
+    private hoverPropriedadeClasse(
+        palavra: string,
+        textoAntesPalavra: string,
+        linhaAtual: number,
+        todasDeclaracoes: any[]
+    ): vscode.Hover | undefined {
+        if (!textoAntesPalavra.trimEnd().endsWith('isto.')) {
+            return undefined;
+        }
+        
+        const classesLocais = todasDeclaracoes.filter(
+            d => d instanceof Classe && !(d as any).caminhoArquivoDefinicao
+        ) as Classe[];
+        
+        const classesAnteriores = classesLocais.filter(c => Number(c.simbolo.linha) <= linhaAtual);
+        if (!classesAnteriores.length) {
+            return undefined;
+        }
+        
+        const classeAtual = classesAnteriores.reduce((prev, curr) =>
+            Number(curr.simbolo.linha) > Number(prev.simbolo.linha) ? curr : prev
+    );
+    
+    const propriedade = classeAtual.propriedades.find(p => p.nome.lexema === palavra);
+    if (!propriedade) {
+        return undefined;
+    }
+    
+    const tipo = propriedade.tipo || 'qualquer';
+    const doc = new vscode.MarkdownString();
+    doc.appendCodeblock(`(Propriedade de classe) ${palavra}: ${tipo}`, 'pitugues');
+    return new vscode.Hover(doc);
+}
 
-        return this.hoverMetodoPrimitivo(textoAntesPosicao, palavra, declaracoesPertinentes)
-            ?? this.hoverFuncaoNativa(palavra)
-            ?? this.hoverVariavelOuConstante(palavra, declaracoesPertinentes)
-            ?? this.hoverFuncaoDocumentada(palavra, todasDeclaracoes)
-            ?? this.hoverClasseDocumentada(palavra, todasDeclaracoes, documento.getText())
-            ?? this.hoverInterfaceDocumentada(palavra, todasDeclaracoes, documento.getText());
+    private encontrarParaCadaComVariavel(declaracoes: any[], palavra: string): ParaCada | undefined {
+        for (const decl of declaracoes) {
+            if (decl instanceof ParaCada && (decl.variavelIteracao as any).simbolo?.lexema === palavra) {
+                return decl;
+            }
+            const sub: any[] = (decl as any).corpo?.declaracoes
+                ?? (decl as any).caminhoEntao?.declaracoes
+                ?? (decl as any).caminhoSenao?.declaracoes
+                ?? [];
+            const encontrado = this.encontrarParaCadaComVariavel(sub, palavra);
+            if (encontrado) {
+                return encontrado;
+            }
+        }
+        return undefined;
     }
 
-    private hoverMetodoPrimitivo(
+    private elementoDeIteravel(tipoIteravel: string): string {
+    if (tipoIteravel === 'texto') {
+        return 'texto';
+    }
+    if (tipoIteravel.endsWith('[]')) {
+        return tipoIteravel.slice(0, -2);
+    }
+    return 'qualquer';
+}
+
+
+private hoverVariavelParaCada(
+    palavra: string,
+    linhaAtual: number,
+    todasDeclaracoes: any[]
+): vscode.Hover | undefined {
+    const todasFuncoes: FuncaoDeclaracao[] = [];
+    for (const d of todasDeclaracoes) {
+        if (d instanceof FuncaoDeclaracao) {
+            todasFuncoes.push(d);
+        }
+        if (d instanceof Classe) {
+            todasFuncoes.push(...d.metodos);
+        }
+    }
+    
+    const funcoesAnteriores = todasFuncoes.filter(f => Number(f.simbolo.linha) <= linhaAtual);
+    if (!funcoesAnteriores.length) {
+        return undefined;
+    }
+    
+    const funcaoAtual = funcoesAnteriores.reduce((prev, curr) =>
+        Number(curr.simbolo.linha) > Number(prev.simbolo.linha) ? curr : prev
+);
+
+const corpoDeclaracoes: any[] = Array.isArray(funcaoAtual.funcao.corpo) ? funcaoAtual.funcao.corpo : [];
+const paraCada = this.encontrarParaCadaComVariavel(corpoDeclaracoes, palavra);
+if (!paraCada) {
+    return undefined;
+}
+
+const tipoIteravel = (paraCada.vetorOuDicionario as any).tipo
+|| funcaoAtual.funcao.parametros.find(
+    p => p.nome.lexema === (paraCada.vetorOuDicionario as any).simbolo?.lexema
+)?.tipoDado
+|| 'qualquer';
+
+const doc = new vscode.MarkdownString();
+doc.appendCodeblock(`(Variável de iteração) ${palavra}: ${this.elementoDeIteravel(tipoIteravel)}`, 'pitugues');
+return new vscode.Hover(doc);
+}
+
+private hoverParametroFuncao(
+    palavra: string,
+    linhaAtual: number,
+    todasDeclaracoes: any[]
+): vscode.Hover | undefined {
+    const todasFuncoes: FuncaoDeclaracao[] = [];
+    
+    for (const declaracao of todasDeclaracoes) {
+        if (declaracao instanceof FuncaoDeclaracao) {
+            todasFuncoes.push(declaracao);
+        }
+        if (declaracao instanceof Classe) {
+            todasFuncoes.push(...declaracao.metodos);
+        }
+    }
+    
+    const funcoesAnteriores = todasFuncoes.filter(
+        f => Number(f.simbolo.linha) <= linhaAtual
+    );
+    if (!funcoesAnteriores.length) {
+        return undefined;
+    }
+    
+    const funcaoAtual = funcoesAnteriores.reduce((prev, curr) =>
+        Number(curr.simbolo.linha) > Number(prev.simbolo.linha) ? curr : prev
+);
+
+const parametro = funcaoAtual.funcao.parametros.find(
+    p => p.nome.lexema === palavra
+);
+if (!parametro) {
+    return undefined;
+}
+
+const tipo = parametro.tipoDado || 'qualquer';
+const doc = new vscode.MarkdownString();
+doc.appendCodeblock(`(Parâmetro) ${palavra}: ${tipo}`, 'pitugues');
+return new vscode.Hover(doc);
+}
+
+    private hoverMetodoDePrimitiva(
         textoAntesPosicao: string,
         palavra: string,
         declaracoesPertinentes: { nome: string; tipo: string }[]
@@ -80,7 +260,10 @@ export class PituguesProvedorDocumentacaoEmEditor
             'texto[]':      primitivasVetorFormatadas,
         };
 
-        const listaPrimitivas = mapaMetodos[declaracao.tipo] ?? primitivas;
+        const listaPrimitivas = mapaMetodos[declaracao.tipo];
+        if (!listaPrimitivas) {
+            return undefined;
+        }
         const metodo = listaPrimitivas.find(m => m.nome === palavra);
         if (!metodo) {
             return undefined;
@@ -111,7 +294,7 @@ export class PituguesProvedorDocumentacaoEmEditor
         declaracoesPertinentes: { nome: string; tipo: string }[]
     ): vscode.Hover | undefined {
         const declaracao = declaracoesPertinentes.find(d => d.nome === palavra);
-        if (!declaracao) {
+        if (!declaracao || declaracao.nome === declaracao.tipo) {
             return undefined;
         }
 
@@ -120,13 +303,41 @@ export class PituguesProvedorDocumentacaoEmEditor
         return new vscode.Hover(doc);
     }
 
-    private hoverFuncaoDocumentada(
+    private hoverFuncaoOuMetodoDocumentado(
         palavra: string,
+        textoAntesPalavra: string,
         todasDeclaracoes: any[]
     ): vscode.Hover | undefined {
-        let declaracaoFuncao = todasDeclaracoes.find(
-            d => d instanceof FuncaoDeclaracao && d.simbolo.lexema === palavra
-        ) as FuncaoDeclaracao | undefined;
+        const tiposEmCache = { ...obterDefinicoesPorContexto('normal'), ...obterDefinicoesPorContexto('liquido') };
+        const declaracaoCache = tiposEmCache[palavra];
+        if (declaracaoCache && !todasDeclaracoes.includes(declaracaoCache)) {
+            todasDeclaracoes.push(declaracaoCache);
+        }
+
+        let declaracaoFuncao: FuncaoDeclaracao | undefined;
+
+        const correspondenciaReceptor = textoAntesPalavra.trimEnd().match(/(\w+)\.$/);
+        if (correspondenciaReceptor) {
+            const nomeReceptor = correspondenciaReceptor[1];
+            const classeReceptor = (todasDeclaracoes.find(
+                d => d instanceof Classe &&
+                    (d as Classe).simbolo.lexema.toLowerCase() === nomeReceptor.toLowerCase()
+            ) ?? Object.values(tiposEmCache).find(
+                d => d instanceof Classe &&
+                    (d as Classe).simbolo.lexema.toLowerCase() === nomeReceptor.toLowerCase()
+            )) as Classe | undefined;
+            if (classeReceptor) {
+                declaracaoFuncao = classeReceptor.metodos.find(
+                    (m: FuncaoDeclaracao) => m.simbolo.lexema === palavra
+                );
+            }
+        }
+
+        if (!declaracaoFuncao) {
+            declaracaoFuncao = todasDeclaracoes.find(
+                d => d instanceof FuncaoDeclaracao && d.simbolo.lexema === palavra
+            ) as FuncaoDeclaracao | undefined;
+        }
 
         if (!declaracaoFuncao) {
             for (const declaracao of todasDeclaracoes) {
@@ -145,23 +356,34 @@ export class PituguesProvedorDocumentacaoEmEditor
         }
 
         const conteudo = declaracaoFuncao.documentacao as ComentarioComoConstruto;
-        const texto = Array.isArray(conteudo.conteudo) ? conteudo.conteudo.join('\n') : conteudo.conteudo;
-        return new vscode.Hover(new vscode.MarkdownString(texto));
+        const doc = new vscode.MarkdownString();
+        return new vscode.Hover(
+            formatarDocumentacaoDocumentario(doc, extrairTextoDocumentacao(conteudo.conteudo))
+        );
     }
 
-    private hoverClasseDocumentada(
+    private async hoverClasseDocumentada(
         palavra: string,
         todasDeclaracoes: any[],
         codigoFonte: string
-    ): vscode.Hover | undefined {
+    ): Promise<vscode.Hover | undefined> {
+        const tiposEmCache = { ...obterDefinicoesPorContexto('normal'), ...obterDefinicoesPorContexto('liquido') };
+        const declaracaoCache = tiposEmCache[palavra];
+        if (declaracaoCache && !todasDeclaracoes.includes(declaracaoCache)) {
+            todasDeclaracoes.push(declaracaoCache);
+        }
+
         const declaracaoClasse = todasDeclaracoes.find(
-            d => d instanceof Classe && (d as Classe).simbolo.lexema === palavra
+            d => d instanceof Classe && (
+                (d as Classe).simbolo.lexema === palavra ||
+                (d as Classe).simbolo.lexema.toLowerCase() === palavra.toLowerCase()
+            )
         ) as Classe | undefined;
         if (!declaracaoClasse) {
             return undefined;
         }
 
-        const prefixo = declaracaoClasse.abstrata ? '(classe abstrata)' : '(classe)';
+        const prefixo = (declaracaoClasse as any).abstrata ? '(classe abstrata)' : '(classe)';
         let assinatura = `${prefixo} ${declaracaoClasse.simbolo.lexema}`;
 
         if (declaracaoClasse.superClasses?.length) {
@@ -180,23 +402,43 @@ export class PituguesProvedorDocumentacaoEmEditor
         const doc = new vscode.MarkdownString();
         doc.appendCodeblock(assinatura, 'pitugues');
 
+        if (declaracaoClasse.documentacao) {
+            const conteudoComentario = declaracaoClasse.documentacao as unknown as ComentarioComoConstruto;
+            formatarDocumentacaoDocumentario(doc, extrairTextoDocumentacao(conteudoComentario.conteudo));
+            return new vscode.Hover(doc);
+        }
+
+        const caminhoImportado = (declaracaoClasse as any).caminhoArquivoDefinicao as string | undefined;
+        const fonteParaPesquisar = caminhoImportado
+            ? await this.lerConteudoArquivo(caminhoImportado)
+            : codigoFonte;
+
         const regexDocClasse = /\/\*\*([\s\S]*?)\*\/\s*(?:abstrat[ao]\s+)?classe\s+/g;
         let correspondencia: RegExpExecArray | null;
-        while ((correspondencia = regexDocClasse.exec(codigoFonte)) !== null) {
+        while ((correspondencia = regexDocClasse.exec(fonteParaPesquisar)) !== null) {
             const posicaoAposComentario = correspondencia.index + correspondencia[0].length;
-            const nomeClasse = codigoFonte.slice(posicaoAposComentario).match(/^[\wÀ-úÇç]+/)?.[0];
+            const nomeClasse = fonteParaPesquisar.slice(posicaoAposComentario).match(/^[\wÀ-úÇç]+/)?.[0];
             if (nomeClasse === palavra) {
                 const conteudo = correspondencia[1]
                     .split('\n')
                     .map(l => l.replace(/^\s*\*\s?/, ''))
                     .join('\n')
                     .trim();
-                doc.appendMarkdown('\n\n' + conteudo);
+                formatarDocumentacaoDocumentario(doc, conteudo);
                 break;
             }
         }
 
         return new vscode.Hover(doc);
+    }
+
+    private async lerConteudoArquivo(caminho: string): Promise<string> {
+        try {
+            const buffer = await vscode.workspace.fs.readFile(vscode.Uri.file(caminho));
+            return Buffer.from(buffer).toString('utf8');
+        } catch {
+            return '';
+        }
     }
 
     private hoverInterfaceDocumentada(
@@ -222,10 +464,12 @@ export class PituguesProvedorDocumentacaoEmEditor
                     .map(l => l.replace(/^\s*\*\s?/, ''))
                     .join('\n')
                     .trim();
-                return new vscode.Hover(new vscode.MarkdownString(conteudo));
-            }
+            return new vscode.Hover(
+                formatarDocumentacaoDocumentario(new vscode.MarkdownString(), conteudo)
+            );
         }
-
-        return undefined;
     }
+
+    return undefined;
+}
 }

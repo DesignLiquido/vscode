@@ -5,6 +5,7 @@ import primitivasNumero from '@designliquido/delegua/bibliotecas/dialetos/pitugu
 import primitivasTexto from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-texto';
 import primitivasVetor from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-vetor';
 
+
 import { funcoesNativasPitugues} from './funcoes-nativas';
 import { FuncaoNativaOuMetodoPrimitiva, ParametroAssinaturaMetodo } from '../../tipos';
 
