@@ -4,6 +4,7 @@ import {
     calendarioPortugolStudio,
     constantesPortugolStudio,
     matematicaPortugolStudio,
+    palavrasReservadasPortugolStudio,
     primitivasEntradaSaidaPortugolStudio,
     textoPortugolStudio,
     tiposPortugolStudio,
@@ -133,6 +134,23 @@ export class PortugolStudioProvedorDocumentacaoEmEditor
             if (constantePortugolStudio.exemploCodigo) {
                 documentacaoElemento.appendCodeblock(
                     constantePortugolStudio.exemploCodigo
+                );
+            }
+
+            return new vscode.Hover(documentacaoElemento);
+        }
+
+        const palavraReservada = palavrasReservadasPortugolStudio.find(
+            (palavraReservada) => palavraReservada.nome === palavra
+        );
+
+        if (palavraReservada) {
+            const documentacaoElemento = new vscode.MarkdownString(
+                palavraReservada.documentacao
+            );
+            if (palavraReservada.exemploCodigo) {
+                documentacaoElemento.appendCodeblock(
+                    palavraReservada.exemploCodigo
                 );
             }
 

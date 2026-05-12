@@ -4,6 +4,7 @@ import {
     calendarioPortugolStudio,
     constantesPortugolStudio,
     matematicaPortugolStudio,
+    palavrasReservadasPortugolStudio,
     primitivasEntradaSaidaPortugolStudio,
     textoPortugolStudio,
     tiposPortugolStudio,
@@ -93,6 +94,16 @@ export class PortugolStudioProvedorCompletude
                         vscode.CompletionItemKind.Constant
                     );
                     completionItem.documentation = constante.documentacao;
+                    return completionItem;
+                })
+            )
+            .concat(
+                palavrasReservadasPortugolStudio.map((palavraReservada) => {
+                    let completionItem = new vscode.CompletionItem(
+                        palavraReservada.nome,
+                        vscode.CompletionItemKind.Keyword
+                    );
+                    completionItem.documentation = palavraReservada.documentacao;
                     return completionItem;
                 })
             );

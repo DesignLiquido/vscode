@@ -82,6 +82,10 @@ jest.mock('../../fontes/bibliotecas/dialetos/portugol-studio', () => ({
         { nome: 'verdadeiro', documentacao: 'Constante verdadeira.' },
         { nome: 'falso', documentacao: 'Constante falsa.' },
     ],
+    palavrasReservadasPortugolStudio: [
+        { nome: 'programa', documentacao: 'Bloco principal.' },
+        { nome: 'se', documentacao: 'Estrutura de decisão.' },
+    ],
     }),
     { virtual: true }
 );
@@ -508,9 +512,9 @@ describe('completude/provedores-simples', () => {
                 mockContext
             );
 
-            // 2 Calendario + 2 Matematica + 2 Texto + 2 Util + 
-            // 2 Entrada/Saída + 2 Tipos + 2 Constantes = 14
-            expect(items.length).toBe(14);
+            // 2 Calendario + 2 Matematica + 2 Texto + 2 Util +
+            // 2 Entrada/Saída + 2 Tipos + 2 Constantes + 2 Palavras Reservadas = 16
+            expect(items.length).toBe(16);
         });
 
         it('deve criar itens com tipo Function', () => {
@@ -622,7 +626,7 @@ describe('completude/provedores-simples', () => {
             expect(itemReal.kind).toBe(vscode.CompletionItemKind.Keyword);
         });
 
-        it('deve incluir constantes', () => {
+it('deve incluir constantes', () => {
             const items = provedor.provideCompletionItems(
                 mockDocument,
                 mockPosition,
@@ -640,7 +644,38 @@ describe('completude/provedores-simples', () => {
             expect(itemVerdadeiro.kind).toBe(
                 vscode.CompletionItemKind.Constant
             );
-            expect(itemFalso.kind).toBe(vscode.CompletionItemKind.Constant);
+            expect(itemFalso.kind).toBe(
+                vscode.CompletionItemKind.Constant
+            );
+        });
+
+        it('deve incluir palavras reservadas', () => {
+            const items = provedor.provideCompletionItems(
+                mockDocument,
+                mockPosition,
+                mockToken,
+                mockContext
+            );
+
+            const itemPrograma = items.find((item: any) => item.label === 'programa');
+            const itemSe = items.find((item: any) => item.label === 'se');
+
+            expect(itemPrograma).toBeDefined();
+            expect(itemSe).toBeDefined();
+            expect(itemPrograma.kind).toBe(vscode.CompletionItemKind.Keyword);
+            expect(itemSe.kind).toBe(vscode.CompletionItemKind.Keyword);
+        });
+
+        it('deve adicionar documentação às palavras reservadas', () => {
+            const items = provedor.provideCompletionItems(
+                mockDocument,
+                mockPosition,
+                mockToken,
+                mockContext
+            );
+
+            const itemPrograma = items.find((item: any) => item.label === 'programa');
+            expect(itemPrograma.documentation).toBe('Bloco principal.');
         });
 
         it('deve adicionar documentação às funções', () => {
