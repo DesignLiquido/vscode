@@ -1,0 +1,36 @@
+name: Testes Unitários
+
+on:
+  pull_request:
+    branches: [ principal ]
+  push:
+    branches: [ principal ]
+
+permissions:
+  contents: read
+
+jobs:
+  testes-unitarios:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'yarn'
+
+    - name: Yarn - Dependências
+      run: yarn install --frozen-lockfile
+
+    - name: Testes unitários com cobertura
+      run: yarn testes-unitarios --coverage --coverageReporters=json-summary --coverageReporters=text
+
+    - name: Salvar resultados de cobertura
+      if: github.event_name == 'pull_request'
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage/coverage-summary.json
+        retention-days: 1
