@@ -26,6 +26,7 @@ jest.mock('@designliquido/delegua/declaracoes/classe', () => ({
 
 jest.mock('@designliquido/delegua/declaracoes', () => ({
     Declaracao: class Declaracao {},
+    Classe: ClasseMock,
 }), { virtual: true });
 
 jest.mock('../../fontes/analise-codigo/cache-analise', () => ({

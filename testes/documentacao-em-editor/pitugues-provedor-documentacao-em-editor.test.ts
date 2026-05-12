@@ -11,6 +11,14 @@ class ClasseMock {
 class InterfaceDeclaracaoMock {
     constructor(public simbolo: any) {}
 }
+class VarMock {
+    constructor(public simbolo: any, public tipo: any, public inicializador?: any) {}
+}
+class ConstMock {
+    constructor(public simbolo: any, public tipo: any, public inicializador?: any) {}
+}
+class ParaCadaMock {}
+class ChamadaMock {}
 
 jest.mock('vscode', () => ({
     MarkdownString: class MarkdownString {
@@ -28,16 +36,24 @@ jest.mock('@designliquido/delegua/declaracoes', () => ({
     Classe: ClasseMock,
     FuncaoDeclaracao: FuncaoDeclaracaoMock,
     InterfaceDeclaracao: InterfaceDeclaracaoMock,
+    Var: VarMock,
+    Const: ConstMock,
+    ParaCada: ParaCadaMock,
 }), { virtual: true });
 
 jest.mock('@designliquido/delegua/construtos', () => ({
     ComentarioComoConstruto: class ComentarioComoConstruto {
         constructor(public conteudo: any) {}
     },
+    Chamada: ChamadaMock,
 }), { virtual: true });
 
 jest.mock('../../fontes/analise-codigo/cache-analise', () => ({
     obterResultado: jest.fn().mockReturnValue(null),
+}), { virtual: true });
+
+jest.mock('../../fontes/analise-codigo/cache-definicoes', () => ({
+    obterDefinicoesPorContexto: jest.fn().mockReturnValue({}),
 }), { virtual: true });
 
 jest.mock('../../fontes/bibliotecas/dialetos/pitugues', () => ({
@@ -70,7 +86,7 @@ function criarDocumento(palavra: string, linhaTexto?: string): any {
         uri: { toString: () => 'file:///teste.pit' },
         lineAt: jest.fn().mockReturnValue({ text: linhaTexto ?? palavra }),
         getText: jest.fn().mockReturnValue(palavra),
-        getWordRangeAtPosition: jest.fn().mockReturnValue({}),
+        getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 2 } }),
     };
 }
 
@@ -90,28 +106,28 @@ describe('PituguesProvedorDocumentacaoEmEditor', () => {
         expect(typeof provedor.provideHover).toBe('function');
     });
 
-    it('retorna undefined quando palavra não encontrada', () => {
-        const result = provedor.provideHover(criarDocumento('desconhecida'), mockPos, mockToken);
+    it('retorna undefined quando palavra não encontrada', async () => {
+        const result = await provedor.provideHover(criarDocumento('desconhecida'), mockPos, mockToken);
         expect(result).toBeUndefined();
     });
 
-    it('retorna Hover para função nativa "escreva"', () => {
-        const result = provedor.provideHover(criarDocumento('escreva'), mockPos, mockToken);
+    it('retorna Hover para função nativa "escreva"', async () => {
+        const result = await provedor.provideHover(criarDocumento('escreva'), mockPos, mockToken);
         expect(result).toBeDefined();
         expect(result.contents).toBeDefined();
     });
 
-    it('função nativa com exemploCodigo chama appendCodeblock', () => {
-        const hover = provedor.provideHover(criarDocumento('escreva'), mockPos, mockToken);
+    it('função nativa com exemploCodigo chama appendCodeblock', async () => {
+        const hover = await provedor.provideHover(criarDocumento('escreva'), mockPos, mockToken);
         expect(hover.contents.value).toContain('escreva("oi")');
     });
 
-    it('retorna Hover para função nativa "leia" sem exemploCodigo', () => {
-        const result = provedor.provideHover(criarDocumento('leia'), mockPos, mockToken);
+    it('retorna Hover para função nativa "leia" sem exemploCodigo', async () => {
+        const result = await provedor.provideHover(criarDocumento('leia'), mockPos, mockToken);
         expect(result).toBeDefined();
     });
 
-    it('retorna Hover para variável do tipo texto via hoverMetodoPrimitivo (maiuscula)', () => {
+    it('retorna Hover para variável do tipo texto via hoverMetodoPrimitivo (maiuscula)', async () => {
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
                 declaracoes: [
@@ -120,11 +136,11 @@ describe('PituguesProvedorDocumentacaoEmEditor', () => {
             },
         });
         const doc = criarDocumento('maiuscula', 't.maiuscula');
-        const result = provedor.provideHover(doc, { line: 0, character: 8 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 8 }, mockToken);
         expect(result).toBeDefined();
     });
 
-    it('retorna Hover para variável do tipo numero via hoverMetodoPrimitivo (absoluto)', () => {
+    it('retorna Hover para variável do tipo numero via hoverMetodoPrimitivo (absoluto)', async () => {
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
                 declaracoes: [
@@ -133,11 +149,11 @@ describe('PituguesProvedorDocumentacaoEmEditor', () => {
             },
         });
         const doc = criarDocumento('absoluto', 'n.absoluto');
-        const result = provedor.provideHover(doc, { line: 0, character: 7 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 7 }, mockToken);
         expect(result).toBeDefined();
     });
 
-    it('retorna Hover para variável do tipo vetor (adicionar)', () => {
+    it('retorna Hover para variável do tipo vetor (adicionar)', async () => {
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
                 declaracoes: [
@@ -146,11 +162,11 @@ describe('PituguesProvedorDocumentacaoEmEditor', () => {
             },
         });
         const doc = criarDocumento('adicionar', 'v.adicionar');
-        const result = provedor.provideHover(doc, { line: 0, character: 8 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 8 }, mockToken);
         expect(result).toBeDefined();
     });
 
-    it('retorna Hover para variável do tipo dicionario (chaves)', () => {
+    it('retorna Hover para variável do tipo dicionario (chaves)', async () => {
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
                 declaracoes: [
@@ -159,13 +175,11 @@ describe('PituguesProvedorDocumentacaoEmEditor', () => {
             },
         });
         const doc = criarDocumento('chaves', 'd.chaves');
-        const result = provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
         expect(result).toBeDefined();
     });
 
-    it('retorna Hover (nome:tipo) para FuncaoDeclaracao — hoverVariavelOuConstante tem prioridade', () => {
-        // FuncaoDeclaracao entra em declaracoesPertinentes, então hoverVariavelOuConstante
-        // dispara antes de hoverFuncaoDocumentada e retorna "nome: tipo"
+    it('retorna Hover (nome:tipo) para FuncaoDeclaracao — hoverVariavelOuConstante tem prioridade', async () => {
         const comentario = { conteudo: 'Documentação da função pitugues' };
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
@@ -174,12 +188,12 @@ describe('PituguesProvedorDocumentacaoEmEditor', () => {
                 ],
             },
         });
-        const result = provedor.provideHover(criarDocumento('minhaFuncao'), mockPos, mockToken);
+        const result = await provedor.provideHover(criarDocumento('minhaFuncao'), mockPos, mockToken);
         expect(result).toBeDefined();
         expect(result.contents.value).toContain('minhaFuncao');
     });
 
-    it('retorna Hover (nome:tipo) para FuncaoDeclaracao com conteúdo array', () => {
+    it('retorna Hover (nome:tipo) para FuncaoDeclaracao com conteúdo array', async () => {
         const comentario = { conteudo: ['linha a', 'linha b'] };
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: {
@@ -188,70 +202,70 @@ describe('PituguesProvedorDocumentacaoEmEditor', () => {
                 ],
             },
         });
-        const result = provedor.provideHover(criarDocumento('funcArray'), mockPos, mockToken);
+        const result = await provedor.provideHover(criarDocumento('funcArray'), mockPos, mockToken);
         expect(result).toBeDefined();
         expect(result.contents.value).toContain('funcArray');
     });
 
-    it('retorna Hover para método em classe', () => {
+    it('retorna Hover para método em classe', async () => {
         const comentario = { conteudo: 'Método da classe' };
         const metodo = new FuncaoDeclaracaoMock({ lexema: 'metodoClasse' }, 'funcao', comentario);
         const classe = new ClasseMock({ lexema: 'MinhaClasse' }, [metodo]);
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: { declaracoes: [classe] },
         });
-        const result = provedor.provideHover(criarDocumento('metodoClasse'), mockPos, mockToken);
+        const result = await provedor.provideHover(criarDocumento('metodoClasse'), mockPos, mockToken);
         expect(result).toBeDefined();
     });
 
-    it('retorna Hover para classe documentada', () => {
+    it('retorna Hover para classe documentada', async () => {
         const classe = new ClasseMock({ lexema: 'ClassePitugues' });
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: { declaracoes: [classe] },
         });
-        const result = provedor.provideHover(criarDocumento('ClassePitugues'), mockPos, mockToken);
+        const result = await provedor.provideHover(criarDocumento('ClassePitugues'), mockPos, mockToken);
         expect(result).toBeDefined();
         expect(result.contents.value).toContain('(classe)');
     });
 
-    it('retorna Hover para classe abstrata pitugues', () => {
+    it('retorna Hover para classe abstrata pitugues', async () => {
         const classe = new ClasseMock({ lexema: 'ClasseAbstrata' }, [], true);
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: { declaracoes: [classe] },
         });
-        const result = provedor.provideHover(criarDocumento('ClasseAbstrata'), mockPos, mockToken);
+        const result = await provedor.provideHover(criarDocumento('ClasseAbstrata'), mockPos, mockToken);
         expect(result).toBeDefined();
         expect(result.contents.value).toContain('(classe abstrata)');
     });
 
-    it('retorna Hover para classe com superClasses', () => {
+    it('retorna Hover para classe com superClasses', async () => {
         const classe = new ClasseMock({ lexema: 'Filho' }, [], false, [{ simbolo: { lexema: 'Pai' } }]);
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: { declaracoes: [classe] },
         });
-        const result = provedor.provideHover(criarDocumento('Filho'), mockPos, mockToken);
+        const result = await provedor.provideHover(criarDocumento('Filho'), mockPos, mockToken);
         expect(result.contents.value).toContain('herda Pai');
     });
 
-    it('retorna Hover para classe com mesclas', () => {
+    it('retorna Hover para classe com mesclas', async () => {
         const classe = new ClasseMock({ lexema: 'ComMixin' }, [], false, undefined, [{ simbolo: { lexema: 'MixinA' } }]);
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: { declaracoes: [classe] },
         });
-        const result = provedor.provideHover(criarDocumento('ComMixin'), mockPos, mockToken);
+        const result = await provedor.provideHover(criarDocumento('ComMixin'), mockPos, mockToken);
         expect(result.contents.value).toContain('mescla MixinA');
     });
 
-    it('retorna Hover para classe com implementa', () => {
+    it('retorna Hover para classe com implementa', async () => {
         const classe = new ClasseMock({ lexema: 'ImplClasse' }, [], false, undefined, undefined, [{ lexema: 'IFoo' }]);
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: { declaracoes: [classe] },
         });
-        const result = provedor.provideHover(criarDocumento('ImplClasse'), mockPos, mockToken);
+        const result = await provedor.provideHover(criarDocumento('ImplClasse'), mockPos, mockToken);
         expect(result.contents.value).toContain('implementa IFoo');
     });
 
-    it('retorna Hover para interface via regex no código fonte', () => {
+    it('retorna Hover para interface via regex no código fonte', async () => {
         const iface = new InterfaceDeclaracaoMock({ lexema: 'IMinhaInterface' });
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: { declaracoes: [iface] },
@@ -261,13 +275,13 @@ describe('PituguesProvedorDocumentacaoEmEditor', () => {
             uri: { toString: () => 'file:///teste.pit' },
             lineAt: jest.fn().mockReturnValue({ text: 'IMinhaInterface' }),
             getText: jest.fn((range?: any) => range ? 'IMinhaInterface' : codigoFonte),
-            getWordRangeAtPosition: jest.fn().mockReturnValue({}),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
         };
-        const result = provedor.provideHover(doc, { line: 0, character: 7 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 7 }, mockToken);
         expect(result).toBeDefined();
     });
 
-    it('retorna undefined para interface não encontrada no regex', () => {
+    it('retorna undefined para interface não encontrada no regex', async () => {
         const iface = new InterfaceDeclaracaoMock({ lexema: 'INaoDocumentada' });
         (obterResultado as jest.Mock).mockReturnValue({
             avaliadorSintatico: { declaracoes: [iface] },
@@ -276,15 +290,15 @@ describe('PituguesProvedorDocumentacaoEmEditor', () => {
             uri: { toString: () => 'file:///teste.pit' },
             lineAt: jest.fn().mockReturnValue({ text: 'INaoDocumentada' }),
             getText: jest.fn((range?: any) => range ? 'INaoDocumentada' : 'sem comentario'),
-            getWordRangeAtPosition: jest.fn().mockReturnValue({}),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
         };
-        const result = provedor.provideHover(doc, { line: 0, character: 7 }, mockToken);
+        const result = await provedor.provideHover(doc, { line: 0, character: 7 }, mockToken);
         expect(result).toBeUndefined();
     });
 
-    it('cache nulo, palavra desconhecida → undefined', () => {
+    it('cache nulo, palavra desconhecida → undefined', async () => {
         (obterResultado as jest.Mock).mockReturnValue(null);
-        const result = provedor.provideHover(criarDocumento('palavraEstranha'), mockPos, mockToken);
+        const result = await provedor.provideHover(criarDocumento('palavraEstranha'), mockPos, mockToken);
         expect(result).toBeUndefined();
     });
 });

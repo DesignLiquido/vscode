@@ -69,7 +69,7 @@ import { obterResultado } from '../../fontes/analise-codigo/cache-analise';
 
 function criarDocumento(linhas: string[] = ['']): any {
     return {
-        uri: { toString: () => 'file:///teste.pit' },
+        uri: { toString: () => 'file:///teste.pitu' },
         lineAt: jest.fn((linha: any) => {
             const idx = typeof linha === 'number' ? linha : linha.line ?? 0;
             return { text: linhas[idx] ?? '' };

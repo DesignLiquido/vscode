@@ -5,18 +5,14 @@ import { Chamada, ComentarioComoConstruto } from '@designliquido/delegua/constru
 
 import { obterResultado } from '../analise-codigo/cache-analise';
 import { obterDefinicoesPorContexto } from '../analise-codigo/cache-definicoes';
-import primitivasDicionario from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-dicionario';
-import primitivasNumero from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-numero';
-import primitivasTexto from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-texto';
-import primitivasVetor from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-vetor';
-import {funcoesNativasPitugues} from '../bibliotecas/dialetos/pitugues/funcoes-nativas';
-import { formatarPrimitivas } from '../bibliotecas';
+import {
+    primitivasDicionarioFormatadas,
+    primitivasNumeroFormatadas,
+    primitivasTextoFormatadas,
+    primitivasVetorFormatadas,
+    funcoesNativasPitugues,
+} from '../bibliotecas/dialetos/pitugues';
 import { extrairTextoDocumentacao, formatarDocumentacaoDocumentario } from './formatador-documentacao';
-
-const primitivasDicionarioFormatadas = formatarPrimitivas(primitivasDicionario);
-const primitivasNumeroFormatadas = formatarPrimitivas(primitivasNumero);
-const primitivasTextoFormatadas = formatarPrimitivas(primitivasTexto);
-const primitivasVetorFormatadas = formatarPrimitivas(primitivasVetor);
 
 function desembrulharTipoFuncao(tipo: string): string {
     const correspondencia = tipo?.match(/^função<(.+)>$/);
@@ -77,8 +73,8 @@ export class PituguesProvedorDocumentacaoEmEditor
         return this.hoverVariavelParaCada(palavra, posicao.line + 1, todasDeclaracoes)
         ?? this.hoverParametroFuncao(palavra, posicao.line + 1, todasDeclaracoes)
         ?? this.hoverFuncaoNativa(palavra)
-        ?? this.hoverFuncaoOuMetodoDocumentado(palavra, textoAntesPalavra, todasDeclaracoes)
         ?? this.hoverVariavelOuConstante(palavra, declaracoesPertinentes)
+        ?? this.hoverFuncaoOuMetodoDocumentado(palavra, textoAntesPalavra, todasDeclaracoes)
         ?? await this.hoverClasseDocumentada(palavra, todasDeclaracoes, documento.getText())
         ?? this.hoverInterfaceDocumentada(palavra, todasDeclaracoes, documento.getText());
     }

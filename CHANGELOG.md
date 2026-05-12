@@ -2,7 +2,7 @@
 
 ## 0.26.0
 
-- Núcleo de Delégua atualizado para a versão 1.22.2:
+- Núcleo de Delégua atualizado para a versão 1.23.0:
   - Funcionalidade de testes nativa para Delégua;
   - Sugestão de implementação de método inexistente em classe;
   - Analisador Semântico considera hierarquia de herança ao verificar métodos;
@@ -14,8 +14,12 @@
   - Pituguês: refatoração dos métodos de primitivas de `vetor`.
 - Suporte a arquivos `.teste.delegua` para execução de testes unitários diretamente no editor;
 - Sugestão de implementação de métodos ausentes para Delégua;
+- Pituguês:
+  - Novo provedor de completude para funções nativas e métodos de primitivas, com suporte a sugestões de snippets: https://github.com/DesignLiquido/vscode/pull/90
 - Potigol:
   - Correções de verificação de uso de variáveis e constantes pelo Analisador Semântico (resolve https://github.com/DesignLiquido/potigol/issues/177);
+- Portugol Studio:
+  - Adição de snippets: https://github.com/DesignLiquido/vscode/pull/91
 - Ampliação da cobertura de testes unitários da extensão, incluindo testes para fluxogramas.
 
 ## 0.25.11

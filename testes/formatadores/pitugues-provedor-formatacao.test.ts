@@ -57,7 +57,7 @@ function criarDocumento(texto = 'escreva("oi")', eol = 1): any {
         lineAt: jest.fn((idx: number) => ({
             range: { start: { line: idx, character: 0 }, end: { line: idx, character: linhas[idx]?.length ?? 0 } },
         })),
-        uri: 'file:///teste.pit',
+        uri: 'file:///teste.pitu',
     };
 }
 
