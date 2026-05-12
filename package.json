@@ -576,10 +576,14 @@
                 "language": "visualg",
                 "path": "./snippets/visualg.code-snippets.json"
             },
-            {
-                "language": "pitugues",
-                "path": "./snippets/pitugues.code-snippets.json"
-            }
+{
+            "language": "pitugues",
+            "path": "./snippets/pitugues.code-snippets.json"
+        },
+        {
+            "language": "portugolstudio",
+            "path": "./snippets/portugolstudio.code-snippets.json"
+        }
         ],
         "walkthroughs": [
             {

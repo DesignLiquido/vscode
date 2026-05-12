@@ -52,6 +52,10 @@ jest.mock('../../fontes/bibliotecas/dialetos/portugol-studio', () => ({
     constantesPortugolStudio: [
         { nome: 'verdadeiro', documentacao: 'Constante verdadeira', exemploCodigo: '' },
     ],
+    palavrasReservadasPortugolStudio: [
+        { nome: 'programa', documentacao: 'Bloco principal do programa', exemploCodigo: 'programa { }' },
+        { nome: 'se', documentacao: 'Estrutura de decisão', exemploCodigo: 'se (condicao) { }' },
+    ],
 }), { virtual: true });
 
 // Mock FoLEs
@@ -205,6 +209,18 @@ describe('provedores-simples documentacao-em-editor', () => {
         it('hover em constante', () => {
             const result = provedor.provideHover(criarDocumento('verdadeiro'), mockPos, mockToken);
             expect(result).toBeDefined();
+        });
+
+        it('hover em palavra reservada (programa)', () => {
+            const result = provedor.provideHover(criarDocumento('programa'), mockPos, mockToken);
+            expect(result).toBeDefined();
+            expect(result.contents.value).toContain('Bloco principal do programa');
+        });
+
+        it('hover em palavra reservada com exemploCodigo (se)', () => {
+            const result = provedor.provideHover(criarDocumento('se'), mockPos, mockToken);
+            expect(result).toBeDefined();
+            expect(result.contents.value).toContain('se (condicao)');
         });
 
         it('palavra desconhecida → undefined', () => {

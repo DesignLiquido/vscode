@@ -1,0 +1,229 @@
+{
+	"Estrutura Básica": {
+		"prefix": "programa",
+		"body": [
+			"programa {",
+			"\tfuncao inicio() {",
+			"\t\t$1",
+			"\t}",
+			"}"
+		],
+		"description": "Estrutura Básica do Programa com funcao inicio()"
+	},
+	"Escreva na tela": {
+		"prefix": "escreva",
+		"body": [
+			"escreva(\"$1\")"
+		],
+		"description": "Escreve valores na tela (use \\n para pular linha)"
+	},
+	"Leia entrada": {
+		"prefix": "leia",
+		"body": [
+			"leia($1)"
+		],
+		"description": "Lê valores de entrada do usuário"
+	},
+	"Se": {
+		"prefix": "se",
+		"body": [
+			"se ($1) {",
+			"\t$2",
+			"}"
+		],
+		"description": "Estrutura de decisão se"
+	},
+	"Se Senão": {
+		"prefix": "senao",
+		"body": [
+			"se ($1) {",
+			"\t$2",
+			"} senao {",
+			"\t$3",
+			"}"
+		],
+		"description": "Estrutura de decisão se-senão"
+	},
+	"Se Senão Se Senão": {
+		"prefix": "senaose",
+		"body": [
+			"se ($1) {",
+			"\t$2",
+			"} senao se ($3) {",
+			"\t$4",
+			"} senao {",
+			"\t$5",
+			"}"
+		],
+		"description": "Estrutura de decisão se-senao se-senão"
+	},
+	"Enquanto Faça": {
+		"prefix": "enquanto",
+		"body": [
+			"enquanto ($1) {",
+			"\t$2",
+			"}"
+		],
+		"description": "Estrutura de repetição enquanto-faça"
+	},
+	"Para": {
+		"prefix": "para",
+		"body": [
+			"para (inteiro i = $1; i < $2; $i++) {",
+			"\t$4",
+			"}"
+		],
+		"description": "Estrutura de repetição para com contador"
+	},
+	"Faça Enquanto": {
+		"prefix": "faca",
+		"body": [
+			"faca {",
+			"\t$1",
+			"} enquanto ($2)"
+		],
+		"description": "Estrutura de repetição faça-enquanto"
+	},
+	"Escolha Caso 1": {
+		"prefix": "escolha1",
+		"body": [
+			"escolha($1) {",
+			"\tcaso $2:",
+			"\t\t$3",
+			"\tpare",
+			"}"
+		],
+		"description": "Estrutura de seleção múltipla escolha-caso com 1 caso"
+	},
+	"Escolha Caso 2": {
+		"prefix": "escolha2",
+		"body": [
+			"escolha($1) {",
+			"\tcaso $2:",
+			"\t\t$3",
+			"\tpare",
+			"\tcaso contrario:",
+			"\t\t$4",
+			"}"
+		],
+		"description": "Estrutura de seleção múltipla escolha-caso com 2 casos"
+	},
+	"Escolha Caso 3": {
+		"prefix": "escolha3",
+		"body": [
+			"escolha($1) {",
+			"\tcaso $2:",
+			"\t\t$3",
+			"\tpare",
+			"\tcaso $4:",
+			"\t\t$5",
+			"\tpare",
+			"\tcaso contrario:",
+			"\t\t$6",
+			"}"
+		],
+		"description": "Estrutura de seleção múltipla escolha-caso com 3 casos"
+	},
+	"Função": {
+		"prefix": "funcao",
+		"body": [
+			"funcao $1 ($2) {",
+			"\t$3",
+			"}"
+		],
+		"description": "Declara uma nova função"
+	},
+	"Função Inteiro": {
+		"prefix": "funcaoi",
+		"body": [
+			"funcao inteiro $1 ($2) {",
+			"\t$3",
+			"\tretorne 0",
+			"}"
+		],
+		"description": "Declara uma função que retorna inteiro"
+	},
+	"Função Cadeia": {
+		"prefix": "funcaoc",
+		"body": [
+			"funcao cadeia $1 ($2) {",
+			"\t$3",
+			"\tretorne \"\"",
+			"}"
+		],
+		"description": "Declara uma função que retorna cadeia"
+	},
+	"Função Lógico": {
+		"prefix": "funcaol",
+		"body": [
+			"funcao logico $1 ($2) {",
+			"\t$3",
+			"\tretorne verdadeiro",
+			"}"
+		],
+		"description": "Declara uma função que retorna lógico"
+	},
+	"Retorne": {
+		"prefix": "retorne",
+		"body": [
+			"retorne $1"
+		],
+		"description": "Retorna um valor de uma função"
+	},
+	"Variável Inteiro": {
+		"prefix": "inteiro",
+		"body": [
+			"inteiro $1 = $2"
+		],
+		"description": "Declara uma variável do tipo inteiro"
+	},
+	"Variável Real": {
+		"prefix": "real",
+		"body": [
+			"real $1 = $2"
+		],
+		"description": "Declara uma variável do tipo real"
+	},
+	"Variável Cadeia": {
+		"prefix": "cadeia",
+		"body": [
+			"cadeia $1 = $2"
+		],
+		"description": "Declara uma variável do tipo cadeia"
+	},
+	"Variável Caracter": {
+		"prefix": "caracter",
+		"body": [
+			"caracter $1 = $2"
+		],
+		"description": "Declara uma variável do tipo caracter"
+	},
+	"Variável Lógico": {
+		"prefix": "logico",
+		"body": [
+			"logico $1 = $2"
+		],
+		"description": "Declara uma variável do tipo lógico"
+	},
+	"Vetor": {
+		"prefix": "vetor",
+		"body": [
+			"inteiro ${1:nome}[$2] = {${3:0}}"
+		],
+		"description": "Declara e inicializa um vetor (array unidimensional)"
+	},
+	"Matriz": {
+		"prefix": "matriz",
+		"body": [
+			"inteiro ${1:nome}[$2][$3] = {{${4:0}}}"
+		],
+		"description": "Declara e inicializa uma matriz (array bidimensional)"
+	},
+	"Inclua Biblioteca": {
+		"prefix": "inclua",
+		"body": [
+			"inclua biblioteca $1 --> $2"
+		],
+		"description": "Inclui uma biblioteca externa"
+	}
+}
