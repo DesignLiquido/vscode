@@ -122,6 +122,21 @@ jest.mock('../fontes/analise-codigo', () => ({
     executarAnalises: jest.fn(() => Promise.resolve())
 }));
 
+jest.mock('../fontes/analise-codigo/cache-analise', () => ({
+    expirarResultado: jest.fn(),
+    expirarResultados: jest.fn(),
+    expirarResultadosPorDependenciaArquivo: jest.fn(),
+    expirarTudo: jest.fn(),
+}));
+
+jest.mock('../fontes/analise-codigo/cache-definicoes', () => ({
+    expirarTodasDefinicoes: jest.fn(),
+}));
+
+jest.mock('../fontes/importacao/utilitarios-caminho-importacao-delegua', () => ({
+    ehArquivoDelegua: jest.fn((uri: any) => uri?.fsPath?.endsWith('.delegua')),
+}));
+
 jest.mock('../fontes/assinaturas-metodos', () => ({
     DeleguaProvedorAssinaturaMetodos: class {},
     DeleguaTestesProvedorAssinaturaMetodos: class {}
@@ -193,6 +208,15 @@ jest.mock('../fontes/mecanismo-importacao-bibliotecas', () => ({
 }));
 
 import * as extensao from '../fontes/extensao';
+import { executarAnalises } from '../fontes/analise-codigo';
+import {
+    expirarResultados,
+    expirarResultadosPorDependenciaArquivo,
+    expirarTudo,
+} from '../fontes/analise-codigo/cache-analise';
+import { expirarTodasDefinicoes } from '../fontes/analise-codigo/cache-definicoes';
+import { GerenciadorVisoesFluxograma } from '../fontes/visoes/fluxogramas/gerenciador-visoes-fluxograma';
+import { ehArquivoDelegua } from '../fontes/importacao/utilitarios-caminho-importacao-delegua';
 
 describe('Extensão VSCode - Design Líquido', () => {
     describe('Carregamento da extensão', () => {
@@ -206,6 +230,22 @@ describe('Extensão VSCode - Design Líquido', () => {
 
         beforeEach(() => {
             jest.clearAllMocks();
+
+            const criarDisposable = () => ({ dispose: jest.fn() });
+            (vscode.workspace.onWillRenameFiles as jest.Mock).mockImplementation(() => criarDisposable());
+            (vscode.workspace.onDidRenameFiles as jest.Mock).mockImplementation(() => criarDisposable());
+            (vscode.workspace.onDidOpenTextDocument as jest.Mock).mockImplementation(() => criarDisposable());
+            (vscode.workspace.onDidChangeTextDocument as jest.Mock).mockImplementation(() => criarDisposable());
+            (vscode.workspace.onDidCloseTextDocument as jest.Mock).mockImplementation(() => criarDisposable());
+            (vscode.workspace.onDidSaveTextDocument as jest.Mock).mockImplementation(() => criarDisposable());
+            (vscode.workspace.onDidCreateFiles as jest.Mock).mockImplementation(() => criarDisposable());
+            (vscode.workspace.onDidDeleteFiles as jest.Mock).mockImplementation(() => criarDisposable());
+            (vscode.window.onDidChangeActiveTextEditor as jest.Mock).mockImplementation(() => criarDisposable());
+            (vscode.commands.registerCommand as jest.Mock).mockImplementation(() => criarDisposable());
+            (vscode.languages.registerRenameProvider as jest.Mock).mockImplementation(() => criarDisposable());
+            (vscode.workspace.findFiles as jest.Mock).mockResolvedValue([]);
+            (vscode.workspace.saveAll as jest.Mock).mockResolvedValue(true);
+            (ehArquivoDelegua as jest.Mock).mockImplementation((uri: any) => uri?.fsPath?.endsWith('.delegua'));
 
             context = {
                 subscriptions: [],
@@ -276,6 +316,87 @@ describe('Extensão VSCode - Design Líquido', () => {
             extensao.activate(context);
 
             expect(vscode.languages.registerRenameProvider).toHaveBeenCalled();
+        });
+
+        it('deve expirar caches ao salvar dependência de projeto', () => {
+            extensao.activate(context);
+
+            const callback = (vscode.workspace.onDidSaveTextDocument as jest.Mock).mock.calls[0][0];
+            callback({ fileName: '/projeto/package-lock.json' });
+
+            expect(expirarTudo).toHaveBeenCalledWith('dependencias-atualizadas');
+            expect(expirarTodasDefinicoes).toHaveBeenCalledWith('dependencias-atualizadas');
+        });
+
+        it('deve expirar resultados ao criar arquivo delegua', () => {
+            extensao.activate(context);
+
+            const callback = (vscode.workspace.onDidCreateFiles as jest.Mock).mock.calls[0][0];
+            callback({
+                files: [
+                    { fsPath: '/projeto/um.delegua', toString: () => 'file:///projeto/um.delegua' },
+                    { fsPath: '/projeto/anotacao.txt', toString: () => 'file:///projeto/anotacao.txt' },
+                ],
+            });
+
+            expect(expirarResultados).toHaveBeenCalledWith(
+                ['file:///projeto/um.delegua', 'file:///projeto/anotacao.txt'],
+                'arquivo-criado'
+            );
+            expect(expirarResultadosPorDependenciaArquivo).toHaveBeenCalledWith(
+                ['/projeto/um.delegua'],
+                'arquivo-delegua-criado'
+            );
+        });
+
+        it('não deve salvar e reanalisar quando renomeação não envolve delegua', async () => {
+            extensao.activate(context);
+
+            const callback = (vscode.workspace.onDidRenameFiles as jest.Mock).mock.calls[0][0];
+            await callback({
+                files: [
+                    {
+                        oldUri: { fsPath: '/projeto/velho.txt', toString: () => 'file:///projeto/velho.txt' },
+                        newUri: { fsPath: '/projeto/novo.txt', toString: () => 'file:///projeto/novo.txt' },
+                    },
+                ],
+            });
+
+            expect(vscode.workspace.saveAll).not.toHaveBeenCalled();
+            expect(vscode.workspace.findFiles).not.toHaveBeenCalled();
+            expect(executarAnalises).not.toHaveBeenCalled();
+        });
+
+        it('deve salvar e reanalisar ao renomear arquivo delegua', async () => {
+            extensao.activate(context);
+
+            (vscode.workspace.findFiles as jest.Mock).mockResolvedValueOnce([{ fsPath: '/projeto/um.delegua' }]);
+            (vscode.workspace.openTextDocument as jest.Mock).mockResolvedValueOnce({
+                languageId: 'delegua',
+                fileName: '/projeto/um.delegua',
+                uri: { toString: () => 'file:///projeto/um.delegua' },
+                getText: () => 'escreva("oi")',
+                version: 1,
+            });
+
+            const callback = (vscode.workspace.onDidRenameFiles as jest.Mock).mock.calls[0][0];
+            await callback({
+                files: [
+                    {
+                        oldUri: { fsPath: '/projeto/velho.delegua', toString: () => 'file:///projeto/velho.delegua' },
+                        newUri: { fsPath: '/projeto/novo.delegua', toString: () => 'file:///projeto/novo.delegua' },
+                    },
+                ],
+            });
+
+            expect(vscode.workspace.saveAll).toHaveBeenCalledWith(false);
+            expect(vscode.workspace.findFiles).toHaveBeenCalled();
+            expect(executarAnalises).toHaveBeenCalled();
+        });
+
+        it('deactivate deve descartar gerenciador de fluxogramas', () => {
+            extensao.deactivate();
+            expect(GerenciadorVisoesFluxograma.descartar).toHaveBeenCalled();
         });
     });
 });

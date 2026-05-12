@@ -113,11 +113,44 @@ jest.mock('../fontes/analise-codigo/cache-analise', () => ({
 }));
 jest.mock('../fontes/analise-codigo/cache-definicoes', () => ({ expirarTodasDefinicoes: jest.fn() }));
 
-import { activate } from '../fontes/extensao-web';
+import tradutorWeb from '../fontes/traducao/index-web';
+import { executarAnalises } from '../fontes/analise-codigo';
+import { tentarFecharTagLmht } from '../fontes/linguagens/lmht/fechamento-estruturas';
+import {
+    expirarResultado,
+    expirarResultados,
+    expirarResultadosPorDependenciaArquivo,
+    expirarTudo,
+} from '../fontes/analise-codigo/cache-analise';
+import { expirarTodasDefinicoes } from '../fontes/analise-codigo/cache-definicoes';
+import { GerenciadorVisoesFluxograma } from '../fontes/visoes/fluxogramas/gerenciador-visoes-fluxograma';
+import { activate, deactivate } from '../fontes/extensao-web';
+
+function obterComando(nomeComando: string): (...argumentos: any[]) => Promise<void> | void {
+    const chamada = (vscode.commands.registerCommand as jest.Mock).mock.calls.find(
+        ([nome]) => nome === nomeComando
+    );
+    return chamada?.[1];
+}
 
 describe('Extensão Web', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+
+        const criarDisposable = () => ({ dispose: jest.fn() });
+        (vscode.workspace.onDidOpenTextDocument as jest.Mock).mockImplementation(() => criarDisposable());
+        (vscode.workspace.onDidSaveTextDocument as jest.Mock).mockImplementation(() => criarDisposable());
+        (vscode.workspace.onDidCloseTextDocument as jest.Mock).mockImplementation(() => criarDisposable());
+        (vscode.workspace.onDidCreateFiles as jest.Mock).mockImplementation(() => criarDisposable());
+        (vscode.workspace.onDidDeleteFiles as jest.Mock).mockImplementation(() => criarDisposable());
+        (vscode.workspace.onDidRenameFiles as jest.Mock).mockImplementation(() => criarDisposable());
+        (vscode.workspace.onDidChangeTextDocument as jest.Mock).mockImplementation(() => criarDisposable());
+        (vscode.window.onDidChangeActiveTextEditor as jest.Mock).mockImplementation(() => criarDisposable());
+        (vscode.languages.createDiagnosticCollection as jest.Mock).mockImplementation(() => ({
+            delete: jest.fn(),
+            dispose: jest.fn(),
+        }));
+        (vscode.workspace.findFiles as jest.Mock).mockResolvedValue([]);
     });
 
     it('registra provedor de renomeação de símbolos Delégua', () => {
@@ -132,5 +165,104 @@ describe('Extensão Web', () => {
             { language: 'delegua' },
             expect.anything()
         );
+    });
+
+    it('expira cache ao salvar arquivo de dependência do projeto', () => {
+        const context: any = { subscriptions: [], extensionUri: vscode.Uri.file('/test/path') };
+        activate(context);
+
+        const callback = (vscode.workspace.onDidSaveTextDocument as jest.Mock).mock.calls[0][0];
+        callback({ uri: { path: '/projeto/package.json' } });
+
+        expect(expirarTudo).toHaveBeenCalledWith('dependencias-atualizadas');
+        expect(expirarTodasDefinicoes).toHaveBeenCalledWith('dependencias-atualizadas');
+    });
+
+    it('expira resultados de arquivo e dependências ao criar arquivos', () => {
+        const context: any = { subscriptions: [], extensionUri: vscode.Uri.file('/test/path') };
+        activate(context);
+
+        const callback = (vscode.workspace.onDidCreateFiles as jest.Mock).mock.calls[0][0];
+        callback({
+            files: [
+                { path: '/projeto/novo.delegua', toString: () => 'file:///projeto/novo.delegua' },
+                { path: '/projeto/notas.txt', toString: () => 'file:///projeto/notas.txt' },
+            ],
+        });
+
+        expect(expirarResultados).toHaveBeenCalledWith(
+            ['file:///projeto/novo.delegua', 'file:///projeto/notas.txt'],
+            'arquivo-criado'
+        );
+        expect(expirarResultadosPorDependenciaArquivo).toHaveBeenCalledWith(
+            ['/projeto/novo.delegua'],
+            'arquivo-linguagem-criado'
+        );
+    });
+
+    it('expira resultados de arquivo ao fechar documento', () => {
+        const context: any = { subscriptions: [], extensionUri: vscode.Uri.file('/test/path') };
+        activate(context);
+
+        const callback = (vscode.workspace.onDidCloseTextDocument as jest.Mock).mock.calls[0][0];
+        callback({ uri: { toString: () => 'file:///projeto/arquivo.delegua' } });
+
+        expect(expirarResultado).toHaveBeenCalledWith('file:///projeto/arquivo.delegua', 'documento-fechado');
+    });
+
+    it('encaminha fechamento de tags para LMHT', () => {
+        const context: any = { subscriptions: [], extensionUri: vscode.Uri.file('/test/path') };
+        activate(context);
+
+        const callback = (vscode.workspace.onDidChangeTextDocument as jest.Mock).mock.calls[0][0];
+        const evento = { document: { languageId: 'lmht' } } as any;
+
+        callback(evento);
+
+        expect(tentarFecharTagLmht).toHaveBeenCalledWith(evento);
+    });
+
+    it('executa tradução web e mostra erro quando tradutor falha', async () => {
+        const context: any = { subscriptions: [], extensionUri: vscode.Uri.file('/test/path') };
+        (tradutorWeb.traduzir as jest.Mock).mockRejectedValueOnce(new Error('falhou'));
+
+        activate(context);
+        const comando = obterComando('extension.designliquido.traduzir.css.para.foles');
+        await comando();
+
+        expect(tradutorWeb.traduzir).toHaveBeenCalledWith('css', 'foles', '');
+        expect(vscode.window.showErrorMessage).toHaveBeenCalledWith('Erro na tradução web: falhou');
+    });
+
+    it('criar arquivo pituguês mostra erro sem pasta aberta', async () => {
+        const context: any = { subscriptions: [], extensionUri: vscode.Uri.file('/test/path') };
+        (vscode.workspace as any).workspaceFolders = undefined;
+
+        activate(context);
+        const comando = obterComando('extension.designliquido.criarArquivoPitugues');
+        await comando();
+
+        expect(vscode.window.showErrorMessage).toHaveBeenCalledWith('Nenhuma pasta aberta no VS Code.');
+        expect(vscode.workspace.fs.writeFile).not.toHaveBeenCalled();
+    });
+
+    it('criar arquivo pituguês grava arquivo e abre no editor', async () => {
+        const context: any = { subscriptions: [], extensionUri: vscode.Uri.file('/test/path') };
+        (vscode.workspace as any).workspaceFolders = [{ uri: { fsPath: '/workspace', path: '/workspace' } }];
+        (vscode.window.showInputBox as jest.Mock).mockResolvedValueOnce('novo-arquivo');
+        (vscode.workspace.openTextDocument as jest.Mock).mockResolvedValueOnce({ uri: { path: '/workspace/novo-arquivo.pitugues' } });
+
+        activate(context);
+        const comando = obterComando('extension.designliquido.criarArquivoPitugues');
+        await comando();
+
+        expect(vscode.workspace.fs.writeFile).toHaveBeenCalled();
+        expect(vscode.window.showInformationMessage).toHaveBeenCalledWith('Arquivo criado: novo-arquivo.pitugues');
+        expect(vscode.window.showTextDocument).toHaveBeenCalled();
+    });
+
+    it('deactivate descarta gerenciador de fluxogramas', () => {
+        deactivate();
+        expect(GerenciadorVisoesFluxograma.descartar).toHaveBeenCalled();
     });
 });
