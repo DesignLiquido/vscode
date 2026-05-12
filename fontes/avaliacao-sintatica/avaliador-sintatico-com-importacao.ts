@@ -6,12 +6,12 @@ import {
     Classe,
     Comentario,
     Const,
-    Construto,
+    ConstrutoInterface,
     Declaracao,
     FuncaoDeclaracao,
     Literal,
-    RetornoAvaliadorSintatico,
-    RetornoLexador,
+    RetornoAvaliadorSintaticoInterface,
+    RetornoLexadorInterface,
     SimboloInterface,
     Var,
     Variavel
@@ -48,7 +48,7 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
         this.contextoLiquidoHabilitado = habilitado;
     }
 
-    override async finalizarChamada(entidadeChamada: Construto, tipoPrimitiva?: string | undefined): Promise<Chamada> {
+    override async finalizarChamada(entidadeChamada: ConstrutoInterface, tipoPrimitiva?: string | undefined): Promise<Chamada> {
         const chamadaResolvida = await super.finalizarChamada(entidadeChamada, tipoPrimitiva);
         if (chamadaResolvida.entidadeChamada instanceof AcessoMetodo && chamadaResolvida.entidadeChamada.objeto.tipo === 'módulo') {
             // Espera-se que o módulo esteja devidamente registrado.
@@ -468,6 +468,7 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
             this.pilhaEscopos.definirInformacoesVariavel('liquido', new InformacaoElementoSintatico('liquido', 'módulo'));
             this.pilhaEscopos.definirInformacoesVariavel('requisicao', new InformacaoElementoSintatico('requisicao', 'módulo'));
             this.pilhaEscopos.definirInformacoesVariavel('resposta', new InformacaoElementoSintatico('resposta', 'módulo'));
+            this.pilhaEscopos.definirInformacoesVariavel('lincones', new InformacaoElementoSintatico('lincones', 'módulo'));
         }
     }
 
@@ -519,10 +520,10 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
     }
 
     override async analisar(
-        retornoLexador: RetornoLexador<SimboloInterface>,
+        retornoLexador: RetornoLexadorInterface<SimboloInterface>,
         hashArquivo: number,
         arquivosImportados?: string[]
-    ): Promise<RetornoAvaliadorSintatico<Declaracao>> {
+    ): Promise<RetornoAvaliadorSintaticoInterface<Declaracao>> {
         this.arquivosImportados = arquivosImportados || [];
         const definicoesPreCarregadas = { ...this.tiposDefinidosEmCodigo };
         const resultado = await super.analisar(retornoLexador, hashArquivo);

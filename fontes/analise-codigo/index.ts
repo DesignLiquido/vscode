@@ -35,7 +35,7 @@ import { definirResultado, obterDiagnosticos, obterResultadoValido } from './cac
 import { definirDefinicoes } from './cache-definicoes';
 import { ImportadorExtensao } from '../importador';
 import { AvaliadorSintaticoComImportacao } from '../avaliacao-sintatica/avaliador-sintatico-com-importacao';
-import { AnalisadorSemanticoPituguesLiquido } from '../avaliacao-sintatica/analisador-semantico-pitugues-liquido';
+import { AnalisadorSemanticoPituguesLiquido } from '../analise-semantica/analisador-semantico-pitugues-liquido';
 import { AvaliadorSintaticoPituguesLiquido } from '../avaliacao-sintatica/avaliador-sintatico-pitugues-liquido';
 import { descobrirDefinicoes } from '../descobridor-definicoes';
 import { cyrb53 } from '@designliquido/delegua';
@@ -125,6 +125,7 @@ export async function executarAnalises(
                     Liquido: 'liquido',
                     Requisicao: 'requisicao',
                     Resposta: 'resposta',
+                    Lincones: 'lincones',
                 };
 
                 for (const [nomePascal, nomeVariavel] of Object.entries(aliasesContextoLiquido)) {

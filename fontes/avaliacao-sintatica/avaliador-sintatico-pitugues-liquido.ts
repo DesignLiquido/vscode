@@ -40,7 +40,7 @@ export class AvaliadorSintaticoPituguesLiquido extends AvaliadorSintaticoPitugue
                     let indexArgumento = 0;
 
                     do {
-                        const valorExpressao = await this.expressao();
+                        const valorExpressao = await this.atribuir();
 
                         atributos[indexArgumento] = valorExpressao;
 
