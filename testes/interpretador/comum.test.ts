@@ -18,12 +18,12 @@ class DeleguaModuloMock {
 jest.mock('@designliquido/delegua/interpretador/estruturas', () => ({
     DeleguaFuncao: DeleguaFuncaoMock,
     DeleguaModulo: DeleguaModuloMock,
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/declaracoes', () => ({
     Const: class Const {},
     FuncaoDeclaracao: class FuncaoDeclaracao {},
-}), { virtual: true });
+}));
 
 jest.mock('../../fontes/construtos', () => ({
     ImportarBiblioteca: class ImportarBiblioteca {
@@ -32,13 +32,13 @@ jest.mock('../../fontes/construtos', () => ({
     ModuloDeclaracoes: class ModuloDeclaracoes {
         constructor(public linha: number, public hashArquivo: number, public declaracoes: any[]) {}
     },
-}), { virtual: true });
+}));
 
-jest.mock('../../fontes/interfaces/interpretador-com-importacao-interface', () => ({}), { virtual: true });
+jest.mock('../../fontes/interfaces/interpretador-com-importacao-interface', () => ({}));
 
 jest.mock('../../fontes/mecanismo-importacao-bibliotecas', () => ({
     carregarBibliotecaDelegua: jest.fn(),
-}), { virtual: true });
+}));
 
 import {
     visitarConstrutoImportarBiblioteca,

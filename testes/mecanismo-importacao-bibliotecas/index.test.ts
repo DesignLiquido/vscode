@@ -10,7 +10,7 @@ jest.mock('@designliquido/delegua/interpretador/estruturas', () => ({
     FuncaoPadrao: class FuncaoPadrao {
         constructor(public aridade: number, public fn: Function) {}
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua-interface-grafica', () => ({
     InfraestruturaWebView: class InfraestruturaWebView {
@@ -31,7 +31,7 @@ jest.mock('@designliquido/delegua-interface-grafica', () => ({
         iniciar() {}
         encerrar() {}
     },
-}), { virtual: true });
+}));
 
 import {
     definirFabricaPainelWebView,
