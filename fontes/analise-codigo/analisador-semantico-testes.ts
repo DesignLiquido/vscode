@@ -18,6 +18,10 @@ export class AnalisadorSemanticoTestes extends AnalisadorSemantico {
         this.funcoes['teste'] = simboloConhecido;
         this.funcoes['lancarErro'] = simboloConhecido;
         this.funcoes['afirmar'] = simboloConhecido;
+        this.funcoes['antesDeCada'] = simboloConhecido;
+        this.funcoes['antesDeTodos'] = simboloConhecido;
+        this.funcoes['depoisDeCada'] = simboloConhecido;
+        this.funcoes['depoisDeTodos'] = simboloConhecido;
         return super.analisar(declaracoes);
     }
 }

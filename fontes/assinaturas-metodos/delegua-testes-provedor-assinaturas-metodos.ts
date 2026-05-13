@@ -1,10 +1,12 @@
 import * as vscode from 'vscode';
 
-import { funcoesAfirmar, funcoesModuloTestesDelegua } from '../bibliotecas/funcoes-testes';
+import { funcoesAfirmar, funcoesModuloTestesDelegua, funcoesSubMetodosGrupo, funcoesSubMetodosTeste } from '../bibliotecas/funcoes-testes';
 import { DeleguaProvedorAssinaturaMetodos } from './delegua-provedor-assinaturas-metodos';
 
-const regexAfirmar  = /afirmar\.(\w+)\s*\(/g;
-const regexDireto   = /\b(grupo|teste|lancarErro)\s*\(/g;
+const regexAfirmar       = /afirmar\.(\w+)\s*\(/g;
+const regexDireto        = /\b(grupo|teste|lancarErro|antesDeCada|antesDeTodos|depoisDeCada|depoisDeTodos)\s*\(/g;
+const regexTesteMetodo   = /\bteste\.(pular|apenas)\s*\(/g;
+const regexGrupoMetodo   = /\bgrupo\.(pular|apenas)\s*\(/g;
 
 export class DeleguaTestesProvedorAssinaturaMetodos extends DeleguaProvedorAssinaturaMetodos {
     override provideSignatureHelp(
@@ -26,7 +28,27 @@ export class DeleguaTestesProvedorAssinaturaMetodos extends DeleguaProvedorAssin
             }
         }
 
-        // grupo( / teste( / lancarErro( — última ocorrência (chamada mais interna)
+        // teste.pular( / teste.apenas(
+        const matchesTesteMetodo = [...textoAntesCursor.matchAll(regexTesteMetodo)];
+        const matchTesteMetodo = matchesTesteMetodo.at(-1);
+        if (matchTesteMetodo) {
+            const funcao = funcoesSubMetodosTeste.find(f => f.nome === matchTesteMetodo[1]);
+            if (funcao?.assinaturas?.length) {
+                return this.construirObjetoAssinatura(funcao, parametroAtivo);
+            }
+        }
+
+        // grupo.pular( / grupo.apenas(
+        const matchesGrupoMetodo = [...textoAntesCursor.matchAll(regexGrupoMetodo)];
+        const matchGrupoMetodo = matchesGrupoMetodo.at(-1);
+        if (matchGrupoMetodo) {
+            const funcao = funcoesSubMetodosGrupo.find(f => f.nome === matchGrupoMetodo[1]);
+            if (funcao?.assinaturas?.length) {
+                return this.construirObjetoAssinatura(funcao, parametroAtivo);
+            }
+        }
+
+        // grupo( / teste( / lancarErro( / antesDeCada( / ...
         const matchesDireto = [...textoAntesCursor.matchAll(regexDireto)];
         const matchDireto = matchesDireto.at(-1);
         if (matchDireto) {

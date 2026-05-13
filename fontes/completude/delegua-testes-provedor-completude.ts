@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { funcoesAfirmar, funcoesModuloTestesDelegua } from '../bibliotecas/funcoes-testes';
+import { funcoesAfirmar, funcoesModuloTestesDelegua, funcoesSubMetodosGrupo, funcoesSubMetodosTeste } from '../bibliotecas/funcoes-testes';
 import { FuncaoNativaOuMetodoPrimitiva } from '../bibliotecas/tipos';
 import { ParametroDetectado } from '../interfaces/completude';
 import { DeleguaProvedorCompletude } from './delegua-provedor-completude';
@@ -26,11 +26,16 @@ export class DeleguaTestesProvedorCompletude extends DeleguaProvedorCompletude {
         declaracaoCorrespondente: { nome: string; tipo: string } | undefined
     ): vscode.CompletionItem[] {
         if (textoAntesPosicao.trimEnd().endsWith('.')) {
-            // afirmar. → completude das assertivas
             if (palavraAntesPonto === 'afirmar') {
                 return funcoesAfirmar.map(criarItemCompletude);
             }
-            
+            if (palavraAntesPonto === 'teste') {
+                return funcoesSubMetodosTeste.map(criarItemCompletude);
+            }
+            if (palavraAntesPonto === 'grupo') {
+                return funcoesSubMetodosGrupo.map(criarItemCompletude);
+            }
+
             return super.completudesParaDelegua(
                 textoAntesPosicao,
                 palavraAntesPonto,

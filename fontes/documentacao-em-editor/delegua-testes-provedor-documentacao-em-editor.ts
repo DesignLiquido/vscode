@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { funcoesAfirmar, funcoesModuloTestesDelegua } from '../bibliotecas/funcoes-testes';
+import { funcoesAfirmar, funcoesModuloTestesDelegua, funcoesSubMetodosGrupo, funcoesSubMetodosTeste } from '../bibliotecas/funcoes-testes';
 import { FuncaoNativaOuMetodoPrimitiva } from '../bibliotecas/tipos';
 import { DeleguaProvedorDocumentacaoEmEditor } from './delegua-provedor-documentacao-em-editor';
 
@@ -38,7 +38,23 @@ export class DeleguaTestesProvedorDocumentacaoEmEditor extends DeleguaProvedorDo
             }
         }
 
-        // grupo / teste / lancarErro / afirmar sem ponto anterior → documentação do módulo
+        // teste.pular / teste.apenas → documentação do sub-método
+        if (textoAntesPalavra.endsWith('teste.')) {
+            const funcao = funcoesSubMetodosTeste.find(f => f.nome === palavra);
+            if (funcao) {
+                return criarHover(funcao);
+            }
+        }
+
+        // grupo.pular / grupo.apenas → documentação do sub-método
+        if (textoAntesPalavra.endsWith('grupo.')) {
+            const funcao = funcoesSubMetodosGrupo.find(f => f.nome === palavra);
+            if (funcao) {
+                return criarHover(funcao);
+            }
+        }
+
+        // grupo / teste / lancarErro / afirmar / hooks sem ponto anterior → documentação do módulo
         if (!textoAntesPalavra.endsWith('.') && nomesModuleTestes.has(palavra)) {
             const funcao = funcoesModuloTestesDelegua.find(f => f.nome === palavra);
             if (funcao) {
