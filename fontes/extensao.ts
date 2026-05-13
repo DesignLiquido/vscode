@@ -166,9 +166,22 @@ export function activate(context: vscode.ExtensionContext) {
                     changeTimeout = setTimeout(function () {
                         clearTimeout(changeTimeout);
                         changeTimeout = null;
-                        executarAnalises(evento.document, diagnosticosDelegua).catch(erro => {
-							console.error('Erro ao executar análises:', erro);
-						});
+                        executarAnalises(evento.document, diagnosticosDelegua)
+                            .then(() => {
+                                if (ehArquivoDelegua(evento.document.uri)) {
+                                    expirarResultadosPorDependenciaArquivo([evento.document.uri.fsPath], 'arquivo-delegua-modificado');
+                                    for (const editor of vscode.window.visibleTextEditors) {
+                                        if (editor.document !== evento.document && ehArquivoDelegua(editor.document.uri)) {
+                                            executarAnalises(editor.document, diagnosticosDelegua).catch(erro => {
+                                                console.error('Erro ao executar análises de dependentes:', erro);
+                                            });
+                                        }
+                                    }
+                                }
+                            })
+                            .catch(erro => {
+                                console.error('Erro ao executar análises:', erro);
+                            });
                     }, 500);
                     break;
                 case 'delprops':

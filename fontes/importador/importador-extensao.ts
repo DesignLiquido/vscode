@@ -60,8 +60,12 @@ export class ImportadorExtensao implements ImportadorInterface<SimboloInterface>
                 }
             }
 
-            const bufferArquivo = await vscode.workspace.fs.readFile(fileUri);
-            const conteudoArquivo = Buffer.from(bufferArquivo).toString('utf8').split('\n').map(linha => linha + '\0');
+            const documentoAberto = vscode.workspace.textDocuments.find(
+                d => d.uri.fsPath.toLowerCase() === fileUri.fsPath.toLowerCase()
+            );
+            const conteudoArquivo = documentoAberto
+                ? documentoAberto.getText().split('\n').map(linha => linha + '\0')
+                : Buffer.from(await vscode.workspace.fs.readFile(fileUri)).toString('utf8').split('\n').map(linha => linha + '\0');
 
             const caminhoResolvido = fileUri.fsPath;
             const separador = caminhoResolvido.lastIndexOf('/') !== -1 ? '/' : '\\';

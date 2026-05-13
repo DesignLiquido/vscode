@@ -144,7 +144,9 @@ export class DeleguaProvedorAcoesCodigo implements vscode.CodeActionProvider {
                 continue;
             }
 
-            const esbocoMetodo = this.gerarEsbocoMembro({ tipo: 'metodo', nome: correcaoMetodo.nomeMetodo });
+            const argsTexto = this.extrairArgumentosChamada(documento, diagnosticoVscode, correcaoMetodo.nomeMetodo);
+            const parametros = this.inferirParametrosDeArgumentos(argsTexto, documento, resultado);
+            const esbocoMetodo = this.gerarEsbocoMembro({ tipo: 'metodo', nome: correcaoMetodo.nomeMetodo, parametros });
             const acao = new vscode.CodeAction(
                 `Implementar método '${correcaoMetodo.nomeMetodo}' na classe '${correcaoMetodo.nomeClasse}'`,
                 vscode.CodeActionKind.QuickFix
@@ -495,21 +497,129 @@ export class DeleguaProvedorAcoesCodigo implements vscode.CodeActionProvider {
     private encontrarLinhaFechamentoClasse(documento: vscode.TextDocument, linhaDeclaracao: number): number {
         const linhaInicio = Math.max(0, linhaDeclaracao - 1);
         let profundidade = 0;
+        let dentroDeString = false;
+        let charString = '';
 
         for (let i = linhaInicio; i < documento.lineCount; i++) {
-            for (const char of documento.lineAt(i).text) {
-                if (char === '{') {
-                    profundidade++;
-                } else if (char === '}') {
-                    profundidade--;
-                    if (profundidade === 0) {
-                        return i;
+            const texto = documento.lineAt(i).text;
+            let j = 0;
+            while (j < texto.length) {
+                const c = texto[j];
+                if (dentroDeString) {
+                    if (c === '\\') { j += 2; continue; }
+                    if (c === charString) dentroDeString = false;
+                } else {
+                    if (c === '"' || c === "'") {
+                        dentroDeString = true;
+                        charString = c;
+                    } else if (c === '{') {
+                        profundidade++;
+                    } else if (c === '}') {
+                        profundidade--;
+                        if (profundidade === 0) return i;
                     }
                 }
+                j++;
             }
+            dentroDeString = false;
         }
 
         return -1;
+    }
+
+    private extrairArgumentosChamada(
+        documento: vscode.TextDocument,
+        diagnosticoVscode: vscode.Diagnostic,
+        nomeMetodo: string
+    ): string[] {
+        const linhaIdx = diagnosticoVscode.range.start.line;
+        if (linhaIdx < 0 || linhaIdx >= documento.lineCount) return [];
+        const texto = documento.lineAt(linhaIdx).text;
+
+        const padrao = new RegExp(`\\.${nomeMetodo}\\s*\\(`, 'g');
+        let match: RegExpExecArray | null;
+        let posicaoAbrir = -1;
+        while ((match = padrao.exec(texto)) !== null) {
+            posicaoAbrir = match.index + match[0].length;
+        }
+        if (posicaoAbrir < 0) return [];
+
+        let profundidade = 1;
+        let j = posicaoAbrir;
+        while (j < texto.length && profundidade > 0) {
+            const c = texto[j];
+            if (c === '(') profundidade++;
+            else if (c === ')') profundidade--;
+            j++;
+        }
+        const conteudo = texto.slice(posicaoAbrir, j - 1).trim();
+        if (!conteudo) return [];
+
+        const args: string[] = [];
+        let atual = '';
+        let prof = 0;
+        for (const c of conteudo) {
+            if (c === '(' || c === '[') prof++;
+            else if (c === ')' || c === ']') prof--;
+            else if (c === ',' && prof === 0) {
+                args.push(atual.trim());
+                atual = '';
+                continue;
+            }
+            atual += c;
+        }
+        if (atual.trim()) args.push(atual.trim());
+        return args;
+    }
+
+    private inferirParametrosDeArgumentos(
+        args: string[],
+        documento: vscode.TextDocument,
+        resultado: any
+    ): Array<{ nome: string; tipoDado?: string }> {
+        const textoDocumento = documento.getText();
+        const todasDeclaracoes: any[] = [
+            ...(resultado?.declaracoesPreCarregadas || []),
+            ...(resultado?.avaliadorSintatico?.declaracoes || []),
+        ];
+
+        return args.map((arg, idx) => {
+            const identificadores = arg.match(/\b[a-zA-ZÀ-ÿ_][a-zA-ZÀ-ÿ0-9_]*\b/g);
+            const nome = identificadores?.at(-1) ?? `argumento${idx + 1}`;
+
+            const partes = arg.trim().split('.');
+            let tipoDado: string | undefined;
+
+            if (partes.length === 1) {
+                const varNome = partes[0];
+                const match = textoDocumento.match(
+                    new RegExp(`\\b${varNome}\\s*:\\s*([A-Za-zÀ-ÿ_][A-Za-zÀ-ÿ0-9_\\[\\]]*)`)
+                );
+                tipoDado = match?.[1];
+            } else {
+                const nomeObjeto = partes[0];
+                const nomePropriedade = partes[partes.length - 1];
+
+                const matchObjeto = textoDocumento.match(
+                    new RegExp(`\\b${nomeObjeto}\\s*:\\s*([A-Za-zÀ-ÿ_][A-Za-zÀ-ÿ0-9_]*)`)
+                );
+                const tipoObjeto = matchObjeto?.[1];
+
+                if (tipoObjeto) {
+                    const declaracaoClasse = todasDeclaracoes.find(
+                        (d: any) => d?.simbolo?.lexema === tipoObjeto
+                    );
+                    if (declaracaoClasse?.propriedades) {
+                        const prop = declaracaoClasse.propriedades.find(
+                            (p: any) => p?.nome?.lexema === nomePropriedade
+                        );
+                        tipoDado = prop?.tipo;
+                    }
+                }
+            }
+
+            return { nome, tipoDado };
+        });
     }
 
     private gerarEsbocoMembro(membro: MembroInterfaceFaltandoInterface): string {
@@ -518,7 +628,7 @@ export class DeleguaProvedorAcoesCodigo implements vscode.CodeActionProvider {
                 .map(p => p.tipoDado ? `${p.nome}: ${p.tipoDado}` : p.nome)
                 .join(', ');
             const tipoRetorno = membro.tipoRetorno ? `: ${membro.tipoRetorno}` : '';
-            return `\t${membro.nome}(${parametros})${tipoRetorno} {\n\t\t// AFAZER\n\t}`;
+            return `\t${membro.nome}(${parametros})${tipoRetorno} {\n\t\t// AFAZER: Implementar corpo de \`${membro.nome}\`.\n\t}`;
         }
 
         const tipo = membro.tipoPropriedade ? `: ${membro.tipoPropriedade}` : '';
