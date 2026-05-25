@@ -35,7 +35,7 @@ import { InterpretadorPortugolStudioComDepuracao } from '@designliquido/portugol
 
 import { LexadorPotigol } from '@designliquido/potigol/lexador';
 import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sintatico';
-import { InterpretadorPotigolComDepuracao } from '@designliquido/potigol/interpretador';
+import { InterpretadorPotigolComDepuracaoImportacao } from '../../interpretador/dialetos/interpretador-potigol-com-depuracao-importacao';
 
 import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg } from '@designliquido/visualg';
 import { InterpretadorVisuAlgComDepuracao } from '@designliquido/visualg/interpretador';
@@ -165,9 +165,9 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
                 this.avaliadorSintatico = new AvaliadorSintaticoPotigol();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
                 
-                this.interpretador = new InterpretadorPotigolComDepuracao(
-                    process.cwd(), 
-                    this.escreverEmSaida.bind(this), 
+                this.interpretador = new InterpretadorPotigolComDepuracaoImportacao(
+                    process.cwd(),
+                    this.escreverEmSaida.bind(this),
                     this.escreverEmSaidaMesmaLinha.bind(this)
                 );
                 break;

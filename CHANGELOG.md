@@ -1,5 +1,30 @@
 # Histórico de Modificações
 
+## 0.26.1
+
+- Núcleo de Delégua atualizado para a versão 1.23.3:
+  - Correção de acesso de propriedade em valor nulo;
+  - Analisador Semântico verifica a entidade ao acessar método ou propriedade;
+  - Preservação de tipos primitivos em vetores e compreensão de listas;
+  - Exigência de identificador válido após operador de ponto;
+  - Chamada a `cederControle` nos laços de repetição para evitar travamento do navegador;
+  - Operador de resto (`%`) funcionando corretamente;
+  - Correção de tipagem incorreta ao receber o retorno de uma função;
+  - `retorna` respeita valores iniciados com operador unário;
+  - Correção de corrupção na inferência de tipos em declarações múltiplas de variáveis.
+- Potigol atualizado para a versão 0.11.6:
+  - Implementação de `se` em linha (resolve https://github.com/DesignLiquido/potigol/issues/191);
+  - Nova declaração: atribuição paralela (resolve https://github.com/DesignLiquido/potigol/issues/190);
+  - Correções de inferência de tipos em comandos `leia_` (resolve https://github.com/DesignLiquido/potigol/issues/189);
+  - Correção de `senão se` ou `senãose` aninhado (resolve https://github.com/DesignLiquido/potigol/issues/188);
+  - Correção de variáveis de controle dentro de `para` (resolve https://github.com/DesignLiquido/potigol/issues/187);
+  - Correção de reatribuição de variável dentro de `enquanto` (resolve https://github.com/DesignLiquido/potigol/issues/186);
+  - Vetores em Potigol começam com índice 1 (resolve https://github.com/DesignLiquido/potigol/issues/185);
+  - Correção de falso positivo emitido pelo Analisador Semântico para exercícios do Beecrowd (resolve https://github.com/DesignLiquido/potigol/issues/184);
+  - Correção do operador `formato` (resolve https://github.com/DesignLiquido/potigol/issues/183);
+  - Melhoria na leitura da entrada padrão, possibilitando o uso de arquivos para automatização de testes do Beecrowd;
+  - Implementação das bibliotecas `Arquivo` (leitura e escrita de arquivos) e `URL` (acesso à web) com dependência no sistema de arquivos e periféricos do Node.js.
+
 ## 0.26.0
 
 - Núcleo de Delégua atualizado para a versão 1.23.0:

@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/DesignLiquido/vscode"
     },
-    "version": "0.26.0",
+    "version": "0.26.1",
     "engines": {
         "vscode": "^1.80.0"
     },
@@ -778,8 +778,8 @@
         "webpack-cli": "^6.0.1"
     },
     "dependencies": {
-        "@designliquido/birl": "^0.6.4",
-        "@designliquido/delegua": "^1.23.1",
+        "@designliquido/birl": "^0.6.6",
+        "@designliquido/delegua": "^1.23.3",
         "@designliquido/delegua-arquivos": "^0.0.3",
         "@designliquido/delegua-criptografia": "^0.3.3",
         "@designliquido/delegua-csv": "^0.0.2",
@@ -798,17 +798,17 @@
         "@designliquido/foles": "^0.15.1",
         "@designliquido/lincones-js": "^0.2.1",
         "@designliquido/lmht-js": "^0.6.2",
-        "@designliquido/mapler": "^0.7.4",
-        "@designliquido/portugol-studio": "^0.11.4",
-        "@designliquido/potigol": "^0.11.4",
-        "@designliquido/visualg": "^0.9.4",
+        "@designliquido/mapler": "^0.7.6",
+        "@designliquido/portugol-studio": "^0.11.6",
+        "@designliquido/potigol": "^0.11.6",
+        "@designliquido/visualg": "^0.9.6",
         "@xterm/addon-fit": "^0.10.0",
         "@xterm/xterm": "5.5.0",
         "lodash": "^4.17.21",
         "real-executable-path": "^3.0.0"
     },
     "resolutions": {
-        "@designliquido/delegua": "1.23.0"
+        "@designliquido/delegua": "1.23.3"
     },
     "copyFiles": [
         {

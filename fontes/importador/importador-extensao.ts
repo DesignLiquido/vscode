@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 import { LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
-import { RetornoLexador } from '@designliquido/delegua/interfaces/retornos';
+import { RetornoLexadorInterface } from '@designliquido/delegua/interfaces/retornos';
 import { cyrb53 } from '@designliquido/delegua/geracao-identificadores';
 import { ImportadorInterface } from '../interfaces';
 
@@ -10,7 +10,7 @@ export interface RetornoImportador<S extends SimboloInterface> {
     nomeArquivo: string;
     caminhoAbsoluto: string;
     hashArquivo: number;
-    retornoLexador: RetornoLexador<S>;
+    retornoLexador: RetornoLexadorInterface<S>;
 }
 
 /**
