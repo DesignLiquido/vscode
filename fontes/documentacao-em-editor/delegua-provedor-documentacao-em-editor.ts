@@ -10,6 +10,7 @@ import primitivasVetor from '@designliquido/delegua/bibliotecas/primitivas-vetor
 import { obterResultado } from '../analise-codigo/cache-analise';
 import { obterDefinicoesPorContexto } from '../analise-codigo/cache-definicoes';
 import { formatarPrimitivas, funcoesNativasDelegua } from '../bibliotecas';
+import { primitivasMetodosLiquido, objetosEmRotaLiquido, metodosRespostaLiquido } from '../bibliotecas/primitivas-liquido';
 import { extrairTextoDocumentacao, formatarDocumentacaoDocumentario } from './formatador-documentacao';
 
 const primitivasDicionarioFormatadas = formatarPrimitivas(primitivasDicionario);
@@ -39,6 +40,7 @@ export class DeleguaProvedorDocumentacaoEmEditor
             return undefined;
         }
 
+        const eContextoLiquido = /[\\\/]rotas[\\\/]/i.test(documento.uri.fsPath);
         const palavra = documento.getText(intervalo);
         const linhaTexto = documento.lineAt(posicao).text;
         const textoAntesPosicao = linhaTexto.substring(0, posicao.character);
@@ -70,10 +72,12 @@ export class DeleguaProvedorDocumentacaoEmEditor
         if (textoAntesPalavra.trimEnd().endsWith('.')) {
             return this.hoverPropriedadeClasse(palavra, textoAntesPalavra, posicao.line + 1, todasDeclaracoes)
                 ?? this.hoverMetodoDePrimitiva(textoAntesPosicao, palavra, declaracoesPertinentes)
+                ?? this.hoverMetodoDeObjetoLiquido(textoAntesPalavra, palavra, eContextoLiquido)
                 ?? this.hoverFuncaoOuMetodoDocumentado(palavra, textoAntesPalavra, todasDeclaracoes);
         }
 
         return this.hoverVariavelParaCada(palavra, posicao.line + 1, todasDeclaracoes)
+            ?? this.hoverObjetoEmRotaLiquido(palavra, eContextoLiquido)
             ?? this.hoverParametroFuncao(palavra, posicao.line + 1, todasDeclaracoes)
             ?? this.hoverFuncaoNativa(palavra)
             ?? this.hoverFuncaoOuMetodoDocumentado(palavra, textoAntesPalavra, todasDeclaracoes)
@@ -436,6 +440,68 @@ export class DeleguaProvedorDocumentacaoEmEditor
         } catch {
             return '';
         }
+    }
+
+    private hoverMetodoDeObjetoLiquido(
+        textoAntesPalavra: string,
+        palavra: string,
+        eContextoLiquido: boolean
+    ): vscode.Hover | undefined {
+        if (!eContextoLiquido) {
+            return undefined;
+        }
+        // Strip argument lists so chains like `resposta.enviar("...").` become `resposta.enviar().`
+        const textoSemArgs = textoAntesPalavra.replace(/\(.*?\)/g, '()');
+        const correspondencia = textoSemArgs.trimEnd().match(/\b(\w+)(?:\.\w+\(\))*\.$/);
+        if (!correspondencia) {
+            return undefined;
+        }
+        const objeto = correspondencia[1];
+        const mapaMetodosObjetos: Record<string, typeof primitivasMetodosLiquido> = {
+            liquido: primitivasMetodosLiquido,
+            resposta: metodosRespostaLiquido,
+        };
+        const listaMetodos = mapaMetodosObjetos[objeto];
+        if (!listaMetodos) {
+            return undefined;
+        }
+        const metodo = listaMetodos.find(m => m.nome === palavra);
+        if (!metodo) {
+            return undefined;
+        }
+        const doc = new vscode.MarkdownString(metodo.documentacao);
+        if (metodo.exemploCodigo) {
+            doc.appendCodeblock(metodo.exemploCodigo, 'delegua');
+        }
+        return new vscode.Hover(doc);
+    }
+
+    private hoverObjetoEmRotaLiquido(
+        palavra: string,
+        eContextoLiquido: boolean
+    ): vscode.Hover | undefined {
+        if (!eContextoLiquido) {
+            return undefined;
+        }
+        if (palavra === 'liquido') {
+            const doc = new vscode.MarkdownString(
+                '# Objeto `liquido`\n\nFramework para criação de APIs REST em Delégua.\n\n'
+            );
+            doc.appendCodeblock(
+                'liquido.rotaGet(requisicao, resposta) { ... }\nliquido.rotaPost(requisicao, resposta) { ... }',
+                'delegua'
+            );
+            return new vscode.Hover(doc);
+        }
+        const objeto = objetosEmRotaLiquido.find(o => o.nome === palavra);
+        if (!objeto) {
+            return undefined;
+        }
+        const doc = new vscode.MarkdownString(objeto.documentacao);
+        if (objeto.exemploCodigo) {
+            doc.appendCodeblock(objeto.exemploCodigo, 'delegua');
+        }
+        return new vscode.Hover(doc);
     }
 
     private hoverInterfaceDocumentada(
