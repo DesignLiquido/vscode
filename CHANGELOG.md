@@ -1,5 +1,25 @@
 # Histórico de Modificações
 
+## 0.26.2
+
+- Núcleo de Delégua atualizado para a versão 1.23.5:
+  - Impressão de emojis sem necessidade de aspas (resolve https://github.com/DesignLiquido/delegua/issues/1319);
+  - Correção de mensagem de erro exibida no terminal após o uso de emojis sem aspas ao redor (resolve https://github.com/DesignLiquido/delegua/issues/1320);
+  - Correção de inconsistência na resposta dos operadores de comparação e falsos positivos em comparações encadeadas (resolve https://github.com/DesignLiquido/delegua/issues/1318);
+  - Correção do bloco `senão` não estar funcionando em `Tente/Pegue` (resolve https://github.com/DesignLiquido/delegua/issues/1313);
+  - Correção de valor padrão de parâmetro de função não estar funcionando (resolve https://github.com/DesignLiquido/delegua/issues/1314);
+  - Correção de vazamento de AST ao tentar usar operador de atribuição em chamada de função (resolve https://github.com/DesignLiquido/delegua/issues/1317);
+  - Correção de `falhar` para funcionar corretamente no Pituguês, aceitando expressões (resolve https://github.com/DesignLiquido/delegua/issues/1307);
+  - Correção de _bug_ relativo ao VisuAlg e resolução de argumentos de vetores;
+  - Atualizações de gramáticas.
+- Potigol atualizado para a versão 0.11.8:
+  - `para` pode estar no lado direito da atribuição (resolve https://github.com/DesignLiquido/potigol/issues/201);
+  - Lógica mais elaborada de interpolação de texto com objetos (resolve https://github.com/DesignLiquido/potigol/issues/200);
+  - Correção de inferência de variáveis por `leia_inteiro` e `leia_real` (resolve https://github.com/DesignLiquido/potigol/issues/199);
+  - Correção de `[object Object]` na saída de interpolações de texto (resolve https://github.com/DesignLiquido/potigol/issues/198);
+  - Melhoria na inferência de tipos para chamadas aninhadas (resolve https://github.com/DesignLiquido/potigol/issues/195);
+  - Correção da função `raiz` (resolve https://github.com/DesignLiquido/potigol/issues/196).
+
 ## 0.26.1
 
 - Núcleo de Delégua atualizado para a versão 1.23.3:
