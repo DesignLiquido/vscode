@@ -1,10 +1,16 @@
-import * as path from 'path';
 import * as vscode from 'vscode';
+
+function obterExtensao(caminho: string): string {
+    const ultimaBarraBarra = Math.max(caminho.lastIndexOf('/'), caminho.lastIndexOf('\\'));
+    const parte = caminho.slice(ultimaBarraBarra + 1);
+    const indicePonto = parte.lastIndexOf('.');
+    return indicePonto > 0 ? parte.slice(indicePonto) : '';
+}
 
 const EXTENSOES_DELEGUA = ['.delegua', '.egua'];
 
 export function ehArquivoDelegua(uri: vscode.Uri): boolean {
-    const extensao = path.extname(uri.fsPath).toLowerCase();
+    const extensao = obterExtensao(uri.path).toLowerCase();
     return EXTENSOES_DELEGUA.includes(extensao);
 }
 
@@ -158,7 +164,7 @@ export async function resolverDestinoImportacao(
             return destinoRelativo;
         }
 
-        if (!path.extname(caminho)) {
+        if (!obterExtensao(caminho)) {
             for (const extensao of EXTENSOES_DELEGUA) {
                 const comExtensao = destinoRelativo.with({ path: `${destinoRelativo.path}${extensao}` });
                 if (await uriExiste(comExtensao)) {
@@ -196,7 +202,7 @@ export async function resolverDestinoImportacao(
             return uriDireta;
         }
 
-        if (!path.extname(caminho)) {
+        if (!obterExtensao(caminho)) {
             for (const extensao of EXTENSOES_DELEGUA) {
                 const uriComExtensao = vscode.Uri.joinPath(pasta.uri, ...partes.slice(0, -1), `${partes[partes.length - 1]}${extensao}`);
                 if (await uriExiste(uriComExtensao)) {
@@ -214,11 +220,21 @@ export function calcularNovoCaminhoImportacao(
     novoDestino: vscode.Uri,
     preservarExtensaoOriginal: boolean
 ): string {
-    const pastaImportador = path.dirname(importador.fsPath);
-    let relativo = path.relative(pastaImportador, novoDestino.fsPath).replace(/\\/g, '/');
+    const partesDe = importador.path.split('/');
+    partesDe.pop();
+    const partesPara = novoDestino.path.split('/');
+
+    let comum = 0;
+    while (comum < partesDe.length && comum < partesPara.length && partesDe[comum] === partesPara[comum]) {
+        comum++;
+    }
+
+    const subir = partesDe.length - comum;
+    const descer = partesPara.slice(comum);
+    let relativo = [...Array(subir).fill('..'), ...descer].join('/') || '.';
 
     if (!preservarExtensaoOriginal) {
-        const extensao = path.extname(relativo);
+        const extensao = obterExtensao(relativo);
         if (extensao) {
             relativo = relativo.slice(0, -extensao.length);
         }

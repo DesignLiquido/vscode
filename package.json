@@ -758,7 +758,7 @@
         "@vscode/debugadapter": "^1.68.0",
         "@vscode/debugadapter-testsupport": "^1.68.0",
         "@vscode/debugprotocol": "^1.68.0",
-        "@vscode/test-web": "^0.0.76",
+        "@vscode/test-web": "^0.0.80",
         "@vscode/vsce": "^3.7.1",
         "assert": "^2.1.0",
         "await-notify": "^1.0.1",

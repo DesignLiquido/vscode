@@ -1,4 +1,3 @@
-import * as path from 'path';
 import * as vscode from 'vscode';
 
 import {
@@ -9,7 +8,7 @@ import {
 } from '../importacao/utilitarios-caminho-importacao-delegua';
 
 function normalizarFsPath(caminho: string): string {
-    return path.resolve(caminho).replace(/\\/g, '/').toLowerCase();
+    return caminho.replace(/\\/g, '/').toLowerCase();
 }
 
 async function construirEdicoesRenomeacao(
@@ -39,7 +38,7 @@ async function construirEdicoesRenomeacao(
                 continue;
             }
 
-            const preservarExtensaoOriginal = Boolean(path.extname(importacao.caminho));
+            const preservarExtensaoOriginal = /\.[^/\\]+$/.test(importacao.caminho);
             const novoCaminho = calcularNovoCaminhoImportacao(
                 documento.uri,
                 novo,

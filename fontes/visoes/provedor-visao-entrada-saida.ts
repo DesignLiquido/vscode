@@ -22,11 +22,11 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 
     private _view?: vscode.WebviewView;
 
-    // NOVO: Manipulador de entrada baseado em Promise para ambiente web
+    // Manipulador de entrada baseado em Promise para ambiente web
     private resolverLeitura: ((value: string) => void) | null = null;
 
     constructor(
-		private readonly _extensionUri: vscode.Uri,
+		protected readonly _extensionUri: vscode.Uri,
 	) { 
         this.promessaLeitura = new Subject();
         this.entrada = "";
@@ -59,7 +59,7 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
                         // Notifica Subject legado (manter para retrocompatibilidade)
                         this.promessaLeitura.notify();
 
-                        // NOVO: Resolve manipulador de entrada baseado em Promise
+                        // Resolve manipulador de entrada baseado em Promise
                         if (this.resolverLeitura) {
                             const resolver = this.resolverLeitura;
                             const valor = this.copiaEntrada;
@@ -89,7 +89,7 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
     }
 
     /**
-     * NOVO: Aguarda entrada do usuário de forma não-bloqueante.
+     * Aguarda entrada do usuário de forma não-bloqueante.
      * Retorna uma Promise que resolve quando o usuário pressiona Enter.
      * Esta implementação é otimizada para o ambiente web e não bloqueia o event loop.
      */
@@ -128,13 +128,19 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
 		}
 	}
 
-    private _getHtmlForWebview(webview: vscode.Webview) {
-		// Obtém o caminho local para o script principal executado na webview, depois converte para um URI que podemos usar na webview.
-		const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@xterm', 'xterm', 'lib', 'xterm.js'));
-		const addonFitUrl = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@xterm', 'addon-fit', 'lib', 'addon-fit.js'));
+    protected _obterUrlsXterm(webview: vscode.Webview) {
+        return {
+            scriptUri: webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@xterm', 'xterm', 'lib', 'xterm.js')).toString(),
+            addonFitUrl: webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@xterm', 'addon-fit', 'lib', 'addon-fit.js')).toString(),
+            estilosTerminal: webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@xterm', 'xterm', 'css', 'xterm.css')).toString(),
+            cspScriptSrc: webview.cspSource,
+            cspStyleSrc: `${webview.cspSource} 'unsafe-inline'`,
+            cspFontSrc: webview.cspSource,
+        };
+    }
 
-		// Faz o mesmo para a folha de estilos.
-		const estilosTerminal = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@xterm', 'xterm', 'css', 'xterm.css'));
+    private _getHtmlForWebview(webview: vscode.Webview) {
+        const { scriptUri, addonFitUrl, estilosTerminal, cspScriptSrc, cspStyleSrc, cspFontSrc } = this._obterUrlsXterm(webview);
 
         // Gera um nonce para scripts inline
         const nonce = this.obterNonce();
@@ -143,7 +149,7 @@ export class ProvedorVisaoEntradaSaida implements vscode.WebviewViewProvider {
         <html lang="en">
             <head>
                 <meta charset="UTF-8">
-                <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https:; script-src ${webview.cspSource} 'nonce-${nonce}'; style-src ${webview.cspSource} 'unsafe-inline'; font-src ${webview.cspSource};">
+                <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https:; script-src ${cspScriptSrc} 'nonce-${nonce}'; style-src ${cspStyleSrc}; font-src ${cspFontSrc};">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <script src="${scriptUri}"></script>
                 <script src="${addonFitUrl}"></script>

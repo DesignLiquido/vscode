@@ -1,4 +1,3 @@
-import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { Classe, Const, Declaracao, Var } from '@designliquido/delegua/declaracoes';
@@ -12,7 +11,16 @@ import { obterDefinicoesPorContexto } from '../analise-codigo/cache-definicoes';
  */
 export class DeleguaProvedorDefinicao implements vscode.DefinitionProvider {
     private normalizarCaminho(caminho: string): string {
-        return path.normalize(caminho).replace(/\\/g, '/').toLowerCase();
+        return caminho.replace(/\\/g, '/').toLowerCase();
+    }
+
+    private resolverCaminho(base: string, relativo: string): string {
+        const partes = base.slice(0, base.lastIndexOf('/')).replace(/\\/g, '/').split('/');
+        for (const parte of relativo.replace(/\\/g, '/').split('/')) {
+            if (parte === '..') { partes.pop(); }
+            else if (parte && parte !== '.') { partes.push(parte); }
+        }
+        return partes.join('/');
     }
 
     private obterDefinicoesEmCache(): string[] {
@@ -86,21 +94,14 @@ export class DeleguaProvedorDefinicao implements vscode.DefinitionProvider {
         // Resolve o caminho importado para um caminho absoluto
         let caminhoAbsoluto: string;
         
-        if (caminhoRelativo.startsWith('./') || caminhoRelativo.startsWith('../')) {
-            // Caminho relativo
-            caminhoAbsoluto = path.resolve(path.dirname(uriDocumento.fsPath), caminhoRelativo);
-        } else if (caminhoRelativo.includes('/')) {
-            // Caminho com barras - pode ser scoped ou relativo
-            caminhoAbsoluto = path.resolve(path.dirname(uriDocumento.fsPath), caminhoRelativo);
+        if (caminhoRelativo.startsWith('./') || caminhoRelativo.startsWith('../') || caminhoRelativo.includes('/')) {
+            caminhoAbsoluto = this.resolverCaminho(uriDocumento.path, caminhoRelativo);
         } else {
             // Módulo npm bare (ex: 'liquido')
-            const workspaceFolder = path.dirname(uriDocumento.fsPath);
-            let tentativa = path.join(workspaceFolder, 'node_modules', caminhoRelativo);
-            
-            // Tenta primeiro com a estrutura direta
+            const pastaDoc = uriDocumento.path.slice(0, uriDocumento.path.lastIndexOf('/'));
+            let tentativa = `${pastaDoc}/node_modules/${caminhoRelativo}`;
             if (!this.caminhoExiste(tentativa)) {
-                // Tenta como arquivo .delegua
-                tentativa = tentativa + '.delegua';
+                tentativa = `${tentativa}.delegua`;
             }
             caminhoAbsoluto = tentativa;
         }

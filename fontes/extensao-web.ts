@@ -32,7 +32,7 @@ import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio
 import { executarAnalises } from './analise-codigo';
 import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
 import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
-import { ProvedorVisaoEntradaSaida } from './visoes';
+import { ProvedorVisaoEntradaSaida, ProvedorVisaoEntradaSaidaWeb } from './visoes';
 import { FabricaAdaptadorDepuracaoWeb } from './depuracao/fabricas/fabrica-adaptador-depuracao-web';
 import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-formatacao';
 import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-visoes-fluxograma';
@@ -358,10 +358,10 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     // Visão de Entrada e Saída
-    const provedorEntradaSaida = new ProvedorVisaoEntradaSaida(context.extensionUri);
+    const provedorEntradaSaida = new ProvedorVisaoEntradaSaidaWeb(context.extensionUri);
     context.subscriptions.push(
         vscode.window.registerWebviewViewProvider(
-            ProvedorVisaoEntradaSaida.viewType,
+            ProvedorVisaoEntradaSaidaWeb.viewType,
             provedorEntradaSaida,
             {
                 webviewOptions: {
