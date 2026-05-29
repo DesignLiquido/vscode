@@ -19,6 +19,8 @@
   - Correção de `[object Object]` na saída de interpolações de texto (resolve https://github.com/DesignLiquido/potigol/issues/198);
   - Melhoria na inferência de tipos para chamadas aninhadas (resolve https://github.com/DesignLiquido/potigol/issues/195);
   - Correção da função `raiz` (resolve https://github.com/DesignLiquido/potigol/issues/196).
+- VisuAlg atualizado para a versão 0.9.8:
+  - Melhor inferência na inicialização de vetores, evitando problemas com `leia()` ao informar uma referência de vetor com índice.
 
 ## 0.26.1
 
