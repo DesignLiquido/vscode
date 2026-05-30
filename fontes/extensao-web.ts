@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+﻿import * as vscode from 'vscode';
 
 import tradutorWeb from './traducao/index-web';
 
@@ -41,8 +41,8 @@ import { DeleguaProvedorAcoesCodigo } from './acoes-codigo/delegua-provedor-acoe
 import { DeleguaProvedorDefinicao } from './definicao';
 import { DeleguaProvedorReferencias } from './referencias';
 import { DeleguaProvedorRenomeacao } from './renomeacao';
-import { expirarResultado, expirarResultados, expirarResultadosPorDependenciaArquivo, expirarTudo } from './analise-codigo/cache-analise';
-import { expirarTodasDefinicoes } from './analise-codigo/cache-definicoes';
+import { expirarResultado, expirarResultados, expirarResultadosPorDependenciaArquivo, expirarTudo } from '@designliquido/delegua-lsp/analise/cache-analise';
+import { expirarTodasDefinicoes } from '@designliquido/delegua-lsp/analise/cache-definicoes';
 
 let changeTimeout: NodeJS.Timeout | null = null;
 const arquivosDependenciasProjeto = new Set([

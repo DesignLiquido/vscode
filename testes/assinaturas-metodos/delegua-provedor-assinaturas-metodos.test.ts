@@ -1,4 +1,4 @@
-// @ts-nocheck - Ignora erros de tipo nos mocks complexos
+﻿// @ts-nocheck - Ignora erros de tipo nos mocks complexos
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as vscode from 'vscode';
 
@@ -60,7 +60,7 @@ jest.mock('../../fontes/bibliotecas', () => ({
 }), { virtual: true });
 
 // Mock do cache-analise
-jest.mock('../../fontes/analise-codigo/cache-analise', () => ({
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
     obterResultado: jest.fn()
 }), { virtual: true });
 
@@ -402,7 +402,7 @@ describe('DeleguaProvedorAssinaturaMetodos', () => {
             mockContext = {};
 
             // Mock do cache
-            const { obterResultado } = require('../../fontes/analise-codigo/cache-analise');
+            const { obterResultado } = require('@designliquido/delegua-lsp/analise/cache-analise');
             obterResultado.mockReturnValue({
                 avaliadorSintatico: {
                     declaracoes: []
@@ -444,7 +444,7 @@ describe('DeleguaProvedorAssinaturaMetodos', () => {
 
         it('deve fornecer assinatura para função definida no código', () => {
             const { FuncaoDeclaracao } = require('@designliquido/delegua/declaracoes');
-            const { obterResultado } = require('../../fontes/analise-codigo/cache-analise');
+            const { obterResultado } = require('@designliquido/delegua-lsp/analise/cache-analise');
 
             const funcaoDecl = new FuncaoDeclaracao(
                 { lexema: 'minhaFuncao' },
@@ -511,7 +511,7 @@ describe('DeleguaProvedorAssinaturaMetodos', () => {
 
         it('deve lidar com declarações de variáveis', () => {
             const { Var } = require('@designliquido/delegua/declaracoes');
-            const { obterResultado } = require('../../fontes/analise-codigo/cache-analise');
+            const { obterResultado } = require('@designliquido/delegua-lsp/analise/cache-analise');
 
             const varDecl = new Var(
                 { lexema: 'meuTexto' },
@@ -543,7 +543,7 @@ describe('DeleguaProvedorAssinaturaMetodos', () => {
 
         it('deve encaminhar nome do objeto e método para assinatura de chamada de método', () => {
             const { Var } = require('@designliquido/delegua/declaracoes');
-            const { obterResultado } = require('../../fontes/analise-codigo/cache-analise');
+            const { obterResultado } = require('@designliquido/delegua-lsp/analise/cache-analise');
 
             const varDecl = new Var(
                 { lexema: 'meuTexto' },
@@ -584,7 +584,7 @@ describe('DeleguaProvedorAssinaturaMetodos', () => {
 
         it('deve fornecer assinatura para construtor de classe pre-carregada', () => {
             const { Classe } = require('@designliquido/delegua/declaracoes');
-            const { obterResultado } = require('../../fontes/analise-codigo/cache-analise');
+            const { obterResultado } = require('@designliquido/delegua-lsp/analise/cache-analise');
 
             const classePreCarregada = new Classe({ lexema: 'Pessoa' });
             classePreCarregada.metodos = [
@@ -622,7 +622,7 @@ describe('DeleguaProvedorAssinaturaMetodos', () => {
         });
 
         it('deve lidar com cache vazio', () => {
-            const { obterResultado } = require('../../fontes/analise-codigo/cache-analise');
+            const { obterResultado } = require('@designliquido/delegua-lsp/analise/cache-analise');
             obterResultado.mockReturnValue(undefined);
 
             mockDocument.lineAt.mockReturnValue({
@@ -652,7 +652,7 @@ describe('DeleguaProvedorAssinaturaMetodos', () => {
             };
 
             const mockPosition = { line: 0, character: 14 };
-            const { obterResultado } = require('../../fontes/analise-codigo/cache-analise');
+            const { obterResultado } = require('@designliquido/delegua-lsp/analise/cache-analise');
             obterResultado.mockReturnValue({
                 avaliadorSintatico: { declaracoes: [] }
             });

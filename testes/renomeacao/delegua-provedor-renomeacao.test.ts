@@ -1,153 +1,120 @@
-// @ts-nocheck
-import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import * as vscode from 'vscode';
-
-const documentos = new Map<string, any>();
+﻿// @ts-nocheck
+import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 
 jest.mock('vscode', () => ({
-    Position: class Position {
-        constructor(public line: number, public character: number) {}
-    },
     Range: class Range {
-        constructor(public start: any, public end: any) {}
-    },
-    WorkspaceEdit: class WorkspaceEdit {
-        public replaces: any[] = [];
-
-        replace(uri: any, range: any, newText: string) {
-            this.replaces.push({ uri, range, newText });
+        constructor(public startLine, public startChar, public endLine, public endChar) {
+            this.start = { line: startLine, character: startChar };
+            this.end = { line: endLine, character: endChar };
         }
     },
-    workspace: {
-        findFiles: jest.fn(),
-        openTextDocument: jest.fn(),
+    Uri: {
+        parse: (uri) => ({ _uri: uri, toString: () => uri }),
     },
+    WorkspaceEdit: class WorkspaceEdit {
+        _edits = new Map();
+        set(uri, edits) { this._edits.set(uri._uri || uri.toString(), edits); }
+        allEdits() {
+            const result = [];
+            this._edits.forEach((edits) => result.push(...edits));
+            return result;
+        }
+    },
+    TextEdit: class TextEdit {
+        constructor(public range, public newText) {}
+    },
+    workspace: {
+        workspaceFolders: [{ uri: { fsPath: '/workspace' } }],
+    },
+}), { virtual: true });
+
+jest.mock('@designliquido/delegua-lsp', () => ({
+    prepareRename: jest.fn().mockReturnValue(undefined),
+    provideRenameEdits: jest.fn().mockReturnValue(undefined),
+    DocumentoLSP: undefined,
 }), { virtual: true });
 
 import { DeleguaProvedorRenomeacao } from '../../fontes/renomeacao/delegua-provedor-renomeacao';
 
-function criarDocumento(uriPath: string, linhas: string[]): any {
-    const uri = {
-        fsPath: uriPath,
-        toString: () => `file://${uriPath}`,
-    };
-
+function criarDocumento(texto = 'analisarCaractere') {
     return {
-        uri,
-        lineCount: linhas.length,
-        lineAt: (indice: number) => ({ text: linhas[indice] }),
-        getText: jest.fn((range: any) => {
-            if (!range) {
-                return '';
-            }
-
-            const linha = linhas[range.start.line] ?? '';
-            return linha.substring(range.start.character, range.end.character);
-        }),
-        getWordRangeAtPosition: jest.fn((posicao: any) => {
-            const texto = linhas[posicao.line] ?? '';
-            const correspondencia = /[_a-zA-Z][_a-zA-Z0-9]*/g;
-            let item: RegExpExecArray | null;
-
-            while ((item = correspondencia.exec(texto)) !== null) {
-                const inicio = item.index;
-                const fim = inicio + item[0].length;
-                if (posicao.character >= inicio && posicao.character <= fim) {
-                    return {
-                        start: { line: posicao.line, character: inicio },
-                        end: { line: posicao.line, character: fim },
-                    };
-                }
-            }
-
-            return undefined;
-        }),
+        uri: { toString: () => 'file:///test.delegua' },
+        fileName: '/test.delegua',
+        getText: jest.fn((range) => range
+            ? texto.substring(range.start?.character ?? 0, range.end?.character ?? texto.length)
+            : texto),
+        version: 1,
+        languageId: 'delegua',
     };
 }
 
-describe('DeleguaProvedorRenomeacao', () => {
-    let provedor: DeleguaProvedorRenomeacao;
+describe('renomeacao/DeleguaProvedorRenomeacao', () => {
+    let provedor;
+    let lspMock;
 
     beforeEach(() => {
-        documentos.clear();
         jest.clearAllMocks();
-        (vscode.workspace.findFiles as jest.Mock).mockImplementation(async () =>
-            Array.from(documentos.values()).map((d: any) => d.uri)
-        );
-        (vscode.workspace.openTextDocument as jest.Mock).mockImplementation(async (uri: any) =>
-            documentos.get(uri.fsPath || uri.path || uri.toString())
-        );
+        lspMock = jest.requireMock('@designliquido/delegua-lsp');
+        lspMock.prepareRename.mockReturnValue(undefined);
+        lspMock.provideRenameEdits.mockReturnValue(undefined);
         provedor = new DeleguaProvedorRenomeacao();
     });
 
-    it('prepareRename retorna intervalo e placeholder para identificador válido', () => {
-        const documento = criarDocumento('/workspace/a.delegua', ['const simbolo = analisarCaractere(c)']);
+    describe('prepareRename', () => {
+        it('retorna undefined quando LSP retorna undefined', () => {
+            const resultado = provedor.prepareRename(criarDocumento(), { line: 0, character: 5 }, {});
+            expect(resultado).toBeUndefined();
+        });
 
-        const resultado = provedor.prepareRename(
-            documento,
-            { line: 0, character: 16 } as any,
-            {} as any
-        );
-
-        expect(resultado).toBeDefined();
-        expect(resultado.placeholder).toBe('analisarCaractere');
+        it('converte Range do LSP e extrai placeholder', () => {
+            lspMock.prepareRename.mockReturnValue({
+                start: { line: 0, character: 0 },
+                end: { line: 0, character: 17 },
+            });
+            const resultado = provedor.prepareRename(criarDocumento('analisarCaractere'), { line: 0, character: 5 }, {});
+            expect(resultado).toBeDefined();
+            expect(resultado.placeholder).toBe('analisarCaractere');
+        });
     });
 
-    it('provideRenameEdits cria edições em múltiplos arquivos', async () => {
-        const documentoA = criarDocumento('/workspace/a.delegua', [
-            'funcao analisarCaractere(c) { retorna c }',
-            'const simbolo = analisarCaractere(caractereAtual)',
-        ]);
-        const documentoB = criarDocumento('/workspace/b.delegua', [
-            'resultado = analisarCaractere("x")',
-        ]);
+    describe('provideRenameEdits', () => {
+        it('lança erro para nome de identificador inválido', async () => {
+            await expect(
+                provedor.provideRenameEdits(criarDocumento(), { line: 0, character: 0 }, 'nome inválido', {})
+            ).rejects.toThrow('inválido');
+        });
 
-        documentos.set('/workspace/a.delegua', documentoA);
-        documentos.set('/workspace/b.delegua', documentoB);
+        it('retorna undefined quando LSP retorna undefined', async () => {
+            const resultado = await provedor.provideRenameEdits(criarDocumento(), { line: 0, character: 0 }, 'novoNome', {});
+            expect(resultado).toBeUndefined();
+        });
 
-        const edicoes = await provedor.provideRenameEdits(
-            documentoA,
-            { line: 1, character: 20 } as any,
-            'analisarToken',
-            {} as any
-        );
+        it('converte WorkspaceEdit do LSP para vscode.WorkspaceEdit', async () => {
+            lspMock.provideRenameEdits.mockReturnValue({
+                changes: {
+                    'file:///a.delegua': [
+                        { range: { start: { line: 0, character: 0 }, end: { line: 0, character: 17 } }, newText: 'novoNome' },
+                        { range: { start: { line: 1, character: 9 }, end: { line: 1, character: 26 } }, newText: 'novoNome' },
+                    ],
+                },
+            });
 
-        expect(edicoes).toBeDefined();
-        expect(edicoes.replaces.length).toBe(3);
-        for (const item of edicoes.replaces) {
-            expect(item.newText).toBe('analisarToken');
-        }
-    });
+            const resultado = await provedor.provideRenameEdits(criarDocumento(), { line: 0, character: 0 }, 'novoNome', {});
+            expect(resultado).toBeDefined();
+            const edicoes = resultado.allEdits();
+            expect(edicoes.length).toBe(2);
+            expect(edicoes[0].newText).toBe('novoNome');
+        });
 
-    it('não renomeia quando identificador faz parte de palavra maior', async () => {
-        const documento = criarDocumento('/workspace/a.delegua', [
-            'analisarCaractere = 1',
-            'prefixoanalisarCaractere = 2',
-            'analisarCaractereSufixo = 3',
-        ]);
-        documentos.set('/workspace/a.delegua', documento);
-
-        const edicoes = await provedor.provideRenameEdits(
-            documento,
-            { line: 0, character: 3 } as any,
-            'analisarToken',
-            {} as any
-        );
-
-        expect(edicoes.replaces.length).toBe(1);
-    });
-
-    it('lança erro para novo nome inválido', async () => {
-        const documento = criarDocumento('/workspace/a.delegua', ['analisarCaractere()']);
-        documentos.set('/workspace/a.delegua', documento);
-
-        await expect(
-            provedor.provideRenameEdits(
-                documento,
-                { line: 0, character: 3 } as any,
-                'novo nome',
-                {} as any
-            )
-        ).rejects.toThrow('Novo nome inválido para identificador Delégua.');
+        it('passa posição, novo nome e pasta workspace para o LSP', async () => {
+            lspMock.provideRenameEdits.mockReturnValue({ changes: {} });
+            await provedor.provideRenameEdits(criarDocumento(), { line: 0, character: 5 }, 'novoIdentificador', {});
+            expect(lspMock.provideRenameEdits).toHaveBeenCalledWith(
+                expect.objectContaining({ uri: 'file:///test.delegua' }),
+                { line: 0, character: 5 },
+                'novoIdentificador',
+                '/workspace'
+            );
+        });
     });
 });

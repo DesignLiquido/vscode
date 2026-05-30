@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+﻿import * as vscode from 'vscode';
 
 import { Classe, Const, Declaracao, FuncaoDeclaracao, Var } from '@designliquido/delegua/declaracoes';
 
@@ -23,7 +23,7 @@ const primitivas = [
     const nome2 = b.nome.toUpperCase();
     return nome1 > nome2 ? 1 : nome1 < nome2 ? -1 : 0;
 });
-import { obterResultado } from '../analise-codigo/cache-analise';
+import { obterResultado } from '@designliquido/delegua-lsp/analise/cache-analise';
 
 /**
  * Provedor de assinatura de métodos de Delégua.

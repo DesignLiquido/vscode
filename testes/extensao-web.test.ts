@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import * as vscode from 'vscode';
 
@@ -91,6 +91,11 @@ jest.mock('../fontes/visoes', () => ({
         static viewType = 'delegua.entradaSaida';
         ativarVisao() {}
     },
+    ProvedorVisaoEntradaSaidaWeb: class {
+        static viewType = 'delegua.entradaSaida';
+        constructor(_extensionUri: any) {}
+        resolveWebviewView() {}
+    },
 }));
 jest.mock('../fontes/depuracao/fabricas/fabrica-adaptador-depuracao-web', () => ({
     FabricaAdaptadorDepuracaoWeb: class {},
@@ -105,13 +110,13 @@ jest.mock('../fontes/acoes-codigo/delegua-provedor-acoes-codigo', () => ({
 jest.mock('../fontes/definicao', () => ({ DeleguaProvedorDefinicao: class {} }));
 jest.mock('../fontes/referencias', () => ({ DeleguaProvedorReferencias: class {} }));
 jest.mock('../fontes/renomeacao', () => ({ DeleguaProvedorRenomeacao: class {} }));
-jest.mock('../fontes/analise-codigo/cache-analise', () => ({
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
     expirarResultado: jest.fn(),
     expirarResultados: jest.fn(),
     expirarResultadosPorDependenciaArquivo: jest.fn(),
     expirarTudo: jest.fn(),
 }));
-jest.mock('../fontes/analise-codigo/cache-definicoes', () => ({ expirarTodasDefinicoes: jest.fn() }));
+jest.mock('@designliquido/delegua-lsp/analise/cache-definicoes', () => ({ expirarTodasDefinicoes: jest.fn() }));
 
 import tradutorWeb from '../fontes/traducao/index-web';
 import { executarAnalises } from '../fontes/analise-codigo';
@@ -121,8 +126,8 @@ import {
     expirarResultados,
     expirarResultadosPorDependenciaArquivo,
     expirarTudo,
-} from '../fontes/analise-codigo/cache-analise';
-import { expirarTodasDefinicoes } from '../fontes/analise-codigo/cache-definicoes';
+} from '@designliquido/delegua-lsp/analise/cache-analise';
+import { expirarTodasDefinicoes } from '@designliquido/delegua-lsp/analise/cache-definicoes';
 import { GerenciadorVisoesFluxograma } from '../fontes/visoes/fluxogramas/gerenciador-visoes-fluxograma';
 import { activate, deactivate } from '../fontes/extensao-web';
 

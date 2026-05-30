@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+﻿import * as vscode from 'vscode';
 
 import { Classe, Const, FuncaoDeclaracao, InterfaceDeclaracao, ParaCada, Var } from '@designliquido/delegua/declaracoes';
 import { Chamada, ComentarioComoConstruto } from '@designliquido/delegua/construtos';
@@ -7,8 +7,8 @@ import primitivasNumero from '@designliquido/delegua/bibliotecas/primitivas-nume
 import primitivasTexto from '@designliquido/delegua/bibliotecas/primitivas-texto';
 import primitivasVetor from '@designliquido/delegua/bibliotecas/primitivas-vetor';
 
-import { obterResultado } from '../analise-codigo/cache-analise';
-import { obterDefinicoesPorContexto } from '../analise-codigo/cache-definicoes';
+import { obterResultado } from '@designliquido/delegua-lsp/analise/cache-analise';
+import { obterDefinicoesPorContexto } from '@designliquido/delegua-lsp/analise/cache-definicoes';
 import { formatarPrimitivas, funcoesNativasDelegua } from '../bibliotecas';
 import { primitivasMetodosLiquido, objetosEmRotaLiquido, metodosRespostaLiquido } from '../bibliotecas/primitivas-liquido';
 import { extrairTextoDocumentacao, formatarDocumentacaoDocumentario } from './formatador-documentacao';

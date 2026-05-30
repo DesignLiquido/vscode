@@ -1,158 +1,79 @@
-// @ts-nocheck
-import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import * as vscode from 'vscode';
-
-const documentos = new Map<string, any>();
+﻿// @ts-nocheck
+import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 
 jest.mock('vscode', () => ({
-    Position: class Position {
-        constructor(public line: number, public character: number) {}
-    },
     Location: class Location {
-        public range: any;
-
-        constructor(public uri: any, posicaoOuRange: any) {
-            if (typeof posicaoOuRange?.line === 'number') {
-                this.range = { start: posicaoOuRange, end: posicaoOuRange };
-                return;
-            }
-
-            this.range = posicaoOuRange;
-        }
+        constructor(public uri, public range) {}
     },
     Uri: {
-        file: jest.fn((fsPath: string) => ({
-            fsPath,
-            toString: () => `file://${fsPath}`,
-        })),
+        parse: (uri) => ({ _uri: uri, toString: () => uri }),
+    },
+    Range: class Range {
+        constructor(public startLine, public startChar, public endLine, public endChar) {}
     },
     workspace: {
-        findFiles: jest.fn(),
-        openTextDocument: jest.fn(),
+        workspaceFolders: [{ uri: { fsPath: '/workspace' } }],
     },
 }), { virtual: true });
 
-jest.mock('@designliquido/delegua/declaracoes/classe', () => ({
-    Classe: class ClasseMock {},
+jest.mock('@designliquido/delegua-lsp', () => ({
+    provideReferences: jest.fn().mockReturnValue([]),
+    DocumentoLSP: undefined,
 }), { virtual: true });
 
-jest.mock('@designliquido/delegua/declaracoes', () => ({
-    Declaracao: class DeclaracaoMock {},
-}), { virtual: true });
-
-jest.mock('../../fontes/analise-codigo/cache-analise', () => ({
-    obterResultado: jest.fn().mockReturnValue(undefined),
-}), { virtual: true });
-
-import { obterResultado } from '../../fontes/analise-codigo/cache-analise';
 import { DeleguaProvedorReferencias } from '../../fontes/referencias/delegua-provedor-referencias';
 
-function criarDocumento(uriPath: string, linhas: string[]): any {
-    const uri = {
-        fsPath: uriPath,
-        toString: () => `file://${uriPath}`,
-    };
-
+function criarDocumento() {
     return {
-        uri,
-        lineCount: linhas.length,
-        lineAt: (indice: number) => ({ text: linhas[indice] }),
-        getText: jest.fn(() => 'variavel'),
-        getWordRangeAtPosition: jest.fn(() => ({
-            start: { line: 0, character: 0 },
-            end: { line: 0, character: 8 },
-        })),
+        uri: { toString: () => 'file:///test.delegua' },
+        fileName: '/test.delegua',
+        getText: jest.fn(() => 'variavel = 1'),
+        version: 1,
+        languageId: 'delegua',
     };
 }
 
-describe('DeleguaProvedorReferencias', () => {
-    let provedor: DeleguaProvedorReferencias;
+describe('referencias/DeleguaProvedorReferencias', () => {
+    let provedor;
+    let lspMock;
 
     beforeEach(() => {
-        documentos.clear();
         jest.clearAllMocks();
-        (vscode.Uri.file as jest.Mock).mockImplementation((fsPath: string) => ({
-            fsPath,
-            toString: () => `file://${fsPath}`,
-        }));
-        (vscode.workspace.findFiles as jest.Mock).mockImplementation(async () =>
-            Array.from(documentos.values()).map((d: any) => d.uri)
-        );
-        (vscode.workspace.openTextDocument as jest.Mock).mockImplementation(async (uri: any) =>
-            documentos.get(uri.fsPath || uri.path || uri.toString())
-        );
+        lspMock = jest.requireMock('@designliquido/delegua-lsp');
+        lspMock.provideReferences.mockReturnValue([]);
         provedor = new DeleguaProvedorReferencias();
     });
 
-    it('retorna vazio quando não há palavra no cursor', async () => {
-        const documento = criarDocumento('/workspace/a.delegua', ['escreva("oi")']);
-        documento.getWordRangeAtPosition = jest.fn(() => undefined);
-
-        const resultado = await provedor.provideReferences(
-            documento,
-            { line: 0, character: 0 } as any,
-            { includeDeclaration: true } as any,
-            {} as any
-        );
-
+    it('retorna lista vazia quando LSP retorna vazio', () => {
+        const resultado = provedor.provideReferences(criarDocumento(), { line: 0, character: 0 }, { includeDeclaration: true }, {});
         expect(resultado).toEqual([]);
     });
 
-    it('encontra ocorrências em múltiplos arquivos', async () => {
-        const documentoA = criarDocumento('/workspace/a.delegua', [
-            'variavel = 1',
-            'escreva(variavel)',
-            'variavel2 = 2',
+    it('converte Location[] do LSP para vscode.Location[]', () => {
+        lspMock.provideReferences.mockReturnValue([
+            {
+                uri: 'file:///a.delegua',
+                range: { start: { line: 0, character: 0 }, end: { line: 0, character: 8 } },
+            },
+            {
+                uri: 'file:///b.delegua',
+                range: { start: { line: 2, character: 4 }, end: { line: 2, character: 12 } },
+            },
         ]);
-        const documentoB = criarDocumento('/workspace/b.delegua', [
-            'funcao teste() {',
-            '  retorna variavel',
-            '}',
-        ]);
 
-        documentos.set('/workspace/a.delegua', documentoA);
-        documentos.set('/workspace/b.delegua', documentoB);
-
-        const resultado = await provedor.provideReferences(
-            documentoA,
-            { line: 0, character: 0 } as any,
-            { includeDeclaration: true } as any,
-            {} as any
-        );
-
-        expect(resultado.length).toBe(3);
+        const resultado = provedor.provideReferences(criarDocumento(), { line: 0, character: 0 }, { includeDeclaration: true }, {});
+        expect(resultado.length).toBe(2);
+        expect(resultado[0].uri._uri).toBe('file:///a.delegua');
+        expect(resultado[1].uri._uri).toBe('file:///b.delegua');
     });
 
-    it('remove declaração quando includeDeclaration é falso', async () => {
-        const documento = criarDocumento('/workspace/a.delegua', [
-            'variavel = 1',
-            'escreva(variavel)',
-        ]);
-        documentos.set('/workspace/a.delegua', documento);
-
-        (obterResultado as jest.Mock).mockReturnValue({
-            avaliadorSintatico: {
-                declaracoes: [
-                    {
-                        simbolo: {
-                            lexema: 'variavel',
-                            linha: 1,
-                            colunaInicio: 0,
-                        },
-                    },
-                ],
-            },
-            declaracoesPreCarregadas: [],
-        });
-
-        const resultado = await provedor.provideReferences(
-            documento,
-            { line: 0, character: 0 } as any,
-            { includeDeclaration: false } as any,
-            {} as any
+    it('passa includeDeclaration e pastaWorkspace para o LSP', () => {
+        provedor.provideReferences(criarDocumento(), { line: 0, character: 5 }, { includeDeclaration: false }, {});
+        expect(lspMock.provideReferences).toHaveBeenCalledWith(
+            expect.objectContaining({ uri: 'file:///test.delegua' }),
+            { line: 0, character: 5 },
+            false,
+            '/workspace'
         );
-
-        expect(resultado.length).toBe(1);
-        expect(resultado[0].range.start.line).toBe(1);
     });
 });

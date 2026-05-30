@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+﻿import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -55,8 +55,8 @@ import { definirFabricaPainelWebView } from './mecanismo-importacao-bibliotecas'
 import { DeleguaProvedorReferencias } from './referencias';
 import { DeleguaProvedorRenomeacao, registrarRenomeacaoArquivosDelegua } from './renomeacao';
 import { ehArquivoDelegua } from './importacao/utilitarios-caminho-importacao-delegua';
-import { expirarResultado, expirarResultados, expirarResultadosPorDependenciaArquivo, expirarTudo } from './analise-codigo/cache-analise';
-import { expirarTodasDefinicoes } from './analise-codigo/cache-definicoes';
+import { expirarResultado, expirarResultados, expirarResultadosPorDependenciaArquivo, expirarTudo } from '@designliquido/delegua-lsp/analise/cache-analise';
+import { expirarTodasDefinicoes } from '@designliquido/delegua-lsp/analise/cache-definicoes';
 
 /**
  * Em teoria runMode é uma "compile time flag", mas nunca foi usado aqui desta forma.

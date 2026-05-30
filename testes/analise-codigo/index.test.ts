@@ -1,4 +1,4 @@
-// @ts-nocheck - Ignora erros de tipo nos mocks complexos
+﻿// @ts-nocheck - Ignora erros de tipo nos mocks complexos
 import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
 import * as vscode from 'vscode';
 
@@ -205,7 +205,7 @@ jest.mock('../../fontes/avaliacao-sintatica', () => ({
     formatarDiagnosticosAvaliacaoSintatica: jest.fn().mockReturnValue([])
 }), { virtual: true });
 
-jest.mock('../../fontes/analise-codigo/cache-analise', () => ({
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
     definirResultado: jest.fn(),
     obterResultadoValido: jest.fn().mockReturnValue(undefined),
     obterDiagnosticos: jest.fn().mockReturnValue([]),
@@ -349,7 +349,7 @@ describe('analise-codigo/index', () => {
         });
 
         it('deve definir resultado no cache após análise', async () => {
-            const { definirResultado } = require('../../fontes/analise-codigo/cache-analise');
+            const { definirResultado } = require('@designliquido/delegua-lsp/analise/cache-analise');
             mockDocumento.fileName = 'test.delegua';
 
             await executarAnalises(mockDocumento, mockDiagnosticos);
@@ -375,7 +375,7 @@ describe('analise-codigo/index', () => {
             await expect(executarAnalises(mockDocumento, mockDiagnosticos)).resolves.not.toThrow();
 
             // Deve ter definido resultado no cache mesmo com erro
-            const { definirResultado } = require('../../fontes/analise-codigo/cache-analise');
+            const { definirResultado } = require('@designliquido/delegua-lsp/analise/cache-analise');
             expect(definirResultado).toHaveBeenCalled();
         });
 
@@ -387,7 +387,7 @@ describe('analise-codigo/index', () => {
             await expect(executarAnalises(mockDocumento, mockDiagnosticos)).resolves.not.toThrow();
 
             // Deve ter definido resultado no cache
-            const { definirResultado } = require('../../fontes/analise-codigo/cache-analise');
+            const { definirResultado } = require('@designliquido/delegua-lsp/analise/cache-analise');
             expect(definirResultado).toHaveBeenCalled();
         });
     });
@@ -465,7 +465,7 @@ describe('analise-codigo/index', () => {
 
     describe('Integração com cache', () => {
         it('deve armazenar resultado completo no cache', async () => {
-            const { definirResultado } = require('../../fontes/analise-codigo/cache-analise');
+            const { definirResultado } = require('@designliquido/delegua-lsp/analise/cache-analise');
             mockDocumento.fileName = 'test.delegua';
 
             await executarAnalises(mockDocumento, mockDiagnosticos);
@@ -496,7 +496,7 @@ describe('analise-codigo/index', () => {
         }
 
         function obterDeclaracoesPreCarregadas(): any[] {
-            const { definirResultado } = require('../../fontes/analise-codigo/cache-analise');
+            const { definirResultado } = require('@designliquido/delegua-lsp/analise/cache-analise');
             const [, resultado] = definirResultado.mock.calls[0];
             return resultado.declaracoesPreCarregadas;
         }

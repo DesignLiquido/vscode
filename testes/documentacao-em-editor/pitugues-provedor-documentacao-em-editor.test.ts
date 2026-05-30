@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 
 class FuncaoDeclaracaoMock {
@@ -48,11 +48,11 @@ jest.mock('@designliquido/delegua/construtos', () => ({
     Chamada: ChamadaMock,
 }), { virtual: true });
 
-jest.mock('../../fontes/analise-codigo/cache-analise', () => ({
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
     obterResultado: jest.fn().mockReturnValue(null),
 }), { virtual: true });
 
-jest.mock('../../fontes/analise-codigo/cache-definicoes', () => ({
+jest.mock('@designliquido/delegua-lsp/analise/cache-definicoes', () => ({
     obterDefinicoesPorContexto: jest.fn().mockReturnValue({}),
 }), { virtual: true });
 
@@ -79,7 +79,7 @@ jest.mock('../../fontes/bibliotecas/dialetos/pitugues', () => ({
 }), { virtual: true });
 
 import { PituguesProvedorDocumentacaoEmEditor } from '../../fontes/documentacao-em-editor/pitugues-provedor-documentacao-em-editor';
-import { obterResultado } from '../../fontes/analise-codigo/cache-analise';
+import { obterResultado } from '@designliquido/delegua-lsp/analise/cache-analise';
 
 function criarDocumento(palavra: string, linhaTexto?: string): any {
     return {

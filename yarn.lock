@@ -385,7 +385,7 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@designliquido/birl@^0.6.8":
+"@designliquido/birl@^0.6.7", "@designliquido/birl@^0.6.8":
   version "0.6.8"
   resolved "https://registry.yarnpkg.com/@designliquido/birl/-/birl-0.6.8.tgz#e112596a4ebaaa8ec20fe966710ad0bede7a2805"
   integrity sha512-2+lQTPeuDkYPO9NGRuu1PG3gWInhdbs7gpPDrd/VUI16B5euXl0bWtM8IN9haRdjceMoWm0XP4PaBtkACXO7sg==
@@ -458,6 +458,20 @@
   resolved "https://registry.yarnpkg.com/@designliquido/delegua-json/-/delegua-json-0.2.1.tgz#57c2e9dc45525ebdf1b4ee6038b11b6a18d3181c"
   integrity sha512-Ym+Tw98Pll84TNSrEnQrFZC0PcKos66qnrEqwUDDxP/6cdnbu2bvTW05wVLXWBZPVUutCld8Qt1RhzJWLr1kVQ==
 
+"@designliquido/delegua-lsp@^0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-lsp/-/delegua-lsp-0.0.0.tgz#4394e05cdb5c0bbc0cbdfdd06d60ea1d3d445f1f"
+  integrity sha512-T230iOVAc/eKt4GwfKNGdpxfCancXDfcFAXgSMLV4D4UX49OVV8wbjPP4hCluIRzeuX2giQupenURgSHTxby+A==
+  dependencies:
+    "@designliquido/birl" "^0.6.7"
+    "@designliquido/delegua" "^1.23.4"
+    "@designliquido/mapler" "^0.7.7"
+    "@designliquido/portugol-studio" "^0.11.7"
+    "@designliquido/potigol" "^0.11.7"
+    "@designliquido/visualg" "^0.9.7"
+    vscode-languageserver "^9.0.1"
+    vscode-languageserver-textdocument "^1.0.12"
+
 "@designliquido/delegua-matematica@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@designliquido/delegua-matematica/-/delegua-matematica-0.3.0.tgz#fbd1048bc0efbadcecf96c3486f8c376b6516846"
@@ -478,7 +492,7 @@
     "@designliquido/delegua" "^1.15.4"
     yaml "^2.6.1"
 
-"@designliquido/delegua@1.23.5", "@designliquido/delegua@^1.15.4", "@designliquido/delegua@^1.23.5":
+"@designliquido/delegua@1.23.5", "@designliquido/delegua@^1.15.4", "@designliquido/delegua@^1.23.4", "@designliquido/delegua@^1.23.5":
   version "1.23.5"
   resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-1.23.5.tgz#629d742bab6d4628354ac6c6803a1e8637a71f2d"
   integrity sha512-aYjsrwNhG44SCg/g/Sp3eU9yURiUBuJ0ZWzyj+Fpw6N6/UU75+9Athwu/i/y0XuamYpft1CBCPeehtOOMQUO4A==
@@ -533,7 +547,7 @@
     jsdom "^21.1.1"
     xslt-processor "^5.0.3"
 
-"@designliquido/mapler@^0.7.8":
+"@designliquido/mapler@^0.7.7", "@designliquido/mapler@^0.7.8":
   version "0.7.8"
   resolved "https://registry.yarnpkg.com/@designliquido/mapler/-/mapler-0.7.8.tgz#f6351e9f7505cb7f8933a3ff2caeb07ac8b5babb"
   integrity sha512-kyVL2OF/SHUXCIbMiWo9hZkYMQxntKpGIafdk1j46dAm/txbwTlleHxu7gyI3dmfJf8lVl6D3GuKgYIX4wWGAQ==
@@ -541,7 +555,7 @@
     lodash "^4.17.21"
     node-fetch "2"
 
-"@designliquido/portugol-studio@^0.11.8":
+"@designliquido/portugol-studio@^0.11.7", "@designliquido/portugol-studio@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@designliquido/portugol-studio/-/portugol-studio-0.11.8.tgz#b923ec28d22b26703b03c3191759bf24ffb2946d"
   integrity sha512-C8wfuC6Hh1xy3qm8ELuLXx6dAF/lvoAX783ncK1DBV2amXHwIyr8De5AcEQf+ZnvOTZJCD4DhzHE+9EoRZp9QQ==
@@ -550,14 +564,14 @@
     node-fetch "2"
     xml2js "^0.6.2"
 
-"@designliquido/potigol@^0.11.8":
+"@designliquido/potigol@^0.11.7", "@designliquido/potigol@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@designliquido/potigol/-/potigol-0.11.8.tgz#3edd2dee44516149bc6c632dcc6e4625f2253081"
   integrity sha512-xaHgxfRgvZk2TU2bfs/nlUc9aAmc8T1HQ8plW36wXaymPSlY5WNQTIDU8SKwZjifrcCJME2TTKBk1uqKQZBO8Q==
   dependencies:
     lodash "^4.17.21"
 
-"@designliquido/visualg@^0.9.8":
+"@designliquido/visualg@^0.9.7", "@designliquido/visualg@^0.9.8":
   version "0.9.8"
   resolved "https://registry.yarnpkg.com/@designliquido/visualg/-/visualg-0.9.8.tgz#2e0254db38d2e33bd2c86b1adc8faaf4932766e0"
   integrity sha512-zCbSA9vpImskhaoQJdVH1OYHV1BsNcAocNpMmDYbBBvQtPyktZ8SVcIYxjK9DsbspM+5j595obc94sqV5mc4Rg==
@@ -7147,6 +7161,36 @@ vlq@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/vlq/-/vlq-2.0.4.tgz#6057b85729245b9829e3cc7755f95b228d4fe041"
   integrity sha512-aodjPa2wPQFkra1G8CzJBTHXhgk3EVSwxSWXNPr1fgdFLUb8kvLV1iEb6rFgasIsjP82HWI6dsb5Io26DDnasA==
+
+vscode-jsonrpc@8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-8.2.0.tgz#f43dfa35fb51e763d17cd94dcca0c9458f35abf9"
+  integrity sha512-C+r0eKJUIfiDIfwJhria30+TYWPtuHJXHtI7J0YlOmKAo7ogxP20T0zxB7HZQIFhIyvoBPwWskjxrvAtfjyZfA==
+
+vscode-languageserver-protocol@3.17.5:
+  version "3.17.5"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-protocol/-/vscode-languageserver-protocol-3.17.5.tgz#864a8b8f390835572f4e13bd9f8313d0e3ac4bea"
+  integrity sha512-mb1bvRJN8SVznADSGWM9u/b07H7Ecg0I3OgXDuLdn307rl/J3A9YD6/eYOssqhecL27hK1IPZAsaqh00i/Jljg==
+  dependencies:
+    vscode-jsonrpc "8.2.0"
+    vscode-languageserver-types "3.17.5"
+
+vscode-languageserver-textdocument@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.12.tgz#457ee04271ab38998a093c68c2342f53f6e4a631"
+  integrity sha512-cxWNPesCnQCcMPeenjKKsOCKQZ/L6Tv19DTRIGuLWe32lyzWhihGVJ/rcckZXJxfdKCFvRLS3fpBIsV/ZGX4zA==
+
+vscode-languageserver-types@3.17.5:
+  version "3.17.5"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.17.5.tgz#3273676f0cf2eab40b3f44d085acbb7f08a39d8a"
+  integrity sha512-Ld1VelNuX9pdF39h2Hgaeb5hEZM2Z3jUrrMgWQAu82jMtZp7p3vJT3BzToKtZI7NgQssZje5o0zryOrhQvzQAg==
+
+vscode-languageserver@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver/-/vscode-languageserver-9.0.1.tgz#500aef82097eb94df90d008678b0b6b5f474015b"
+  integrity sha512-woByF3PDpkHFUreUa7Hos7+pUWdeWMXRd26+ZX2A8cFx6v/JPTtd4/uN0/jB6XQHYaOlHbio03NTHCqrgG5n7g==
+  dependencies:
+    vscode-languageserver-protocol "3.17.5"
 
 vscode-uri@^3.1.0:
   version "3.1.0"

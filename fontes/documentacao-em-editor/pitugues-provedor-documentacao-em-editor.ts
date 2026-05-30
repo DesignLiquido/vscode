@@ -1,10 +1,10 @@
-import * as vscode from 'vscode';
+﻿import * as vscode from 'vscode';
 
 import { Classe, Const, FuncaoDeclaracao, InterfaceDeclaracao, ParaCada, Var } from '@designliquido/delegua/declaracoes';
 import { Chamada, ComentarioComoConstruto } from '@designliquido/delegua/construtos';
 
-import { obterResultado } from '../analise-codigo/cache-analise';
-import { obterDefinicoesPorContexto } from '../analise-codigo/cache-definicoes';
+import { obterResultado } from '@designliquido/delegua-lsp/analise/cache-analise';
+import { obterDefinicoesPorContexto } from '@designliquido/delegua-lsp/analise/cache-definicoes';
 import {
     primitivasDicionarioFormatadas,
     primitivasNumeroFormatadas,

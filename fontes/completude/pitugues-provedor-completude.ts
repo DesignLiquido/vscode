@@ -1,7 +1,7 @@
-import * as vscode from 'vscode';
+﻿import * as vscode from 'vscode';
 import { primitivasMetodosLiquido, objetosEmRotaLiquido } from '../bibliotecas/primitivas-liquido';
 
-import { obterResultado } from '../analise-codigo/cache-analise';
+import { obterResultado } from '@designliquido/delegua-lsp/analise/cache-analise';
 import { ParametroDetectado, TipoParametro } from '../interfaces/completude';
 
 import { Classe, FuncaoDeclaracao } from '@designliquido/delegua/declaracoes';

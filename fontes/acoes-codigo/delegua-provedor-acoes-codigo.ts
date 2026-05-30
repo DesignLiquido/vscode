@@ -1,6 +1,6 @@
-import * as vscode from 'vscode';
+﻿import * as vscode from 'vscode';
 
-import { obterResultado } from '../analise-codigo/cache-analise';
+import { obterResultado } from '@designliquido/delegua-lsp/analise/cache-analise';
 import { CorrecaoSugeridaInterface } from '@designliquido/delegua/interfaces';
 import { CorrecaoImplementacaoInterface, MembroInterfaceFaltandoInterface } from '@designliquido/delegua/interfaces/avaliador-sintatico';
 

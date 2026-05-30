@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as vscode from 'vscode';
 
@@ -58,14 +58,14 @@ jest.mock('../../fontes/bibliotecas/dialetos/pitugues', () => ({
     ],
 }), { virtual: true });
 
-jest.mock('../../fontes/analise-codigo/cache-analise', () => ({
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
     obterResultado: jest.fn().mockReturnValue(null),
 }), { virtual: true });
 
 jest.mock('../../fontes/completude/interfaces', () => ({}), { virtual: true });
 
 import { PituguesProvedorCompletude } from '../../fontes/completude/pitugues-provedor-completude';
-import { obterResultado } from '../../fontes/analise-codigo/cache-analise';
+import { obterResultado } from '@designliquido/delegua-lsp/analise/cache-analise';
 
 function criarDocumento(linhas: string[] = ['']): any {
     return {
@@ -240,7 +240,7 @@ describe('PituguesProvedorCompletude', () => {
         const FuncaoDeclaracaoMock = class {
             constructor(public simbolo: any, public tipo: string) {}
         };
-        jest.doMock('../../fontes/analise-codigo/cache-analise', () => ({
+        jest.doMock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
             obterResultado: jest.fn().mockReturnValue({
                 avaliadorSintatico: {
                     declaracoes: [

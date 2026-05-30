@@ -1,10 +1,10 @@
-import {
+﻿import {
     definirDefinicoes,
     expirarDefinicoes,
     expirarTodasDefinicoes,
     limparDefinicoesExpiradas,
     obterDefinicoes,
-} from '../../fontes/analise-codigo/cache-definicoes';
+} from '@designliquido/delegua-lsp/analise/cache-definicoes';
 
 describe('cache-definicoes', () => {
     beforeEach(() => {

@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 
 // Classes reais para que instanceof funcione
@@ -74,7 +74,7 @@ jest.mock('@designliquido/delegua/bibliotecas/primitivas-vetor', () => ({
     },
 }), { virtual: true });
 
-jest.mock('../../fontes/analise-codigo/cache-analise', () => ({
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
     obterResultado: jest.fn().mockReturnValue(null),
 }), { virtual: true });
 
@@ -90,7 +90,7 @@ jest.mock('../../fontes/bibliotecas', () => ({
 }), { virtual: true });
 
 import { DeleguaProvedorDocumentacaoEmEditor } from '../../fontes/documentacao-em-editor/delegua-provedor-documentacao-em-editor';
-import { obterResultado } from '../../fontes/analise-codigo/cache-analise';
+import { obterResultado } from '@designliquido/delegua-lsp/analise/cache-analise';
 
 function criarDocumento(overrides: Partial<any> = {}): any {
     return {

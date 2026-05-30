@@ -1,4 +1,4 @@
-// @ts-nocheck - Ignora erros de tipo nos mocks complexos
+﻿// @ts-nocheck - Ignora erros de tipo nos mocks complexos
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as vscode from 'vscode';
 
@@ -122,14 +122,14 @@ jest.mock('../fontes/analise-codigo', () => ({
     executarAnalises: jest.fn(() => Promise.resolve())
 }));
 
-jest.mock('../fontes/analise-codigo/cache-analise', () => ({
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
     expirarResultado: jest.fn(),
     expirarResultados: jest.fn(),
     expirarResultadosPorDependenciaArquivo: jest.fn(),
     expirarTudo: jest.fn(),
 }));
 
-jest.mock('../fontes/analise-codigo/cache-definicoes', () => ({
+jest.mock('@designliquido/delegua-lsp/analise/cache-definicoes', () => ({
     expirarTodasDefinicoes: jest.fn(),
 }));
 
@@ -213,8 +213,8 @@ import {
     expirarResultados,
     expirarResultadosPorDependenciaArquivo,
     expirarTudo,
-} from '../fontes/analise-codigo/cache-analise';
-import { expirarTodasDefinicoes } from '../fontes/analise-codigo/cache-definicoes';
+} from '@designliquido/delegua-lsp/analise/cache-analise';
+import { expirarTodasDefinicoes } from '@designliquido/delegua-lsp/analise/cache-definicoes';
 import { GerenciadorVisoesFluxograma } from '../fontes/visoes/fluxogramas/gerenciador-visoes-fluxograma';
 import { ehArquivoDelegua } from '../fontes/importacao/utilitarios-caminho-importacao-delegua';
 

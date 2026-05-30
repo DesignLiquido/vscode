@@ -136,8 +136,8 @@ describe('renomeacao/renomeacao-arquivos-delegua', () => {
         callbackRenomeacao({
             files: [
                 {
-                    oldUri: { fsPath: '/workspace/app/modulo-antigo.delegua' },
-                    newUri: { fsPath: '/workspace/app/modulo-novo.delegua' },
+                    oldUri: { fsPath: '/workspace/app/modulo-antigo.delegua', path: '/workspace/app/modulo-antigo.delegua' },
+                    newUri: { fsPath: '/workspace/app/modulo-novo.delegua', path: '/workspace/app/modulo-novo.delegua' },
                 },
             ],
             waitUntil: (p: Promise<any>) => {

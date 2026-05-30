@@ -1,4 +1,4 @@
-// @ts-nocheck - Ignora erros de tipo nos mocks complexos
+﻿// @ts-nocheck - Ignora erros de tipo nos mocks complexos
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as vscode from 'vscode';
 
@@ -48,7 +48,7 @@ jest.mock('vscode', () => {
 }, { virtual: true });
 
 // Mock do cache de análise
-jest.mock('../../fontes/analise-codigo/cache-analise', () => ({
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
     obterResultado: jest.fn()
 }), { virtual: true });
 
@@ -100,7 +100,7 @@ describe('acoes-codigo/DeleguaProvedorAcoesCodigo', () => {
         DeleguaProvedorAcoesCodigo = modulo.DeleguaProvedorAcoesCodigo;
         provedor = new DeleguaProvedorAcoesCodigo();
 
-        const cacheModulo = require('../../fontes/analise-codigo/cache-analise');
+        const cacheModulo = require('@designliquido/delegua-lsp/analise/cache-analise');
         obterResultado = cacheModulo.obterResultado;
 
         mockDocumento = {

@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+﻿import * as vscode from 'vscode';
 
 import { AnalisadorSemantico } from '@designliquido/delegua/analisador-semantico';
 import { AvaliadorSintaticoInterface, LexadorInterface, SimboloInterface } from '@designliquido/delegua/interfaces';
@@ -31,8 +31,8 @@ import { AnalisadorSemanticoPortugolStudio } from "@designliquido/portugol-studi
 import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg, AnalisadorSemanticoVisuAlg } from '@designliquido/visualg';
 
 import { formatarDiagnosticosAvaliacaoSintatica } from '../avaliacao-sintatica';
-import { definirResultado, obterDiagnosticos, obterResultadoValido } from './cache-analise';
-import { definirDefinicoes } from './cache-definicoes';
+import { definirResultado, obterDiagnosticos, obterResultadoValido } from '@designliquido/delegua-lsp/analise/cache-analise';
+import { definirDefinicoes } from '@designliquido/delegua-lsp/analise/cache-definicoes';
 import { ImportadorExtensao } from '../importador';
 import { AvaliadorSintaticoComImportacao } from '../avaliacao-sintatica/avaliador-sintatico-com-importacao';
 import { AnalisadorSemanticoPituguesLiquido } from '../analise-semantica/analisador-semantico-pitugues-liquido';

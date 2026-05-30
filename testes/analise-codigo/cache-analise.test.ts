@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { describe, it, expect, beforeEach } from '@jest/globals';
 import {
     definirResultado,
@@ -9,7 +9,7 @@ import {
     obterDiagnosticos,
     obterResultado,
     obterResultadoValido,
-} from '../../fontes/analise-codigo/cache-analise';
+} from '@designliquido/delegua-lsp/analise/cache-analise';
 
 describe('cache-analise', () => {
     beforeEach(() => {

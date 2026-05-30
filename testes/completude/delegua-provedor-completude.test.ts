@@ -1,963 +1,110 @@
-// @ts-nocheck - Ignora erros de tipo nos mocks complexos
+﻿// @ts-nocheck
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
-import * as vscode from 'vscode';
 
-// Mock do módulo vscode
 jest.mock('vscode', () => ({
     CompletionItemKind: {
-        Property: 9,
-        Function: 2,
-        Method: 1,
-        Variable: 5,
-        Interface: 7
+        Text: 0, Method: 1, Function: 2, Constructor: 3, Field: 4,
+        Variable: 5, Class: 6, Interface: 7, Module: 8, Property: 9,
     },
     CompletionItem: class CompletionItem {
-        constructor(public label: string, public kind?: number) {}
-        documentation: any;
-        detail: string;
-        insertText: any;
+        constructor(public label, public kind) {}
+        documentation = null;
+        detail = '';
+        insertText = null;
+        sortText = '';
     },
     MarkdownString: class MarkdownString {
-        constructor(public value: string) {}
+        constructor(public value) {}
     },
     SnippetString: class SnippetString {
-        constructor(public value: string) {}
-    }
-}), { virtual: true });
-
-// Mock das bibliotecas
-jest.mock('../../fontes/bibliotecas', () => ({
-    formatarPrimitivas: jest.fn().mockImplementation((modulo) => {
-        if (!modulo) return [];
-        const chaves = Object.keys(modulo);
-        if (chaves.includes('chaves')) return [{ nome: 'chaves', documentacao: 'Retorna as chaves do dicionário' }];
-        if (chaves.includes('absoluto')) return [{ nome: 'arredondar', documentacao: 'Arredonda um número' }];
-        if (chaves.includes('aparar')) return [{ nome: 'maiuscula', documentacao: 'Converte para maiúsculas' }];
-        if (chaves.includes('adicionar')) return [{ nome: 'empurrar', documentacao: 'Adiciona elemento ao vetor' }];
-        return [];
-    }),
-    funcoesNativasDelegua: [
-        { nome: 'escreva', documentacao: 'Escreve na saída' },
-        { nome: 'leia', documentacao: 'Lê da entrada' }
-    ]
-}), { virtual: true });
-
-// Mock das primitivas do Liquido
-jest.mock('../../fontes/bibliotecas/primitivas-liquido', () => ({
-    primitivasMetodosLiquido: [
-        { nome: 'rotaGet', documentacao: 'Define uma rota GET' },
-        { nome: 'rotaPost', documentacao: 'Define uma rota POST' }
-    ],
-    objetosEmRotaLiquido: [
-        { nome: 'requisicao', documentacao: 'Objeto de requisição HTTP' },
-        { nome: 'resposta', documentacao: 'Objeto de resposta HTTP' }
-    ]
-}), { virtual: true });
-
-// Mock do cache de análise
-jest.mock('../../fontes/analise-codigo/cache-analise', () => ({
-    obterResultado: jest.fn().mockReturnValue(null)
-}), { virtual: true });
-
-jest.mock('../../fontes/documentacao-em-editor/etiquetas-documentarios', () => ({
-    definicoesTagsDocumentario: [
-        { canonica: '@param', aliases: ['@param', '@arg'], titulo: 'Parametros' },
-        { canonica: '@veja', aliases: ['@veja', '@see'], titulo: 'Veja tambem' },
-        { canonica: '@retorna', aliases: ['@retorna', '@returns'], titulo: 'Retorna' }
-    ]
-}), { virtual: true });
-
-// Mock das declarações do Delegua
-jest.mock('@designliquido/delegua/declaracoes', () => ({
-    Var: class Var {
-        constructor(public simbolo: any, public tipo: string) {}
+        constructor(public value) {}
     },
-    Const: class Const {
-        constructor(public simbolo: any, public tipo: string) {}
-    },
-    Classe: class Classe {
-        metodos: any[];
-        propriedades: any[];
-        constructor(public simbolo: any, superClasses?: any[], metodos?: any[], propriedades?: any[]) {
-            this.metodos = metodos ?? [];
-            this.propriedades = propriedades ?? [];
-        }
-    },
-    FuncaoDeclaracao: class FuncaoDeclaracao {
-        constructor(public simbolo: any, public tipo: string) {}
-    }
 }), { virtual: true });
 
-jest.mock('@designliquido/delegua/declaracoes/propriedade-classe', () => ({
-    PropriedadeClasse: class PropriedadeClasse {
-        constructor(public nome: any, public tipo?: string) {}
-    }
+jest.mock('@designliquido/delegua-lsp', () => ({
+    provideCompletionItems: jest.fn().mockReturnValue([]),
+    DocumentoLSP: undefined,
 }), { virtual: true });
+
+jest.mock('vscode-languageserver-types', () => ({
+    InsertTextFormat: { PlainText: 1, Snippet: 2 },
+}), { virtual: true });
+
+import { DeleguaProvedorCompletude } from '../../fontes/completude/delegua-provedor-completude';
+
+function criarDocumento(texto = '') {
+    return {
+        uri: { toString: () => 'file:///test.delegua' },
+        fileName: '/test.delegua',
+        getText: jest.fn(() => texto),
+        version: 1,
+        languageId: 'delegua',
+        offsetAt: jest.fn(() => texto.length),
+    };
+}
 
 describe('completude/DeleguaProvedorCompletude', () => {
-    let DeleguaProvedorCompletude: any;
-    let provedor: any;
-    let mockDocument: any;
-    let mockPosition: any;
-    let mockToken: any;
-    let mockContext: any;
-    let obterResultado: any;
+    let provedor;
+    let lspMock;
 
     beforeEach(() => {
         jest.clearAllMocks();
-
-        const module = require('../../fontes/completude/delegua-provedor-completude');
-        DeleguaProvedorCompletude = module.DeleguaProvedorCompletude;
+        lspMock = jest.requireMock('@designliquido/delegua-lsp');
+        lspMock.provideCompletionItems.mockReturnValue([]);
         provedor = new DeleguaProvedorCompletude();
-
-        const cacheModule = require('../../fontes/analise-codigo/cache-analise');
-        obterResultado = cacheModule.obterResultado;
-
-        mockDocument = {
-            uri: { toString: () => 'file:///test.delegua' },
-            lineAt: jest.fn().mockReturnValue({ text: '' })
-        };
-
-        mockPosition = {
-            line: 5,
-            character: 10
-        };
-
-        mockToken = {};
-        mockContext = {};
     });
 
-    describe('Construtor', () => {
-        it('deve criar instância do provedor', () => {
-            expect(provedor).toBeDefined();
-            expect(typeof provedor.provideCompletionItems).toBe('function');
-        });
-
-        it('deve ter tiposParametrosLiquido definido', () => {
-            expect(provedor.tiposParametrosLiquido).toBeDefined();
-            expect(Array.isArray(provedor.tiposParametrosLiquido)).toBe(true);
-        });
-
-        it('deve incluir tipo "requisicao" nos parâmetros Liquido', () => {
-            const tipoRequisicao = provedor.tiposParametrosLiquido.find(
-                (t: any) => t.nome === 'requisicao'
-            );
-            expect(tipoRequisicao).toBeDefined();
-            expect(tipoRequisicao.propriedades).toBeDefined();
-        });
-
-        it('deve incluir tipo "resposta" nos parâmetros Liquido', () => {
-            const tipoResposta = provedor.tiposParametrosLiquido.find(
-                (t: any) => t.nome === 'resposta'
-            );
-            expect(tipoResposta).toBeDefined();
-            expect(tipoResposta.metodos).toBeDefined();
-        });
+    it('cria instância do provedor', () => {
+        expect(provedor).toBeDefined();
+        expect(typeof provedor.provideCompletionItems).toBe('function');
     });
 
-    describe('provideCompletionItems', () => {
-        it('deve retornar sugestões básicas para linha vazia', () => {
-            mockDocument.lineAt.mockReturnValue({ text: '' });
-            obterResultado.mockReturnValue({ avaliadorSintatico: { declaracoes: [] } });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument,
-                mockPosition,
-                mockToken,
-                mockContext
-            );
-
-            expect(Array.isArray(items)).toBe(true);
-            expect(items.length).toBeGreaterThan(0);
-        });
-
-        it('deve sugerir etiquetas de documentário após @ dentro de /** */', () => {
-            mockDocument.lineAt = jest.fn((linhaOuPosicao: number | { line: number }) => {
-                const linhas = ['/**', ' * @', ' */'];
-                const linha = typeof linhaOuPosicao === 'number' ? linhaOuPosicao : linhaOuPosicao.line;
-                return { text: linhas[linha] };
-            });
-            mockDocument.lineCount = 3;
-            mockPosition.line = 1;
-            mockPosition.character = 4;
-            obterResultado.mockReturnValue({ avaliadorSintatico: { declaracoes: [] } });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument,
-                mockPosition,
-                mockToken,
-                mockContext
-            );
-
-            expect(Array.isArray(items)).toBe(true);
-            expect(items.some((item: any) => item.label === '@param')).toBe(true);
-            expect(items.some((item: any) => item.label === '@veja')).toBe(true);
-
-            const itemParam = items.find((item: any) => item.label === '@param');
-            expect(itemParam.insertText.value).toBe('param $0');
-        });
-
-        it('deve filtrar etiquetas de documentário pelo prefixo digitado', () => {
-            mockDocument.lineAt = jest.fn((linhaOuPosicao: number | { line: number }) => {
-                const linhas = ['/**', ' * @v', ' */'];
-                const linha = typeof linhaOuPosicao === 'number' ? linhaOuPosicao : linhaOuPosicao.line;
-                return { text: linhas[linha] };
-            });
-            mockDocument.lineCount = 3;
-            mockPosition.line = 1;
-            mockPosition.character = 5;
-            obterResultado.mockReturnValue({ avaliadorSintatico: { declaracoes: [] } });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument,
-                mockPosition,
-                mockToken,
-                mockContext
-            );
-
-            expect(items).toHaveLength(1);
-            expect(items[0].label).toBe('@veja');
-            expect(items[0].insertText.value).toBe('eja $0');
-        });
-
-        it('deve retornar sugestões de métodos Liquido após "liquido."', () => {
-            mockDocument.lineAt.mockReturnValue({ text: 'liquido.' });
-            mockPosition.character = 8;
-            obterResultado.mockReturnValue({ avaliadorSintatico: { declaracoes: [] } });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument,
-                mockPosition,
-                mockToken,
-                mockContext
-            );
-
-            expect(Array.isArray(items)).toBe(true);
-            expect(items.length).toBeGreaterThan(0);
-            // Deve incluir métodos como rotaGet, rotaPost
-            const hasRotaMethod = items.some((item: any) =>
-                item.label === 'rotaGet' || item.label === 'rotaPost'
-            );
-            expect(hasRotaMethod).toBe(true);
-        });
-
-        it('deve incluir variáveis declaradas nas sugestões', () => {
-            const { Var } = require('@designliquido/delegua/declaracoes');
-
-            mockDocument.lineAt.mockReturnValue({ text: 'x' });
-            obterResultado.mockReturnValue({
-                avaliadorSintatico: {
-                    declaracoes: [
-                        new Var({ lexema: 'minhaVar' }, 'número')
-                    ]
-                }
-            });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument,
-                mockPosition,
-                mockToken,
-                mockContext
-            );
-
-            const varItem = items.find((item: any) => item.label === 'minhaVar');
-            expect(varItem).toBeDefined();
-            expect(varItem.kind).toBe(vscode.CompletionItemKind.Variable);
-        });
-
-        it('deve incluir constantes declaradas nas sugestões', () => {
-            const { Const } = require('@designliquido/delegua/declaracoes');
-
-            mockDocument.lineAt.mockReturnValue({ text: 'x' });
-            obterResultado.mockReturnValue({
-                avaliadorSintatico: {
-                    declaracoes: [
-                        new Const({ lexema: 'MINHA_CONST' }, 'texto')
-                    ]
-                }
-            });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument,
-                mockPosition,
-                mockToken,
-                mockContext
-            );
-
-            const constItem = items.find((item: any) => item.label === 'MINHA_CONST');
-            expect(constItem).toBeDefined();
-        });
-
-        it('deve retornar primitivas de número para variável tipo número', () => {
-            const { Var } = require('@designliquido/delegua/declaracoes');
-
-            mockDocument.lineAt.mockReturnValue({ text: 'x.' });
-            mockPosition.character = 2;
-            obterResultado.mockReturnValue({
-                avaliadorSintatico: {
-                    declaracoes: [
-                        new Var({ lexema: 'x' }, 'número')
-                    ]
-                }
-            });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument,
-                mockPosition,
-                mockToken,
-                mockContext
-            );
-
-            expect(Array.isArray(items)).toBe(true);
-            expect(items.length).toBeGreaterThan(0);
-            // Deve ter primitivas de número
-            const hasNumPrimitive = items.some((item: any) => item.label === 'arredondar');
-            expect(hasNumPrimitive).toBe(true);
-        });
-
-        it('deve retornar primitivas de texto para variável tipo texto', () => {
-            const { Var } = require('@designliquido/delegua/declaracoes');
-
-            mockDocument.lineAt.mockReturnValue({ text: 'str.' });
-            mockPosition.character = 4;
-            obterResultado.mockReturnValue({
-                avaliadorSintatico: {
-                    declaracoes: [
-                        new Var({ lexema: 'str' }, 'texto')
-                    ]
-                }
-            });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument,
-                mockPosition,
-                mockToken,
-                mockContext
-            );
-
-            const hasTextPrimitive = items.some((item: any) => item.label === 'maiuscula');
-            expect(hasTextPrimitive).toBe(true);
-        });
-
-        it('deve retornar primitivas de vetor para variável tipo vetor', () => {
-            const { Var } = require('@designliquido/delegua/declaracoes');
-
-            mockDocument.lineAt.mockReturnValue({ text: 'arr.' });
-            mockPosition.character = 4;
-            obterResultado.mockReturnValue({
-                avaliadorSintatico: {
-                    declaracoes: [
-                        new Var({ lexema: 'arr' }, 'vetor')
-                    ]
-                }
-            });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument,
-                mockPosition,
-                mockToken,
-                mockContext
-            );
-
-            const hasVectorPrimitive = items.some((item: any) => item.label === 'empurrar');
-            expect(hasVectorPrimitive).toBe(true);
-        });
-
-        it('deve retornar primitivas de dicionário para variável tipo dicionário', () => {
-            const { Var } = require('@designliquido/delegua/declaracoes');
-
-            mockDocument.lineAt.mockReturnValue({ text: 'dict.' });
-            mockPosition.character = 5;
-            obterResultado.mockReturnValue({
-                avaliadorSintatico: {
-                    declaracoes: [
-                        new Var({ lexema: 'dict' }, 'dicionário')
-                    ]
-                }
-            });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument,
-                mockPosition,
-                mockToken,
-                mockContext
-            );
-
-            const hasDictPrimitive = items.some((item: any) => item.label === 'chaves');
-            expect(hasDictPrimitive).toBe(true);
-        });
+    it('retorna lista vazia quando LSP retorna vazio', () => {
+        const resultado = provedor.provideCompletionItems(criarDocumento(), { line: 0, character: 0 }, {});
+        expect(resultado).toEqual([]);
     });
 
-    describe('analisarCadeiaChamadasEmCodigo', () => {
-        it('deve analisar chamada simples com ponto', () => {
-            const caminho = provedor.analisarCadeiaChamadasEmCodigo('objeto.');
-            expect(caminho).toEqual(['objeto']);
-        });
-
-        it('deve analisar chamada encadeada', () => {
-            const caminho = provedor.analisarCadeiaChamadasEmCodigo('objeto.propriedade.');
-            expect(caminho).toEqual(['objeto', 'propriedade']);
-        });
-
-        it('deve analisar chamada com método', () => {
-            const caminho = provedor.analisarCadeiaChamadasEmCodigo('objeto.metodo().');
-            expect(caminho.length).toBeGreaterThan(0);
-            expect(caminho[0]).toBe('objeto');
-        });
-
-        it('deve retornar array vazio para texto sem ponto', () => {
-            const caminho = provedor.analisarCadeiaChamadasEmCodigo('objeto');
-            expect(caminho).toEqual([]);
-        });
-
-        it('deve analisar cadeia complexa', () => {
-            const caminho = provedor.analisarCadeiaChamadasEmCodigo('resposta.status(200).json().');
-            expect(caminho.length).toBeGreaterThan(0);
-        });
+    it('converte CompletionItem do LSP para vscode (kind com offset -1)', () => {
+        // LSP CompletionItemKind.Variable = 6 → vscode.CompletionItemKind.Variable = 5
+        lspMock.provideCompletionItems.mockReturnValue([
+            { label: 'minhaVar', kind: 6 }
+        ]);
+        const resultado = provedor.provideCompletionItems(criarDocumento(), { line: 0, character: 0 }, {});
+        expect(resultado.length).toBe(1);
+        expect(resultado[0].label).toBe('minhaVar');
+        expect(resultado[0].kind).toBe(5);
     });
 
-    describe('obterPalavraAntesPonto', () => {
-        it('deve extrair palavra antes do ponto', () => {
-            const palavra = provedor.obterPalavraAntesPonto('objeto.');
-            expect(palavra).toBe('objeto');
-        });
-
-        it('deve retornar null quando não há ponto', () => {
-            const palavra = provedor.obterPalavraAntesPonto('objeto');
-            expect(palavra).toBeNull();
-        });
-
-        it('deve extrair última palavra antes do ponto', () => {
-            const palavra = provedor.obterPalavraAntesPonto('primeiro.segundo.');
-            expect(palavra).toBe('primeiro');
-        });
+    it('converte documentação MarkupContent para MarkdownString', () => {
+        lspMock.provideCompletionItems.mockReturnValue([
+            { label: 'escreva', kind: 3, documentation: { kind: 'markdown', value: 'Escreve na saída' } }
+        ]);
+        const resultado = provedor.provideCompletionItems(criarDocumento(), { line: 0, character: 0 }, {});
+        expect(resultado[0].documentation.value).toBe('Escreve na saída');
     });
 
-    describe('obterDetalhesEscopo', () => {
-        it('deve detectar escopo global', () => {
-            mockDocument.lineAt.mockReturnValue({ text: 'var x = 10' });
-
-            const detalhes = provedor.obterDetalhesEscopo(mockDocument, mockPosition);
-
-            expect(detalhes.tipoEscopo).toBe('global');
-            expect(detalhes.escopos).toEqual([]);
-        });
-
-        it('deve detectar escopo dentro de rotaGet', () => {
-            mockDocument.lineAt
-                .mockReturnValueOnce({ text: 'liquido.rotaGet("/", funcao(req, res) {' })
-                .mockReturnValueOnce({ text: '    var x = 10' })
-                .mockReturnValueOnce({ text: '    var x = 10' })
-                .mockReturnValueOnce({ text: '    var x = 10' })
-                .mockReturnValueOnce({ text: '    var x = 10' })
-                .mockReturnValueOnce({ text: '    res.' });
-
-            const detalhes = provedor.obterDetalhesEscopo(mockDocument, mockPosition);
-
-            expect(detalhes.tipoEscopo).toBe('rotaGet');
-            expect(detalhes.dentroDoEscopo).toBe(true);
-        });
-
-        it('deve contar nível de aninhamento', () => {
-            mockDocument.lineAt
-                .mockReturnValueOnce({ text: 'funcao teste() {' })
-                .mockReturnValueOnce({ text: '    se (verdadeiro) {' })
-                .mockReturnValueOnce({ text: '        var x = 10' })
-                .mockReturnValueOnce({ text: '        var x = 10' })
-                .mockReturnValueOnce({ text: '        var x = 10' })
-                .mockReturnValueOnce({ text: '        x.' });
-
-            const detalhes = provedor.obterDetalhesEscopo(mockDocument, mockPosition);
-
-            expect(detalhes.nivelAninhamento).toBeGreaterThan(0);
-        });
+    it('converte insertText simples para string', () => {
+        lspMock.provideCompletionItems.mockReturnValue([
+            { label: 'escreva', insertText: 'escreva', insertTextFormat: 1 }
+        ]);
+        const resultado = provedor.provideCompletionItems(criarDocumento(), { line: 0, character: 0 }, {});
+        expect(typeof resultado[0].insertText).toBe('string');
     });
 
-    describe('detectarParametrosDaFuncao', () => {
-        it('deve detectar parâmetros de rotaGet', () => {
-            mockDocument.lineAt = jest.fn((linha: number) => {
-                if (linha === 3) {
-                    return { text: 'liquido.rotaGet(funcao(req, res) {' };
-                }
-                return { text: '' };
-            });
-            mockPosition.line = 5;
-
-            const parametros = provedor.detectarParametrosDaFuncao(mockDocument, mockPosition);
-
-            expect(parametros.length).toBe(2);
-            expect(parametros[0].nome).toBe('req');
-            expect(parametros[0].tipoOriginal).toBe('requisicao');
-            expect(parametros[1].nome).toBe('res');
-            expect(parametros[1].tipoOriginal).toBe('resposta');
-        });
-
-        it('deve detectar parâmetros de rotaPost', () => {
-            mockDocument.lineAt = jest.fn((linha: number) => {
-                if (linha === 2) {
-                    return { text: 'liquido.rotaPost(funcao(requisicao, resposta) {' };
-                }
-                return { text: '' };
-            });
-            mockPosition.line = 5;
-
-            const parametros = provedor.detectarParametrosDaFuncao(mockDocument, mockPosition);
-
-            expect(parametros.length).toBe(2);
-            expect(parametros[0].nome).toBe('requisicao');
-            expect(parametros[1].nome).toBe('resposta');
-        });
-
-        it('deve retornar array vazio quando não encontra padrão', () => {
-            mockDocument.lineAt.mockReturnValue({ text: 'var x = 10' });
-
-            const parametros = provedor.detectarParametrosDaFuncao(mockDocument, mockPosition);
-
-            expect(parametros).toEqual([]);
-        });
+    it('converte insertText snippet para SnippetString', () => {
+        lspMock.provideCompletionItems.mockReturnValue([
+            { label: 'escreva', insertText: 'escreva($0)', insertTextFormat: 2 }
+        ]);
+        const resultado = provedor.provideCompletionItems(criarDocumento(), { line: 0, character: 0 }, {});
+        expect(resultado[0].insertText.value).toBe('escreva($0)');
     });
 
-    describe('criarCompletudesCompletas', () => {
-        it('deve criar completudes para propriedades', () => {
-            const tipoParametro = {
-                nome: 'teste',
-                propriedades: [
-                    {
-                        nome: 'prop1',
-                        tipo: 'texto',
-                        documentacao: 'Propriedade de teste',
-                        tipoCompletude: vscode.CompletionItemKind.Property
-                    }
-                ]
-            };
-
-            const completudes = provedor.criarCompletudesCompletas(tipoParametro);
-
-            expect(completudes.length).toBeGreaterThan(0);
-            expect(completudes[0].label).toBe('prop1');
-            expect(completudes[0].kind).toBe(vscode.CompletionItemKind.Property);
-        });
-
-        it('deve criar completudes para métodos', () => {
-            const tipoParametro = {
-                nome: 'teste',
-                metodos: [
-                    {
-                        nome: 'metodo1',
-                        parametros: ['arg1: texto'],
-                        tipoRetorno: 'número',
-                        documentacao: 'Método de teste',
-                        permiteEncadeamento: false
-                    }
-                ]
-            };
-
-            const completudes = provedor.criarCompletudesCompletas(tipoParametro);
-
-            expect(completudes.length).toBeGreaterThan(0);
-            expect(completudes[0].label).toBe('metodo1');
-            expect(completudes[0].kind).toBe(vscode.CompletionItemKind.Method);
-        });
-
-        it('deve adicionar snippet para métodos', () => {
-            const tipoParametro = {
-                nome: 'teste',
-                metodos: [
-                    {
-                        nome: 'metodo1',
-                        parametros: [],
-                        documentacao: 'Teste',
-                        snippet: 'metodo1(${1:arg})'
-                    }
-                ]
-            };
-
-            const completudes = provedor.criarCompletudesCompletas(tipoParametro);
-
-            expect(completudes[0].insertText).toBeDefined();
-            expect(completudes[0].insertText.value).toBe('metodo1(${1:arg})');
-        });
-
-        it('deve indicar métodos encadeáveis', () => {
-            const tipoParametro = {
-                nome: 'teste',
-                metodos: [
-                    {
-                        nome: 'metodo1',
-                        parametros: [],
-                        tipoRetorno: 'teste',
-                        documentacao: 'Teste',
-                        permiteEncadeamento: true
-                    }
-                ]
-            };
-
-            const completudes = provedor.criarCompletudesCompletas(tipoParametro);
-
-            expect(completudes[0].detail).toContain('encadeável');
-        });
-    });
-
-    describe('Integração - Liquido', () => {
-        it('deve sugerir métodos de resposta dentro de escopo de rota', () => {
-            mockDocument.lineAt.mockImplementation((linha: number) => {
-                if (linha === 0) {
-                    return { text: 'liquido.rotaGet("/", funcao(req, res) {' };
-                }
-                if (linha === 5) {
-                    return { text: '    ' };
-                }
-                return { text: '' };
-            });
-            obterResultado.mockReturnValue({ avaliadorSintatico: { declaracoes: [] } });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument,
-                mockPosition,
-                mockToken,
-                mockContext
-            );
-
-            // Deve incluir objetos disponíveis em rotas (requisicao, resposta)
-            expect(Array.isArray(items)).toBe(true);
-            expect(items.length).toBeGreaterThan(0);
-        });
-    });
-
-    describe('obterClasseEnvolvente', () => {
-        it('deve retornar nome da classe quando cursor está dentro de um método', () => {
-            mockDocument.lineAt = jest.fn((linha: number) => {
-                const linhas = [
-                    'classe Lexador {',
-                    '    funcao mapear(texto) {',
-                    '        isto.',
-                ];
-                return { text: linhas[linha] ?? '' };
-            });
-            mockPosition.line = 2;
-            mockPosition.character = 13;
-
-            const nome = provedor.obterClasseEnvolvente(mockDocument, mockPosition);
-
-            expect(nome).toBe('Lexador');
-        });
-
-        it('deve retornar null quando cursor não está dentro de uma classe', () => {
-            mockDocument.lineAt = jest.fn((linha: number) => {
-                const linhas = [
-                    'funcao teste() {',
-                    '    isto.',
-                ];
-                return { text: linhas[linha] ?? '' };
-            });
-            mockPosition.line = 1;
-            mockPosition.character = 9;
-
-            const nome = provedor.obterClasseEnvolvente(mockDocument, mockPosition);
-
-            expect(nome).toBeNull();
-        });
-
-        it('deve ignorar blocos aninhados e encontrar a classe correta', () => {
-            mockDocument.lineAt = jest.fn((linha: number) => {
-                const linhas = [
-                    'classe Lexador {',
-                    '    funcao mapear() {',
-                    '        se (verdadeiro) {',
-                    '            var x = 0',
-                    '        }',
-                    '        isto.',
-                ];
-                return { text: linhas[linha] ?? '' };
-            });
-            mockPosition.line = 5;
-            mockPosition.character = 13;
-
-            const nome = provedor.obterClasseEnvolvente(mockDocument, mockPosition);
-
-            expect(nome).toBe('Lexador');
-        });
-
-        it('deve encontrar classe mesmo com múltiplos blocos aninhados entre ela e o cursor', () => {
-            mockDocument.lineAt = jest.fn((linha: number) => {
-                const linhas = [
-                    'classe Lexador {',
-                    '    analisarCaractere(c) {',
-                    '        escolha c {',
-                    '            padrão:',
-                    '                se isto.eDigito(c) {',
-                    '                    retorna 0',
-                    '                } senão se isto.eLetra(c) {',
-                    '                    isto.',
-                ];
-                return { text: linhas[linha] ?? '' };
-            });
-            mockPosition.line = 7;
-            mockPosition.character = 24;
-
-            const nome = provedor.obterClasseEnvolvente(mockDocument, mockPosition);
-
-            expect(nome).toBe('Lexador');
-        });
-
-        it('deve retornar null para arquivo sem classes', () => {
-            mockDocument.lineAt = jest.fn(() => ({ text: 'var x = 10' }));
-            mockPosition.line = 0;
-            mockPosition.character = 5;
-
-            const nome = provedor.obterClasseEnvolvente(mockDocument, mockPosition);
-
-            expect(nome).toBeNull();
-        });
-    });
-
-    describe('obterCompletudesDeClasse', () => {
-        it('deve retornar métodos da classe como CompletionItem', () => {
-            const { Classe } = require('@designliquido/delegua/declaracoes');
-            const metodos = [
-                { simbolo: { lexema: 'mapear' }, funcao: { parametros: [{ nome: { lexema: 'texto' } }] } },
-                { simbolo: { lexema: 'tokenizar' }, funcao: { parametros: [] } },
-            ];
-            const classe = new Classe({ lexema: 'Lexador' }, [], metodos, []);
-
-            const completudes = provedor.obterCompletudesDeClasse(classe);
-
-            expect(completudes.length).toBe(2);
-            expect(completudes.some((c: any) => c.label === 'mapear')).toBe(true);
-            expect(completudes.some((c: any) => c.label === 'tokenizar')).toBe(true);
-            expect(completudes.find((c: any) => c.label === 'mapear').kind).toBe(vscode.CompletionItemKind.Method);
-        });
-
-        it('deve incluir parâmetros no detalhe do método', () => {
-            const { Classe } = require('@designliquido/delegua/declaracoes');
-            const metodos = [
-                { simbolo: { lexema: 'mapear' }, funcao: { parametros: [{ nome: { lexema: 'linhas' } }, { nome: { lexema: 'hashArquivo' } }] } },
-            ];
-            const classe = new Classe({ lexema: 'Lexador' }, [], metodos, []);
-
-            const completudes = provedor.obterCompletudesDeClasse(classe);
-            const item = completudes.find((c: any) => c.label === 'mapear');
-
-            expect(item.detail).toContain('linhas');
-            expect(item.detail).toContain('hashArquivo');
-        });
-
-        it('deve gerar snippet com cursor entre parênteses para métodos', () => {
-            const { Classe } = require('@designliquido/delegua/declaracoes');
-            const metodos = [
-                { simbolo: { lexema: 'mapear' }, funcao: { parametros: [] } },
-            ];
-            const classe = new Classe({ lexema: 'Lexador' }, [], metodos, []);
-
-            const completudes = provedor.obterCompletudesDeClasse(classe);
-
-            expect(completudes[0].insertText.value).toBe('mapear($0)');
-        });
-
-        it('deve retornar propriedades da classe como CompletionItem', () => {
-            const { Classe } = require('@designliquido/delegua/declaracoes');
-            const propriedades = [
-                { nome: { lexema: 'simbolos' }, tipo: 'vetor' },
-                { nome: { lexema: 'erros' }, tipo: 'vetor' },
-            ];
-            const classe = new Classe({ lexema: 'Lexador' }, [], [], propriedades);
-
-            const completudes = provedor.obterCompletudesDeClasse(classe);
-
-            expect(completudes.length).toBe(2);
-            expect(completudes.find((c: any) => c.label === 'simbolos').kind).toBe(vscode.CompletionItemKind.Property);
-            expect(completudes.find((c: any) => c.label === 'simbolos').detail).toContain('vetor');
-        });
-
-        it('deve retornar tanto métodos quanto propriedades juntos', () => {
-            const { Classe } = require('@designliquido/delegua/declaracoes');
-            const metodos = [{ simbolo: { lexema: 'mapear' }, funcao: { parametros: [] } }];
-            const propriedades = [{ nome: { lexema: 'erros' }, tipo: 'vetor' }];
-            const classe = new Classe({ lexema: 'Lexador' }, [], metodos, propriedades);
-
-            const completudes = provedor.obterCompletudesDeClasse(classe);
-
-            expect(completudes.length).toBe(2);
-            expect(completudes.some((c: any) => c.label === 'mapear')).toBe(true);
-            expect(completudes.some((c: any) => c.label === 'erros')).toBe(true);
-        });
-
-        it('deve retornar array vazio para classe sem membros', () => {
-            const { Classe } = require('@designliquido/delegua/declaracoes');
-            const classe = new Classe({ lexema: 'Vazia' }, [], [], []);
-
-            const completudes = provedor.obterCompletudesDeClasse(classe);
-
-            expect(completudes).toEqual([]);
-        });
-    });
-
-    describe('provideCompletionItems - isto.', () => {
-        it('deve sugerir métodos da classe ao digitar isto.', () => {
-            const { Classe } = require('@designliquido/delegua/declaracoes');
-            const metodos = [
-                { simbolo: { lexema: 'mapear' }, funcao: { parametros: [] } },
-                { simbolo: { lexema: 'tokenizar' }, funcao: { parametros: [] } },
-            ];
-            const classe = new Classe({ lexema: 'Lexador' }, [], metodos, []);
-
-            mockDocument.lineAt = jest.fn((linhaOuPosicao: number | { line: number }) => {
-                const linhas = [
-                    'classe Lexador {',
-                    '    funcao mapear() {',
-                    '        isto.',
-                ];
-                const i = typeof linhaOuPosicao === 'number' ? linhaOuPosicao : linhaOuPosicao.line;
-                return { text: linhas[i] ?? '' };
-            });
-            mockPosition.line = 2;
-            mockPosition.character = 13;
-
-            obterResultado.mockReturnValue({
-                avaliadorSintatico: { declaracoes: [classe] }
-            });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument, mockPosition, mockToken, mockContext
-            );
-
-            expect(items.some((item: any) => item.label === 'mapear')).toBe(true);
-            expect(items.some((item: any) => item.label === 'tokenizar')).toBe(true);
-        });
-
-        it('deve sugerir propriedades da classe ao digitar isto.', () => {
-            const { Classe } = require('@designliquido/delegua/declaracoes');
-            const propriedades = [{ nome: { lexema: 'erros' }, tipo: 'vetor' }];
-            const classe = new Classe({ lexema: 'Lexador' }, [], [], propriedades);
-
-            mockDocument.lineAt = jest.fn((linhaOuPosicao: number | { line: number }) => {
-                const linhas = [
-                    'classe Lexador {',
-                    '    funcao init() {',
-                    '        isto.',
-                ];
-                const i = typeof linhaOuPosicao === 'number' ? linhaOuPosicao : linhaOuPosicao.line;
-                return { text: linhas[i] ?? '' };
-            });
-            mockPosition.line = 2;
-            mockPosition.character = 13;
-
-            obterResultado.mockReturnValue({
-                avaliadorSintatico: { declaracoes: [classe] }
-            });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument, mockPosition, mockToken, mockContext
-            );
-
-            expect(items.some((item: any) => item.label === 'erros')).toBe(true);
-        });
-
-        it('deve sugerir métodos via texto quando cache de análise é null', () => {
-            mockDocument.lineCount = 4;
-            mockDocument.lineAt = jest.fn((linhaOuPosicao: number | { line: number }) => {
-                const linhas = [
-                    'classe Lexador {',
-                    '    mapear(codigo) {',
-                    '        isto.',
-                    '}',
-                ];
-                const i = typeof linhaOuPosicao === 'number' ? linhaOuPosicao : linhaOuPosicao.line;
-                return { text: linhas[i] ?? '' };
-            });
-            mockPosition.line = 2;
-            mockPosition.character = 13;
-
-            obterResultado.mockReturnValue(null);
-
-            const items = provedor.provideCompletionItems(
-                mockDocument, mockPosition, mockToken, mockContext
-            );
-
-            expect(items.some((item: any) => item.label === 'mapear')).toBe(true);
-        });
-
-        it('não deve sugerir membros de classe quando isto. é usado fora de classe', () => {
-            mockDocument.lineAt = jest.fn((linhaOuPosicao: number | { line: number }) => {
-                const linhas = [
-                    'funcao solto() {',
-                    '    isto.',
-                ];
-                const i = typeof linhaOuPosicao === 'number' ? linhaOuPosicao : linhaOuPosicao.line;
-                return { text: linhas[i] ?? '' };
-            });
-            mockPosition.line = 1;
-            mockPosition.character = 9;
-
-            obterResultado.mockReturnValue({
-                avaliadorSintatico: { declaracoes: [] }
-            });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument, mockPosition, mockToken, mockContext
-            );
-
-            // Should fall through to native functions, not crash
-            expect(Array.isArray(items)).toBe(true);
-        });
-    });
-
-    describe('Casos extremos', () => {
-        it('deve lidar com documento sem cache de análise', () => {
-            obterResultado.mockReturnValue(null);
-            mockDocument.lineAt.mockReturnValue({ text: '' });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument,
-                mockPosition,
-                mockToken,
-                mockContext
-            );
-
-            expect(Array.isArray(items)).toBe(true);
-        });
-
-        it('deve lidar com posição no início da linha', () => {
-            mockDocument.lineAt.mockReturnValue({ text: 'var x = 10' });
-            mockPosition.character = 0;
-            obterResultado.mockReturnValue({ avaliadorSintatico: { declaracoes: [] } });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument,
-                mockPosition,
-                mockToken,
-                mockContext
-            );
-
-            expect(Array.isArray(items)).toBe(true);
-        });
-
-        it('deve lidar com múltiplas declarações de diferentes tipos', () => {
-            const { Var, Const, Classe, FuncaoDeclaracao } = require('@designliquido/delegua/declaracoes');
-
-            obterResultado.mockReturnValue({
-                avaliadorSintatico: {
-                    declaracoes: [
-                        new Var({ lexema: 'x' }, 'número'),
-                        new Const({ lexema: 'Y' }, 'texto'),
-                        new Classe({ lexema: 'MinhaClasse' }),
-                        new FuncaoDeclaracao({ lexema: 'minhaFuncao' }, 'qualquer')
-                    ]
-                }
-            });
-            mockDocument.lineAt.mockReturnValue({ text: '' });
-
-            const items = provedor.provideCompletionItems(
-                mockDocument,
-                mockPosition,
-                mockToken,
-                mockContext
-            );
-
-            expect(items.some((item: any) => item.label === 'x')).toBe(true);
-            expect(items.some((item: any) => item.label === 'Y')).toBe(true);
-            expect(items.some((item: any) => item.label === 'MinhaClasse')).toBe(true);
-            expect(items.some((item: any) => item.label === 'minhaFuncao')).toBe(true);
-        });
+    it('passa documento e posição corretos para o LSP', () => {
+        const doc = criarDocumento('variavel');
+        provedor.provideCompletionItems(doc, { line: 0, character: 5 }, {});
+        expect(lspMock.provideCompletionItems).toHaveBeenCalledWith(
+            expect.objectContaining({ uri: 'file:///test.delegua', languageId: 'delegua' }),
+            { line: 0, character: 5 }
+        );
     });
 });

@@ -1,49 +1,15 @@
-import * as vscode from 'vscode';
+﻿import * as vscode from 'vscode';
+import { prepareRename, provideRenameEdits, DocumentoLSP } from '@designliquido/delegua-lsp';
 
-function escaparRegex(texto: string): string {
-    return texto.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function eCaracterPalavra(caractere: string): boolean {
-    return /[_a-zA-Z0-9]/.test(caractere);
-}
-
-function identificarOcorrenciasLinha(textoLinha: string, palavra: string): number[] {
-    const ocorrencias: number[] = [];
-    const regex = new RegExp(escaparRegex(palavra), 'g');
-    let correspondencia: RegExpExecArray | null;
-
-    while ((correspondencia = regex.exec(textoLinha)) !== null) {
-        const indice = correspondencia.index;
-        const antes = indice > 0 ? textoLinha[indice - 1] : '';
-        const depois = textoLinha[indice + palavra.length] ?? '';
-
-        if (!eCaracterPalavra(antes) && !eCaracterPalavra(depois)) {
-            ocorrencias.push(indice);
-        }
-    }
-
-    return ocorrencias;
-}
-
-function coletarEdicoesDocumento(
-    documento: vscode.TextDocument,
-    palavra: string,
-    novoNome: string,
-    edicoes: vscode.WorkspaceEdit
-): void {
-    for (let indiceLinha = 0; indiceLinha < documento.lineCount; indiceLinha++) {
-        const textoLinha = documento.lineAt(indiceLinha).text;
-        const ocorrencias = identificarOcorrenciasLinha(textoLinha, palavra);
-
-        for (const coluna of ocorrencias) {
-            const range = new vscode.Range(
-                new vscode.Position(indiceLinha, coluna),
-                new vscode.Position(indiceLinha, coluna + palavra.length)
-            );
-            edicoes.replace(documento.uri, range, novoNome);
-        }
-    }
+function documentoParaLsp(documento: vscode.TextDocument): DocumentoLSP {
+    return {
+        uri: documento.uri.toString(),
+        nomeArquivo: documento.fileName,
+        texto: documento.getText(),
+        linhas: documento.getText().split('\n'),
+        versao: documento.version,
+        languageId: documento.languageId,
+    };
 }
 
 export class DeleguaProvedorRenomeacao implements vscode.RenameProvider {
@@ -52,19 +18,20 @@ export class DeleguaProvedorRenomeacao implements vscode.RenameProvider {
         posicao: vscode.Position,
         _token: vscode.CancellationToken
     ): vscode.ProviderResult<vscode.Range | { range: vscode.Range; placeholder: string }> {
-        const intervaloWord = documento.getWordRangeAtPosition(posicao, /[_a-zA-Z][_a-zA-Z0-9]*/);
-        if (!intervaloWord) {
-            return undefined;
-        }
-
-        const simbolo = documento.getText(intervaloWord);
-        if (!simbolo) {
-            return undefined;
-        }
-
+        const lspRange = prepareRename(
+            documentoParaLsp(documento),
+            { line: posicao.line, character: posicao.character }
+        );
+        if (!lspRange) return undefined;
+        const range = new vscode.Range(
+            lspRange.start.line,
+            lspRange.start.character,
+            lspRange.end.line,
+            lspRange.end.character
+        );
         return {
-            range: intervaloWord,
-            placeholder: simbolo,
+            range,
+            placeholder: documento.getText(range),
         };
     }
 
@@ -78,29 +45,30 @@ export class DeleguaProvedorRenomeacao implements vscode.RenameProvider {
             throw new Error('Novo nome inválido para identificador Delégua.');
         }
 
-        const intervaloWord = documento.getWordRangeAtPosition(posicao, /[_a-zA-Z][_a-zA-Z0-9]*/);
-        if (!intervaloWord) {
-            return undefined;
-        }
-
-        const palavra = documento.getText(intervaloWord);
-        if (!palavra || palavra === novoNome) {
-            return new vscode.WorkspaceEdit();
-        }
+        const pastaWorkspace = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '';
+        const resultado = provideRenameEdits(
+            documentoParaLsp(documento),
+            { line: posicao.line, character: posicao.character },
+            novoNome,
+            pastaWorkspace
+        );
+        if (!resultado) return undefined;
 
         const edicoes = new vscode.WorkspaceEdit();
-        coletarEdicoesDocumento(documento, palavra, novoNome, edicoes);
-
-        const arquivos = await vscode.workspace.findFiles('**/*.{delegua,egua}', '**/node_modules/**');
-        for (const arquivo of arquivos) {
-            if (arquivo.toString() === documento.uri.toString()) {
-                continue;
-            }
-
-            const documentoArquivo = await vscode.workspace.openTextDocument(arquivo);
-            coletarEdicoesDocumento(documentoArquivo, palavra, novoNome, edicoes);
+        for (const [uri, textEdits] of Object.entries(resultado.changes ?? {})) {
+            edicoes.set(
+                vscode.Uri.parse(uri),
+                textEdits.map(e => new vscode.TextEdit(
+                    new vscode.Range(
+                        e.range.start.line,
+                        e.range.start.character,
+                        e.range.end.line,
+                        e.range.end.character
+                    ),
+                    e.newText
+                ))
+            );
         }
-
         return edicoes;
     }
 }

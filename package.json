@@ -778,6 +778,7 @@
         "webpack-cli": "^6.0.1"
     },
     "dependencies": {
+        "@designliquido/delegua-lsp": "^0.0.0",
         "@designliquido/birl": "^0.6.8",
         "@designliquido/delegua": "^1.23.5",
         "@designliquido/delegua-arquivos": "^0.0.3",
