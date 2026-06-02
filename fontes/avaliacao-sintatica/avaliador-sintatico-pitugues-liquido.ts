@@ -40,15 +40,26 @@ export class AvaliadorSintaticoPituguesLiquido extends AvaliadorSintaticoPitugue
                     let indexArgumento = 0;
 
                     do {
-                        const valorExpressao = await this.atribuir();
+                        // Argumento nomeado: identificador = valor (não é atribuição de variável)
+                        if (
+                            this.verificarTipoSimboloAtual(tiposDeSimbolos.IDENTIFICADOR) &&
+                            this.verificarTipoProximoSimbolo(tiposDeSimbolos.IGUAL)
+                        ) {
+                            const nomeArgumento = this.avancarEDevolverAnterior().lexema;
+                            this.avancarEDevolverAnterior();
+                            const valorExpressao = await this.ou();
+                            atributos[nomeArgumento] = valorExpressao;
+                        } else {
+                            const valorExpressao = await this.atribuir();
 
-                        atributos[indexArgumento] = valorExpressao;
+                            atributos[indexArgumento] = valorExpressao;
 
-                        if (indexArgumento === 0) {
-                            atributos['caminho'] = valorExpressao;
+                            if (indexArgumento === 0) {
+                                atributos['caminho'] = valorExpressao;
+                            }
+
+                            indexArgumento++;
                         }
-
-                        indexArgumento++;
                     } while (this.verificarSeSimboloAtualEIgualA(tiposDeSimbolos.VIRGULA));
                 }
 
