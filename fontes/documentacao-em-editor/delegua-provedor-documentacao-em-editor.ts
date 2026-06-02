@@ -10,7 +10,7 @@ import primitivasVetor from '@designliquido/delegua/bibliotecas/primitivas-vetor
 import { obterResultado } from '@designliquido/delegua-lsp/analise/cache-analise';
 import { obterDefinicoesPorContexto } from '@designliquido/delegua-lsp/analise/cache-definicoes';
 import { formatarPrimitivas, funcoesNativasDelegua } from '../bibliotecas';
-import { primitivasMetodosLiquido, objetosEmRotaLiquido, metodosRespostaLiquido } from '../bibliotecas/primitivas-liquido';
+import { primitivasMetodosLiquido, objetosEmRotaLiquido, metodosRespostaLiquido, metodosLinCones } from '../bibliotecas/primitivas-liquido';
 import { extrairTextoDocumentacao, formatarDocumentacaoDocumentario } from './formatador-documentacao';
 
 const primitivasDicionarioFormatadas = formatarPrimitivas(primitivasDicionario);
@@ -460,6 +460,7 @@ export class DeleguaProvedorDocumentacaoEmEditor
         const mapaMetodosObjetos: Record<string, typeof primitivasMetodosLiquido> = {
             liquido: primitivasMetodosLiquido,
             resposta: metodosRespostaLiquido,
+            lincones: metodosLinCones,
         };
         const listaMetodos = mapaMetodosObjetos[objeto];
         if (!listaMetodos) {

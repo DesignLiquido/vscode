@@ -95,7 +95,27 @@ export const metodosRespostaLiquido: FuncaoNativaOuMetodoPrimitiva[] = [
     }
 ];
 
+export const metodosLinCones: FuncaoNativaOuMetodoPrimitiva[] = [
+    {
+        nome: 'executar',
+        assinaturas: [
+            {
+                formato: 'executar(comando)',
+                parametros: [{ nome: 'comando', documentacao: 'Comando LinConEs (SQL em português) a executar.' }]
+            }
+        ],
+        documentacao: '# `lincones.executar(comando)`\n\nExecuta um comando LinConEs (SQL em português) no banco de dados configurado.\n\nRetorna um vetor de resultados para comandos de seleção.',
+        exemploCodigo: 'var resultado = lincones.executar("SELECIONAR * DE clientes")\nvar linhas = resultado[0].linhasRetornadas'
+    }
+];
+
 export const objetosEmRotaLiquido: FuncaoNativaOuMetodoPrimitiva[] = [
+    {
+        nome: 'lincones',
+        assinaturas: [{ formato: 'lincones', parametros: [] }],
+        documentacao: '# Objeto `lincones`\n\nConexão com banco de dados LinConEs disponibilizada pelo Líquido para uso dentro de rotas.\n\nPermite executar comandos LinConEs (SQL em português) no banco de dados configurado.',
+        exemploCodigo: 'lincones.executar("CRIAR TABELA clientes (ID INTEIRO NAO NULO CHAVE PRIMARIA AUTO INCREMENTO)")\nvar resultado = lincones.executar("SELECIONAR * DE clientes")'
+    },
     {
         nome: 'requisicao',
         assinaturas: [
