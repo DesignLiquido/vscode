@@ -40,6 +40,7 @@ import { AvaliadorSintaticoPituguesLiquido } from '../avaliacao-sintatica/avalia
 import { descobrirDefinicoes } from '../descobridor-definicoes';
 import { cyrb53 } from '@designliquido/delegua';
 import { AnalisadorSemanticoTestes } from './analisador-semantico-testes';
+import { verificarConfiguracaoLincones } from './verificar-lincones';
 
 const mapaSeveridadeDiagnosticos = {
     0: vscode.DiagnosticSeverity.Error,
@@ -236,6 +237,12 @@ export async function executarAnalises(
         }
     } catch (erro: any) {
         console.error(`Erro ao formatar diagnósticos para arquivo de extensão ${extensaoArquivo}`, erro);
+    }
+
+    const diagnosticosLincones = await verificarConfiguracaoLincones(documento);
+    if (diagnosticosLincones.length > 0) {
+        listaOcorrencias = listaOcorrencias.concat(diagnosticosLincones);
+        diagnosticos.set(documento.uri, listaOcorrencias);
     }
 
     definirResultado(uriDocumento, {
