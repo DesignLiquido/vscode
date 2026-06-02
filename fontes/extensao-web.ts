@@ -159,6 +159,18 @@ export function activate(context: vscode.ExtensionContext) {
                 expirarTudo('dependencias-atualizadas');
                 expirarTodasDefinicoes('dependencias-atualizadas');
             }
+
+            if (documento.uri.path.endsWith('configuracao.delprops')) {
+                for (const doc of vscode.workspace.textDocuments) {
+                    if (/[\\\/]rotas[\\\/]/i.test(doc.fileName) &&
+                        doc.languageId === 'delegua') {
+                        expirarResultado(doc.uri.toString(), 'delprops-atualizado');
+                        executarAnalises(doc, diagnosticosDelegua).catch(erro => {
+                            console.error('Erro ao reanalisar rota após atualização de delprops:', erro);
+                        });
+                    }
+                }
+            }
         })
     );
 
