@@ -252,4 +252,25 @@ describe('validarDelprops', () => {
         const diags = validarDelprops(criarDocumento(["liquido.dados.bd.usuario = 'admin'"]));
         expect(diags).toHaveLength(0);
     });
+
+    // ──── URLs com // não devem ser tratadas como comentário ────
+    it("valor com URL contendo '//' → sem diagnóstico (// não é comentário dentro de aspas)", () => {
+        const diags = validarDelprops(criarDocumento(["liquido.aplicacao.licenca.url = 'https://designliquido.com.br'"]));
+        expect(diags).toHaveLength(0);
+    });
+
+    it("valor com URL contendo '//' em aspas duplas → sem diagnóstico", () => {
+        const diags = validarDelprops(criarDocumento(['liquido.aplicacao.licenca.url = "https://designliquido.com.br"']));
+        expect(diags).toHaveLength(0);
+    });
+
+    it("comentário após valor com URL → valor preservado, comentário ignorado", () => {
+        const diags = validarDelprops(criarDocumento(["liquido.aplicacao.licenca.url = 'https://designliquido.com.br' // site oficial"]));
+        expect(diags).toHaveLength(0);
+    });
+
+    it("comentário de linha inteira com URL dentro → linha ignorada", () => {
+        const diags = validarDelprops(criarDocumento(["// liquido.aplicacao.licenca.url = 'https://designliquido.com.br'"]));
+        expect(diags).toHaveLength(0);
+    });
 });

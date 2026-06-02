@@ -63,6 +63,24 @@ const esquemaAutenticacao: Record<string, EsquemaPropriedade> = {
     'expiracao': { tipo: 'texto' },
 };
 
+function removerComentarioLinha(linha: string): string {
+    let emAspasSimples = false;
+    let emAspasDuplas = false;
+
+    for (let i = 0; i < linha.length - 1; i++) {
+        const c = linha[i];
+        if (c === "'" && !emAspasDuplas) {
+            emAspasSimples = !emAspasSimples;
+        } else if (c === '"' && !emAspasSimples) {
+            emAspasDuplas = !emAspasDuplas;
+        } else if (c === '/' && linha[i + 1] === '/' && !emAspasSimples && !emAspasDuplas) {
+            return linha.slice(0, i);
+        }
+    }
+
+    return linha;
+}
+
 function inferirTipoValor(valor: string): TipoValor | null {
     const v = valor.trim();
     if (v === 'verdadeiro' || v === 'falso') return 'logico';
@@ -292,7 +310,7 @@ export function validarDelprops(documento: vscode.TextDocument): vscode.Diagnost
 
     for (let i = 0; i < documento.lineCount; i++) {
         const linhaTexto = documento.lineAt(i).text;
-        const semComentario = linhaTexto.replace(/\/\/.*$/, '').trim();
+        const semComentario = removerComentarioLinha(linhaTexto).trim();
 
         if (semComentario === '') continue;
 
