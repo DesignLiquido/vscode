@@ -212,7 +212,7 @@ describe('validarDelprops', () => {
     it('liquido.namespaceDesconhecido → warning', () => {
         const diags = validarDelprops(criarDocumento(['liquido.algumOutro.prop = valor']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('Namespace desconhecido');
+        expect(diags[0].message).toContain('Propriedade ou espaço de nomes desconhecido');
         expect(diags[0].severity).toBe(1); // Warning
     });
 
