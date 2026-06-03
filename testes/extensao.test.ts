@@ -322,7 +322,7 @@ describe('Extensão VSCode - Design Líquido', () => {
             extensao.activate(context);
 
             const callback = (vscode.workspace.onDidSaveTextDocument as jest.Mock).mock.calls[0][0];
-            callback({ fileName: '/projeto/package-lock.json' });
+            callback({ fileName: '/projeto/package-lock.json', uri: { path: '/projeto/package-lock.json' } });
 
             expect(expirarTudo).toHaveBeenCalledWith('dependencias-atualizadas');
             expect(expirarTodasDefinicoes).toHaveBeenCalledWith('dependencias-atualizadas');
