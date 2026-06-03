@@ -1,5 +1,35 @@
 # Histórico de Modificações
 
+## 0.27.0
+
+- Núcleo de Delégua atualizado para a versão 1.24.2:
+  - Implementação do arcabouço de FFIs (Interfaces de Funcionalidade Estrangeira);
+  - Operador `tipo()`/`tipo de` retorna o tipo exato de cada dado em laços `para cada` sobre dicionários (resolve https://github.com/DesignLiquido/delegua/issues/1327);
+  - Correção de falso positivo no analisador semântico de Pituguês quanto a soma de vetores (resolve https://github.com/DesignLiquido/delegua/issues/1328);
+  - Impede uso de operadores matemáticos (`++`, `+=`, `-=`, etc.) em texto (resolve https://github.com/DesignLiquido/delegua/issues/1326);
+  - Correção de _bug_ de operador unário negativo não ser tratado corretamente (resolve https://github.com/DesignLiquido/delegua/issues/1322);
+  - Atualizações de gramáticas.
+- Potigol atualizado para a versão 0.11.10:
+  - Melhor inferência de tipos em operações binárias (resolve https://github.com/DesignLiquido/potigol/issues/217);
+  - Expansão de casos na micro avaliação sintática (resolve https://github.com/DesignLiquido/potigol/issues/216);
+  - Melhoramento de algoritmo de incremento em `para` (resolve https://github.com/DesignLiquido/potigol/issues/215);
+  - Múltiplas faixas em laço `para` (resolve https://github.com/DesignLiquido/potigol/issues/209);
+  - Correção em `para gere` para trabalhar com múltiplas faixas geradoras (resolve https://github.com/DesignLiquido/potigol/issues/208);
+  - Repensando métodos de vetor `injete` e `selecione` (resolve https://github.com/DesignLiquido/potigol/issues/207);
+  - Correções em vários métodos de texto (resolve https://github.com/DesignLiquido/potigol/issues/206);
+  - Chamar método após indexação de lista com `[]` (resolve https://github.com/DesignLiquido/potigol/issues/204);
+  - Acesso a elemento de lista como argumento de função (resolve https://github.com/DesignLiquido/potigol/issues/203).
+- Liquido:
+  - Registro de `lincones` como primitiva de rotas;
+  - Expansão das verificações de LinConEs em projetos Liquido;
+  - Verificação de configuração de LinConEs quando `lincones` é mencionado em alguma rota;
+  - Melhorado suporte a URLs como valores em arquivos `.delprops`;
+  - Melhorias na documentação em editor para arquivos de rotas;
+  - Revisão da validação de arquivos `.delprops` para projetos Liquido.
+- Suporte a argumentos nomeados de decoradores em Delégua;
+- Correção de problemas relativos a particularidades de execução em ambiente Web;
+- Introdução do `delegua-lsp`, servidor de protocolo de linguagem (_Language Server Protocol_) para Delégua; vários mecanismos de análise de código passam a ser delegados a este pacote.
+
 ## 0.26.2
 
 - Núcleo de Delégua atualizado para a versão 1.23.5:
