@@ -1,6 +1,6 @@
 ﻿import * as vscode from 'vscode';
 import { CompletionItem, InsertTextFormat } from 'vscode-languageserver-types';
-import { provideCompletionItems, DocumentoLSP } from '@designliquido/delegua-lsp';
+import { proverItensCompletude, DocumentoLSP } from '@designliquido/delegua-lsp';
 
 import { ParametroDetectado } from '../interfaces/completude';
 
@@ -64,6 +64,6 @@ export class DeleguaProvedorCompletude implements vscode.CompletionItemProvider 
         if (!this._documento || !this._posicao) return [];
         const lspDoc = documentoParaLsp(this._documento);
         const lspPos = { line: this._posicao.line, character: this._posicao.character };
-        return provideCompletionItems(lspDoc, lspPos).map(converterItemCompletude);
+        return proverItensCompletude(lspDoc, lspPos).map(converterItemCompletude);
     }
 }

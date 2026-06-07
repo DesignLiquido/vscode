@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+// @ts-nocheck
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 
 jest.mock('vscode', () => ({
@@ -7,14 +7,17 @@ jest.mock('vscode', () => ({
     },
     Uri: {
         parse: (uri) => ({ toString: () => uri, _uri: uri }),
+        file: (uri) => ({ toString: () => `file:///${uri}`, _uri: uri }),
     },
     Range: class Range {
         constructor(public startLine, public startChar, public endLine, public endChar) {}
     },
+    FileType: { Directory: 2 },
+    workspace: { fs: {} },
 }), { virtual: true });
 
 jest.mock('@designliquido/delegua-lsp', () => ({
-    provideDefinition: jest.fn().mockReturnValue(undefined),
+    proverDefinicao: jest.fn().mockReturnValue(undefined),
     DocumentoLSP: undefined,
 }), { virtual: true });
 
@@ -37,7 +40,7 @@ describe('definicao/DeleguaProvedorDefinicao', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         lspMock = jest.requireMock('@designliquido/delegua-lsp');
-        lspMock.provideDefinition.mockReturnValue(undefined);
+        lspMock.proverDefinicao.mockReturnValue(undefined);
         provedor = new DeleguaProvedorDefinicao();
     });
 
@@ -47,7 +50,7 @@ describe('definicao/DeleguaProvedorDefinicao', () => {
     });
 
     it('converte Location do LSP para vscode.Location', () => {
-        lspMock.provideDefinition.mockReturnValue({
+        lspMock.proverDefinicao.mockReturnValue({
             uri: 'file:///definicao.delegua',
             range: {
                 start: { line: 2, character: 4 },
@@ -63,9 +66,10 @@ describe('definicao/DeleguaProvedorDefinicao', () => {
     it('passa documento e posição corretos para o LSP', () => {
         const doc = criarDocumento();
         provedor.provideDefinition(doc, { line: 1, character: 3 }, {});
-        expect(lspMock.provideDefinition).toHaveBeenCalledWith(
+        expect(lspMock.proverDefinicao).toHaveBeenCalledWith(
             expect.objectContaining({ uri: 'file:///test.delegua', languageId: 'delegua' }),
-            { line: 1, character: 3 }
+            { line: 1, character: 3 },
+            expect.anything()
         );
     });
 });

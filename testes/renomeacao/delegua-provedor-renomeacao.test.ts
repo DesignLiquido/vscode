@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+// @ts-nocheck
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 
 jest.mock('vscode', () => ({
@@ -10,6 +10,7 @@ jest.mock('vscode', () => ({
     },
     Uri: {
         parse: (uri) => ({ _uri: uri, toString: () => uri }),
+        file: (uri) => ({ _uri: uri, toString: () => `file:///${uri}` }),
     },
     WorkspaceEdit: class WorkspaceEdit {
         _edits = new Map();
@@ -23,14 +24,16 @@ jest.mock('vscode', () => ({
     TextEdit: class TextEdit {
         constructor(public range, public newText) {}
     },
+    FileType: { Directory: 2 },
     workspace: {
         workspaceFolders: [{ uri: { fsPath: '/workspace' } }],
+        fs: {},
     },
 }), { virtual: true });
 
 jest.mock('@designliquido/delegua-lsp', () => ({
     prepareRename: jest.fn().mockReturnValue(undefined),
-    provideRenameEdits: jest.fn().mockReturnValue(undefined),
+    provideRenameEdits: jest.fn().mockResolvedValue(undefined),
     DocumentoLSP: undefined,
 }), { virtual: true });
 
@@ -56,7 +59,7 @@ describe('renomeacao/DeleguaProvedorRenomeacao', () => {
         jest.clearAllMocks();
         lspMock = jest.requireMock('@designliquido/delegua-lsp');
         lspMock.prepareRename.mockReturnValue(undefined);
-        lspMock.provideRenameEdits.mockReturnValue(undefined);
+        lspMock.provideRenameEdits.mockResolvedValue(undefined);
         provedor = new DeleguaProvedorRenomeacao();
     });
 
@@ -90,7 +93,7 @@ describe('renomeacao/DeleguaProvedorRenomeacao', () => {
         });
 
         it('converte WorkspaceEdit do LSP para vscode.WorkspaceEdit', async () => {
-            lspMock.provideRenameEdits.mockReturnValue({
+            lspMock.provideRenameEdits.mockResolvedValue({
                 changes: {
                     'file:///a.delegua': [
                         { range: { start: { line: 0, character: 0 }, end: { line: 0, character: 17 } }, newText: 'novoNome' },
@@ -107,13 +110,14 @@ describe('renomeacao/DeleguaProvedorRenomeacao', () => {
         });
 
         it('passa posição, novo nome e pasta workspace para o LSP', async () => {
-            lspMock.provideRenameEdits.mockReturnValue({ changes: {} });
+            lspMock.provideRenameEdits.mockResolvedValue({ changes: {} });
             await provedor.provideRenameEdits(criarDocumento(), { line: 0, character: 5 }, 'novoIdentificador', {});
             expect(lspMock.provideRenameEdits).toHaveBeenCalledWith(
                 expect.objectContaining({ uri: 'file:///test.delegua' }),
                 { line: 0, character: 5 },
                 'novoIdentificador',
-                '/workspace'
+                '/workspace',
+                expect.anything()
             );
         });
     });

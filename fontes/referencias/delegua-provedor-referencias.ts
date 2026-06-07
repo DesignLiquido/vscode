@@ -1,5 +1,7 @@
-﻿import * as vscode from 'vscode';
-import { provideReferences, DocumentoLSP } from '@designliquido/delegua-lsp';
+import * as vscode from 'vscode';
+import { proverReferencias, DocumentoLSP } from '@designliquido/delegua-lsp';
+
+import { ambienteVscode } from '../ambiente/ambiente-vscode';
 
 function documentoParaLsp(documento: vscode.TextDocument): DocumentoLSP {
     return {
@@ -13,18 +15,19 @@ function documentoParaLsp(documento: vscode.TextDocument): DocumentoLSP {
 }
 
 export class DeleguaProvedorReferencias implements vscode.ReferenceProvider {
-    provideReferences(
+    async provideReferences(
         documento: vscode.TextDocument,
         posicao: vscode.Position,
         contexto: vscode.ReferenceContext,
         _token: vscode.CancellationToken
-    ): vscode.Location[] {
+    ): Promise<vscode.Location[]> {
         const pastaWorkspace = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '';
-        const resultados = provideReferences(
+        const resultados = await proverReferencias(
             documentoParaLsp(documento),
             { line: posicao.line, character: posicao.character },
             contexto.includeDeclaration,
-            pastaWorkspace
+            pastaWorkspace,
+            ambienteVscode
         );
         return resultados.map(loc =>
             new vscode.Location(

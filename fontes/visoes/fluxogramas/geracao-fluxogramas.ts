@@ -4,7 +4,8 @@ import * as path from 'path';
 import { Lexador } from '@designliquido/delegua/lexador';
 import { TradutorMermaidJs } from '@designliquido/delegua/tradutores';
 import { ImportadorExtensao } from '../../importador';
-import { AvaliadorSintatico, RetornoLexador, SimboloInterface } from '@designliquido/delegua';
+import { AvaliadorSintatico, SimboloInterface } from '@designliquido/delegua';
+import { RetornoLexadorInterface } from '@designliquido/delegua/interfaces/retornos';
 import { GerenciadorVisoesFluxograma } from './gerenciador-visoes-fluxograma';
 
 /**
@@ -50,7 +51,7 @@ export async function gerarFluxograma(uri: vscode.Uri | undefined, context: vsco
                 progresso.report({ increment: 30, message: 'Analisando código...' });
 
                 const retornoAvaliadorSintatico = await avaliadorSintatico.analisar(
-                    retornoImportador?.retornoLexador as RetornoLexador<SimboloInterface<string>>, 
+                    retornoImportador?.retornoLexador as RetornoLexadorInterface<SimboloInterface<string>>,
                     -1
                 );
 

@@ -1,9 +1,10 @@
 import { Declaracao } from "@designliquido/delegua";
-import { RetornoAnalisadorSemantico, RetornoAvaliadorSintatico, RetornoLexador, SimboloInterface } from "@designliquido/delegua/interfaces";
+import { SimboloInterface } from "@designliquido/delegua/interfaces";
+import { RetornoAnalisadorSemanticoInterface, RetornoAvaliadorSintaticoInterface, RetornoLexadorInterface } from "@designliquido/delegua/interfaces/retornos";
 
 export interface ResultadoAnaliseInterface {
-    lexador: RetornoLexador<SimboloInterface>;
-    avaliadorSintatico: RetornoAvaliadorSintatico<Declaracao>;
-    analisadorSemantico: RetornoAnalisadorSemantico;
+    lexador: RetornoLexadorInterface<SimboloInterface>;
+    avaliadorSintatico: RetornoAvaliadorSintaticoInterface<Declaracao>;
+    analisadorSemantico: RetornoAnalisadorSemanticoInterface;
     declaracoesPreCarregadas?: any[];
 }

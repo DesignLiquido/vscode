@@ -1,5 +1,7 @@
-﻿import * as vscode from 'vscode';
+import * as vscode from 'vscode';
 import { prepareRename, provideRenameEdits, DocumentoLSP } from '@designliquido/delegua-lsp';
+
+import { ambienteVscode } from '../ambiente/ambiente-vscode';
 
 function documentoParaLsp(documento: vscode.TextDocument): DocumentoLSP {
     return {
@@ -46,11 +48,12 @@ export class DeleguaProvedorRenomeacao implements vscode.RenameProvider {
         }
 
         const pastaWorkspace = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '';
-        const resultado = provideRenameEdits(
+        const resultado = await provideRenameEdits(
             documentoParaLsp(documento),
             { line: posicao.line, character: posicao.character },
             novoNome,
-            pastaWorkspace
+            pastaWorkspace,
+            ambienteVscode
         );
         if (!resultado) return undefined;
 

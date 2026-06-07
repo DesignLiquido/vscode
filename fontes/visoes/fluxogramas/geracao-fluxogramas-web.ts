@@ -2,7 +2,8 @@ import * as vscode from 'vscode';
 
 import { Lexador } from '@designliquido/delegua/lexador';
 import { TradutorMermaidJs } from '@designliquido/delegua/tradutores';
-import { AvaliadorSintatico, RetornoLexador, SimboloInterface } from '@designliquido/delegua';
+import { AvaliadorSintatico, SimboloInterface } from '@designliquido/delegua';
+import { RetornoLexadorInterface } from '@designliquido/delegua/interfaces/retornos';
 
 import { ImportadorExtensao } from '../../importador';
 import { GerenciadorVisoesFluxograma } from './gerenciador-visoes-fluxograma';
@@ -65,7 +66,7 @@ export async function gerarFluxogramaWeb(uri: vscode.Uri | undefined, context: v
                 progress.report({ increment: 30, message: 'Analisando código...' });
 
                 const retornoAvaliadorSintatico = await avaliadorSintatico.analisar(
-                    retornoImportador?.retornoLexador as RetornoLexador<SimboloInterface<string>>, 
+                    retornoImportador?.retornoLexador as RetornoLexadorInterface<SimboloInterface<string>>,
                     -1
                 );
 

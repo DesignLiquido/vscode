@@ -1,5 +1,7 @@
-﻿import * as vscode from 'vscode';
-import { provideDefinition, DocumentoLSP } from '@designliquido/delegua-lsp';
+import * as vscode from 'vscode';
+import { proverDefinicao, DocumentoLSP } from '@designliquido/delegua-lsp';
+
+import { ambienteVscode } from '../ambiente/ambiente-vscode';
 
 function documentoParaLsp(documento: vscode.TextDocument): DocumentoLSP {
     return {
@@ -18,9 +20,10 @@ export class DeleguaProvedorDefinicao implements vscode.DefinitionProvider {
         posicao: vscode.Position,
         _token: vscode.CancellationToken
     ): vscode.Location | undefined {
-        const resultado = provideDefinition(
+        const resultado = proverDefinicao(
             documentoParaLsp(documento),
-            { line: posicao.line, character: posicao.character }
+            { line: posicao.line, character: posicao.character },
+            ambienteVscode
         );
         if (!resultado) return undefined;
         return new vscode.Location(

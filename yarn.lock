@@ -465,10 +465,10 @@
   resolved "https://registry.yarnpkg.com/@designliquido/delegua-json/-/delegua-json-0.2.1.tgz#57c2e9dc45525ebdf1b4ee6038b11b6a18d3181c"
   integrity sha512-Ym+Tw98Pll84TNSrEnQrFZC0PcKos66qnrEqwUDDxP/6cdnbu2bvTW05wVLXWBZPVUutCld8Qt1RhzJWLr1kVQ==
 
-"@designliquido/delegua-lsp@^0.0.0":
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-lsp/-/delegua-lsp-0.0.0.tgz#4394e05cdb5c0bbc0cbdfdd06d60ea1d3d445f1f"
-  integrity sha512-T230iOVAc/eKt4GwfKNGdpxfCancXDfcFAXgSMLV4D4UX49OVV8wbjPP4hCluIRzeuX2giQupenURgSHTxby+A==
+"@designliquido/delegua-lsp@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-lsp/-/delegua-lsp-0.0.1.tgz#8387c4365b6ca70c093ceee96f06d44c8d341bb2"
+  integrity sha512-rRzKfilK/hn+XmZs+7xyur76sLpgM0DLG1tad03ncx36078AUIib9iHBbQ3MNeqGvNKXQcaXL3jmptdgr2xsyw==
   dependencies:
     "@designliquido/birl" "^0.6.7"
     "@designliquido/delegua" "^1.23.4"

@@ -791,7 +791,7 @@
         "@designliquido/delegua-imagens": "^0.0.0",
         "@designliquido/delegua-interface-grafica": "^0.0.1",
         "@designliquido/delegua-json": "^0.2.1",
-        "@designliquido/delegua-lsp": "^0.0.0",
+        "@designliquido/delegua-lsp": "^0.0.1",
         "@designliquido/delegua-matematica": "^0.3.0",
         "@designliquido/delegua-tempo": "^1.0.1",
         "@designliquido/delegua-yaml": "^0.0.0",

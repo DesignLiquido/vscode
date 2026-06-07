@@ -1,6 +1,7 @@
-import { Construto, Declaracao } from '@designliquido/delegua';
+import { Declaracao } from '@designliquido/delegua';
+import { ConstrutoInterface } from '@designliquido/delegua/interfaces/construtos/construto-interface';
 
-export class ModuloDeclaracoes implements Construto {
+export class ModuloDeclaracoes implements ConstrutoInterface {
     linha: number;
     hashArquivo: number;
     nomeModulo?: string;

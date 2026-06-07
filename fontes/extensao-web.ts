@@ -32,7 +32,7 @@ import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio
 import { executarAnalises } from './analise-codigo';
 import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
 import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
-import { ProvedorVisaoEntradaSaida, ProvedorVisaoEntradaSaidaWeb } from './visoes';
+import { ProvedorVisaoEntradaSaidaWeb } from './visoes';
 import { FabricaAdaptadorDepuracaoWeb } from './depuracao/fabricas/fabrica-adaptador-depuracao-web';
 import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-formatacao';
 import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-visoes-fluxograma';

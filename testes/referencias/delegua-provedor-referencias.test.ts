@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+// @ts-nocheck
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 
 jest.mock('vscode', () => ({
@@ -7,17 +7,20 @@ jest.mock('vscode', () => ({
     },
     Uri: {
         parse: (uri) => ({ _uri: uri, toString: () => uri }),
+        file: (uri) => ({ _uri: uri, toString: () => `file:///${uri}` }),
     },
     Range: class Range {
         constructor(public startLine, public startChar, public endLine, public endChar) {}
     },
+    FileType: { Directory: 2 },
     workspace: {
         workspaceFolders: [{ uri: { fsPath: '/workspace' } }],
+        fs: {},
     },
 }), { virtual: true });
 
 jest.mock('@designliquido/delegua-lsp', () => ({
-    provideReferences: jest.fn().mockReturnValue([]),
+    proverReferencias: jest.fn().mockResolvedValue([]),
     DocumentoLSP: undefined,
 }), { virtual: true });
 
@@ -40,17 +43,17 @@ describe('referencias/DeleguaProvedorReferencias', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         lspMock = jest.requireMock('@designliquido/delegua-lsp');
-        lspMock.provideReferences.mockReturnValue([]);
+        lspMock.proverReferencias.mockResolvedValue([]);
         provedor = new DeleguaProvedorReferencias();
     });
 
-    it('retorna lista vazia quando LSP retorna vazio', () => {
-        const resultado = provedor.provideReferences(criarDocumento(), { line: 0, character: 0 }, { includeDeclaration: true }, {});
+    it('retorna lista vazia quando LSP retorna vazio', async () => {
+        const resultado = await provedor.provideReferences(criarDocumento(), { line: 0, character: 0 }, { includeDeclaration: true }, {});
         expect(resultado).toEqual([]);
     });
 
-    it('converte Location[] do LSP para vscode.Location[]', () => {
-        lspMock.provideReferences.mockReturnValue([
+    it('converte Location[] do LSP para vscode.Location[]', async () => {
+        lspMock.proverReferencias.mockResolvedValue([
             {
                 uri: 'file:///a.delegua',
                 range: { start: { line: 0, character: 0 }, end: { line: 0, character: 8 } },
@@ -61,19 +64,20 @@ describe('referencias/DeleguaProvedorReferencias', () => {
             },
         ]);
 
-        const resultado = provedor.provideReferences(criarDocumento(), { line: 0, character: 0 }, { includeDeclaration: true }, {});
+        const resultado = await provedor.provideReferences(criarDocumento(), { line: 0, character: 0 }, { includeDeclaration: true }, {});
         expect(resultado.length).toBe(2);
         expect(resultado[0].uri._uri).toBe('file:///a.delegua');
         expect(resultado[1].uri._uri).toBe('file:///b.delegua');
     });
 
-    it('passa includeDeclaration e pastaWorkspace para o LSP', () => {
-        provedor.provideReferences(criarDocumento(), { line: 0, character: 5 }, { includeDeclaration: false }, {});
-        expect(lspMock.provideReferences).toHaveBeenCalledWith(
+    it('passa includeDeclaration e pastaWorkspace para o LSP', async () => {
+        await provedor.provideReferences(criarDocumento(), { line: 0, character: 5 }, { includeDeclaration: false }, {});
+        expect(lspMock.proverReferencias).toHaveBeenCalledWith(
             expect.objectContaining({ uri: 'file:///test.delegua' }),
             { line: 0, character: 5 },
             false,
-            '/workspace'
+            '/workspace',
+            expect.anything()
         );
     });
 });

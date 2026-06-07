@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+// @ts-nocheck
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 
 jest.mock('vscode', () => ({
@@ -19,10 +19,13 @@ jest.mock('vscode', () => ({
     SnippetString: class SnippetString {
         constructor(public value) {}
     },
+    FileType: { Directory: 2 },
+    Uri: { parse: (u) => u, file: (u) => u },
+    workspace: { fs: {} },
 }), { virtual: true });
 
 jest.mock('@designliquido/delegua-lsp', () => ({
-    provideCompletionItems: jest.fn().mockReturnValue([]),
+    proverItensCompletude: jest.fn().mockReturnValue([]),
     DocumentoLSP: undefined,
 }), { virtual: true });
 
@@ -50,7 +53,7 @@ describe('completude/DeleguaProvedorCompletude', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         lspMock = jest.requireMock('@designliquido/delegua-lsp');
-        lspMock.provideCompletionItems.mockReturnValue([]);
+        lspMock.proverItensCompletude.mockReturnValue([]);
         provedor = new DeleguaProvedorCompletude();
     });
 
@@ -66,7 +69,7 @@ describe('completude/DeleguaProvedorCompletude', () => {
 
     it('converte CompletionItem do LSP para vscode (kind com offset -1)', () => {
         // LSP CompletionItemKind.Variable = 6 → vscode.CompletionItemKind.Variable = 5
-        lspMock.provideCompletionItems.mockReturnValue([
+        lspMock.proverItensCompletude.mockReturnValue([
             { label: 'minhaVar', kind: 6 }
         ]);
         const resultado = provedor.provideCompletionItems(criarDocumento(), { line: 0, character: 0 }, {});
@@ -76,7 +79,7 @@ describe('completude/DeleguaProvedorCompletude', () => {
     });
 
     it('converte documentação MarkupContent para MarkdownString', () => {
-        lspMock.provideCompletionItems.mockReturnValue([
+        lspMock.proverItensCompletude.mockReturnValue([
             { label: 'escreva', kind: 3, documentation: { kind: 'markdown', value: 'Escreve na saída' } }
         ]);
         const resultado = provedor.provideCompletionItems(criarDocumento(), { line: 0, character: 0 }, {});
@@ -84,7 +87,7 @@ describe('completude/DeleguaProvedorCompletude', () => {
     });
 
     it('converte insertText simples para string', () => {
-        lspMock.provideCompletionItems.mockReturnValue([
+        lspMock.proverItensCompletude.mockReturnValue([
             { label: 'escreva', insertText: 'escreva', insertTextFormat: 1 }
         ]);
         const resultado = provedor.provideCompletionItems(criarDocumento(), { line: 0, character: 0 }, {});
@@ -92,7 +95,7 @@ describe('completude/DeleguaProvedorCompletude', () => {
     });
 
     it('converte insertText snippet para SnippetString', () => {
-        lspMock.provideCompletionItems.mockReturnValue([
+        lspMock.proverItensCompletude.mockReturnValue([
             { label: 'escreva', insertText: 'escreva($0)', insertTextFormat: 2 }
         ]);
         const resultado = provedor.provideCompletionItems(criarDocumento(), { line: 0, character: 0 }, {});
@@ -102,7 +105,7 @@ describe('completude/DeleguaProvedorCompletude', () => {
     it('passa documento e posição corretos para o LSP', () => {
         const doc = criarDocumento('variavel');
         provedor.provideCompletionItems(doc, { line: 0, character: 5 }, {});
-        expect(lspMock.provideCompletionItems).toHaveBeenCalledWith(
+        expect(lspMock.proverItensCompletude).toHaveBeenCalledWith(
             expect.objectContaining({ uri: 'file:///test.delegua', languageId: 'delegua' }),
             { line: 0, character: 5 }
         );
