@@ -498,15 +498,15 @@ describe('descobrirDefinicoes — pacotes de raiz em node_modules', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         mockVscode.workspace.workspaceFolders = null;
+        limparCacheCaminhosDefinicoes();
     });
 
-    it.skip('pacote de raiz com delegua.definicoes e arquivo .delegua → retorna caminho', async () => {
+    it('pacote de raiz com delegua.definicoes e arquivo .delegua → retorna caminho', async () => {
         setWorkspace('/workspace');
         mockReadDirectory
-            .mockResolvedValueOnce([])                      // Call 1: definicoes do projeto
-            .mockResolvedValueOnce([])                      // Call 2: @designliquido (vazio)
-            .mockResolvedValueOnce([['liquido', 2]])        // Call 3: node_modules raiz
-            .mockResolvedValueOnce([['liquido.delegua', 1], ['outro.txt', 1]]); // Call 4: definicoes do pacote
+            .mockResolvedValueOnce([])                                          // Call 1: definicoes do projeto
+            .mockResolvedValueOnce([])                                          // Call 2: @designliquido (vazio)
+            .mockResolvedValueOnce([['liquido.delegua', 1], ['outro.txt', 1]]); // Call 3: liquido/definicoes
         mockReadFile.mockResolvedValue(Buffer.from(JSON.stringify({
             name: 'liquido',
             delegua: { definicoes: 'definicoes' },
@@ -543,16 +543,15 @@ describe('descobrirDefinicoes — pacotes de raiz em node_modules', () => {
         expect(resultado).toEqual([]);
     });
 
-    it.skip('entrada não-diretório em node_modules raiz → ignorada', async () => {
+    it('arquivo sem extensão .delegua na pasta de definicoes de pacote de raiz → ignorado', async () => {
         setWorkspace('/workspace');
         mockReadDirectory
             .mockResolvedValueOnce([])
             .mockResolvedValueOnce([])
             .mockResolvedValueOnce([
-                ['algum-arquivo.txt', 1], // FileType.File — deve ser ignorado
-                ['liquido', 2],           // FileType.Directory — deve ser processado
-            ])
-            .mockResolvedValueOnce([['liquido.delegua', 1]]);
+                ['algum-arquivo.txt', 1], // não .delegua — deve ser ignorado
+                ['liquido.delegua', 1],   // .delegua — deve ser processado
+            ]);
         mockReadFile.mockResolvedValue(Buffer.from(JSON.stringify({
             name: 'liquido',
             delegua: { definicoes: 'definicoes' },
@@ -588,14 +587,13 @@ describe('descobrirDefinicoes — pacotes de raiz em node_modules', () => {
         expect(resultado).toEqual([]);
     });
 
-    it.skip('pacote de raiz e pacote @designliquido → retorna arquivos de ambos', async () => {
+    it('pacote de raiz e pacote @designliquido → retorna arquivos de ambos', async () => {
         setWorkspace('/workspace');
         mockReadDirectory
             .mockResolvedValueOnce([])                             // Call 1: definicoes do projeto
             .mockResolvedValueOnce([['delegua-entidades', 2]])     // Call 2: @designliquido
-            .mockResolvedValueOnce([['liquido', 2]])               // Call 3: node_modules raiz
-            .mockResolvedValueOnce([['modelo.delegua', 1]])        // Call 4: definicoes de delegua-entidades
-            .mockResolvedValueOnce([['liquido.delegua', 1]]);      // Call 5: definicoes de liquido
+            .mockResolvedValueOnce([['liquido.delegua', 1]])       // Call 3: liquido/definicoes
+            .mockResolvedValueOnce([['modelo.delegua', 1]]);       // Call 4: delegua-entidades/definicoes
         mockReadFile.mockResolvedValue(Buffer.from(JSON.stringify({
             delegua: { definicoes: 'definicoes' },
         })));

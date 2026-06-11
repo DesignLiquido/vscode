@@ -1,5 +1,17 @@
 # Histórico de Modificações
 
+## 0.27.1
+
+- Núcleo de Delégua atualizado para a versão 1.24.3:
+  - Suporte a decoradores com parâmetros (resolve https://github.com/DesignLiquido/delegua/issues/1334);
+  - Extensão de `LexadorBase` com otimizações de legibilidade e estrutura (resolve https://github.com/DesignLiquido/delegua/issues/1335);
+  - Adição de testes para construtos de classes, dicionários, laços e tradutores; correções de _bugs_ colaterais encontrados.
+- Potigol atualizado para a versão 0.11.11:
+  - Correção para prevenir _loops_ infinitos usando `enquanto` (resolve https://github.com/DesignLiquido/potigol/issues/222);
+  - Compreensão `para ... em ... gere` (resolve https://github.com/DesignLiquido/potigol/issues/221);
+  - Aceita símbolo `senãose` ou `senaose` como alternativa a `senão se` (resolve https://github.com/DesignLiquido/potigol/issues/218).
+- `delegua-lsp` atualizado para a versão 0.0.1.
+
 ## 0.27.0
 
 - Núcleo de Delégua atualizado para a versão 1.24.2:
