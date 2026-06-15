@@ -38,29 +38,30 @@ const esquemaRoteador: Record<string, EsquemaPropriedade> = {
     'passport': { tipo: 'logico' },
     'json': { tipo: 'logico' },
     'helmet': { tipo: 'logico' },
-    'porta': { tipo: 'numero' },
+};
+
+/**
+ * Propriedades diretas de `liquido.dados` (sem sub-fonte).
+ */
+const esquemaDadosDireto: Record<string, EsquemaPropriedade> = {
+    'motor': { tipo: 'texto', valoresPermitidos: ['lincones', 'delegua-entidades'] },
 };
 
 /**
  * Propriedades conhecidas dentro de uma fonte de dados (`liquido.dados.<nome>`).
  */
 const esquemaFonteDados: Record<string, EsquemaPropriedade> = {
-    'tecnologia': { tipo: 'texto', valoresPermitidos: ['sqlite', 'mysql', 'postgres', 'mongodb', 'mssql'] },
+    'tecnologia': { tipo: 'texto' },
     'caminho': { tipo: 'texto' },
-    'host': { tipo: 'texto' },
-    'porta': { tipo: 'numero' },
-    'usuario': { tipo: 'texto' },
-    'senha': { tipo: 'texto' },
-    'banco': { tipo: 'texto' },
+    'autoInicializar': { tipo: 'logico' },
+    'arquivoInicializacao': { tipo: 'texto' },
 };
 
 /**
  * Propriedades conhecidas do namespace `liquido.autenticacao`.
  */
 const esquemaAutenticacao: Record<string, EsquemaPropriedade> = {
-    'tecnologia': { tipo: 'texto', valoresPermitidos: ['jwt', 'session'] },
-    'segredo': { tipo: 'texto' },
-    'expiracao': { tipo: 'texto' },
+    'tecnologia': { tipo: 'texto', valoresPermitidos: ['jwt'] },
 };
 
 function removerComentarioLinha(linha: string): string {
@@ -198,30 +199,43 @@ function validarPropriedadeLiquido(
             break;
         }
         case 'dados': {
-            if (segmentos.length < 4) {
+            if (segmentos.length < 3) {
                 diagnosticos.push(new vscode.Diagnostic(
                     new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                    `Propriedade 'liquido.dados' incompleta. Esperado 'liquido.dados.<nome>.<propriedade>'.`,
+                    `Propriedade 'liquido.dados' incompleta. Esperado 'liquido.dados.<propriedade>' ou 'liquido.dados.<nome>.<propriedade>'.`,
                     vscode.DiagnosticSeverity.Error
                 ));
                 return;
             }
 
-            const nomeFonte = segmentos[2];
-            const propriedade = segmentos[3];
-            const esquema = esquemaFonteDados[propriedade];
-            
-            if (!esquema) {
-                const conhecidas = Object.keys(esquemaFonteDados).join(', ');
-                diagnosticos.push(new vscode.Diagnostic(
-                    new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                    `Propriedade desconhecida 'liquido.dados.${nomeFonte}.${propriedade}'. Propriedades conhecidas: ${conhecidas}.`,
-                    vscode.DiagnosticSeverity.Warning
-                ));
-                return;
+            if (segmentos.length === 3) {
+                const propriedade = segmentos[2];
+                const esquema = esquemaDadosDireto[propriedade];
+                if (!esquema) {
+                    const conhecidas = Object.keys(esquemaDadosDireto).join(', ');
+                    diagnosticos.push(new vscode.Diagnostic(
+                        new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
+                        `Propriedade desconhecida 'liquido.dados.${propriedade}'. Propriedades conhecidas: ${conhecidas}.`,
+                        vscode.DiagnosticSeverity.Warning
+                    ));
+                    return;
+                }
+                validarTipoEValor(valor, esquema, `liquido.dados.${propriedade}`, linha, diagnosticos);
+            } else {
+                const nomeFonte = segmentos[2];
+                const propriedade = segmentos[3];
+                const esquema = esquemaFonteDados[propriedade];
+                if (!esquema) {
+                    const conhecidas = Object.keys(esquemaFonteDados).join(', ');
+                    diagnosticos.push(new vscode.Diagnostic(
+                        new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
+                        `Propriedade desconhecida 'liquido.dados.${nomeFonte}.${propriedade}'. Propriedades conhecidas: ${conhecidas}.`,
+                        vscode.DiagnosticSeverity.Warning
+                    ));
+                    return;
+                }
+                validarTipoEValor(valor, esquema, `liquido.dados.${nomeFonte}.${propriedade}`, linha, diagnosticos);
             }
-
-            validarTipoEValor(valor, esquema, `liquido.dados.${nomeFonte}.${propriedade}`, linha, diagnosticos);
             break;
         }
         case 'roteador': {

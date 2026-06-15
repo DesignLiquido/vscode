@@ -90,9 +90,10 @@ describe('validarDelprops', () => {
         expect(diags[0].message).toContain("'liquido.roteador' incompleta");
     });
 
-    it('liquido.roteador.porta com número válido → sem diagnóstico', () => {
+    it('liquido.roteador.porta → propriedade removida → warning', () => {
         const diags = validarDelprops(criarDocumento(['liquido.roteador.porta = 3000']));
-        expect(diags).toHaveLength(0);
+        expect(diags).toHaveLength(1);
+        expect(diags[0].severity).toBe(1); // Warning
     });
 
     it('liquido.roteador.cors com lógico válido → sem diagnóstico', () => {
@@ -105,11 +106,10 @@ describe('validarDelprops', () => {
         expect(diags).toHaveLength(0);
     });
 
-    it('liquido.roteador.porta com texto → erro tipo incorreto', () => {
+    it('liquido.roteador.porta com texto → propriedade removida → warning', () => {
         const diags = validarDelprops(criarDocumento(["liquido.roteador.porta = 'texto'"]));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('Tipo incorreto');
-        expect(diags[0].message).toContain('número');
+        expect(diags[0].severity).toBe(1); // Warning
     });
 
     it('liquido.roteador.cors com número → erro tipo incorreto', () => {
@@ -139,27 +139,44 @@ describe('validarDelprops', () => {
         expect(diags[0].message).toContain("'liquido.dados' incompleta");
     });
 
-    it('liquido.dados.bd sem propriedade → erro incompleto', () => {
+    it('liquido.dados.bd → propriedade direta desconhecida → warning', () => {
         const diags = validarDelprops(criarDocumento(['liquido.dados.bd = verdadeiro']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("'liquido.dados' incompleta");
+        expect(diags[0].message).toContain("Propriedade desconhecida 'liquido.dados.bd'");
+        expect(diags[0].severity).toBe(1); // Warning
     });
 
-    it('liquido.dados.bd.porta com número válido → sem diagnóstico', () => {
-        const diags = validarDelprops(criarDocumento(['liquido.dados.bd.porta = 5432']));
+    it('liquido.dados.motor com valor permitido → sem diagnóstico', () => {
+        const diags = validarDelprops(criarDocumento(["liquido.dados.motor = 'lincones'"]));
         expect(diags).toHaveLength(0);
     });
 
-    it('liquido.dados.bd.tecnologia com sqlite (valor permitido) → sem diagnóstico', () => {
+    it('liquido.dados.motor com valor não permitido → erro', () => {
+        const diags = validarDelprops(criarDocumento(["liquido.dados.motor = 'mysql'"]));
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain("'mysql'");
+        expect(diags[0].message).toContain('Valores permitidos');
+    });
+
+    it('liquido.dados.bd.porta → propriedade removida → warning', () => {
+        const diags = validarDelprops(criarDocumento(['liquido.dados.bd.porta = 5432']));
+        expect(diags).toHaveLength(1);
+        expect(diags[0].severity).toBe(1); // Warning
+    });
+
+    it('liquido.dados.bd.tecnologia com sqlite → sem diagnóstico', () => {
         const diags = validarDelprops(criarDocumento(["liquido.dados.bd.tecnologia = 'sqlite'"]));
         expect(diags).toHaveLength(0);
     });
 
-    it('liquido.dados.bd.tecnologia com valor não permitido → erro', () => {
-        const diags = validarDelprops(criarDocumento(["liquido.dados.bd.tecnologia = 'oracle'"]));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("'oracle'");
-        expect(diags[0].message).toContain('Valores permitidos');
+    it('liquido.dados.bd.autoInicializar com lógico → sem diagnóstico', () => {
+        const diags = validarDelprops(criarDocumento(['liquido.dados.bd.autoInicializar = verdadeiro']));
+        expect(diags).toHaveLength(0);
+    });
+
+    it('liquido.dados.bd.arquivoInicializacao com texto → sem diagnóstico', () => {
+        const diags = validarDelprops(criarDocumento(["liquido.dados.bd.arquivoInicializacao = 'init.lincones'"]));
+        expect(diags).toHaveLength(0);
     });
 
     it('liquido.dados.bd.tecnologia com tipo errado (número) → erro tipo', () => {
@@ -181,9 +198,10 @@ describe('validarDelprops', () => {
         expect(diags[0].message).toContain("'liquido.autenticacao' incompleta");
     });
 
-    it("liquido.autenticacao.segredo com texto → sem diagnóstico", () => {
+    it("liquido.autenticacao.segredo → propriedade removida → warning", () => {
         const diags = validarDelprops(criarDocumento(["liquido.autenticacao.segredo = 'minha-chave-secreta'"]));
-        expect(diags).toHaveLength(0);
+        expect(diags).toHaveLength(1);
+        expect(diags[0].severity).toBe(1); // Warning
     });
 
     it("liquido.autenticacao.tecnologia com 'jwt' → sem diagnóstico", () => {
@@ -191,9 +209,11 @@ describe('validarDelprops', () => {
         expect(diags).toHaveLength(0);
     });
 
-    it("liquido.autenticacao.tecnologia com 'session' → sem diagnóstico", () => {
+    it("liquido.autenticacao.tecnologia com 'session' → erro valor não permitido", () => {
         const diags = validarDelprops(criarDocumento(["liquido.autenticacao.tecnologia = 'session'"]));
-        expect(diags).toHaveLength(0);
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain("'session'");
+        expect(diags[0].severity).toBe(0); // Error
     });
 
     it("liquido.autenticacao.tecnologia com valor não permitido → erro", () => {
@@ -226,10 +246,10 @@ describe('validarDelprops', () => {
     it('múltiplas linhas válidas → sem diagnóstico', () => {
         const diags = validarDelprops(criarDocumento([
             '// Configuração do roteador',
-            "liquido.roteador.porta = 3000",
             "liquido.roteador.cors = verdadeiro",
+            "liquido.roteador.helmet = verdadeiro",
             '',
-            "liquido.autenticacao.segredo = 'segredo'",
+            "liquido.autenticacao.tecnologia = 'jwt'",
         ]));
         expect(diags).toHaveLength(0);
     });
@@ -237,20 +257,22 @@ describe('validarDelprops', () => {
     it('múltiplas linhas com alguns erros → conta corretamente', () => {
         const diags = validarDelprops(criarDocumento([
             'linha-sem-igual',
-            'liquido.roteador.porta = 3000',
+            'liquido.roteador.cors = verdadeiro',
             'outra-sem-igual',
         ]));
         expect(diags).toHaveLength(2);
     });
 
-    it('liquido.dados.bd.host com texto → sem diagnóstico', () => {
+    it('liquido.dados.bd.host → propriedade removida → warning', () => {
         const diags = validarDelprops(criarDocumento(["liquido.dados.bd.host = 'localhost'"]));
-        expect(diags).toHaveLength(0);
+        expect(diags).toHaveLength(1);
+        expect(diags[0].severity).toBe(1); // Warning
     });
 
-    it('liquido.dados.bd.usuario com texto → sem diagnóstico', () => {
+    it('liquido.dados.bd.usuario → propriedade removida → warning', () => {
         const diags = validarDelprops(criarDocumento(["liquido.dados.bd.usuario = 'admin'"]));
-        expect(diags).toHaveLength(0);
+        expect(diags).toHaveLength(1);
+        expect(diags[0].severity).toBe(1); // Warning
     });
 
     // ──── URLs com // não devem ser tratadas como comentário ────

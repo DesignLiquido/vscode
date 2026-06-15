@@ -115,6 +115,8 @@ describe('DelpropsProvedorCompletude', () => {
         expect(labels).toContain('tecnologia');
         expect(labels).toContain('host');
         expect(labels).toContain('porta');
+        expect(labels).toContain('autoInicializar');
+        expect(labels).toContain('arquivoInicializacao');
     });
 
     it('texto sem relação com liquido → retorna undefined', () => {

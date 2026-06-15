@@ -13,17 +13,19 @@ const propriedadesRoteador = [
 ];
 
 const propriedadesFonteDados = [
-    { nome: 'tecnologia', tipo: 'texto', detalhe: "Tecnologia de banco de dados: 'sqlite', 'mysql', 'postgres', 'mongodb', 'mssql'." },
+    { nome: 'tecnologia', tipo: 'texto', detalhe: "Tecnologia de banco de dados (ex: 'sqlite')." },
     { nome: 'caminho', tipo: 'texto', detalhe: "Caminho do arquivo de banco de dados (ex: ':memory:' para SQLite em memória)." },
     { nome: 'host', tipo: 'texto', detalhe: "Endereço do servidor de banco de dados." },
     { nome: 'porta', tipo: 'numero', detalhe: "Porta do servidor de banco de dados." },
     { nome: 'usuario', tipo: 'texto', detalhe: "Nome de usuário para conexão." },
     { nome: 'senha', tipo: 'texto', detalhe: "Senha para conexão." },
     { nome: 'banco', tipo: 'texto', detalhe: "Nome do banco de dados." },
+    { nome: 'autoInicializar', tipo: 'logico', detalhe: "Inicializa o banco automaticamente ao iniciar o servidor." },
+    { nome: 'arquivoInicializacao', tipo: 'texto', detalhe: "Arquivo de inicialização do banco (padrão: 'inicializacao.lincones')." },
 ];
 
 const propriedadesAutenticacao = [
-    { nome: 'tecnologia', tipo: 'texto', detalhe: "Tecnologia de autenticação: 'jwt' ou 'session'." },
+    { nome: 'tecnologia', tipo: 'texto', detalhe: "Tecnologia de autenticação: 'jwt'." },
     { nome: 'segredo', tipo: 'texto', detalhe: "Chave secreta para assinatura de tokens." },
     { nome: 'expiracao', tipo: 'texto', detalhe: "Tempo de expiração do token (ex: '1h', '7d')." },
 ];
