@@ -10,3 +10,5 @@ coverage
 
 .claude/
 CLAUDE.md
+
+install-state.gz
