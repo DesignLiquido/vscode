@@ -1,5 +1,14 @@
 # Histórico de Modificações
 
+## 0.27.2
+
+- Núcleo de Delégua atualizado para a versão 1.24.4:
+  - Inferência mais robusta de tipos envolvendo `qualquer`;
+  - Correção de decoradores com acesso a propriedades no Pituguês (resolve https://github.com/DesignLiquido/delegua/issues/1346);
+  - Correção: `nao` interpretado como negação unária no Pituguês (resolve https://github.com/DesignLiquido/delegua/issues/1345).
+- Incluindo lista de modificadores vinda do repositório FolEs.
+- Atualização na validação de arquivos `.delprops` que trabalham com Liquido.
+
 ## 0.27.1
 
 - Núcleo de Delégua atualizado para a versão 1.24.3:
