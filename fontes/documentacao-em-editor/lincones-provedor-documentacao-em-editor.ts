@@ -18,6 +18,8 @@ export class LinConEsProvedorDocumentacaoEmEditor
         const palavra = document.getText(intervalo);
 
         const modificador = modificadoresLinConEs[palavra];
+        if (!modificador) { return undefined; }
+
         const elementoDocumentacao = new vscode.MarkdownString(modificador.documentacao);
         elementoDocumentacao.appendCodeblock(modificador.exemploCodigo);
         return new vscode.Hover(elementoDocumentacao);
