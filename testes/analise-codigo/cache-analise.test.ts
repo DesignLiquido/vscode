@@ -101,7 +101,7 @@ describe('cache-analise', () => {
             const uri = 'file:///test/ttl.delegua';
             const resultado = criarResultadoMock('ttl');
 
-            definirResultado(uri, resultado, { ttlMs: 1000 });
+            definirResultado(uri, resultado, { tempoVidaMs: 1000 });
             expect(obterResultado(uri)).toBe(resultado);
 
             jest.advanceTimersByTime(1001);
@@ -194,8 +194,8 @@ describe('cache-analise', () => {
         it('deve remover apenas entradas expiradas', () => {
             jest.useFakeTimers();
 
-            definirResultado('file:///test/expira-rapido.delegua', criarResultadoMock('rapido'), { ttlMs: 1000 });
-            definirResultado('file:///test/expira-lento.delegua', criarResultadoMock('lento'), { ttlMs: 5000 });
+            definirResultado('file:///test/expira-rapido.delegua', criarResultadoMock('rapido'), { tempoVidaMs: 1000 });
+            definirResultado('file:///test/expira-lento.delegua', criarResultadoMock('lento'), { tempoVidaMs: 5000 });
 
             jest.advanceTimersByTime(1500);
             const removidos = limparResultadosExpirados();

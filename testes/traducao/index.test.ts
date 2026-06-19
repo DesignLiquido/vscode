@@ -6,6 +6,8 @@ const mockShowInformationMessage = jest.fn();
 const mockGetConfiguration = jest.fn();
 const mockClipboardWriteText = jest.fn();
 const mockWriteFileSync = jest.fn();
+const mockLexadorMapear = jest.fn().mockReturnValue({ simbolos: [], erros: [] });
+const mockAvaliadorAnalisar = jest.fn().mockResolvedValue({ declaracoes: [{ tipo: 'var' }], erros: [] });
 
 jest.mock('vscode', () => ({
     window: {
@@ -39,7 +41,7 @@ jest.mock('../../fontes/traducao/comum', () => ({
 jest.mock('@designliquido/delegua', () => ({
     Lexador: class Lexador {
         constructor(_modo: boolean) {}
-        mapear(linhas: string[], _hash: number) { return { simbolos: [], erros: [] }; }
+        mapear(linhas: string[], _hash: number) { return mockLexadorMapear(linhas, _hash); }
     },
     TradutorJavaScript: class TradutorJavaScript {
         async traduzir(_decls: any[]) { return 'js traduzido'; }
@@ -74,7 +76,7 @@ jest.mock('@designliquido/delegua', () => ({
 jest.mock('@designliquido/delegua/avaliador-sintatico', () => ({
     AvaliadorSintatico: class AvaliadorSintatico {
         async analisar(_retorno: any, _hash: number) {
-            return { declaracoes: [{ tipo: 'var' }], erros: [] };
+            return mockAvaliadorAnalisar(_retorno, _hash);
         }
     },
 }), { virtual: true });
@@ -138,6 +140,8 @@ describe('traduzir', () => {
         mockComum.traduzirPorMotorFolEs.mockResolvedValue('foles-resultado');
         mockComum.traduzirPorMotorLinConEs.mockResolvedValue('lincones-resultado');
         mockComum.traduzirPorMotorLmht.mockResolvedValue('lmht-resultado');
+        mockLexadorMapear.mockReturnValue({ simbolos: [], erros: [] });
+        mockAvaliadorAnalisar.mockResolvedValue({ declaracoes: [{ tipo: 'var' }], erros: [] });
     });
 
     it('extensão não bate → showErrorMessage', async () => {
@@ -227,5 +231,100 @@ describe('traduzir', () => {
         setActiveEditor('/tmp/arquivo.delegua');
         await traduzir('delegua', 'inexistente');
         expect(mockShowInformationMessage).toHaveBeenCalled();
+    });
+
+    it('traduz delegua → js via motor Delégua', async () => {
+        setActiveEditor('/tmp/arquivo.delegua');
+        await traduzir('delegua', 'js');
+        expect(mockWriteFileSync).toHaveBeenCalled();
+        expect(mockClipboardWriteText).toHaveBeenCalled();
+    });
+
+    it('traduz delegua → py via motor Delégua', async () => {
+        setActiveEditor('/tmp/arquivo.delegua');
+        await traduzir('delegua', 'py');
+        expect(mockWriteFileSync).toHaveBeenCalled();
+    });
+
+    it('traduz delegua → rb via motor Delégua', async () => {
+        setActiveEditor('/tmp/arquivo.delegua');
+        await traduzir('delegua', 'rb');
+        expect(mockWriteFileSync).toHaveBeenCalled();
+    });
+
+    it('traduz delegua → elixir via motor Delégua', async () => {
+        setActiveEditor('/tmp/arquivo.delegua');
+        await traduzir('delegua', 'elixir');
+        expect(mockWriteFileSync).toHaveBeenCalled();
+    });
+
+    it('traduz delegua → as (AssemblyScript) via motor Delégua', async () => {
+        setActiveEditor('/tmp/arquivo.delegua');
+        await traduzir('delegua', 'as');
+        expect(mockWriteFileSync).toHaveBeenCalled();
+    });
+
+    it('traduz delegua → arm (linux) via motor Delégua', async () => {
+        setActiveEditor('/tmp/arquivo.delegua');
+        await traduzir('delegua', 'arm');
+        expect(mockWriteFileSync).toHaveBeenCalled();
+    });
+
+    it('traduz delegua → arm android via motor Delégua', async () => {
+        setActiveEditor('/tmp/arquivo.delegua');
+        await traduzir('delegua', 'arm', 'android');
+        expect(mockWriteFileSync).toHaveBeenCalled();
+    });
+
+    it('traduz delegua → x64 (linux) via motor Delégua', async () => {
+        setActiveEditor('/tmp/arquivo.delegua');
+        await traduzir('delegua', 'x64');
+        expect(mockWriteFileSync).toHaveBeenCalled();
+    });
+
+    it('traduz delegua → x64 windows via motor Delégua', async () => {
+        setActiveEditor('/tmp/arquivo.delegua');
+        await traduzir('delegua', 'x64', 'windows');
+        expect(mockWriteFileSync).toHaveBeenCalled();
+    });
+
+    it('traduz js → delegua (reverso) via motor Delégua', async () => {
+        setActiveEditor('/tmp/arquivo.js');
+        await traduzir('js', 'delegua');
+        expect(mockWriteFileSync).toHaveBeenCalled();
+    });
+
+    it('traduz potigol → delegua (reverso) via motor Delégua', async () => {
+        setActiveEditor('/tmp/arquivo.potigol');
+        await traduzir('potigol', 'delegua');
+        expect(mockWriteFileSync).toHaveBeenCalled();
+    });
+
+    it('traduz alg → delegua (reverso VisuAlg) via motor Delégua', async () => {
+        setActiveEditor('/tmp/arquivo.alg');
+        await traduzir('alg', 'delegua');
+        expect(mockWriteFileSync).toHaveBeenCalled();
+    });
+
+    it('erros léxicos impedem tradução e exibem mensagem de erro', async () => {
+        setActiveEditor('/tmp/arquivo.delegua');
+        mockLexadorMapear.mockReturnValueOnce({
+            simbolos: [],
+            erros: [{ linha: 1, mensagem: 'caractere inválido', caractere: '@' }],
+        });
+        await traduzir('delegua', 'js');
+        expect(mockShowErrorMessage).toHaveBeenCalled();
+        expect(mockWriteFileSync).not.toHaveBeenCalled();
+    });
+
+    it('erros sintáticos impedem tradução e exibem mensagem de erro', async () => {
+        setActiveEditor('/tmp/arquivo.delegua');
+        mockAvaliadorAnalisar.mockResolvedValueOnce({
+            declaracoes: [],
+            erros: [{ linha: 1, mensagem: 'expressão inválida' }],
+        });
+        await traduzir('delegua', 'js');
+        expect(mockShowErrorMessage).toHaveBeenCalled();
+        expect(mockWriteFileSync).not.toHaveBeenCalled();
     });
 });

@@ -301,4 +301,138 @@ describe('PituguesProvedorDocumentacaoEmEditor', () => {
         const result = await provedor.provideHover(criarDocumento('palavraEstranha'), mockPos, mockToken);
         expect(result).toBeUndefined();
     });
+
+    it('retorna Hover para parâmetro de função no pitugues', async () => {
+        const funcaoMock = new FuncaoDeclaracaoMock({ lexema: 'calcular', linha: 1 }, 'numero');
+        (funcaoMock as any).funcao = {
+            parametros: [{ nome: { lexema: 'entrada' }, tipoDado: 'numero' }],
+            corpo: [],
+        };
+        (obterResultado as jest.Mock).mockReturnValue({
+            avaliadorSintatico: { declaracoes: [funcaoMock] },
+        });
+        const doc = {
+            uri: { toString: () => 'file:///teste.pit' },
+            lineAt: jest.fn().mockReturnValue({ text: 'entrada' }),
+            getText: jest.fn().mockReturnValue('entrada'),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
+        };
+        const result = await provedor.provideHover(doc, { line: 0, character: 4 }, mockToken);
+        expect(result).toBeDefined();
+        expect(result.contents.value).toContain('entrada');
+    });
+
+    it('retorna Hover para propriedade de classe com "isto." no pitugues', async () => {
+        const classeMock = new ClasseMock({ lexema: 'ContaPit', linha: 1 });
+        (classeMock as any).propriedades = [{ nome: { lexema: 'saldo' }, tipo: 'numero' }];
+        (obterResultado as jest.Mock).mockReturnValue({
+            avaliadorSintatico: { declaracoes: [classeMock] },
+        });
+        const doc = {
+            uri: { toString: () => 'file:///teste.pit' },
+            lineAt: jest.fn().mockReturnValue({ text: 'isto.saldo' }),
+            getText: jest.fn().mockReturnValue('saldo'),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 5 } }),
+        };
+        const result = await provedor.provideHover(doc, { line: 0, character: 7 }, mockToken);
+        expect(result).toBeDefined();
+        expect(result.contents.value).toContain('saldo');
+    });
+
+    it('retorna Hover para variável de iteração em para cada no pitugues', async () => {
+        const paraCadaMock = new ParaCadaMock();
+        (paraCadaMock as any).variavelIteracao = { simbolo: { lexema: 'elemento' } };
+        (paraCadaMock as any).vetorOuDicionario = { tipo: 'texto[]' };
+        const funcaoMock = new FuncaoDeclaracaoMock({ lexema: 'processar', linha: 1 }, 'vazio');
+        (funcaoMock as any).funcao = {
+            parametros: [],
+            corpo: [paraCadaMock],
+        };
+        (obterResultado as jest.Mock).mockReturnValue({
+            avaliadorSintatico: { declaracoes: [funcaoMock] },
+        });
+        const doc = {
+            uri: { toString: () => 'file:///teste.pit' },
+            lineAt: jest.fn().mockReturnValue({ text: 'elemento' }),
+            getText: jest.fn().mockReturnValue('elemento'),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
+        };
+        const result = await provedor.provideHover(doc, { line: 2, character: 4 }, mockToken);
+        expect(result).toBeDefined();
+        expect(result.contents.value).toContain('elemento');
+    });
+
+    it('retorna assinatura de função sem documentação no pitugues', async () => {
+        const funcaoMock = new FuncaoDeclaracaoMock({ lexema: 'somar', linha: 1 }, 'numero');
+        (funcaoMock as any).funcao = {
+            parametros: [
+                { nome: { lexema: 'x' }, tipoDado: 'numero' },
+                { nome: { lexema: 'y' }, tipoDado: 'numero' },
+            ],
+            corpo: [],
+        };
+        (obterResultado as jest.Mock).mockReturnValue({
+            avaliadorSintatico: { declaracoes: [funcaoMock] },
+        });
+        const doc = {
+            uri: { toString: () => 'file:///teste.pit' },
+            lineAt: jest.fn().mockReturnValue({ text: 'somar' }),
+            getText: jest.fn().mockReturnValue('somar'),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
+        };
+        const result = await provedor.provideHover(doc, { line: 0, character: 3 }, mockToken);
+        expect(result).toBeDefined();
+        expect(result.contents.value).toContain('somar');
+    });
+
+    it('retorna Hover para classe com documentação no pitugues', async () => {
+        const classeMock = new ClasseMock({ lexema: 'ContaPit', linha: 1 }, []);
+        (classeMock as any).documentacao = { conteudo: '@resumo Classe de conta pituguesa' };
+        (obterResultado as jest.Mock).mockReturnValue({
+            avaliadorSintatico: { declaracoes: [classeMock] },
+        });
+        const doc = {
+            uri: { toString: () => 'file:///teste.pit' },
+            lineAt: jest.fn().mockReturnValue({ text: 'ContaPit' }),
+            getText: jest.fn().mockImplementation((arg) => arg ? 'ContaPit' : ''),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
+        };
+        const result = await provedor.provideHover(doc, { line: 0, character: 4 }, mockToken);
+        expect(result).toBeDefined();
+    });
+
+    it('retorna Hover para classe via JSDoc no fonte pitugues', async () => {
+        const classeMock = new ClasseMock({ lexema: 'ContaPit', linha: 1 }, []);
+        (obterResultado as jest.Mock).mockReturnValue({
+            avaliadorSintatico: { declaracoes: [classeMock] },
+        });
+        const fontePit = '/** @resumo Conta\n * Descrição da conta\n */ classe ContaPit {\n}';
+        const doc = {
+            uri: { toString: () => 'file:///teste.pit' },
+            lineAt: jest.fn().mockReturnValue({ text: 'ContaPit' }),
+            getText: jest.fn().mockImplementation((arg) => arg ? 'ContaPit' : fontePit),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
+        };
+        const result = await provedor.provideHover(doc, { line: 0, character: 4 }, mockToken);
+        expect(result).toBeDefined();
+    });
+
+    it('retorna Hover para método de classe sem receptor no pitugues (loop de classes)', async () => {
+        const metodoMock = new FuncaoDeclaracaoMock({ lexema: 'depositar', linha: 5 }, 'vazio');
+        (metodoMock as any).funcao = { parametros: [], corpo: [] };
+        (metodoMock as any).documentacao = { conteudo: '@resumo Método depositar' };
+        const classeMock = new ClasseMock({ lexema: 'ContaPit', linha: 1 }, [metodoMock]);
+        (obterResultado as jest.Mock).mockReturnValue({
+            avaliadorSintatico: { declaracoes: [classeMock] },
+        });
+        const doc = {
+            uri: { toString: () => 'file:///teste.pit' },
+            lineAt: jest.fn().mockReturnValue({ text: 'depositar' }),
+            getText: jest.fn().mockReturnValue('depositar'),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
+        };
+        const result = await provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
+        expect(result).toBeDefined();
+        expect(result.contents.value).toContain('depositar');
+    });
 });

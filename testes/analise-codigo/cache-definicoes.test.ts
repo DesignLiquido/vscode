@@ -25,7 +25,7 @@ describe('cache-definicoes', () => {
         jest.useFakeTimers();
         const chave = 'workspace::liquido';
 
-        definirDefinicoes(chave, { Liquido: {} as any }, { ttlMs: 1000 });
+        definirDefinicoes(chave, { Liquido: {} as any }, { tempoVidaMs: 1000 });
         expect(obterDefinicoes(chave)).toBeDefined();
 
         jest.advanceTimersByTime(1001);
@@ -54,7 +54,7 @@ describe('cache-definicoes', () => {
     it('deve remover apenas entradas expiradas na limpeza', () => {
         jest.useFakeTimers();
 
-        definirDefinicoes('workspace::rapido', { ClasseA: {} as any }, { ttlMs: 1000 });
+        definirDefinicoes('workspace::rapido', { ClasseA: {} as any }, { tempoVidaMs: 1000 });
         definirDefinicoes('workspace::lento', { ClasseB: {} as any }, { ttlMs: 5000 });
 
         jest.advanceTimersByTime(1500);

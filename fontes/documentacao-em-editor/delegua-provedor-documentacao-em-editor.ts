@@ -73,14 +73,14 @@ export class DeleguaProvedorDocumentacaoEmEditor
             return this.hoverPropriedadeClasse(palavra, textoAntesPalavra, posicao.line + 1, todasDeclaracoes)
                 ?? this.hoverMetodoDePrimitiva(textoAntesPosicao, palavra, declaracoesPertinentes)
                 ?? this.hoverMetodoDeObjetoLiquido(textoAntesPalavra, palavra, eContextoLiquido)
-                ?? this.hoverFuncaoOuMetodoDocumentado(palavra, textoAntesPalavra, todasDeclaracoes);
+                ?? this.hoverFuncaoOuMetodoDocumentado(palavra, textoAntesPalavra, todasDeclaracoes, posicao.line + 1, declaracoesPertinentes);
         }
 
         return this.hoverVariavelParaCada(palavra, posicao.line + 1, todasDeclaracoes)
             ?? this.hoverObjetoEmRotaLiquido(palavra, eContextoLiquido)
             ?? this.hoverParametroFuncao(palavra, posicao.line + 1, todasDeclaracoes)
             ?? this.hoverFuncaoNativa(palavra)
-            ?? this.hoverFuncaoOuMetodoDocumentado(palavra, textoAntesPalavra, todasDeclaracoes)
+            ?? this.hoverFuncaoOuMetodoDocumentado(palavra, textoAntesPalavra, todasDeclaracoes, posicao.line + 1, declaracoesPertinentes)
             ?? this.hoverVariavelOuConstante(palavra, declaracoesPertinentes)
             ?? await this.hoverClasseDocumentada(palavra, todasDeclaracoes, documento.getText())
             ?? this.hoverInterfaceDocumentada(palavra, todasDeclaracoes, documento.getText());
@@ -128,6 +128,37 @@ export class DeleguaProvedorDocumentacaoEmEditor
             return tipoIteravel.slice(0, -2);
         }
         return 'qualquer';
+    }
+
+    private resolverTipoReceptor(
+        nomeReceptor: string,
+        linhaAtual: number,
+        todasDeclaracoes: any[],
+        declaracoesPertinentes: { nome: string; tipo: string }[]
+    ): string | undefined {
+        const declVar = declaracoesPertinentes.find(d => d.nome === nomeReceptor);
+        if (declVar?.tipo && declVar.tipo !== 'qualquer') return declVar.tipo;
+
+        const classesLocais = todasDeclaracoes.filter(
+            d => d instanceof Classe && !(d as any).caminhoArquivoDefinicao
+        ) as Classe[];
+        const classesAnteriores = classesLocais.filter(c => Number(c.simbolo.linha) <= linhaAtual);
+        if (!classesAnteriores.length) return undefined;
+        const classeAtual = classesAnteriores.reduce((prev, curr) =>
+            Number(curr.simbolo.linha) > Number(prev.simbolo.linha) ? curr : prev
+        );
+        const prop = classeAtual.propriedades.find((p: any) => p.nome.lexema === nomeReceptor);
+        return prop?.tipo;
+    }
+
+    private formatarAssinaturaFuncao(declaracaoFuncao: FuncaoDeclaracao): vscode.Hover {
+        const params = declaracaoFuncao.funcao.parametros
+            .map((p: any) => `${p.nome.lexema}: ${p.tipoDado || 'qualquer'}`)
+            .join(', ');
+        const tipoRetorno = desembrulharTipoFuncao(declaracaoFuncao.tipo || 'qualquer');
+        const doc = new vscode.MarkdownString();
+        doc.appendCodeblock(`${declaracaoFuncao.simbolo.lexema}(${params}): ${tipoRetorno}`, 'delegua');
+        return new vscode.Hover(doc);
     }
 
     private encontrarParaCadaComVariavel(declaracoes: any[], palavra: string): ParaCada | undefined {
@@ -307,7 +338,9 @@ export class DeleguaProvedorDocumentacaoEmEditor
     private hoverFuncaoOuMetodoDocumentado(
         palavra: string,
         textoAntesPalavra: string,
-        todasDeclaracoes: any[]
+        todasDeclaracoes: any[],
+        linhaAtual?: number,
+        declaracoesPertinentes?: { nome: string; tipo: string }[]
     ): vscode.Hover | undefined {
         const tiposEmCache = { ...obterDefinicoesPorContexto('normal'), ...obterDefinicoesPorContexto('liquido') };
         const declaracaoCache = tiposEmCache[palavra];
@@ -332,6 +365,21 @@ export class DeleguaProvedorDocumentacaoEmEditor
                     (m: FuncaoDeclaracao) => m.simbolo.lexema === palavra
                 );
             }
+
+            if (!declaracaoFuncao && nomeReceptor !== 'isto' && linhaAtual !== undefined && declaracoesPertinentes) {
+                const tipo = this.resolverTipoReceptor(nomeReceptor, linhaAtual, todasDeclaracoes, declaracoesPertinentes);
+                if (tipo) {
+                    const todasComCache = [...todasDeclaracoes, ...Object.values(tiposEmCache)];
+                    const classeTipo = todasComCache.find(
+                        d => d instanceof Classe && (d as Classe).simbolo.lexema === tipo
+                    ) as Classe | undefined;
+                    if (classeTipo) {
+                        declaracaoFuncao = classeTipo.metodos.find(
+                            (m: FuncaoDeclaracao) => m.simbolo.lexema === palavra
+                        );
+                    }
+                }
+            }
         }
 
         if (!declaracaoFuncao) {
@@ -352,8 +400,12 @@ export class DeleguaProvedorDocumentacaoEmEditor
             }
         }
 
-        if (!declaracaoFuncao?.documentacao) {
+        if (!declaracaoFuncao) {
             return undefined;
+        }
+
+        if (!declaracaoFuncao.documentacao) {
+            return this.formatarAssinaturaFuncao(declaracaoFuncao);
         }
 
         const conteudo = declaracaoFuncao.documentacao as ComentarioComoConstruto;

@@ -18,6 +18,9 @@ class ClasseMock {
 class InterfaceDeclaracaoMock {
     constructor(public simbolo: any) {}
 }
+class ParaCadaMock {
+    constructor(public variavelIteracao: any, public vetorOuDicionario: any, public corpo?: any) {}
+}
 
 jest.mock('vscode', () => ({
     MarkdownString: class MarkdownString {
@@ -37,6 +40,7 @@ jest.mock('@designliquido/delegua/declaracoes', () => ({
     FuncaoDeclaracao: FuncaoDeclaracaoMock,
     Classe: ClasseMock,
     InterfaceDeclaracao: InterfaceDeclaracaoMock,
+    ParaCada: ParaCadaMock,
 }), { virtual: true });
 
 jest.mock('@designliquido/delegua/construtos', () => ({
@@ -386,5 +390,173 @@ describe('DeleguaProvedorDocumentacaoEmEditor', () => {
         });
         const result = await provedor.provideHover(doc, { line: 0, character: 7 }, mockToken);
         expect(result).toBeDefined();
+    });
+
+    it('retorna Hover para parâmetro de função', async () => {
+        const funcaoMock = new FuncaoDeclaracaoMock({ lexema: 'calcular', linha: 1 }, 'numero');
+        (funcaoMock as any).funcao = {
+            parametros: [{ nome: { lexema: 'valorEntrada' }, tipoDado: 'numero' }],
+            corpo: [],
+        };
+        (obterResultado as jest.Mock).mockReturnValue({
+            avaliadorSintatico: { declaracoes: [funcaoMock] },
+            declaracoesPreCarregadas: [],
+        });
+        const doc = criarDocumento({
+            getText: jest.fn().mockReturnValue('valorEntrada'),
+            lineAt: jest.fn().mockReturnValue({ text: 'valorEntrada' }),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
+        });
+        const result = await provedor.provideHover(doc, { line: 0, character: 5 }, mockToken);
+        expect(result).toBeDefined();
+        expect(result.contents.value).toContain('valorEntrada');
+    });
+
+    it('retorna Hover para propriedade de classe com "isto."', async () => {
+        const classeMock = new ClasseMock({ lexema: 'MinhaClasse', linha: 1 });
+        (classeMock as any).propriedades = [{ nome: { lexema: 'nomePropriedade' }, tipo: 'texto' }];
+        (obterResultado as jest.Mock).mockReturnValue({
+            avaliadorSintatico: { declaracoes: [classeMock] },
+            declaracoesPreCarregadas: [],
+        });
+        const doc = criarDocumento({
+            getText: jest.fn().mockReturnValue('nomePropriedade'),
+            lineAt: jest.fn().mockReturnValue({ text: 'isto.nomePropriedade' }),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 5 } }),
+        });
+        const result = await provedor.provideHover(doc, { line: 0, character: 10 }, mockToken);
+        expect(result).toBeDefined();
+        expect(result.contents.value).toContain('nomePropriedade');
+    });
+
+    it('retorna Hover para variável de iteração de para cada', async () => {
+        const paraCadaMock = new ParaCadaMock(
+            { simbolo: { lexema: 'item' } },
+            { tipo: 'texto[]' }
+        );
+        const funcaoMock = new FuncaoDeclaracaoMock({ lexema: 'processar', linha: 1 }, 'vazio');
+        (funcaoMock as any).funcao = {
+            parametros: [],
+            corpo: [paraCadaMock],
+        };
+        (obterResultado as jest.Mock).mockReturnValue({
+            avaliadorSintatico: { declaracoes: [funcaoMock] },
+            declaracoesPreCarregadas: [],
+        });
+        const doc = criarDocumento({
+            getText: jest.fn().mockReturnValue('item'),
+            lineAt: jest.fn().mockReturnValue({ text: 'item' }),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
+        });
+        const result = await provedor.provideHover(doc, { line: 2, character: 2 }, mockToken);
+        expect(result).toBeDefined();
+        expect(result.contents.value).toContain('item');
+    });
+
+    it('retorna Hover para objeto "liquido" em contexto de rota', async () => {
+        const doc = criarDocumento({
+            getText: jest.fn().mockReturnValue('liquido'),
+            lineAt: jest.fn().mockReturnValue({ text: 'liquido' }),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
+            uri: { toString: () => 'file:///projeto/rotas/index.delegua', fsPath: '/projeto/rotas/index.delegua' },
+        });
+        const result = await provedor.provideHover(doc, { line: 0, character: 3 }, mockToken);
+        expect(result).toBeDefined();
+        expect(result.contents.value).toContain('liquido');
+    });
+
+    it('retorna Hover para objeto "lincones" em contexto de rota', async () => {
+        const doc = criarDocumento({
+            getText: jest.fn().mockReturnValue('lincones'),
+            lineAt: jest.fn().mockReturnValue({ text: 'lincones' }),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
+            uri: { toString: () => 'file:///projeto/rotas/index.delegua', fsPath: '/projeto/rotas/index.delegua' },
+        });
+        const result = await provedor.provideHover(doc, { line: 0, character: 3 }, mockToken);
+        expect(result).toBeDefined();
+        expect(result.contents.value).toContain('lincones');
+    });
+
+    it('retorna Hover para método "rotaGet" de objeto liquido em rota', async () => {
+        const doc = criarDocumento({
+            getText: jest.fn().mockReturnValue('rotaGet'),
+            lineAt: jest.fn().mockReturnValue({ text: 'liquido.rotaGet' }),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 8 } }),
+            uri: { toString: () => 'file:///projeto/rotas/index.delegua', fsPath: '/projeto/rotas/index.delegua' },
+        });
+        const result = await provedor.provideHover(doc, { line: 0, character: 10 }, mockToken);
+        expect(result).toBeDefined();
+        expect(result.contents.value).toContain('rotaGet');
+    });
+
+    it('retorna assinatura de função sem documentação via formatarAssinaturaFuncao', async () => {
+        const funcaoMock = new FuncaoDeclaracaoMock({ lexema: 'somar', linha: 1 }, 'numero');
+        (funcaoMock as any).funcao = {
+            parametros: [
+                { nome: { lexema: 'a' }, tipoDado: 'numero' },
+                { nome: { lexema: 'b' }, tipoDado: 'numero' },
+            ],
+            corpo: [],
+        };
+        (obterResultado as jest.Mock).mockReturnValue({
+            avaliadorSintatico: { declaracoes: [funcaoMock] },
+            declaracoesPreCarregadas: [],
+        });
+        const doc = criarDocumento({
+            getText: jest.fn().mockReturnValue('somar'),
+            lineAt: jest.fn().mockReturnValue({ text: 'somar' }),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
+        });
+        const result = await provedor.provideHover(doc, { line: 0, character: 3 }, mockToken);
+        expect(result).toBeDefined();
+        expect(result.contents.value).toContain('somar');
+        expect(result.contents.value).toContain('numero');
+    });
+
+    it('retorna undefined quando getWordRangeAtPosition retorna null', async () => {
+        const doc = criarDocumento({
+            getWordRangeAtPosition: jest.fn().mockReturnValue(null),
+        });
+        const result = await provedor.provideHover(doc, mockPos, mockToken);
+        expect(result).toBeUndefined();
+    });
+
+    it('retorna Hover para método de classe sem receptor explícito (loop de classes)', async () => {
+        const metodoMock = new FuncaoDeclaracaoMock({ lexema: 'sacar', linha: 5 }, 'vazio');
+        (metodoMock as any).funcao = { parametros: [], corpo: [] };
+        const classeMock = new ClasseMock({ lexema: 'ContaCorrente', linha: 1 }, [metodoMock]);
+        (obterResultado as jest.Mock).mockReturnValue({
+            avaliadorSintatico: { declaracoes: [classeMock] },
+            declaracoesPreCarregadas: [],
+        });
+        const doc = criarDocumento({
+            getText: jest.fn().mockReturnValue('sacar'),
+            lineAt: jest.fn().mockReturnValue({ text: 'sacar' }),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 0 } }),
+        });
+        const result = await provedor.provideHover(doc, { line: 0, character: 3 }, mockToken);
+        expect(result).toBeDefined();
+        expect(result.contents.value).toContain('sacar');
+    });
+
+    it('retorna Hover para método de classe via receptor (Conta.depositar)', async () => {
+        const metodoMock = new FuncaoDeclaracaoMock({ lexema: 'depositar', linha: 5 }, 'vazio');
+        (metodoMock as any).funcao = {
+            parametros: [{ nome: { lexema: 'valor' }, tipoDado: 'numero' }],
+            corpo: [],
+        };
+        const classeMock = new ClasseMock({ lexema: 'Conta', linha: 1 }, [metodoMock]);
+        (obterResultado as jest.Mock).mockReturnValue({
+            avaliadorSintatico: { declaracoes: [classeMock] },
+            declaracoesPreCarregadas: [],
+        });
+        const doc = criarDocumento({
+            getText: jest.fn().mockReturnValue('depositar'),
+            lineAt: jest.fn().mockReturnValue({ text: 'Conta.depositar' }),
+            getWordRangeAtPosition: jest.fn().mockReturnValue({ start: { character: 6 } }),
+        });
+        const result = await provedor.provideHover(doc, { line: 0, character: 10 }, mockToken);
+        expect(result).toBeDefined();
+        expect(result.contents.value).toContain('depositar');
     });
 });
