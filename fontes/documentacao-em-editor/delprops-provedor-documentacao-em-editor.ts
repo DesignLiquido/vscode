@@ -7,10 +7,18 @@ const nomesTipos: Record<string, string> = {
     numero: 'número',
 };
 
+// autoInicializar e arquivoInicializacao ainda não estão no pacote publicado
+const propriedadesDados: DefinicaoPropriedade[] = [
+    ...liquido.dados,
+    { nome: 'autoInicializar', tipo: 'logico', detalhe: 'Inicializa o banco automaticamente ao iniciar o servidor.' },
+    { nome: 'arquivoInicializacao', tipo: 'texto', detalhe: "Arquivo de inicialização do banco (padrão: 'inicializacao.lincones')." },
+];
+
 const subnamespaces: Record<string, { detalhe: string; propriedades: DefinicaoPropriedade[] }> = {
     roteador:     { detalhe: 'Configurações do roteador HTTP.',   propriedades: liquido.roteador },
-    dados:        { detalhe: 'Configurações de fontes de dados.', propriedades: liquido.dados },
+    dados:        { detalhe: 'Configurações de fontes de dados.', propriedades: propriedadesDados },
     autenticacao: { detalhe: 'Configurações de autenticação.',    propriedades: liquido.autenticacao },
+    aplicacao:    { detalhe: 'Configurações da aplicação.',       propriedades: liquido.aplicacao },
 };
 
 function tabelaPropriedades(propriedades: DefinicaoPropriedade[]): string {
@@ -77,6 +85,60 @@ function hoverPropriedade(segmentos: string[], indicePropriedade: number): vscod
     return new vscode.Hover(doc);
 }
 
+function hoverIdentificadorFonteDados(nome: string): vscode.Hover {
+    const doc = new vscode.MarkdownString();
+    doc.appendMarkdown(`**(fonte de dados)** \`liquido.dados.${nome}\`\n\n`);
+    doc.appendMarkdown('Identificador livre para a fonte de dados.\n\n');
+    doc.appendMarkdown(tabelaPropriedades(subnamespaces.dados.propriedades));
+    return new vscode.Hover(doc);
+}
+
+function hoverPropriedadeOuSubNamespace(segmentos: string[]): vscode.Hover | undefined {
+    const nomeNamespace = segmentos[1];
+    const info = subnamespaces[nomeNamespace];
+    if (!info) { return undefined; }
+
+    const chave = segmentos[2];
+
+    // propriedade direta (e.g., liquido.aplicacao.nome, liquido.roteador.cors)
+    const definicao = info.propriedades.find(p => p.nome === chave);
+    if (definicao) {
+        return hoverPropriedade(segmentos, 2);
+    }
+
+    // sub-espaço de nomes com nomes compostos (e.g., liquido.aplicacao.licenca → licenca.nome, licenca.url)
+    const prefixo = chave + '.';
+    const subProps = info.propriedades.filter(p => p.nome.startsWith(prefixo));
+    if (subProps.length === 0) { return undefined; }
+
+    const doc = new vscode.MarkdownString();
+    doc.appendMarkdown(`**(sub-espaço de nomes)** \`liquido.${nomeNamespace}.${chave}\`\n\n`);
+    doc.appendMarkdown(tabelaPropriedades(subProps.map(p => ({ ...p, nome: p.nome.slice(prefixo.length) }))));
+    return new vscode.Hover(doc);
+}
+
+function hoverPropriedadeComposta(segmentos: string[]): vscode.Hover | undefined {
+    const nomeNamespace = segmentos[1];
+    const info = subnamespaces[nomeNamespace];
+    if (!info) { return undefined; }
+
+    const nomeComposto = segmentos[2] + '.' + segmentos[3];
+    const definicao = info.propriedades.find(p => p.nome === nomeComposto);
+    if (!definicao) { return undefined; }
+
+    const caminhoCompleto = `liquido.${nomeNamespace}.${nomeComposto}`;
+    const doc = new vscode.MarkdownString();
+    doc.appendMarkdown(`**(${nomesTipos[definicao.tipo]})** \`${caminhoCompleto}\`\n\n`);
+    doc.appendMarkdown(`${definicao.detalhe}\n`);
+    if (definicao.valoresPermitidos) {
+        doc.appendMarkdown(`\n**Valores permitidos:** ${definicao.valoresPermitidos.map(v => `\`'${v}'\``).join(', ')}`);
+    }
+    if (definicao.padrao) {
+        doc.appendMarkdown(`\n**Padrão:** \`${definicao.padrao}\``);
+    }
+    return new vscode.Hover(doc);
+}
+
 /**
  * Provedor de documentação em hover para arquivos `.delprops`.
  * Exibe informações sobre espaços de nomes e propriedades ao posicionar o ponteiro sobre eles.
@@ -113,11 +175,24 @@ export class DelpropsProvedorDocumentacaoEmEditor implements vscode.HoverProvide
         if (segmentoAtual === 0) { return hoverLiquido(); }
         if (segmentoAtual === 1) { return hoverSubnamespace(segmentos[1]); }
 
-        // Para liquido.dados.<nome>.<prop>, a propriedade está no índice 3.
-        // Para liquido.roteador.<prop> e liquido.autenticacao.<prop>, está no índice 2.
-        const indicePropriedade = segmentos[1] === 'dados' ? 3 : 2;
-        if (segmentoAtual === indicePropriedade) {
-            return hoverPropriedade(segmentos, indicePropriedade);
+        // liquido.dados.<nome> — identificador livre de fonte de dados
+        if (segmentoAtual === 2 && segmentos[1] === 'dados') {
+            return hoverIdentificadorFonteDados(segmentos[2]);
+        }
+
+        // liquido.dados.<nome>.<prop>
+        if (segmentoAtual === 3 && segmentos[1] === 'dados') {
+            return hoverPropriedade(segmentos, 3);
+        }
+
+        // liquido.<namespace>.<sub-espaço>.<prop> com nomes compostos (e.g., liquido.aplicacao.licenca.url)
+        if (segmentoAtual === 3) {
+            return hoverPropriedadeComposta(segmentos);
+        }
+
+        // liquido.<namespace>.<prop> ou liquido.<namespace>.<sub-espaço>
+        if (segmentoAtual === 2) {
+            return hoverPropriedadeOuSubNamespace(segmentos);
         }
 
         return undefined;

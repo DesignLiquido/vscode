@@ -21,9 +21,15 @@ jest.mock('@designliquido/delprops', () => ({
         ],
         dados: [
             { nome: 'tecnologia', tipo: 'texto', detalhe: 'Tecnologia de banco', valoresPermitidos: ['sqlite', 'mysql'], padrao: null },
+            { nome: 'caminho', tipo: 'texto', detalhe: 'Caminho do banco', valoresPermitidos: null, padrao: null },
         ],
         autenticacao: [
             { nome: 'segredo', tipo: 'texto', detalhe: 'Chave secreta JWT', valoresPermitidos: null, padrao: null },
+        ],
+        aplicacao: [
+            { nome: 'nome', tipo: 'texto', detalhe: 'Nome da aplicação', valoresPermitidos: null, padrao: null },
+            { nome: 'licenca.nome', tipo: 'texto', detalhe: 'Nome da licença', valoresPermitidos: null, padrao: null },
+            { nome: 'licenca.url', tipo: 'texto', detalhe: 'URL da licença', valoresPermitidos: null, padrao: null },
         ],
     },
     DefinicaoPropriedade: class {},
@@ -106,5 +112,53 @@ describe('DelpropsProvedorDocumentacaoEmEditor', () => {
     it('cursor fora dos tokens (character=100) → undefined', () => {
         const resultado = provedor.provideHover(criarDocumento('liquido.roteador'), { line: 0, character: 100 }, mockToken);
         expect(resultado).toBeUndefined();
+    });
+
+    it('"liquido.dados.lincones" cursor em segmento 2 → hover de identificador de fonte de dados', () => {
+        // 'liquido.dados.lincones' → lincones começa na coluna 14
+        const resultado = provedor.provideHover(criarDocumento('liquido.dados.lincones'), { line: 0, character: 14 }, mockToken);
+        expect(resultado).toBeDefined();
+        expect(resultado.contents.value).toContain('lincones');
+    });
+
+    it('"liquido.dados.lincones.caminho" cursor em segmento 3 → hover da propriedade caminho', () => {
+        // 'caminho' começa na coluna 23
+        const resultado = provedor.provideHover(criarDocumento('liquido.dados.lincones.caminho'), { line: 0, character: 23 }, mockToken);
+        expect(resultado).toBeDefined();
+        expect(resultado.contents.value).toContain('caminho');
+    });
+
+    it('"liquido.dados.lincones.autoInicializar" cursor em segmento 3 → hover da propriedade', () => {
+        // 'autoInicializar' começa na coluna 23
+        const resultado = provedor.provideHover(criarDocumento('liquido.dados.lincones.autoInicializar'), { line: 0, character: 23 }, mockToken);
+        expect(resultado).toBeDefined();
+        expect(resultado.contents.value).toContain('autoInicializar');
+    });
+
+    it('"liquido.aplicacao" cursor em segmento 1 → hover do subnamespace aplicacao', () => {
+        const resultado = provedor.provideHover(criarDocumento('liquido.aplicacao'), { line: 0, character: 8 }, mockToken);
+        expect(resultado).toBeDefined();
+        expect(resultado.contents.value).toContain('aplicacao');
+    });
+
+    it('"liquido.aplicacao.nome" cursor em segmento 2 → hover da propriedade direta', () => {
+        // 'nome' começa na coluna 18
+        const resultado = provedor.provideHover(criarDocumento('liquido.aplicacao.nome'), { line: 0, character: 18 }, mockToken);
+        expect(resultado).toBeDefined();
+        expect(resultado.contents.value).toContain('nome');
+    });
+
+    it('"liquido.aplicacao.licenca" cursor em segmento 2 → hover do sub-espaço licenca', () => {
+        // 'licenca' começa na coluna 18
+        const resultado = provedor.provideHover(criarDocumento('liquido.aplicacao.licenca'), { line: 0, character: 18 }, mockToken);
+        expect(resultado).toBeDefined();
+        expect(resultado.contents.value).toContain('licenca');
+    });
+
+    it('"liquido.aplicacao.licenca.url" cursor em segmento 3 → hover da propriedade composta', () => {
+        // 'url' começa na coluna 26
+        const resultado = provedor.provideHover(criarDocumento('liquido.aplicacao.licenca.url'), { line: 0, character: 26 }, mockToken);
+        expect(resultado).toBeDefined();
+        expect(resultado.contents.value).toContain('licenca.url');
     });
 });

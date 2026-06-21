@@ -30,6 +30,17 @@ const propriedadesAutenticacao = [
     { nome: 'expiracao', tipo: 'texto', detalhe: "Tempo de expiração do token (ex: '1h', '7d')." },
 ];
 
+const propriedadesAplicacaoDiretas = [
+    { nome: 'nome', tipo: 'texto', detalhe: "Nome da aplicação." },
+    { nome: 'versao', tipo: 'texto', detalhe: "Versão da aplicação." },
+    { nome: 'descricao', tipo: 'texto', detalhe: "Descrição da aplicação." },
+];
+
+const propriedadesLicenca = [
+    { nome: 'nome', tipo: 'texto', detalhe: "Nome da licença da aplicação." },
+    { nome: 'url', tipo: 'texto', detalhe: "URL da licença da aplicação." },
+];
+
 function itemCompletude(nome: string, tipo: string, detalhe: string): vscode.CompletionItem {
     const item = new vscode.CompletionItem(nome, vscode.CompletionItemKind.Property);
     item.detail = `(${tipo}) ${detalhe}`;
@@ -52,6 +63,15 @@ export class DelpropsProvedorCompletude implements vscode.CompletionItemProvider
             return propriedadesFonteDados.map(p => itemCompletude(p.nome, p.tipo, p.detalhe));
         }
 
+        // liquido.dados. → placeholder de identificador livre
+        if (/^liquido\.dados\.$/.test(textoAntesDosCursor)) {
+            const placeholder = new vscode.CompletionItem('nomeFonteDados', vscode.CompletionItemKind.Module);
+            placeholder.detail = 'Identificador livre para a fonte de dados (ex: lincones, principal).';
+            placeholder.insertText = new vscode.SnippetString('${1:nomeFonteDados}.');
+            placeholder.command = { command: 'editor.action.triggerSuggest', title: 'Trigger Suggest' };
+            return [placeholder];
+        }
+
         // liquido.roteador. → propriedades do roteador
         if (/^liquido\.roteador\.$/.test(textoAntesDosCursor)) {
             return propriedadesRoteador.map(p => itemCompletude(p.nome, p.tipo, p.detalhe));
@@ -60,6 +80,21 @@ export class DelpropsProvedorCompletude implements vscode.CompletionItemProvider
         // liquido.autenticacao. → propriedades de autenticação
         if (/^liquido\.autenticacao\.$/.test(textoAntesDosCursor)) {
             return propriedadesAutenticacao.map(p => itemCompletude(p.nome, p.tipo, p.detalhe));
+        }
+
+        // liquido.aplicacao.licenca. → propriedades da licença
+        if (/^liquido\.aplicacao\.licenca\.$/.test(textoAntesDosCursor)) {
+            return propriedadesLicenca.map(p => itemCompletude(p.nome, p.tipo, p.detalhe));
+        }
+
+        // liquido.aplicacao. → propriedades diretas + sub-namespace licenca
+        if (/^liquido\.aplicacao\.$/.test(textoAntesDosCursor)) {
+            const itens = propriedadesAplicacaoDiretas.map(p => itemCompletude(p.nome, p.tipo, p.detalhe));
+            const licenca = new vscode.CompletionItem('licenca', vscode.CompletionItemKind.Module);
+            licenca.detail = 'Configurações de licença da aplicação.';
+            licenca.insertText = new vscode.SnippetString('licenca.');
+            licenca.command = { command: 'editor.action.triggerSuggest', title: 'Trigger Suggest' };
+            return [...itens, licenca];
         }
 
         // liquido. → namespaces de primeiro nível
@@ -73,7 +108,10 @@ export class DelpropsProvedorCompletude implements vscode.CompletionItemProvider
             const autenticacao = new vscode.CompletionItem('autenticacao', vscode.CompletionItemKind.Module);
             autenticacao.detail = 'Configurações de autenticação.';
 
-            return [roteador, dados, autenticacao];
+            const aplicacao = new vscode.CompletionItem('aplicacao', vscode.CompletionItemKind.Module);
+            aplicacao.detail = 'Configurações da aplicação.';
+
+            return [roteador, dados, autenticacao, aplicacao];
         }
 
         // Início de linha → namespace raiz

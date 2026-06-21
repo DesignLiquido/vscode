@@ -62,14 +62,15 @@ describe('DelpropsProvedorCompletude', () => {
         expect(items[0].command.command).toBe('editor.action.triggerSuggest');
     });
 
-    it('"liquido." → retorna namespaces de 1º nível', () => {
+    it('"liquido." → retorna 4 namespaces de 1º nível', () => {
         const items = provedor.provideCompletionItems(criarDocumento('liquido.'), criarPosicao(8));
         expect(Array.isArray(items)).toBe(true);
-        expect(items.length).toBe(3);
+        expect(items.length).toBe(4);
         const labels = items.map((i: any) => i.label);
         expect(labels).toContain('roteador');
         expect(labels).toContain('dados');
         expect(labels).toContain('autenticacao');
+        expect(labels).toContain('aplicacao');
     });
 
     it('namespaces de 1º nível têm tipo Module', () => {
@@ -117,6 +118,41 @@ describe('DelpropsProvedorCompletude', () => {
         expect(labels).toContain('porta');
         expect(labels).toContain('autoInicializar');
         expect(labels).toContain('arquivoInicializacao');
+    });
+
+    it('"liquido.dados." → retorna placeholder de identificador livre', () => {
+        const items = provedor.provideCompletionItems(criarDocumento('liquido.dados.'), criarPosicao(14));
+        expect(Array.isArray(items)).toBe(true);
+        expect(items.length).toBe(1);
+        expect(items[0].label).toBe('nomeFonteDados');
+        expect(items[0].insertText.value).toContain('nomeFonteDados');
+        expect(items[0].command.command).toBe('editor.action.triggerSuggest');
+    });
+
+    it('"liquido.aplicacao." → retorna propriedades diretas e sub-namespace licenca', () => {
+        const items = provedor.provideCompletionItems(criarDocumento('liquido.aplicacao.'), criarPosicao(18));
+        expect(Array.isArray(items)).toBe(true);
+        const labels = items.map((i: any) => i.label);
+        expect(labels).toContain('nome');
+        expect(labels).toContain('versao');
+        expect(labels).toContain('descricao');
+        expect(labels).toContain('licenca');
+    });
+
+    it('"liquido.aplicacao." → item "licenca" tem tipo Module', () => {
+        const { CompletionItemKind } = jest.requireMock('vscode');
+        const items = provedor.provideCompletionItems(criarDocumento('liquido.aplicacao.'), criarPosicao(18));
+        const licenca = items.find((i: any) => i.label === 'licenca');
+        expect(licenca.kind).toBe(CompletionItemKind.Module);
+        expect(licenca.command.command).toBe('editor.action.triggerSuggest');
+    });
+
+    it('"liquido.aplicacao.licenca." → retorna nome e url', () => {
+        const items = provedor.provideCompletionItems(criarDocumento('liquido.aplicacao.licenca.'), criarPosicao(26));
+        expect(Array.isArray(items)).toBe(true);
+        const labels = items.map((i: any) => i.label);
+        expect(labels).toContain('nome');
+        expect(labels).toContain('url');
     });
 
     it('texto sem relação com liquido → retorna undefined', () => {
