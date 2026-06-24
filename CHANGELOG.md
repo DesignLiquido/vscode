@@ -1,5 +1,16 @@
 # Histórico de Modificações
 
+## 0.27.3
+
+- Núcleo de Delégua atualizado para a versão 1.25.0:
+  - Delégua e Pituguês passam a suportar múltiplos blocos `pegue`, cada um tipado por exceção diferente;
+  - Adoção da tabela-verdade padrão do Python no dialeto Pituguês (resolve https://github.com/DesignLiquido/delegua/issues/1344);
+  - Correção de _bug_ do analisador semântico em casos com `tipo de` (resolve https://github.com/DesignLiquido/delegua/issues/1355);
+  - Correção de _bug_ relativo a múltiplas chamadas de função contendo `retorna` em mais de um bloco interno.
+- Atualização de `delegua-lsp` e adição de mais testes unitários.
+- Expandindo opções para arquivos `.delprops` de Líquido.
+- Lista de modificadores de FolEs agora vem do pacote correspondente.
+
 ## 0.27.2
 
 - Núcleo de Delégua atualizado para a versão 1.24.4:
