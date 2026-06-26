@@ -25,6 +25,14 @@ jest.mock('@designliquido/foles/extensao/lista-modificadores', () => ({
     }
 }));
 
+jest.mock('@designliquido/foles/estruturas/dicionario-estruturas-lmht', () => ({
+    DicionarioEstruturasLmht: {
+        'divisao': class { tagHtml = 'div'; },
+        'paragrafo': class { tagHtml = 'p'; },
+        'lmht': class { tagHtml = 'html'; },
+    }
+}));
+
 import { FolesProvedorCompletude } from '../../fontes/completude/foles-provedor-completude';
 
 function criarDocumento(linhas: string[] = ['']): any {
@@ -56,85 +64,130 @@ describe('FolesProvedorCompletude', () => {
         expect(typeof provedor.provideCompletionItems).toBe('function');
     });
 
-    it('retorna array de completion items', () => {
-        const doc = criarDocumento(['']);
-        const pos = criarPosicao(0, 0);
-        const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
-        expect(Array.isArray(items)).toBe(true);
-        expect(items.length).toBeGreaterThan(0);
-    });
-
-    it('todos os itens têm label definido', () => {
-        const doc = criarDocumento(['']);
-        const pos = criarPosicao(0, 0);
-        const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
-        items.forEach((item: any) => {
-            expect(item.label).toBeDefined();
-            expect(typeof item.label).toBe('string');
-        });
-    });
-
-    it('todos os itens são do tipo Property', () => {
-        const doc = criarDocumento(['']);
-        const pos = criarPosicao(0, 0);
-        const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
-        items.forEach((item: any) => {
-            expect(item.kind).toBe(vscode.CompletionItemKind.Property);
-        });
-    });
-
-    it('todos os itens têm documentação', () => {
-        const doc = criarDocumento(['']);
-        const pos = criarPosicao(0, 0);
-        const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
-        items.forEach((item: any) => {
-            expect(item.documentation).toBeDefined();
-        });
-    });
-
-    describe('modificadores mockados', () => {
-        it('inclui alinhamento', () => {
+    describe('nível raiz (fora de bloco)', () => {
+        it('retorna apenas seletores LMHT na raiz', () => {
             const doc = criarDocumento(['']);
             const pos = criarPosicao(0, 0);
             const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
-            expect(items.some((i: any) => i.label === 'alinhamento')).toBe(true);
+            expect(Array.isArray(items)).toBe(true);
+            expect(items.length).toBe(3); // 3 tags LMHT mockadas
         });
 
-        it('inclui cor', () => {
+        it('seletores LMHT são do tipo Interface', () => {
             const doc = criarDocumento(['']);
             const pos = criarPosicao(0, 0);
             const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
-            expect(items.some((i: any) => i.label === 'cor')).toBe(true);
+            items.forEach((item: any) => {
+                expect(item.kind).toBe(vscode.CompletionItemKind.Interface);
+            });
         });
 
-        it('inclui fundo', () => {
+        it('inclui seletor divisao na raiz', () => {
             const doc = criarDocumento(['']);
             const pos = criarPosicao(0, 0);
             const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
-            expect(items.some((i: any) => i.label === 'fundo')).toBe(true);
+            expect(items.some((i: any) => i.label === 'divisao')).toBe(true);
         });
 
-        it('inclui margem', () => {
+        it('inclui seletor lmht na raiz', () => {
             const doc = criarDocumento(['']);
             const pos = criarPosicao(0, 0);
             const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
-            expect(items.some((i: any) => i.label === 'margem')).toBe(true);
+            expect(items.some((i: any) => i.label === 'lmht')).toBe(true);
         });
 
-        it('inclui padding', () => {
+        it('não inclui modificadores na raiz', () => {
             const doc = criarDocumento(['']);
             const pos = criarPosicao(0, 0);
             const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
-            expect(items.some((i: any) => i.label === 'padding')).toBe(true);
+            expect(items.some((i: any) => i.kind === vscode.CompletionItemKind.Property)).toBe(false);
+        });
+
+        it('retorna apenas seletores LMHT após fechar bloco', () => {
+            const doc = criarDocumento(['.classe {', '    cor: red;', '}', '']);
+            const pos = criarPosicao(3, 0);
+            const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
+            expect(items.length).toBe(3);
+            expect(items.every((i: any) => i.kind === vscode.CompletionItemKind.Interface)).toBe(true);
         });
     });
 
-    describe('contagem total de itens', () => {
-        it('retorna todos os modificadores mockados', () => {
-            const doc = criarDocumento(['']);
-            const pos = criarPosicao(0, 0);
+    describe('dentro de um bloco seletor', () => {
+        it('retorna seletores LMHT e modificadores', () => {
+            const doc = criarDocumento(['.classe {', '    ', '}']);
+            const pos = criarPosicao(1, 4);
             const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
-            expect(items.length).toBe(5);
+            expect(items.length).toBe(8); // 3 LMHT + 5 modificadores
+        });
+
+        it('inclui itens do tipo Interface (seletores LMHT)', () => {
+            const doc = criarDocumento(['.classe {', '    ', '}']);
+            const pos = criarPosicao(1, 4);
+            const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
+            expect(items.some((i: any) => i.kind === vscode.CompletionItemKind.Interface)).toBe(true);
+        });
+
+        it('inclui itens do tipo Property (modificadores)', () => {
+            const doc = criarDocumento(['.classe {', '    ', '}']);
+            const pos = criarPosicao(1, 4);
+            const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
+            expect(items.some((i: any) => i.kind === vscode.CompletionItemKind.Property)).toBe(true);
+        });
+
+        it('todos os itens têm label definido', () => {
+            const doc = criarDocumento(['.classe {', '    ', '}']);
+            const pos = criarPosicao(1, 4);
+            const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
+            items.forEach((item: any) => {
+                expect(item.label).toBeDefined();
+                expect(typeof item.label).toBe('string');
+            });
+        });
+
+        it('todos os itens têm documentação', () => {
+            const doc = criarDocumento(['.classe {', '    ', '}']);
+            const pos = criarPosicao(1, 4);
+            const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
+            items.forEach((item: any) => {
+                expect(item.documentation).toBeDefined();
+            });
+        });
+
+        describe('modificadores mockados', () => {
+            it('inclui alinhamento', () => {
+                const doc = criarDocumento(['.classe {', '    ', '}']);
+                const pos = criarPosicao(1, 4);
+                const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
+                expect(items.some((i: any) => i.label === 'alinhamento')).toBe(true);
+            });
+
+            it('inclui cor', () => {
+                const doc = criarDocumento(['.classe {', '    ', '}']);
+                const pos = criarPosicao(1, 4);
+                const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
+                expect(items.some((i: any) => i.label === 'cor')).toBe(true);
+            });
+
+            it('inclui fundo', () => {
+                const doc = criarDocumento(['.classe {', '    ', '}']);
+                const pos = criarPosicao(1, 4);
+                const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
+                expect(items.some((i: any) => i.label === 'fundo')).toBe(true);
+            });
+
+            it('inclui margem', () => {
+                const doc = criarDocumento(['.classe {', '    ', '}']);
+                const pos = criarPosicao(1, 4);
+                const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
+                expect(items.some((i: any) => i.label === 'margem')).toBe(true);
+            });
+
+            it('inclui padding', () => {
+                const doc = criarDocumento(['.classe {', '    ', '}']);
+                const pos = criarPosicao(1, 4);
+                const items = provedor.provideCompletionItems(doc, pos, mockToken, mockContext);
+                expect(items.some((i: any) => i.label === 'padding')).toBe(true);
+            });
         });
     });
 });
