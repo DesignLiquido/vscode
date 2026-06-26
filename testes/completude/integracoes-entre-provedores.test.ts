@@ -60,6 +60,7 @@ describe('integração entre provedores', () => {
 
         mockDocument = {
             lineAt: jest.fn().mockReturnValue({ text: '' }),
+            getText: jest.fn().mockReturnValue(''),
         };
         mockPosition = { line: 0, character: 0 };
         mockToken = {};
@@ -90,7 +91,7 @@ describe('integração entre provedores', () => {
         const itemsFoles = foles.provideCompletionItems(mockDocument, mockPosition, mockToken, mockContext);
         const itemsVisualg = visualg.provideCompletionItems(mockDocument, mockPosition, mockToken, mockContext);
 
-        expect(itemsFoles[0].kind).toBe(vscode.CompletionItemKind.Property);
+        expect(itemsFoles[0].kind).toBe(vscode.CompletionItemKind.Interface);
         expect(itemsVisualg[0].kind).toBe(vscode.CompletionItemKind.Function);
     });
 });
