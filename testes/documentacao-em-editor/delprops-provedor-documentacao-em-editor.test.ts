@@ -81,6 +81,13 @@ describe('DelpropsProvedorDocumentacaoEmEditor', () => {
         expect(resultado.contents.value).toContain('roteador');
     });
 
+    it('"liquido.verboso" cursor em segmento 1 → hover da propriedade direta', () => {
+        const resultado = provedor.provideHover(criarDocumento('liquido.verboso'), { line: 0, character: 9 }, mockToken);
+        expect(resultado).toBeDefined();
+        expect(resultado.contents.value).toContain('liquido.verboso');
+        expect(resultado.contents.value).toContain('logs');
+    });
+
     it('"liquido.dados" cursor em segmento 1 → menção ao identificador livre', () => {
         const resultado = provedor.provideHover(criarDocumento('liquido.dados'), { line: 0, character: 9 }, mockToken);
         expect(resultado).toBeDefined();

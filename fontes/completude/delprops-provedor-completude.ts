@@ -41,6 +41,12 @@ const propriedadesLicenca = [
     { nome: 'url', tipo: 'texto', detalhe: "URL da licença da aplicação." },
 ];
 
+const propriedadesLiquidoDiretas = [
+    { nome: 'arquetipo', tipo: 'texto', detalhe: "Arquitetura da aplicação: 'rest' ou 'mvc'." },
+    { nome: 'linguagem', tipo: 'texto', detalhe: "Linguagem principal da aplicação: 'delégua' ou 'pituguês'." },
+    { nome: 'verboso', tipo: 'logico', detalhe: 'Ativa logs adicionais de carregamento e configuração.' },
+];
+
 function itemCompletude(nome: string, tipo: string, detalhe: string): vscode.CompletionItem {
     const item = new vscode.CompletionItem(nome, vscode.CompletionItemKind.Property);
     item.detail = `(${tipo}) ${detalhe}`;
@@ -99,6 +105,8 @@ export class DelpropsProvedorCompletude implements vscode.CompletionItemProvider
 
         // liquido. → namespaces de primeiro nível
         if (/^liquido\.$/.test(textoAntesDosCursor)) {
+            const propriedadesDiretas = propriedadesLiquidoDiretas.map(p => itemCompletude(p.nome, p.tipo, p.detalhe));
+
             const roteador = new vscode.CompletionItem('roteador', vscode.CompletionItemKind.Module);
             roteador.detail = 'Configurações do roteador web.';
 
@@ -111,7 +119,7 @@ export class DelpropsProvedorCompletude implements vscode.CompletionItemProvider
             const aplicacao = new vscode.CompletionItem('aplicacao', vscode.CompletionItemKind.Module);
             aplicacao.detail = 'Configurações da aplicação.';
 
-            return [roteador, dados, autenticacao, aplicacao];
+            return [...propriedadesDiretas, roteador, dados, autenticacao, aplicacao];
         }
 
         // Início de linha → namespace raiz

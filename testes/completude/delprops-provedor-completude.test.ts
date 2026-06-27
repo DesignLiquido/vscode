@@ -62,11 +62,13 @@ describe('DelpropsProvedorCompletude', () => {
         expect(items[0].command.command).toBe('editor.action.triggerSuggest');
     });
 
-    it('"liquido." → retorna 4 namespaces de 1º nível', () => {
+    it('"liquido." → retorna propriedades diretas e namespaces de 1º nível', () => {
         const items = provedor.provideCompletionItems(criarDocumento('liquido.'), criarPosicao(8));
         expect(Array.isArray(items)).toBe(true);
-        expect(items.length).toBe(4);
         const labels = items.map((i: any) => i.label);
+        expect(labels).toContain('arquetipo');
+        expect(labels).toContain('linguagem');
+        expect(labels).toContain('verboso');
         expect(labels).toContain('roteador');
         expect(labels).toContain('dados');
         expect(labels).toContain('autenticacao');
@@ -76,7 +78,19 @@ describe('DelpropsProvedorCompletude', () => {
     it('namespaces de 1º nível têm tipo Module', () => {
         const { CompletionItemKind } = jest.requireMock('vscode');
         const items = provedor.provideCompletionItems(criarDocumento('liquido.'), criarPosicao(8));
-        items.forEach((i: any) => expect(i.kind).toBe(CompletionItemKind.Module));
+        const namespaces = ['roteador', 'dados', 'autenticacao', 'aplicacao'];
+        items
+            .filter((i: any) => namespaces.includes(i.label))
+            .forEach((i: any) => expect(i.kind).toBe(CompletionItemKind.Module));
+    });
+
+    it('propriedades diretas de liquido têm tipo Property', () => {
+        const { CompletionItemKind } = jest.requireMock('vscode');
+        const items = provedor.provideCompletionItems(criarDocumento('liquido.'), criarPosicao(8));
+        const propriedadesDiretas = ['arquetipo', 'linguagem', 'verboso'];
+        items
+            .filter((i: any) => propriedadesDiretas.includes(i.label))
+            .forEach((i: any) => expect(i.kind).toBe(CompletionItemKind.Property));
     });
 
     it('"liquido.roteador." → retorna propriedades do roteador', () => {

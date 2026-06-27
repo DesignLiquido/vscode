@@ -7,6 +7,7 @@ import { EsquemaPropriedade, TipoValor } from '../../interfaces';
 const esquemaPropriedadesLiquido: Record<string, EsquemaPropriedade> = {
     'arquetipo': { tipo: 'texto', valoresPermitidos: ['rest', 'mvc'] },
     'linguagem': { tipo: 'texto', valoresPermitidos: ['delégua', 'pituguês'] },
+    'verboso': { tipo: 'logico' },
 };
 
 /**
@@ -114,7 +115,8 @@ function validarPropriedadeLiquido(
 
     switch (espacoNomes) {
         case 'arquetipo':
-        case 'linguagem': {
+        case 'linguagem':
+        case 'verboso': {
             const esquema = esquemaPropriedadesLiquido[espacoNomes];
             validarTipoEValor(valor, esquema, `liquido.${espacoNomes}`, linha, diagnosticos);
             break;
@@ -267,7 +269,7 @@ function validarPropriedadeLiquido(
         default: {
             diagnosticos.push(new vscode.Diagnostic(
                 new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                `Propriedade ou espaço de nomes desconhecido 'liquido.${espacoNomes}'. Conhecidos: aplicacao, arquetipo, autenticacao, dados, linguagem, roteador.`,
+                `Propriedade ou espaço de nomes desconhecido 'liquido.${espacoNomes}'. Conhecidos: aplicacao, arquetipo, autenticacao, dados, linguagem, roteador, verboso.`,
                 vscode.DiagnosticSeverity.Warning
             ));
             break;

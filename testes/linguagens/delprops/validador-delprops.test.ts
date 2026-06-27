@@ -83,6 +83,18 @@ describe('validarDelprops', () => {
         expect(diags[0].message).toContain("'liquido' incompleta");
     });
 
+    it('liquido.verboso com lógico válido → sem diagnóstico', () => {
+        const diags = validarDelprops(criarDocumento(['liquido.verboso = verdadeiro']));
+        expect(diags).toHaveLength(0);
+    });
+
+    it('liquido.verboso com texto → erro tipo incorreto', () => {
+        const diags = validarDelprops(criarDocumento(["liquido.verboso = 'sim'"]));
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain('Tipo incorreto');
+        expect(diags[0].message).toContain('lógico');
+    });
+
     // ──── liquido.roteador ────
     it('liquido.roteador sem propriedade → erro incompleto', () => {
         const diags = validarDelprops(criarDocumento(['liquido.roteador = verdadeiro']));

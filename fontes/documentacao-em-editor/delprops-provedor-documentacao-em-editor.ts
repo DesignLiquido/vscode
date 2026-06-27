@@ -7,6 +7,26 @@ const nomesTipos: Record<string, string> = {
     numero: 'número',
 };
 
+const propriedadesLiquidoDiretas: DefinicaoPropriedade[] = [
+    {
+        nome: 'arquetipo',
+        tipo: 'texto',
+        detalhe: "Define o arquétipo da aplicação ('rest' ou 'mvc').",
+        valoresPermitidos: ['rest', 'mvc'],
+    },
+    {
+        nome: 'linguagem',
+        tipo: 'texto',
+        detalhe: "Define a linguagem principal da aplicação ('delégua' ou 'pituguês').",
+        valoresPermitidos: ['delégua', 'pituguês'],
+    },
+    {
+        nome: 'verboso',
+        tipo: 'logico',
+        detalhe: 'Ativa logs adicionais de carregamento e configuração.',
+    },
+];
+
 // autoInicializar e arquivoInicializacao ainda não estão no pacote publicado
 const propriedadesDados: DefinicaoPropriedade[] = [
     ...liquido.dados,
@@ -41,10 +61,31 @@ function hoverLiquido(): vscode.Hover {
     const doc = new vscode.MarkdownString();
     doc.appendMarkdown('**(espaço de nomes)** `liquido`\n\n');
     doc.appendMarkdown('Framework web Líquido para desenvolvimento de aplicações na internet em português.\n\n');
+    doc.appendMarkdown('**Propriedades diretas:**\n\n');
+    doc.appendMarkdown(tabelaPropriedades(propriedadesLiquidoDiretas));
+    doc.appendMarkdown('\n\n');
     doc.appendMarkdown('**Sub-propriedades disponíveis:**\n\n');
     for (const [nome, info] of Object.entries(subnamespaces)) {
         doc.appendMarkdown(`- \`${nome}\` — ${info.detalhe}\n`);
     }
+    return new vscode.Hover(doc);
+}
+
+function hoverPropriedadeLiquido(nome: string): vscode.Hover | undefined {
+    const definicao = propriedadesLiquidoDiretas.find(p => p.nome === nome);
+    if (!definicao) { return undefined; }
+
+    const doc = new vscode.MarkdownString();
+    doc.appendMarkdown(`**(${nomesTipos[definicao.tipo]})** \`liquido.${nome}\`\n\n`);
+    doc.appendMarkdown(`${definicao.detalhe}\n`);
+
+    if (definicao.valoresPermitidos) {
+        doc.appendMarkdown(`\n**Valores permitidos:** ${definicao.valoresPermitidos.map(v => `\`'${v}'\``).join(', ')}`);
+    }
+    if (definicao.padrao) {
+        doc.appendMarkdown(`\n**Padrão:** \`${definicao.padrao}\``);
+    }
+
     return new vscode.Hover(doc);
 }
 
@@ -173,7 +214,9 @@ export class DelpropsProvedorDocumentacaoEmEditor implements vscode.HoverProvide
         if (segmentoAtual === -1) { return undefined; }
 
         if (segmentoAtual === 0) { return hoverLiquido(); }
-        if (segmentoAtual === 1) { return hoverSubnamespace(segmentos[1]); }
+        if (segmentoAtual === 1) {
+            return hoverPropriedadeLiquido(segmentos[1]) || hoverSubnamespace(segmentos[1]);
+        }
 
         // liquido.dados.<nome> — identificador livre de fonte de dados
         if (segmentoAtual === 2 && segmentos[1] === 'dados') {
