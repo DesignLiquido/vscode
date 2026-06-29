@@ -27,16 +27,9 @@ const propriedadesLiquidoDiretas: DefinicaoPropriedade[] = [
     },
 ];
 
-// autoInicializar e arquivoInicializacao ainda não estão no pacote publicado
-const propriedadesDados: DefinicaoPropriedade[] = [
-    ...liquido.dados,
-    { nome: 'autoInicializar', tipo: 'logico', detalhe: 'Inicializa o banco automaticamente ao iniciar o servidor.' },
-    { nome: 'arquivoInicializacao', tipo: 'texto', detalhe: "Arquivo de inicialização do banco (padrão: 'inicializacao.lincones')." },
-];
-
 const subnamespaces: Record<string, { detalhe: string; propriedades: DefinicaoPropriedade[] }> = {
     roteador:     { detalhe: 'Configurações do roteador HTTP.',   propriedades: liquido.roteador },
-    dados:        { detalhe: 'Configurações de fontes de dados.', propriedades: propriedadesDados },
+    dados:        { detalhe: 'Configurações de fontes de dados.', propriedades: liquido.dados },
     autenticacao: { detalhe: 'Configurações de autenticação.',    propriedades: liquido.autenticacao },
     aplicacao:    { detalhe: 'Configurações da aplicação.',       propriedades: liquido.aplicacao },
 };

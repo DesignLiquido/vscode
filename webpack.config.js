@@ -78,6 +78,10 @@ const webConfig = {
     {
       module: /delegua-node/,
       message: /Critical dependency/
+    },
+    {
+      module: /delprops[\\/]descobridor/,
+      message: /Critical dependency/
     }
   ]
 };
