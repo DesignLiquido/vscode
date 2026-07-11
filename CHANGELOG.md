@@ -1,5 +1,19 @@
 # Histórico de Modificações
 
+## 0.27.4
+
+- Núcleo de Delégua atualizado para a versão 1.26.0:
+  - Intervalos de vetores em Delégua;
+  - Correção de acesso a dicionário com valor _falsy_, que agora retorna o valor correto em vez de nulo (resolve https://github.com/DesignLiquido/delegua/issues/1375);
+  - Correção de _bug_ no tradutor reverso de JavaScript para evitar escrever `null` em literal nulo de código Delégua (resolve https://github.com/DesignLiquido/delegua/issues/1366);
+  - Correção de _loop_ infinito causado por comentário dentro de blocos de escopo de `escolha` (resolve https://github.com/DesignLiquido/delegua/issues/1360).
+- Liquido:
+  - Propriedades de dados passam a vir do pacote de Delprops correspondente;
+  - Expansão de validação em propriedades diretas de Liquido;
+  - Documentação em editor para LMHT agora considera atributos sensíveis à estrutura em que são declarados;
+  - Provedor FolEs também usa estruturas LMHT em completude de código.
+- Atualização periódica de pacotes e colaterais.
+
 ## 0.27.3
 
 - Núcleo de Delégua atualizado para a versão 1.25.0:
