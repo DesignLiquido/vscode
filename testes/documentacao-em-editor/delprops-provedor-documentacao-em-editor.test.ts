@@ -22,6 +22,7 @@ jest.mock('@designliquido/delprops', () => ({
         dados: [
             { nome: 'tecnologia', tipo: 'texto', detalhe: 'Tecnologia de banco', valoresPermitidos: ['sqlite', 'mysql'], padrao: null },
             { nome: 'caminho', tipo: 'texto', detalhe: 'Caminho do banco', valoresPermitidos: null, padrao: null },
+            { nome: 'autoInicializar', tipo: 'logico', detalhe: 'Inicializa o banco automaticamente ao iniciar o servidor.', valoresPermitidos: null, padrao: null },
         ],
         autenticacao: [
             { nome: 'segredo', tipo: 'texto', detalhe: 'Chave secreta JWT', valoresPermitidos: null, padrao: null },
