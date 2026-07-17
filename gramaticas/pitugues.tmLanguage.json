@@ -23,7 +23,7 @@
 	"functions": {
 		"patterns": [{
 			"name": "keyword.function.pitugues",
-			"match": "\\b(aleatorio|aleatorioEntre|escreva|imprima|inteiro|intervalo|leia|mapear|ordenar|real|tamanho|texto|importar|ajuda|exemplo|limpar|salvar|carregar|fun1|fun1R|ajuda|exemplo|limpar|salvar|carregar|fun1|fun1R|linspace|fun2|fun2R|rand|aprox|pale|vet|qtd|plot|max|min|intervalo|mediana|smtr|media|ve|sqr|variancia|devpad|covar|coefvar|coefcorr|coluna|linha|transposta|matriz|matrizmult|matrizinv|matrizid|deter|csl|sen|cos|tan|arcos|arsen|artan|exp|log|pot|aleat|raizq|vmed|deltas|deltat|acel|mrufh|mrufhp|mruvel|mruvfh|mruvfhp|mruvvel|mruvvelp|inercia|vmmv|van|periodo|pid)\\b"
+			"match": "\\b(aleatorio|aleatorioEntre|aleatorio_entre|algum|arredondar|combinar|contar|encontrar|encontrar_indice|encontrar_ultimo|encontrar_ultimo_indice|enumerar|escreva|filtrar_por|imprima|incluido|inteiro|intervalo|inverter|leia|mapear|maximo|minimo|ordenar|para_cada|primeiro_em_condicao|real|reduzir|somar|tamanho|texto|todos|todos_em_condicao|tupla|unico|vetor|importar|ajuda|exemplo|limpar|salvar|carregar|fun1|fun1R|ajuda|exemplo|limpar|salvar|carregar|fun1|fun1R|linspace|fun2|fun2R|rand|aprox|pale|vet|qtd|plot|max|min|mediana|smtr|media|ve|sqr|variancia|devpad|covar|coefvar|coefcorr|coluna|linha|transposta|matriz|matrizmult|matrizinv|matrizid|deter|csl|sen|cos|tan|arcos|arsen|artan|exp|log|pot|aleat|raizq|vmed|deltas|deltat|acel|mrufh|mrufhp|mruvel|mruvfh|mruvfhp|mruvvel|mruvvelp|inercia|vmmv|van|periodo|pid)\\b"
 		}]
 	},
 		"impossible": {
