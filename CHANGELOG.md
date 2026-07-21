@@ -1,5 +1,18 @@
 # Histórico de Modificações
 
+## 0.27.5
+
+- Núcleo de Delégua atualizado para a versão 1.26.1:
+  - Criação da função `obterMensagemErro()` para padronizar a captura de mensagens de erro (#1387);
+  - Correção de _bug_ de `enumerar()` não assumir o valor `0` como padrão para o parâmetro `início` (#1385);
+  - Remoção do tipo `número` de Pituguês (#1384);
+  - Melhor asserção de alvos para acesso a métodos e propriedades de classes;
+  - Melhoramentos em detecção de variáveis lógicas em laços `enquanto`;
+  - Correção na forma com que o interpretador adiciona os erros ao array `erros` (#1373);
+  - Analisador Semântico passa a entender funções do módulo de testes;
+  - Correção de problema de encadeamento de chamadas de métodos em Pituguês.
+- Atualização da expressão regular para incluir novas palavras-chave na definição de funções do Pituguês (#98).
+
 ## 0.27.4
 
 - Núcleo de Delégua atualizado para a versão 1.26.0:

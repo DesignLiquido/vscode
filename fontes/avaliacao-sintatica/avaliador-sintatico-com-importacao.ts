@@ -152,33 +152,40 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
         const caminhoTexto = String(literalCaminho.valor);
         const bibliotecaResolvida = verificarModulosDelegua(caminhoTexto);
         if (bibliotecaResolvida) {
-            const moduloResolvido = carregarBibliotecaDelegua(bibliotecaResolvida as string);
+            try {
+                const moduloResolvido = carregarBibliotecaDelegua(bibliotecaResolvida as string);
 
-            this.primitivasConhecidas[caminhoTexto] = {};
-            for (const [nomeComponente, dadosComponente] of Object.entries(moduloResolvido.componentes)) {
-                // TODO: Verificar se sempre é o caso de ser função padrão.
-                let componente;
-                if (dadosComponente instanceof FuncaoPadrao) {
-                    componente = this.importarFuncaoPadraoComoComponente(dadosComponente, nomeComponente);
-                } else if (dadosComponente instanceof ClasseDeModulo) {
-                    const classeModulo = dadosComponente as ClasseDeModulo;
+                this.primitivasConhecidas[caminhoTexto] = {};
+                for (const [nomeComponente, dadosComponente] of Object.entries(moduloResolvido.componentes)) {
+                    // TODO: Verificar se sempre é o caso de ser função padrão.
+                    let componente;
+                    if (dadosComponente instanceof FuncaoPadrao) {
+                        componente = this.importarFuncaoPadraoComoComponente(dadosComponente, nomeComponente);
+                    } else if (dadosComponente instanceof ClasseDeModulo) {
+                        const classeModulo = dadosComponente as ClasseDeModulo;
 
-                    componente = this.criarComponenteDeClasse(caminhoTexto, nomeComponente, classeModulo);
-                    // Registrar também a própria classe (a atribuição ao mapa acontece mais adiante,
-                    // mas garantir que exista agora caso recursão precise dela)
-                    this.primitivasConhecidas[caminhoTexto] = this.primitivasConhecidas[caminhoTexto] || {};
+                        componente = this.criarComponenteDeClasse(caminhoTexto, nomeComponente, classeModulo);
+                        // Registrar também a própria classe (a atribuição ao mapa acontece mais adiante,
+                        // mas garantir que exista agora caso recursão precise dela)
+                        this.primitivasConhecidas[caminhoTexto] = this.primitivasConhecidas[caminhoTexto] || {};
+                        this.primitivasConhecidas[caminhoTexto][nomeComponente] = componente;
+                        this.tiposDefinidosPorBibliotecas[nomeComponente] = classeModulo;
+
+                    } else {
+                        throw this.erro({
+                            hashArquivo: literalCaminho.hashArquivo, linha: literalCaminho.linha
+                        } as SimboloInterface,
+                            `Tipo de importação inválida: ${JSON.stringify(dadosComponente)}.`
+                        );
+                    }
+
                     this.primitivasConhecidas[caminhoTexto][nomeComponente] = componente;
-                    this.tiposDefinidosPorBibliotecas[nomeComponente] = classeModulo;
-
-                } else {
-                    throw this.erro({
-                        hashArquivo: literalCaminho.hashArquivo, linha: literalCaminho.linha
-                    } as SimboloInterface,
-                        `Tipo de importação inválida: ${JSON.stringify(dadosComponente)}.`
-                    );
                 }
-
-                this.primitivasConhecidas[caminhoTexto][nomeComponente] = componente;
+            } catch {
+                // Biblioteca reconhecida mas não carregável neste ambiente (ex.: extensão VSCode
+                // ainda não oferece implementação para o módulo). Segue sem validação rica de
+                // tipos/métodos para essa importação, em vez de abortar a análise sintática inteira.
+                delete this.primitivasConhecidas[caminhoTexto];
             }
         }
 
