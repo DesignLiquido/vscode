@@ -9,6 +9,7 @@ import {
     primitivasDicionarioFormatadas,
     primitivasNumeroFormatadas,
     primitivasTextoFormatadas,
+    primitivasTuplaFormatadas,
     primitivasVetorFormatadas,
     funcoesNativasPitugues,
 } from '../bibliotecas/dialetos/pitugues';
@@ -245,6 +246,7 @@ return new vscode.Hover(doc);
             'numero':       primitivasNumeroFormatadas,
             'número':       primitivasNumeroFormatadas,
             'texto':        primitivasTextoFormatadas,
+            'tupla':        primitivasTuplaFormatadas,
             'vetor':        primitivasVetorFormatadas,
             'dicionario[]': primitivasVetorFormatadas,
             'dicionário[]': primitivasVetorFormatadas,

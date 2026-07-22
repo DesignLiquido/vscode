@@ -3,6 +3,7 @@ import { PrimitivaInterface } from '@designliquido/delegua/interfaces';
 import primitivasDicionario from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-dicionario';
 import primitivasNumero from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-numero';
 import primitivasTexto from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-texto';
+import primitivasTupla from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-tupla';
 import primitivasVetor from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-vetor';
 
 
@@ -47,12 +48,14 @@ function formatarPrimitivas(moduloPrimitivas: {[nome: string]: PrimitivaInterfac
 const primitivasDicionarioFormatadas: FuncaoNativaOuMetodoPrimitiva[] = formatarPrimitivas(primitivasDicionario);
 const primitivasNumeroFormatadas: FuncaoNativaOuMetodoPrimitiva[] = formatarPrimitivas(primitivasNumero);
 const primitivasTextoFormatadas: FuncaoNativaOuMetodoPrimitiva[] = formatarPrimitivas(primitivasTexto);
+const primitivasTuplaFormatadas: FuncaoNativaOuMetodoPrimitiva[] = formatarPrimitivas(primitivasTupla);
 const primitivasVetorFormatadas: FuncaoNativaOuMetodoPrimitiva[] = formatarPrimitivas(primitivasVetor);
 
 const primitivas: FuncaoNativaOuMetodoPrimitiva[] = [
     ...primitivasDicionarioFormatadas,
     ...primitivasNumeroFormatadas, 
     ...primitivasTextoFormatadas, 
+    ...primitivasTuplaFormatadas,
     ...primitivasVetorFormatadas
 ].sort(ordenar);
 
@@ -61,6 +64,7 @@ export {
     primitivasDicionarioFormatadas,
     primitivasNumeroFormatadas,
     primitivasTextoFormatadas,
+    primitivasTuplaFormatadas,
     primitivasVetorFormatadas,
     funcoesNativasPitugues
 };
