@@ -265,7 +265,10 @@ export function activate(context: vscode.ExtensionContext) {
     // Ações de código
     context.subscriptions.push(
         vscode.languages.registerCodeActionsProvider(
-            { language: 'delegua', scheme: 'file' },
+            [
+                { language: 'delegua', scheme: 'file' },
+                { language: 'pitugues', scheme: 'file' }
+            ],
             new DeleguaProvedorAcoesCodigo(),
             { providedCodeActionKinds: DeleguaProvedorAcoesCodigo.tiposAcoesRapidas }
         )
@@ -637,7 +640,9 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerDefinitionProvider(
             [
                 { scheme: 'file', language: 'delegua' },
-                { scheme: 'untitled', language: 'delegua' }
+                { scheme: 'untitled', language: 'delegua' },
+                { scheme: 'file', language: 'pitugues' },
+                { scheme: 'untitled', language: 'pitugues' }
             ],
             new DeleguaProvedorDefinicao()
         )
@@ -648,7 +653,9 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerReferenceProvider(
             [
                 { scheme: 'file', language: 'delegua' },
-                { scheme: 'untitled', language: 'delegua' }
+                { scheme: 'untitled', language: 'delegua' },
+                { scheme: 'file', language: 'pitugues' },
+                { scheme: 'untitled', language: 'pitugues' }
             ],
             new DeleguaProvedorReferencias()
         )
@@ -659,7 +666,9 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerRenameProvider(
             [
                 { scheme: 'file', language: 'delegua' },
-                { scheme: 'untitled', language: 'delegua' }
+                { scheme: 'untitled', language: 'delegua' },
+                { scheme: 'file', language: 'pitugues' },
+                { scheme: 'untitled', language: 'pitugues' }
             ],
             new DeleguaProvedorRenomeacao()
         )
@@ -705,7 +714,9 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerSignatureHelpProvider(
             [
                 { scheme: 'file', language: 'delegua' },
-                { scheme: 'untitled', language: 'delegua' }
+                { scheme: 'untitled', language: 'delegua' },
+                { scheme: 'file', language: 'pitugues' },
+                { scheme: 'untitled', language: 'pitugues' }
             ],
             new DeleguaProvedorAssinaturaMetodos()
         )

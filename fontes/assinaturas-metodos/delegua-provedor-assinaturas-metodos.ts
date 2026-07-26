@@ -6,23 +6,74 @@ import primitivasDicionario from '@designliquido/delegua/bibliotecas/primitivas-
 import primitivasNumero from '@designliquido/delegua/bibliotecas/primitivas-numero';
 import primitivasTexto from '@designliquido/delegua/bibliotecas/primitivas-texto';
 import primitivasVetor from '@designliquido/delegua/bibliotecas/primitivas-vetor';
+import primitivasDicionarioPitugues from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-dicionario';
+import primitivasNumeroPitugues from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-numero';
+import primitivasTextoPitugues from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-texto';
+import primitivasVetorPitugues from '@designliquido/delegua/bibliotecas/dialetos/pitugues/primitivas-vetor';
 import { formatarPrimitivas, funcoesNativasDelegua } from '../bibliotecas';
+import { funcoesNativasPitugues } from '../bibliotecas/dialetos/pitugues';
 import { FuncaoNativaOuMetodoPrimitiva } from '../bibliotecas/tipos';
 
 const primitivasDicionarioFormatadas = formatarPrimitivas(primitivasDicionario);
 const primitivasNumeroFormatadas = formatarPrimitivas(primitivasNumero);
 const primitivasTextoFormatadas = formatarPrimitivas(primitivasTexto);
 const primitivasVetorFormatadas = formatarPrimitivas(primitivasVetor);
+const ordenarPorNome = (a: FuncaoNativaOuMetodoPrimitiva, b: FuncaoNativaOuMetodoPrimitiva) => {
+    const nome1 = a.nome.toUpperCase();
+    const nome2 = b.nome.toUpperCase();
+    return nome1 > nome2 ? 1 : nome1 < nome2 ? -1 : 0;
+};
 const primitivas = [
     ...primitivasDicionarioFormatadas,
     ...primitivasNumeroFormatadas,
     ...primitivasTextoFormatadas,
     ...primitivasVetorFormatadas
-].sort((a, b) => {
-    const nome1 = a.nome.toUpperCase();
-    const nome2 = b.nome.toUpperCase();
-    return nome1 > nome2 ? 1 : nome1 < nome2 ? -1 : 0;
-});
+].sort(ordenarPorNome);
+const primitivasDicionarioPituguesFormatadas = formatarPrimitivas(primitivasDicionarioPitugues);
+const primitivasNumeroPituguesFormatadas = formatarPrimitivas(primitivasNumeroPitugues);
+const primitivasTextoPituguesFormatadas = formatarPrimitivas(primitivasTextoPitugues);
+const primitivasVetorPituguesFormatadas = formatarPrimitivas(primitivasVetorPitugues);
+const primitivasPitugues = [
+    ...primitivasDicionarioPituguesFormatadas,
+    ...primitivasNumeroPituguesFormatadas,
+    ...primitivasTextoPituguesFormatadas,
+    ...primitivasVetorPituguesFormatadas
+].sort(ordenarPorNome);
+
+/**
+ * Coleções de primitivas e funções nativas específicas de cada dialeto.
+ * O provedor seleciona o conjunto correto a partir do `languageId` do
+ * documento, para que Pituguês reconheça suas próprias primitivas e
+ * funções nativas (por exemplo, `escreva` em Delégua e `escrever` em
+ * Pituguês).
+ */
+interface ColecoesDialeto {
+    dicionario: FuncaoNativaOuMetodoPrimitiva[];
+    numero: FuncaoNativaOuMetodoPrimitiva[];
+    texto: FuncaoNativaOuMetodoPrimitiva[];
+    vetor: FuncaoNativaOuMetodoPrimitiva[];
+    todas: FuncaoNativaOuMetodoPrimitiva[];
+    funcoesNativas: FuncaoNativaOuMetodoPrimitiva[];
+}
+
+const colecoesDelegua: ColecoesDialeto = {
+    dicionario: primitivasDicionarioFormatadas,
+    numero: primitivasNumeroFormatadas,
+    texto: primitivasTextoFormatadas,
+    vetor: primitivasVetorFormatadas,
+    todas: primitivas,
+    funcoesNativas: funcoesNativasDelegua
+};
+
+const colecoesPitugues: ColecoesDialeto = {
+    dicionario: primitivasDicionarioPituguesFormatadas,
+    numero: primitivasNumeroPituguesFormatadas,
+    texto: primitivasTextoPituguesFormatadas,
+    vetor: primitivasVetorPituguesFormatadas,
+    todas: primitivasPitugues,
+    funcoesNativas: funcoesNativasPitugues
+};
+
 import { obterResultado } from '@designliquido/delegua-lsp/analise/cache-analise';
 
 /**
@@ -123,7 +174,8 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
         nomeObjeto: string,
         declaracoesPertinentes: { nome: string, tipo: string, declaracao: Declaracao }[],
         parametroAtivo?: number,
-        nomeMetodo?: string
+        nomeMetodo?: string,
+        colecoes: ColecoesDialeto = colecoesDelegua
     ): vscode.SignatureHelp | undefined {
         let tipoObjeto: string | undefined = undefined;
         const nomeProcurado = nomeMetodo ?? nomeObjeto;
@@ -137,7 +189,7 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
             switch (tipoObjeto) {
                 case 'dicionario':
                 case 'dicionário':
-                    const metodoDicionario = primitivasDicionarioFormatadas.find(m => m.nome === nomeProcurado);
+                    const metodoDicionario = colecoes.dicionario.find(m => m.nome === nomeProcurado);
                     if (metodoDicionario) {
                         return this.construirObjetoAssinatura(metodoDicionario, parametroAtivo);
                     }
@@ -145,21 +197,21 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
                     return undefined;
                 case 'numero':
                 case 'número':
-                    const metodoNumero = primitivasNumeroFormatadas.find(m => m.nome === nomeProcurado);
+                    const metodoNumero = colecoes.numero.find(m => m.nome === nomeProcurado);
                     if (metodoNumero) {
                         return this.construirObjetoAssinatura(metodoNumero, parametroAtivo);
                     }
 
                     return undefined;
                 case 'texto':
-                    const metodoTexto = primitivasTextoFormatadas.find(m => m.nome === nomeProcurado);
+                    const metodoTexto = colecoes.texto.find(m => m.nome === nomeProcurado);
                     if (metodoTexto) {
                         return this.construirObjetoAssinatura(metodoTexto, parametroAtivo);
                     }
 
                     return undefined;
                 case 'vetor':
-                    const metodoVetor = primitivasVetorFormatadas.find(m => m.nome === nomeProcurado);
+                    const metodoVetor = colecoes.vetor.find(m => m.nome === nomeProcurado);
                     if (metodoVetor) {
                         return this.construirObjetoAssinatura(metodoVetor, parametroAtivo);
                     }
@@ -167,7 +219,7 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
                     return undefined;
 
                 default:
-                    const metodoQualquer = primitivas.find(m => m.nome === nomeProcurado);
+                    const metodoQualquer = colecoes.todas.find(m => m.nome === nomeProcurado);
                     if (metodoQualquer) {
                         return this.construirObjetoAssinatura(metodoQualquer, parametroAtivo);
                     }
@@ -278,6 +330,10 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
         // Calcula qual parâmetro está ativo baseado na posição do cursor
         const parametroAtivo = this.calcularParametroAtivo(textoAntesCursor);
 
+        // Seleciona as primitivas e funções nativas do dialeto do documento.
+        const colecoes: ColecoesDialeto =
+            document.languageId === 'pitugues' ? colecoesPitugues : colecoesDelegua;
+
         const resultadoAnalise = obterResultado(document.uri.toString());
         const declaracoesPertinentes: { nome: string, tipo: string, declaracao: Declaracao }[] = 
             resultadoAnalise?.avaliadorSintatico.declaracoes.flatMap((declaracao): { nome: string, tipo: string, declaracao: Declaracao }[] => {
@@ -309,7 +365,8 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
                 resultadoObjeto[1],
                 declaracoesPertinentes,
                 parametroAtivo,
-                resultadoRegexFuncaoOuMetodo[1]
+                resultadoRegexFuncaoOuMetodo[1],
+                colecoes
             );
         }
 
@@ -341,7 +398,7 @@ export class DeleguaProvedorAssinaturaMetodos implements vscode.SignatureHelpPro
         }
 
         // Quarto caso: A `palavra` é uma função nativa global.
-        const possivelFuncaoNativa: FuncaoNativaOuMetodoPrimitiva | undefined = funcoesNativasDelegua.find(
+        const possivelFuncaoNativa: FuncaoNativaOuMetodoPrimitiva | undefined = colecoes.funcoesNativas.find(
             (funcaoNativa) => funcaoNativa.nome === resultadoRegexFuncaoOuMetodo[1]
         );
 

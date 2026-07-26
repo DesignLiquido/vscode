@@ -442,6 +442,41 @@ describe('DeleguaProvedorAssinaturaMetodos', () => {
             expect(resultado.signatures.length).toBeGreaterThan(0);
         });
 
+        it('deve fornecer assinatura de função nativa exclusiva de Pituguês quando o documento é Pituguês', () => {
+            // 'aleatorio_entre' existe nas funções nativas de Pituguês (módulo real),
+            // não em Delégua (que usa 'aleatorioEntre').
+            mockDocument.languageId = 'pitugues';
+            mockDocument.uri.toString.mockReturnValue('file:///test/rota.pitu');
+            mockDocument.lineAt.mockReturnValue({ text: 'aleatorio_entre(' });
+            mockPosition.character = 16;
+
+            const resultado = provedor.provideSignatureHelp(
+                mockDocument,
+                mockPosition,
+                mockToken,
+                mockContext
+            );
+
+            expect(resultado).toBeDefined();
+            expect(resultado.signatures.length).toBeGreaterThan(0);
+        });
+
+        it('não deve reconhecer função nativa exclusiva de Pituguês num documento Delégua', () => {
+            // Sem languageId, o dialeto padrão é Delégua; 'aleatorio_entre' (com
+            // sublinhado) não existe nas nativas de Delégua mockadas.
+            mockDocument.lineAt.mockReturnValue({ text: 'aleatorio_entre(' });
+            mockPosition.character = 16;
+
+            const resultado = provedor.provideSignatureHelp(
+                mockDocument,
+                mockPosition,
+                mockToken,
+                mockContext
+            );
+
+            expect(resultado).toBeUndefined();
+        });
+
         it('deve fornecer assinatura para função definida no código', () => {
             const { FuncaoDeclaracao } = require('@designliquido/delegua/declaracoes');
             const { obterResultado } = require('@designliquido/delegua-lsp/analise/cache-analise');
@@ -577,7 +612,8 @@ describe('DeleguaProvedorAssinaturaMetodos', () => {
                 'meuTexto',
                 expect.any(Array),
                 expect.any(Number),
-                'tamanho'
+                'tamanho',
+                expect.any(Object)
             );
             expect(resultado).toBe(assinaturaEsperada);
         });
