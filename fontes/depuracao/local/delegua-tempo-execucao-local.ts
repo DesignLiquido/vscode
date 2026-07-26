@@ -20,26 +20,6 @@ import { palavrasReservadasDelegua } from '@designliquido/delegua/lexador/palavr
 import { Declaracao } from '@designliquido/delegua/declaracoes';
 import { Lexador } from '@designliquido/delegua/lexador';
 
-import { LexadorBirl } from '@designliquido/birl/lexador';
-import { AvaliadorSintaticoBirl } from '@designliquido/birl/avaliador-sintatico';
-import { InterpretadorBirlComDepuracao } from '@designliquido/birl/interpretador';
-
-import { LexadorMapler } from '@designliquido/mapler/lexador';
-import { AvaliadorSintaticoMapler } from '@designliquido/mapler/avaliador-sintatico';
-import { ResolvedorMapler } from '@designliquido/mapler/resolvedor';
-import { InterpretadorMaplerComDepuracao } from '@designliquido/mapler/interpretador';
-
-import { LexadorPortugolStudio } from '@designliquido/portugol-studio/lexador';
-import { AvaliadorSintaticoPortugolStudio } from '@designliquido/portugol-studio/avaliador-sintatico';
-import { InterpretadorPortugolStudioComDepuracao } from '@designliquido/portugol-studio/interpretador';
-
-import { LexadorPotigol } from '@designliquido/potigol/lexador';
-import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sintatico';
-import { InterpretadorPotigolComDepuracaoImportacao } from '../../interpretador/dialetos/interpretador-potigol-com-depuracao-importacao';
-
-import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg } from '@designliquido/visualg';
-import { InterpretadorVisuAlgComDepuracao } from '@designliquido/visualg/interpretador';
-
 import { ElementoPilhaVsCode } from '../elemento-pilha';
 import { ProvedorVisaoEntradaSaida } from '../../visoes';
 import { ImportadorExtensao } from '../../importador';
@@ -93,33 +73,42 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
         this.enviarEvento('limparTela');
     }
 
-    private selecionarDialetoPorExtensao(extensao: string) {
+    private async selecionarDialetoPorExtensao(extensao: string): Promise<void> {
         switch (extensao.toLowerCase()) {
-            case "alg":
+            case "alg": {
+                const { LexadorVisuAlg, AvaliadorSintaticoVisuAlg } = await import('@designliquido/visualg');
+                const { InterpretadorVisuAlgComDepuracao } = await import('@designliquido/visualg/interpretador');
+
                 this._dialetoSelecionado = 'visualg';
                 this.lexador = new LexadorVisuAlg();
                 this.avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
 
                 this.interpretador = new InterpretadorVisuAlgComDepuracao(
-                    process.cwd(), 
-                    this.escreverEmSaida.bind(this), 
+                    process.cwd(),
+                    this.escreverEmSaida.bind(this),
                     this.escreverEmSaidaMesmaLinha.bind(this),
                     this.limparTela.bind(this)
                 );
                 break;
-            case "birl":
+            }
+            case "birl": {
+                const { LexadorBirl } = await import('@designliquido/birl/lexador');
+                const { AvaliadorSintaticoBirl } = await import('@designliquido/birl/avaliador-sintatico');
+                const { InterpretadorBirlComDepuracao } = await import('@designliquido/birl/interpretador');
+
                 this._dialetoSelecionado = 'birl';
                 this.lexador = new LexadorBirl();
                 this.avaliadorSintatico = new AvaliadorSintaticoBirl();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
 
                 this.interpretador = new InterpretadorBirlComDepuracao(
-                    process.cwd(), 
-                    this.escreverEmSaida.bind(this), 
+                    process.cwd(),
+                    this.escreverEmSaida.bind(this),
                     this.escreverEmSaidaMesmaLinha.bind(this)
                 );
                 break;
+            }
             case "pitu":
             case "pitugues":
                 this._dialetoSelecionado = 'pitugues';
@@ -127,13 +116,18 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
                 this.avaliadorSintatico = new AvaliadorSintaticoPitugues();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
                 this.interpretador = new InterpretadorPituguesComDepuracaoImportacao(
-                    this.importadorExtensao as any, 
-                    process.cwd(), 
-                    this.escreverEmSaida.bind(this), 
+                    this.importadorExtensao as any,
+                    process.cwd(),
+                    this.escreverEmSaida.bind(this),
                     this.escreverEmSaidaMesmaLinha.bind(this)
                 );
                 break;
-            case "mapler":
+            case "mapler": {
+                const { LexadorMapler } = await import('@designliquido/mapler/lexador');
+                const { AvaliadorSintaticoMapler } = await import('@designliquido/mapler/avaliador-sintatico');
+                const { ResolvedorMapler } = await import('@designliquido/mapler/resolvedor');
+                const { InterpretadorMaplerComDepuracao } = await import('@designliquido/mapler/interpretador');
+
                 this._dialetoSelecionado = 'mapler';
                 this.lexador = new LexadorMapler();
                 this.avaliadorSintatico = new AvaliadorSintaticoMapler();
@@ -141,36 +135,47 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
                 this.resolvedor = new ResolvedorMapler();
 
                 this.interpretador = new InterpretadorMaplerComDepuracao(
-                    process.cwd(), 
+                    process.cwd(),
                     this.escreverEmSaida.bind(this)
                 );
                 break;
-            case "por":
+            }
+            case "por": {
+                const { LexadorPortugolStudio } = await import('@designliquido/portugol-studio/lexador');
+                const { AvaliadorSintaticoPortugolStudio } = await import('@designliquido/portugol-studio/avaliador-sintatico');
+                const { InterpretadorPortugolStudioComDepuracao } = await import('@designliquido/portugol-studio/interpretador');
+
                 this._dialetoSelecionado = 'portugol-studio';
                 this.lexador = new LexadorPortugolStudio();
                 this.avaliadorSintatico = new AvaliadorSintaticoPortugolStudio();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
 
                 this.interpretador = new InterpretadorPortugolStudioComDepuracao(
-                    process.cwd(), 
-                    this.escreverEmSaida.bind(this), 
-                    this.escreverEmSaidaMesmaLinha.bind(this), 
+                    process.cwd(),
+                    this.escreverEmSaida.bind(this),
+                    this.escreverEmSaidaMesmaLinha.bind(this),
                     this.limparTela.bind(this)
                 );
                 break;
+            }
             case "poti":
-            case "potigol":
+            case "potigol": {
+                const { LexadorPotigol } = await import('@designliquido/potigol/lexador');
+                const { AvaliadorSintaticoPotigol } = await import('@designliquido/potigol/avaliador-sintatico');
+                const { InterpretadorPotigolComDepuracaoImportacao } = await import('../../interpretador/dialetos/interpretador-potigol-com-depuracao-importacao');
+
                 this._dialetoSelecionado = 'potigol';
                 this.lexador = new LexadorPotigol();
                 this.avaliadorSintatico = new AvaliadorSintaticoPotigol();
                 this.importadorExtensao = new ImportadorExtensao(this.lexador);
-                
+
                 this.interpretador = new InterpretadorPotigolComDepuracaoImportacao(
                     process.cwd(),
                     this.escreverEmSaida.bind(this),
                     this.escreverEmSaidaMesmaLinha.bind(this)
                 );
                 break;
+            }
             default:
                 this._dialetoSelecionado = 'delegua';
                 this.lexador = new Lexador();
@@ -228,7 +233,7 @@ export class DeleguaTempoExecucaoLocal extends EventEmitter implements TempoExec
         if (diretorioBase.length > 1) {
             diretorioBase = diretorioBase.slice(1);
         }
-        this.selecionarDialetoPorExtensao(partesNomeArquivo.pop() || '.delegua');
+        await this.selecionarDialetoPorExtensao(partesNomeArquivo.pop() || '.delegua');
 
         // Inicialização do interpretador pós escolha de dialeto.
         this.interpretador.diretorioBase = diretorioBase;

@@ -1,5 +1,4 @@
 import { DeleguaModulo, FuncaoPadrao } from '@designliquido/delegua/interpretador/estruturas';
-import { InfraestruturaWebView, InterfaceGrafica } from '@designliquido/delegua-interface-grafica';
 
 // Fábrica de WebviewPanel injetada pela extensão em activate()
 let _fabricaPainelWebView: (() => any) | null = null;
@@ -19,6 +18,8 @@ function carregarBibliotecaInterfaceGrafica(): DeleguaModulo {
             'Chame definirFabricaPainelWebView() no activate() da extensão.'
         );
     }
+
+    const { InfraestruturaWebView, InterfaceGrafica } = require('@designliquido/delegua-interface-grafica') as typeof import('@designliquido/delegua-interface-grafica');
 
     const infraestrutura = new InfraestruturaWebView(_fabricaPainelWebView());
     const ig = new InterfaceGrafica(infraestrutura);

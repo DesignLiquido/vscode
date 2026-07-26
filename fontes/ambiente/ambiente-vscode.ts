@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 
-import { AmbienteLSPInterface, ManipuladorCaminhosInterface, SistemaArquivosInterface } from '@designliquido/delegua-lsp';
-import { EntradaDiretorioInterface } from '@designliquido/delegua-lsp/interfaces/entrada-diretorio-interface';
+import { AmbienteLSPInterface, EntradaDiretorioInterface, ManipuladorCaminhosInterface, SistemaArquivosInterface } from '@designliquido/delegua-lsp';
 
 const decoder = new TextDecoder('utf-8');
 
