@@ -59,5 +59,27 @@
             "\\'",
             "\\'"
         ]
-    ]
+    ],
+    "indentationRules": {
+        "increaseIndentPattern": "^\\s*(se|senao\\s+se|senao|para|enquanto|fazer|funcao|classe|construtor|escolha|caso|tente|pegue|finalmente)\\b.*:\\s*(#.*)?$",
+        "decreaseIndentPattern": "^\\s*(senao\\s+se|senao|caso|pegue|finalmente)\\b.*:\\s*(#.*)?$"
+    },
+    "onEnterRules": [
+        {
+            "beforeText": {
+                "pattern": "^\\s*(se|senao\\s+se|senao|para|enquanto|fazer|funcao|classe|construtor|escolha|caso|tente|pegue|finalmente)\\b.*:\\s*(#.*)?$"
+            },
+            "action": {
+                "indent": "indent"
+            }
+        }
+    ],
+    "folding": {
+        "offSide": true,
+        "markers": {
+            "start": "^\\s*#\\s*#?region\\b",
+            "end": "^\\s*#\\s*#?endregion\\b"
+        }
+    },
+    "wordPattern": "(-?\\d*\\.\\d\\w*)|([^\\`\\~\\!\\@\\#\\%\\^\\&\\*\\(\\)\\-\\=\\+\\[\\{\\]\\}\\\\\\|\\;\\:\\'\\\"\\,\\.\\<\\>\\/\\?\\s]+)"
 }
