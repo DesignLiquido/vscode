@@ -43,6 +43,67 @@ function carregarBibliotecaInterfaceGrafica(): DeleguaModulo {
 }
 
 /**
+ * Formato de definição de função usado pelos pacotes `@designliquido/delegua-*`
+ * em seus arquivos `delegua-modulo`, consumido por ferramentas de documentação/completude
+ * e, aqui, para gerar componentes chamáveis em tempo de execução.
+ */
+interface DefinicaoFuncaoBiblioteca {
+    funcao: (...argumentos: any[]) => any;
+    argumentos: unknown[];
+}
+
+/**
+ * Converte um objeto de definições no formato `DeleguaModuloXxx` (exportado pelos
+ * pacotes de biblioteca padrão) em um `DeleguaModulo` executável, derivando a aridade
+ * de cada função a partir do tamanho de `argumentos`.
+ */
+function converterDefinicoesParaDeleguaModulo(
+    nomeModulo: string,
+    definicoes: Record<string, DefinicaoFuncaoBiblioteca>
+): DeleguaModulo {
+    const modulo = new DeleguaModulo(nomeModulo);
+    modulo.componentes = {};
+    for (const [nomeComponente, definicao] of Object.entries(definicoes)) {
+        modulo.componentes[nomeComponente] = new FuncaoPadrao(definicao.argumentos.length, definicao.funcao);
+    }
+    return modulo;
+}
+
+/**
+ * Bibliotecas padrão sem dependências diretas de Node.js (sem `fs`/`path`/rede),
+ * portanto seguras para carregar diretamente tanto na extensão desktop quanto na web.
+ * Cada pacote expõe suas definições de função em um submódulo `delegua-modulo`,
+ * no formato consumido por `converterDefinicaoParaDeleguaModulo`.
+ */
+function carregarBibliotecaTempo(): DeleguaModulo {
+    const { DeleguaModuloTempo } = require('@designliquido/delegua-tempo/delegua-modulo') as typeof import('@designliquido/delegua-tempo/delegua-modulo');
+    return converterDefinicoesParaDeleguaModulo('tempo', DeleguaModuloTempo);
+}
+
+function carregarBibliotecaCsv(): DeleguaModulo {
+    const { DeleguaModuloCsv } = require('@designliquido/delegua-csv/delegua-modulo') as typeof import('@designliquido/delegua-csv/delegua-modulo');
+    return converterDefinicoesParaDeleguaModulo('csv', DeleguaModuloCsv);
+}
+
+function carregarBibliotecaCriptografia(): DeleguaModulo {
+    const { DeleguaModuloCriptografia } = require('@designliquido/delegua-criptografia/delegua-modulo') as typeof import('@designliquido/delegua-criptografia/delegua-modulo');
+    return converterDefinicoesParaDeleguaModulo('criptografia', DeleguaModuloCriptografia);
+}
+
+/**
+ * Bibliotecas padrão já com suporte a carregamento nesta extensão, indexadas pelo
+ * nome do pacote npm (o mesmo valor retornado por `verificarModulosDelegua`).
+ * Bibliotecas ausentes deste mapa (ex.: `arquivos`, `json`, `imagens`) dependem de
+ * acesso a sistema de arquivos e ainda não têm uma implementação compatível com a
+ * API do VSCode/regra de não usar `fs`/`path` diretamente.
+ */
+const CARREGADORES_BIBLIOTECAS_SEM_DEPENDENCIA_NODE: { [pacoteNpm: string]: () => DeleguaModulo } = {
+    '@designliquido/delegua-tempo': carregarBibliotecaTempo,
+    '@designliquido/delegua-csv': carregarBibliotecaCsv,
+    '@designliquido/delegua-criptografia': carregarBibliotecaCriptografia,
+};
+
+/**
  * Mapeamento de nomes de módulos Delégua para seus pacotes npm correspondentes.
  * Esta é uma versão simplificada para a extensão VSCode, limitada aos pacotes Delégua.
  */
@@ -89,8 +150,22 @@ export function verificarModulosDelegua(nomeModulo: string): string | false {
  * @throws Error indicando que bibliotecas externas não são suportadas na versão web
  */
 export function carregarBibliotecaDelegua(nome: string): DeleguaModulo {
-    if (nome.toLowerCase() === 'interfacegrafica') {
+    const nomeNormalizado = nome.toLowerCase();
+
+    if (nomeNormalizado === 'interfacegrafica') {
         return carregarBibliotecaInterfaceGrafica();
+    }
+
+    // `nome` chega em dois formatos diferentes dependendo do chamador: o nome curto
+    // digitado pelo usuário (ex.: 'tempo', durante execução) ou o nome do pacote npm
+    // já resolvido por `verificarModulosDelegua` (ex.: '@designliquido/delegua-tempo',
+    // durante análise semântica). Tentamos resolver o nome curto; se não for um, ele
+    // já deve ser o nome do pacote.
+    const nomePacote = verificarModulosDelegua(nomeNormalizado) || nomeNormalizado;
+
+    const carregador = CARREGADORES_BIBLIOTECAS_SEM_DEPENDENCIA_NODE[nomePacote];
+    if (carregador) {
+        return carregador();
     }
 
     throw new Error(
