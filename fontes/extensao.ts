@@ -9,43 +9,25 @@ import {
     DeleguaAdapterNamedPipeServerDescriptorFactory,
     DeleguaDebugAdapterExecutableFactory,
 } from './depuracao/fabricas/remotas';
-import {
-    DeleguaProvedorDocumentacaoEmEditor,
-    DeleguaProvedorLinksDocumentacao,
-    DeleguaTestesProvedorDocumentacaoEmEditor,
-    DelpropsProvedorDocumentacaoEmEditor,
-    FolesProvedorDocumentacaoEmEditor,
-    LinConEsProvedorDocumentacaoEmEditor,
-    PortugolStudioProvedorDocumentacaoEmEditor,
-    PituguesProvedorDocumentacaoEmEditor
-} from './documentacao-em-editor';
-import {
-    DeleguaProvedorCompletude,
-    DeleguaTestesProvedorCompletude,
-    DelpropsProvedorCompletude,
-    FolesProvedorCompletude,
-    LiquidoProvedorCompletude,
-    PituguesProvedorCompletude,
-    PortugolStudioProvedorCompletude,
-} from './completude';
+import { DeleguaProvedorDocumentacaoEmEditor } from './documentacao-em-editor/delegua-provedor-documentacao-em-editor';
+import { DeleguaProvedorLinksDocumentacao } from './documentacao-em-editor/delegua-provedor-links-documentacao';
+import { DeleguaTestesProvedorDocumentacaoEmEditor } from './documentacao-em-editor/delegua-testes-provedor-documentacao-em-editor';
+import { PituguesProvedorDocumentacaoEmEditor } from './documentacao-em-editor/pitugues-provedor-documentacao-em-editor';
+import { DeleguaProvedorCompletude } from './completude/delegua-provedor-completude';
+import { DeleguaTestesProvedorCompletude } from './completude/delegua-testes-provedor-completude';
+import { LiquidoProvedorCompletude } from './completude/liquido-provedor-completude';
+import { PituguesProvedorCompletude } from './completude/pitugues-provedor-completude';
 import { validarDelprops } from './linguagens/delprops/validador-delprops';
-import { DeleguaProvedorFormatacao, VisualgProvedorFormatacao } from './formatadores';
+import { DeleguaProvedorFormatacao } from './formatadores/delegua-provedor-formatacao';
 
-import { LmhtProvedorCompletude } from './completude/lmht-provedor-completude';
-import { VisuAlgProvedorCompletude } from './completude/visualg-provedor-completude';
-import { VisuAlgProvedorDocumentacaoEmEditor } from './documentacao-em-editor/visualg-provedor-documentacao-em-editor';
 import { traduzir } from './traducao';
 import { executarAnalises } from './analise-codigo';
 import { DeleguaProvedorAssinaturaMetodos, DeleguaTestesProvedorAssinaturaMetodos } from './assinaturas-metodos';
+import { garantirProvedoresLinguagem } from './ativacao-linguagens';
 
-import { LmhtProvedorDocumentacaoEmEditor } from './documentacao-em-editor/lmht-provedor-documentacao-em-editor';
 import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
 
-import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio-provedor-formatacao';
-import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao';
-
 import { ProvedorVisaoEntradaSaida } from './visoes';
-import { MaplerProvedorFormatacao } from './formatadores/mapler-provedor-formatacao';
 import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-formatacao';
 import { gerarFluxograma } from './visoes/fluxogramas/geracao-fluxogramas';
 import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-visoes-fluxograma';
@@ -121,6 +103,9 @@ export function activate(context: vscode.ExtensionContext) {
 		executarAnalises(vscode.window.activeTextEditor.document, diagnosticosDelegua).catch(erro => {
 			console.error('Erro ao executar análises:', erro);
 		});
+        garantirProvedoresLinguagem(vscode.window.activeTextEditor.document.languageId, context).catch(erro => {
+            console.error('Erro ao ativar provedores de linguagem:', erro);
+        });
         if (vscode.window.activeTextEditor.document.languageId === 'delprops') {
             diagnosticsDelprops.set(
                 vscode.window.activeTextEditor.document.uri,
@@ -131,6 +116,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.workspace.onDidOpenTextDocument(doc => {
+            garantirProvedoresLinguagem(doc.languageId, context).catch(erro => {
+                console.error('Erro ao ativar provedores de linguagem:', erro);
+            });
             if (['birl', 'delegua', 'delegua-testes', 'mapler', 'visualg', 'portugolstudio', 'potigol'].includes(doc.languageId)) {
                 executarAnalises(doc, diagnosticosDelegua).catch(erro => {
 					console.error('Erro ao executar análises:', erro);
@@ -141,12 +129,18 @@ export function activate(context: vscode.ExtensionContext) {
             }
         }),
         vscode.window.onDidChangeActiveTextEditor(editor => {
-            if (editor && ['birl', 'delegua', 'delegua-testes', 'mapler', 'visualg', 'portugolstudio', 'potigol'].includes(editor.document.languageId)) {
+            if (!editor) {
+                return;
+            }
+            garantirProvedoresLinguagem(editor.document.languageId, context).catch(erro => {
+                console.error('Erro ao ativar provedores de linguagem:', erro);
+            });
+            if (['birl', 'delegua', 'delegua-testes', 'mapler', 'visualg', 'portugolstudio', 'potigol'].includes(editor.document.languageId)) {
                 executarAnalises(editor.document, diagnosticosDelegua).catch(erro => {
 					console.error('Erro ao executar análises:', erro);
 				});
             }
-            if (editor && editor.document.languageId === 'delprops') {
+            if (editor.document.languageId === 'delprops') {
                 diagnosticsDelprops.set(editor.document.uri, validarDelprops(editor.document));
             }
         }),
@@ -409,51 +403,16 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
-    context.subscriptions.push(
-        vscode.languages.registerDocumentFormattingEditProvider(
-            'mapler',
-            new MaplerProvedorFormatacao()
-        )
-    );
-
-    context.subscriptions.push(
-        vscode.languages.registerDocumentFormattingEditProvider(
-            'portugolstudio',
-            new PortugolStudioProvedorFormatacao()
-        )
-    );
-    
-    context.subscriptions.push(
-        vscode.languages.registerDocumentFormattingEditProvider(
-            'potigol',
-            new PotigolProvedorFormatacao()
-        )
-    );
-
-    context.subscriptions.push(
-        vscode.languages.registerDocumentFormattingEditProvider(
-            'visualg',
-            new VisualgProvedorFormatacao()
-        )
-    );
+    // Formatadores, completude e documentação em editor de Mapler, Portugol Studio,
+    // Potigol, VisuAlg, FolEs, LMHT, LinConEs e Delégua Propriedades são registrados
+    // sob demanda em './ativacao-linguagens', na primeira vez que um arquivo daquela
+    // linguagem é aberto (ver garantirProvedoresLinguagem acima).
 
     // IntelliSense para Delégua e Liquido.
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
             { scheme: 'file', language: 'delegua', pattern: '**/configuracao.delegua' },
             new LiquidoProvedorCompletude(),
-            '.' // acionado quando desenvolvedor/a digita '.'
-        )
-    );
-
-    // IntelliSense para .delprops
-    context.subscriptions.push(
-        vscode.languages.registerCompletionItemProvider(
-            [
-                { scheme: 'file', language: 'delprops' },
-                { scheme: 'untitled', language: 'delprops' }
-            ],
-            new DelpropsProvedorCompletude(),
             '.' // acionado quando desenvolvedor/a digita '.'
         )
     );
@@ -480,39 +439,6 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
-    // IntelliSense para FolEs
-    context.subscriptions.push(
-        vscode.languages.registerCompletionItemProvider(
-            [
-                { scheme: 'file', language: 'foles' },
-                { scheme: 'untitled', language: 'foles' }
-            ],
-            new FolesProvedorCompletude()
-        )
-    );
-
-    // IntelliSense para LMHT
-    context.subscriptions.push(
-        vscode.languages.registerCompletionItemProvider(
-            [
-                { scheme: 'file', language: 'lmht' },
-                { scheme: 'untitled', language: 'lmht' }
-            ],
-            new LmhtProvedorCompletude()
-        )
-    );
-
-    // IntelliSense para VisuAlg
-    context.subscriptions.push(
-        vscode.languages.registerCompletionItemProvider(
-            [
-                { scheme: 'file', language: 'visualg' },
-                { scheme: 'untitled', language: 'visualg' }
-            ],
-            new VisuAlgProvedorCompletude()
-        )
-    );
-
     // IntelliSense para Pituguês
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
@@ -523,18 +449,7 @@ export function activate(context: vscode.ExtensionContext) {
             new PituguesProvedorCompletude()
         )
     );
-    
-    // IntelliSense para Portugol Studio
-    context.subscriptions.push(
-        vscode.languages.registerCompletionItemProvider(
-            [
-                { scheme: 'file', language: 'portugolstudio' },
-                { scheme: 'untitled', language: 'portugolstudio' }
-            ],
-            new PortugolStudioProvedorCompletude()
-        )
-    );
-    
+
     // Hovers
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(
@@ -553,65 +468,6 @@ export function activate(context: vscode.ExtensionContext) {
                 { scheme: 'untitled', language: 'delegua-testes' }
             ],
             new DeleguaTestesProvedorDocumentacaoEmEditor()
-        )
-    );
-
-    context.subscriptions.push(
-        vscode.languages.registerHoverProvider(
-            [
-                { scheme: 'file', language: 'delprops' },
-                { scheme: 'untitled', language: 'delprops' }
-            ],
-            new DelpropsProvedorDocumentacaoEmEditor()
-        )
-    );
-
-    context.subscriptions.push(
-        vscode.languages.registerHoverProvider(
-            [
-                { scheme: 'file', language: 'foles' },
-                { scheme: 'untitled', language: 'foles' }
-            ],
-            new FolesProvedorDocumentacaoEmEditor()
-        )
-    );
-
-    context.subscriptions.push(
-        vscode.languages.registerHoverProvider(
-            [
-                { scheme: 'file', language: 'lincones' },
-                { scheme: 'untitled', language: 'lincones' }
-            ],
-            new LinConEsProvedorDocumentacaoEmEditor()
-        )
-    );
-    context.subscriptions.push(
-        vscode.languages.registerHoverProvider(
-            [
-                { scheme: 'file', language: 'lmht' },
-                { scheme: 'untitled', language: 'lmht' }
-            ],
-            new LmhtProvedorDocumentacaoEmEditor()
-        )
-    );
-
-    context.subscriptions.push(
-        vscode.languages.registerHoverProvider(
-            [
-                { scheme: 'file', language: 'visualg' },
-                { scheme: 'untitled', language: 'visualg' }
-            ],
-            new VisuAlgProvedorDocumentacaoEmEditor()
-        )
-    );
-
-    context.subscriptions.push(
-        vscode.languages.registerHoverProvider(
-            [
-                { scheme: 'file', language: 'portugolstudio' },
-                { scheme: 'untitled', language: 'portugolstudio' }
-            ],
-            new PortugolStudioProvedorDocumentacaoEmEditor()
         )
     );
 

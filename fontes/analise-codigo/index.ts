@@ -10,25 +10,7 @@ import { AvaliadorSintaticoPitugues } from '@designliquido/delegua/avaliador-sin
 import { AnalisadorSemanticoInterface } from '@designliquido/delegua/interfaces/analisador-semantico-interface';
 import { AnalisadorSemanticoPitugues } from '@designliquido/delegua/analisador-semantico/dialetos';
 
-import { LexadorBirl } from '@designliquido/birl/lexador';
-import { AvaliadorSintaticoBirl } from '@designliquido/birl/avaliador-sintatico';
-import { AnalisadorSemanticoBirl } from '@designliquido/birl/analisador-semantico';
-
-import { LexadorMapler } from '@designliquido/mapler/lexador';
-import { AvaliadorSintaticoMapler } from '@designliquido/mapler/avaliador-sintatico';
-import { AnalisadorSemanticoMapler } from '@designliquido/mapler/analisador-semantico';
-
 import { RetornoAvaliadorSintaticoInterface, RetornoLexadorInterface, RetornoAnalisadorSemanticoInterface } from '@designliquido/delegua/interfaces/retornos';
-
-import { LexadorPotigol } from '@designliquido/potigol/lexador';
-import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sintatico';
-import { AnalisadorSemanticoPotigol } from '@designliquido/potigol/analisador-semantico';
-
-import { LexadorPortugolStudio } from "@designliquido/portugol-studio/lexador";
-import { AvaliadorSintaticoPortugolStudio } from "@designliquido/portugol-studio/avaliador-sintatico";
-import { AnalisadorSemanticoPortugolStudio } from "@designliquido/portugol-studio/analisador-semantico";
-
-import { LexadorVisuAlg, AvaliadorSintaticoVisuAlg, AnalisadorSemanticoVisuAlg } from '@designliquido/visualg';
 
 import { formatarDiagnosticosAvaliacaoSintatica } from '../avaliacao-sintatica';
 import { definirResultado, obterDiagnosticos, obterResultadoValido } from '@designliquido/delegua-lsp/analise/cache-analise';
@@ -96,17 +78,25 @@ export async function executarAnalises(
     let dependenciasArquivos: string[] = [];
 
     switch (extensaoArquivo) {
-        case "birl":
+        case "birl": {
+            const { LexadorBirl } = await import('@designliquido/birl/lexador');
+            const { AvaliadorSintaticoBirl } = await import('@designliquido/birl/avaliador-sintatico');
+            const { AnalisadorSemanticoBirl } = await import('@designliquido/birl/analisador-semantico');
             lexador = new LexadorBirl();
             avaliadorSintatico = new AvaliadorSintaticoBirl();
             analisadorSemantico = new AnalisadorSemanticoBirl();
             break;
+        }
 
-        case "mapler":
+        case "mapler": {
+            const { LexadorMapler } = await import('@designliquido/mapler/lexador');
+            const { AvaliadorSintaticoMapler } = await import('@designliquido/mapler/avaliador-sintatico');
+            const { AnalisadorSemanticoMapler } = await import('@designliquido/mapler/analisador-semantico');
             lexador = new LexadorMapler();
             avaliadorSintatico = new AvaliadorSintaticoMapler();
             analisadorSemantico = new AnalisadorSemanticoMapler();
             break;
+        }
 
         case "delegua":
             lexador = new Lexador();
@@ -158,24 +148,34 @@ export async function executarAnalises(
             break;
 
         case "poti":
-        case "potigol":
+        case "potigol": {
+            const { LexadorPotigol } = await import('@designliquido/potigol/lexador');
+            const { AvaliadorSintaticoPotigol } = await import('@designliquido/potigol/avaliador-sintatico');
+            const { AnalisadorSemanticoPotigol } = await import('@designliquido/potigol/analisador-semantico');
             lexador = new LexadorPotigol();
             avaliadorSintatico = new AvaliadorSintaticoPotigol();
             analisadorSemantico = new AnalisadorSemanticoPotigol();
             break;
-            
+        }
+
         case "alg":
-        case "visualg":
+        case "visualg": {
+            const { LexadorVisuAlg, AvaliadorSintaticoVisuAlg, AnalisadorSemanticoVisuAlg } = await import('@designliquido/visualg');
             lexador = new LexadorVisuAlg();
             avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
             analisadorSemantico = new AnalisadorSemanticoVisuAlg();
             break;
-            
-        case "por":
+        }
+
+        case "por": {
+            const { LexadorPortugolStudio } = await import('@designliquido/portugol-studio/lexador');
+            const { AvaliadorSintaticoPortugolStudio } = await import('@designliquido/portugol-studio/avaliador-sintatico');
+            const { AnalisadorSemanticoPortugolStudio } = await import('@designliquido/portugol-studio/analisador-semantico');
             lexador = new LexadorPortugolStudio();
             avaliadorSintatico = new AvaliadorSintaticoPortugolStudio();
             analisadorSemantico = new AnalisadorSemanticoPortugolStudio();
             break;
+        }
 
         default:
             return;

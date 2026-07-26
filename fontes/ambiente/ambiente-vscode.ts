@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 
-import { AmbienteLSP, EntradaDiretorio, ManipuladorCaminhosInterface, SistemaArquivosInterface } from '@designliquido/delegua-lsp';
+import { AmbienteLSPInterface, ManipuladorCaminhosInterface, SistemaArquivosInterface } from '@designliquido/delegua-lsp';
+import { EntradaDiretorioInterface } from '@designliquido/delegua-lsp/interfaces/entrada-diretorio-interface';
 
 const decoder = new TextDecoder('utf-8');
 
@@ -20,7 +21,7 @@ const sistemaArquivos: SistemaArquivosInterface = {
             return undefined;
         }
     },
-    async listarDiretorio(caminho: string): Promise<EntradaDiretorio[]> {
+    async listarDiretorio(caminho: string): Promise<EntradaDiretorioInterface[]> {
         try {
             const entradas = await vscode.workspace.fs.readDirectory(caminhoParaUri(caminho));
             return entradas.map(([nome, tipo]) => ({
@@ -68,4 +69,4 @@ const caminhos: ManipuladorCaminhosInterface = {
     },
 };
 
-export const ambienteVscode: AmbienteLSP = { sistemaArquivos, caminhos };
+export const ambienteVscode: AmbienteLSPInterface = { sistemaArquivos, caminhos };

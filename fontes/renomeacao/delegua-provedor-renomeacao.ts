@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import { prepareRename, provideRenameEdits, DocumentoLSP } from '@designliquido/delegua-lsp';
+import { prepareRename, provideRenameEdits, DocumentoLSPInterface } from '@designliquido/delegua-lsp';
 
 import { ambienteVscode } from '../ambiente/ambiente-vscode';
 
-function documentoParaLsp(documento: vscode.TextDocument): DocumentoLSP {
+function documentoParaLsp(documento: vscode.TextDocument): DocumentoLSPInterface {
     return {
         uri: documento.uri.toString(),
         nomeArquivo: documento.fileName,

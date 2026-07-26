@@ -458,10 +458,10 @@
   resolved "https://registry.yarnpkg.com/@designliquido/delegua-json/-/delegua-json-0.2.1.tgz#57c2e9dc45525ebdf1b4ee6038b11b6a18d3181c"
   integrity sha512-Ym+Tw98Pll84TNSrEnQrFZC0PcKos66qnrEqwUDDxP/6cdnbu2bvTW05wVLXWBZPVUutCld8Qt1RhzJWLr1kVQ==
 
-"@designliquido/delegua-lsp@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-lsp/-/delegua-lsp-0.0.3.tgz#1d186a7baaf97140bca9b7b0a69018ace52217fd"
-  integrity sha512-Om8GXYCb9ZE9Wc1DcvZnKQ3t4y+HKy0cOBf0DI6oDrZX9VYyhz9pfRqREdjgcPdxbdCi2jtJOOcnTADxR7rIZQ==
+"@designliquido/delegua-lsp@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-lsp/-/delegua-lsp-0.0.4.tgz#33a2dd1f4e2d2504cc48a4070b62e2ecc7c074a1"
+  integrity sha512-rB0IZrvvb8TReVXs0jlFsZ+xN3OKIpm6tcUnKUchq7xronIPsMCTGvkNUlPex7QwhvAt+iHMGLkRd7wdd5jdww==
   dependencies:
     vscode-languageserver "^9.0.1"
     vscode-languageserver-textdocument "^1.0.12"
@@ -486,17 +486,7 @@
     "@designliquido/delegua" "^1.15.4"
     yaml "^2.6.1"
 
-"@designliquido/delegua@1.25.1", "@designliquido/delegua@^1.15.4":
-  version "1.25.1"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-1.25.1.tgz#3b754eee6163bb25e86b5c9cd6637a2c79a52283"
-  integrity sha512-jXF7xjamFF50fbKVdcxXY7UjjiZp9uTZ0QSjGdNG6lCADHQv+DRLPmcCXAekpLfgsCWFbGbdb7CMGJJkRguN/w==
-  dependencies:
-    antlr4ts "^0.5.0-alpha.4"
-    browser-process-hrtime "^1.0.0"
-    esprima "^4.0.1"
-    lodash.clonedeep "^4.5.0"
-
-"@designliquido/delegua@^1.26.1":
+"@designliquido/delegua@1.26.1", "@designliquido/delegua@^1.15.4", "@designliquido/delegua@^1.26.1":
   version "1.26.1"
   resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-1.26.1.tgz#fdc76eb900fad9dfd71599759f048bdec3344ddf"
   integrity sha512-aBH3E3XDcEV4xjlNNAssR6TPb4d2FxtQcWv09UCjWvUDntcyerja9Z74OtokGwPphnZR5PYGFTnSxVdBusvcQA==

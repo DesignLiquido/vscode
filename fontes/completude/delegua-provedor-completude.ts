@@ -1,10 +1,10 @@
 ﻿import * as vscode from 'vscode';
 import { CompletionItem, InsertTextFormat } from 'vscode-languageserver-types';
-import { proverItensCompletude, DocumentoLSP } from '@designliquido/delegua-lsp';
+import { proverItensCompletude, DocumentoLSPInterface } from '@designliquido/delegua-lsp';
 
 import { ParametroDetectado } from '../interfaces/completude';
 
-function documentoParaLsp(documento: vscode.TextDocument): DocumentoLSP {
+function documentoParaLsp(documento: vscode.TextDocument): DocumentoLSPInterface {
     return {
         uri: documento.uri.toString(),
         nomeArquivo: documento.fileName,

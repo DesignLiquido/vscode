@@ -3,14 +3,8 @@ import * as caminho from 'path';
 import * as sistemaArquivos from 'fs';
 
 import { traduzirPorMotorFolEs, traduzirPorMotorLinConEs, traduzirPorMotorLmht } from './comum';
-import { AvaliadorSintaticoInterface, Lexador, PlataformaAlvo, PlataformaAlvoARM, TradutorAssemblyARM, TradutorAssemblyScript, TradutorAssemblyX64, TradutorElixir, TradutorJavaScript, TradutorPython, TradutorReversoJavaScript, TradutorRuby } from '@designliquido/delegua';
-import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
+import { AvaliadorSintaticoInterface, Lexador, PlataformaAlvo, PlataformaAlvoARM } from '@designliquido/delegua';
 import { TradutorInterface } from './tradutor-interface';
-import { AvaliadorSintaticoJavaScript } from '@designliquido/delegua/avaliador-sintatico/traducao/avaliador-sintatico-javascript';
-import { TradutorReversoPotigol } from '@designliquido/potigol/tradutores/tradutor-reverso-potigol';
-import { AvaliadorSintaticoVisuAlg } from '@designliquido/visualg/avaliador-sintatico';
-import { TradutorReversoVisuAlg } from '@designliquido/visualg/tradutores';
-import { AvaliadorSintaticoPotigol } from '@designliquido/potigol/avaliador-sintatico';
 
 /**
  * Ponto de entrada para todas as traduções desta extensão.
@@ -157,22 +151,33 @@ async function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: strin
 
     switch (deLinguagem) {
         case 'js':
-        case 'javascript':
+        case 'javascript': {
+            const { AvaliadorSintaticoJavaScript } = await import('@designliquido/delegua/avaliador-sintatico/traducao/avaliador-sintatico-javascript');
+            const { TradutorReversoJavaScript } = await import('@designliquido/delegua');
             avaliadorSintatico = new AvaliadorSintaticoJavaScript();
             tradutor = new TradutorReversoJavaScript();
             break;
-        case 'potigol':
+        }
+        case 'potigol': {
+            const { AvaliadorSintaticoPotigol } = await import('@designliquido/potigol/avaliador-sintatico');
+            const { TradutorReversoPotigol } = await import('@designliquido/potigol/tradutores/tradutor-reverso-potigol');
             avaliadorSintatico = new AvaliadorSintaticoPotigol();
             tradutor = new TradutorReversoPotigol();
             break;
+        }
         case 'alg':
-        case 'visualg':
+        case 'visualg': {
+            const { AvaliadorSintaticoVisuAlg } = await import('@designliquido/visualg/avaliador-sintatico');
+            const { TradutorReversoVisuAlg } = await import('@designliquido/visualg/tradutores');
             avaliadorSintatico = new AvaliadorSintaticoVisuAlg();
             tradutor = new TradutorReversoVisuAlg();
             break;
+        }
         default:
             switch (paraLinguagem) {
-                case 'arm':
+                case 'arm': {
+                    const { AvaliadorSintatico } = await import('@designliquido/delegua/avaliador-sintatico');
+                    const { TradutorAssemblyARM } = await import('@designliquido/delegua');
                     avaliadorSintatico = new AvaliadorSintatico();
                     let alvoResolvidoARM: PlataformaAlvoARM = 'linux-arm';
                     if (alvo === 'android') {
@@ -181,32 +186,50 @@ async function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: strin
 
                     tradutor = new TradutorAssemblyARM(alvoResolvidoARM);
                     break;
+                }
                 case 'assemblyscript':
-                case 'as':
+                case 'as': {
+                    const { AvaliadorSintatico } = await import('@designliquido/delegua/avaliador-sintatico');
+                    const { TradutorAssemblyScript } = await import('@designliquido/delegua');
                     avaliadorSintatico = new AvaliadorSintatico();
                     tradutor = new TradutorAssemblyScript();
                     break;
+                }
                 case 'elixir':
-                case 'ex':
+                case 'ex': {
+                    const { AvaliadorSintatico } = await import('@designliquido/delegua/avaliador-sintatico');
+                    const { TradutorElixir } = await import('@designliquido/delegua');
                     avaliadorSintatico = new AvaliadorSintatico();
                     tradutor = new TradutorElixir();
                     break;
+                }
                 case 'javascript':
-                case 'js':
+                case 'js': {
+                    const { AvaliadorSintatico } = await import('@designliquido/delegua/avaliador-sintatico');
+                    const { TradutorJavaScript } = await import('@designliquido/delegua');
                     avaliadorSintatico = new AvaliadorSintatico();
                     tradutor = new TradutorJavaScript();
                     break;
+                }
                 case 'py':
-                case 'python':
+                case 'python': {
+                    const { AvaliadorSintatico } = await import('@designliquido/delegua/avaliador-sintatico');
+                    const { TradutorPython } = await import('@designliquido/delegua');
                     avaliadorSintatico = new AvaliadorSintatico();
                     tradutor = new TradutorPython();
                     break;
+                }
                 case 'rb':
-                case 'ruby':
+                case 'ruby': {
+                    const { AvaliadorSintatico } = await import('@designliquido/delegua/avaliador-sintatico');
+                    const { TradutorRuby } = await import('@designliquido/delegua');
                     avaliadorSintatico = new AvaliadorSintatico();
                     tradutor = new TradutorRuby();
                     break;
-                case 'x64':
+                }
+                case 'x64': {
+                    const { AvaliadorSintatico } = await import('@designliquido/delegua/avaliador-sintatico');
+                    const { TradutorAssemblyX64 } = await import('@designliquido/delegua');
                     avaliadorSintatico = new AvaliadorSintatico();
                     let alvoResolvido: PlataformaAlvo = 'linux';
                     if (alvo === 'windows') {
@@ -214,7 +237,8 @@ async function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: strin
                     }
 
                     tradutor = new TradutorAssemblyX64(alvoResolvido);
-                break;
+                    break;
+                }
                 default:
                     throw new Error(`Tradutor '${paraLinguagem}' não implementado.`);
             }
