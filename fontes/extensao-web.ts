@@ -219,7 +219,10 @@ export function activate(context: vscode.ExtensionContext) {
     // Ações de código
     context.subscriptions.push(
         vscode.languages.registerCodeActionsProvider(
-            { language: 'delegua', scheme: 'file' },
+            [
+                { language: 'delegua', scheme: 'file' },
+                { language: 'pitugues', scheme: 'file' }
+            ],
             new DeleguaProvedorAcoesCodigo(),
             { providedCodeActionKinds: DeleguaProvedorAcoesCodigo.tiposAcoesRapidas }
         )
@@ -340,7 +343,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Ir para definição
     context.subscriptions.push(
         vscode.languages.registerDefinitionProvider(
-            { language: 'delegua' },
+            [{ language: 'delegua' }, { language: 'pitugues' }],
             new DeleguaProvedorDefinicao()
         )
     );
@@ -348,7 +351,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Encontrar todas as referências
     context.subscriptions.push(
         vscode.languages.registerReferenceProvider(
-            { language: 'delegua' },
+            [{ language: 'delegua' }, { language: 'pitugues' }],
             new DeleguaProvedorReferencias()
         )
     );
@@ -356,7 +359,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Renomear símbolos
     context.subscriptions.push(
         vscode.languages.registerRenameProvider(
-            { language: 'delegua' },
+            [{ language: 'delegua' }, { language: 'pitugues' }],
             new DeleguaProvedorRenomeacao()
         )
     );
@@ -364,7 +367,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Assinaturas de métodos
     context.subscriptions.push(
         vscode.languages.registerSignatureHelpProvider(
-            { language: 'delegua' },
+            [{ language: 'delegua' }, { language: 'pitugues' }],
             new DeleguaProvedorAssinaturaMetodos()
         )
     );

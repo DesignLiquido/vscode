@@ -158,7 +158,7 @@ describe('Extensão Web', () => {
         (vscode.workspace.findFiles as jest.Mock).mockResolvedValue([]);
     });
 
-    it('registra provedor de renomeação de símbolos Delégua', () => {
+    it('registra provedor de renomeação de símbolos para Delégua e Pituguês', () => {
         const context: any = {
             subscriptions: [],
             extensionUri: vscode.Uri.file('/test/path'),
@@ -167,7 +167,7 @@ describe('Extensão Web', () => {
         activate(context);
 
         expect(vscode.languages.registerRenameProvider).toHaveBeenCalledWith(
-            { language: 'delegua' },
+            [{ language: 'delegua' }, { language: 'pitugues' }],
             expect.anything()
         );
     });
