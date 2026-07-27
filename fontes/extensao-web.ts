@@ -11,6 +11,12 @@ import { LiquidoProvedorCompletude } from './completude/liquido-provedor-complet
 
 // Importações individuais dos formatadores
 import { DeleguaProvedorFormatacao } from './formatadores/delegua-provedor-formatacao';
+import { ProvedorTarefasLiquidoWeb } from './tarefas/provedor-tarefas-web';
+import { comandosLiquido, TIPO_TAREFA_LIQUIDO } from './tarefas/comandos-liquido';
+import { VisualgProvedorFormatacao } from './formatadores/visualg-provedor-formatacao';
+import { MaplerProvedorFormatacao } from './formatadores/mapler-provedor-formatacao';
+import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao';
+import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio-provedor-formatacao';
 
 import { executarAnalises } from './analise-codigo';
 import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
@@ -439,6 +445,40 @@ export function activate(context: vscode.ExtensionContext) {
         }
     );
     context.subscriptions.push(abrirPainelEntradaESaida);
+
+    // Tarefas do Liquido no ambiente Web, executadas via CustomExecution
+    // (o host Web não tem shell). O servidor de desenvolvimento é omitido aqui.
+    context.subscriptions.push(
+        vscode.tasks.registerTaskProvider(
+            TIPO_TAREFA_LIQUIDO,
+            new ProvedorTarefasLiquidoWeb()
+        )
+    );
+
+    for (const comando of comandosLiquido) {
+        // No Web, não registra o comando do servidor (indisponível).
+        if (comando.requerServidor) {
+            continue;
+        }
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                `extension.designliquido.liquido.${comando.id}`,
+                async () => {
+                    const tarefas = await vscode.tasks.fetchTasks({ type: TIPO_TAREFA_LIQUIDO });
+                    const tarefa = tarefas.find(
+                        t => (t.definition as any).comando === comando.id
+                    );
+                    if (tarefa) {
+                        await vscode.tasks.executeTask(tarefa);
+                    } else {
+                        vscode.window.showErrorMessage(
+                            `Não foi possível localizar a tarefa Liquido "${comando.id}".`
+                        );
+                    }
+                }
+            )
+        );
+    }
 
     // Configurar depuração para Web
     configurarDepuracao(

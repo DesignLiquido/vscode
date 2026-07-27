@@ -26,6 +26,11 @@ jest.mock('vscode', () => ({
         onDidCreateFiles: jest.fn(() => ({ dispose: jest.fn() })),
         onDidDeleteFiles: jest.fn(() => ({ dispose: jest.fn() }))
     },
+    tasks: {
+        registerTaskProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        fetchTasks: jest.fn(() => Promise.resolve([])),
+        executeTask: jest.fn(() => Promise.resolve())
+    },
     languages: {
         createDiagnosticCollection: jest.fn(() => ({
             clear: jest.fn(),

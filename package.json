@@ -87,10 +87,7 @@
     },
     "activationEvents": [
         "onDebugResolve:designliquido",
-        "onDebugDynamicConfigurations:designliquido",
-        "onCommand:extension.designliquido.getProgramName",
-        "onCommand:extension.designliquido.runEditorContents",
-        "onCommand:extension.designliquido.debugEditorContents"
+        "onDebugDynamicConfigurations:designliquido"
     ],
     "workspaceTrust": {
         "request": "never"
@@ -172,6 +169,42 @@
             {
                 "command": "extension.designliquido.verFluxograma",
                 "title": "Ver Fluxograma"
+            },
+            {
+                "command": "extension.designliquido.liquido.servidor",
+                "title": "Iniciar servidor de desenvolvimento",
+                "category": "Liquido",
+                "icon": "$(play)"
+            },
+            {
+                "command": "extension.designliquido.liquido.novo",
+                "title": "Novo projeto",
+                "category": "Liquido",
+                "icon": "$(new-folder)"
+            },
+            {
+                "command": "extension.designliquido.liquido.gerar",
+                "title": "Gerar código",
+                "category": "Liquido",
+                "icon": "$(file-code)"
+            },
+            {
+                "command": "extension.designliquido.liquido.documentar",
+                "title": "Gerar documentação OpenAPI",
+                "category": "Liquido",
+                "icon": "$(book)"
+            },
+            {
+                "command": "extension.designliquido.liquido.banco-iniciar",
+                "title": "Inicializar banco de dados",
+                "category": "Liquido",
+                "icon": "$(database)"
+            },
+            {
+                "command": "extension.designliquido.liquido.testes",
+                "title": "Rodar testes",
+                "category": "Liquido",
+                "icon": "$(beaker)"
             }
         ],
         "breakpoints": [
@@ -557,6 +590,13 @@
                     "command": "extension.designliquido.verFluxograma",
                     "when": "editorLangId == delegua || resourceExtname == .delegua"
                 }
+            ],
+            "editor/title/run": [
+                {
+                    "command": "extension.designliquido.liquido.servidor",
+                    "when": "resourceLangId == delegua || resourceLangId == pitugues",
+                    "group": "navigation"
+                }
             ]
         },
         "snippets": [
@@ -747,7 +787,29 @@
                     "description": "Determina onde o resultado da tradução será armazenado."
                 }
             }
-        }
+        },
+        "taskDefinitions": [
+            {
+                "type": "liquido",
+                "required": [
+                    "comando"
+                ],
+                "properties": {
+                    "comando": {
+                        "type": "string",
+                        "description": "Comando do CLI Liquido a executar.",
+                        "enum": [
+                            "servidor",
+                            "novo",
+                            "gerar",
+                            "documentar",
+                            "banco-iniciar",
+                            "testes"
+                        ]
+                    }
+                }
+            }
+        ]
     },
     "devDependencies": {
         "@jest/globals": "^30.2.0",
