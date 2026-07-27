@@ -27,6 +27,11 @@ jest.mock('vscode', () => ({
         onDidRenameFiles: jest.fn(() => ({ dispose: jest.fn() })),
         onDidChangeTextDocument: jest.fn(() => ({ dispose: jest.fn() })),
     },
+    tasks: {
+        registerTaskProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        fetchTasks: jest.fn(() => Promise.resolve([])),
+        executeTask: jest.fn(() => Promise.resolve())
+    },
     languages: {
         createDiagnosticCollection: jest.fn(() => ({ delete: jest.fn(), dispose: jest.fn() })),
         registerCodeActionsProvider: jest.fn(() => ({ dispose: jest.fn() })),

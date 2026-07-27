@@ -3,6 +3,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { configurarDepuracao } from './depuracao/configuracao-depuracao';
+import { ProvedorTarefasLiquidoDesktop } from './tarefas/provedor-tarefas-desktop';
+import { comandosLiquido, TIPO_TAREFA_LIQUIDO } from './tarefas/comandos-liquido';
 import { FabricaAdaptadorDepuracaoEmbutido } from './depuracao/fabricas';
 import {
     DeleguaAdapterServerDescriptorFactory,
@@ -638,6 +640,38 @@ export function activate(context: vscode.ExtensionContext) {
         }
     );
     context.subscriptions.push(abrirPainelEntradaESaida);
+
+    // Tarefas do Liquido (servidor, novo, gerar, documentar, banco, testes),
+    // executadas via ShellExecution no desktop.
+    context.subscriptions.push(
+        vscode.tasks.registerTaskProvider(
+            TIPO_TAREFA_LIQUIDO,
+            new ProvedorTarefasLiquidoDesktop()
+        )
+    );
+
+    // Comandos de conveniência: cada um dispara a tarefa Liquido correspondente,
+    // permitindo botões (ex.: na barra de título do editor) e atalhos.
+    for (const comando of comandosLiquido) {
+        context.subscriptions.push(
+            vscode.commands.registerCommand(
+                `extension.designliquido.liquido.${comando.id}`,
+                async () => {
+                    const tarefas = await vscode.tasks.fetchTasks({ type: TIPO_TAREFA_LIQUIDO });
+                    const tarefa = tarefas.find(
+                        t => (t.definition as any).comando === comando.id
+                    );
+                    if (tarefa) {
+                        await vscode.tasks.executeTask(tarefa);
+                    } else {
+                        vscode.window.showErrorMessage(
+                            `Não foi possível localizar a tarefa Liquido "${comando.id}".`
+                        );
+                    }
+                }
+            )
+        );
+    }
 
 
     // adaptadores de depuração podem ser executados de diferentes formas usando um vscode.DebugAdapterDescriptorFactory:
