@@ -668,6 +668,67 @@
                         }
                     }
                 ]
+            },
+            {
+                "id": "liquido",
+                "title": "Criando uma aplicação web em Líquido",
+                "description": "Aprenda a criar uma aplicação web completa com o framework Líquido: projeto, configuração, rotas, visões e servidor.",
+                "steps": [
+                    {
+                        "id": "liquido-passo1",
+                        "title": "Crie um projeto Líquido",
+                        "description": "Use o comando para criar a estrutura inicial do seu projeto.\n\n[Criar novo projeto](command:extension.designliquido.liquido.novo)",
+                        "media": {
+                            "markdown": "recursos/passos-a-passos/liquido/liquido-passo-01.md",
+                            "altText": "Criação de projeto Líquido"
+                        }
+                    },
+                    {
+                        "id": "liquido-passo2",
+                        "title": "Configure o arquivo .delprops",
+                        "description": "Abra 'configuracao.delprops' e defina nome, versão, roteador, banco de dados, autenticação e estilos.\n\nA extensão oferece preenchimento automático e documentação ao passar o mouse sobre cada propriedade.",
+                        "media": {
+                            "markdown": "recursos/passos-a-passos/liquido/liquido-passo-02.md",
+                            "altText": "Configuração .delprops"
+                        }
+                    },
+                    {
+                        "id": "liquido-passo3",
+                        "title": "Crie uma rota",
+                        "description": "Crie um arquivo '.delegua' em 'fontes/rotas/' e defina endpoints da API com 'liquido.rotaGet' e 'liquido.rotaPost'.\n\nDica: digite 'liquido.' para ver todas as funções disponíveis com preenchimento automático.",
+                        "media": {
+                            "markdown": "recursos/passos-a-passos/liquido/liquido-passo-03.md",
+                            "altText": "Criação de rota"
+                        }
+                    },
+                    {
+                        "id": "liquido-passo4",
+                        "title": "Crie visões com LMHT e FolEs",
+                        "description": "Use LMHT ('.lmht') para templates HTML e FolEs ('.foles') para CSS em português.\n\nAmbas as linguagens têm realce de sintaxe e snippets na extensão.",
+                        "media": {
+                            "markdown": "recursos/passos-a-passos/liquido/liquido-passo-04.md",
+                            "altText": "Visões LMHT e FolEs"
+                        }
+                    },
+                    {
+                        "id": "liquido-passo5",
+                        "title": "Inicie o servidor de desenvolvimento",
+                        "description": "Com tudo configurado, inicie o servidor.\n\n[▶️ Iniciar servidor](command:extension.designliquido.liquido.servidor)\n\nO servidor recarrega automaticamente ao alterar arquivos.",
+                        "media": {
+                            "markdown": "recursos/passos-a-passos/liquido/liquido-passo-05.md",
+                            "altText": "Servidor de desenvolvimento"
+                        }
+                    },
+                    {
+                        "id": "liquido-passo6",
+                        "title": "Continue explorando!",
+                        "description": "Aprofunde seus conhecimentos:\n\n- [Documentação do Líquido](https://github.com/DesignLiquido/liquido-docs/wiki)\n- [Inicializar banco de dados](command:extension.designliquido.liquido.banco-iniciar)\n- [Gerar documentação OpenAPI](command:extension.designliquido.liquido.documentar)\n- [Rodar testes](command:extension.designliquido.liquido.testes)",
+                        "media": {
+                            "image": "recursos/passos-a-passos/pitugues/explorar-img.png",
+                            "altText": "Continue explorando"
+                        }
+                    }
+                ]
             }
         ],
         "packageManager": "yarn@1.22.22",
