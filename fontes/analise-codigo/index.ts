@@ -23,6 +23,8 @@ import { descobrirDefinicoes } from '../descobridor-definicoes';
 import { cyrb53 } from '@designliquido/delegua';
 import { AnalisadorSemanticoTestes } from './analisador-semantico-testes';
 import { verificarConfiguracaoLincones } from './verificar-lincones';
+import { validarLmht } from './validar-lmht';
+import { validarFoles } from './validar-foles';
 
 const mapaSeveridadeDiagnosticos = {
     0: vscode.DiagnosticSeverity.Error,
@@ -49,7 +51,8 @@ export async function executarAnalises(
     const extensaoArquivo = documento.languageId === 'delegua-testes'
         ? 'delegua'
         : documento.fileName.split('.')[1];
-    if (!['alg', 'birl', 'delegua', 'mapler', 'pitu', 'pitugues', 'por', 'poti', 'potigol', 'visualg'].includes(extensaoArquivo)) {
+    if (!['alg', 'birl', 'delegua', 'mapler', 'pitu', 'pitugues', 'por', 'poti', 'potigol', 'visualg', 'foles', 'lmht', 'lincones'].includes(extensaoArquivo) &&
+        !['foles', 'lmht', 'lincones'].includes(documento.languageId)) {
         return;
     }
 
@@ -175,6 +178,54 @@ export async function executarAnalises(
             avaliadorSintatico = new AvaliadorSintaticoPortugolStudio();
             analisadorSemantico = new AnalisadorSemanticoPortugolStudio();
             break;
+        }
+
+        case "foles":
+            diagnosticos.set(documento.uri, validarFoles(documento));
+            return;
+
+        case "lmht":
+            diagnosticos.set(documento.uri, validarLmht(documento));
+            return;
+
+        case "lincones": {
+            const { Lexador: LexadorLinConEs } = await import('@designliquido/lincones-js');
+            const { AvaliadorSintatico: AvaliadorSintaticoLinConEs } = await import('@designliquido/lincones-js');
+
+            const diagnosticosLocais: vscode.Diagnostic[] = [];
+            const linhasLinConEs = textoDocumento.split('\n');
+            const lexadorLinConEs = new LexadorLinConEs();
+            const resultadoLexadorLinConEs = lexadorLinConEs.mapear(linhasLinConEs);
+
+            for (const erroLexador of resultadoLexadorLinConEs.erros || []) {
+                const numeroLinha = Math.max(0, Number(erroLexador.linha) - 1);
+                if (numeroLinha < documento.lineCount) {
+                    diagnosticosLocais.push(new vscode.Diagnostic(
+                        new vscode.Range(numeroLinha, 0, numeroLinha, documento.lineAt(numeroLinha).text.length),
+                        String(erroLexador.mensagem),
+                        vscode.DiagnosticSeverity.Error
+                    ));
+                }
+            }
+
+            const avaliadorSintaticoLinConEs = new AvaliadorSintaticoLinConEs();
+            const resultadoAvaliadorLinConEs = avaliadorSintaticoLinConEs.analisar(resultadoLexadorLinConEs);
+
+            if (resultadoAvaliadorLinConEs?.erros?.length) {
+                for (const erro of resultadoAvaliadorLinConEs.erros) {
+                    const numeroLinha = Math.max(0, Number(erro.simbolo?.linha) - 1);
+                    if (numeroLinha < documento.lineCount) {
+                        diagnosticosLocais.push(new vscode.Diagnostic(
+                            new vscode.Range(numeroLinha, 0, numeroLinha, documento.lineAt(numeroLinha).text.length),
+                            String(erro.message),
+                            vscode.DiagnosticSeverity.Error
+                        ));
+                    }
+                }
+            }
+
+            diagnosticos.set(documento.uri, diagnosticosLocais);
+            return;
         }
 
         default:
