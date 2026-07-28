@@ -37,6 +37,10 @@ import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
 import { ProvedorVisaoEntradaSaidaWeb } from './visoes';
 import { FabricaAdaptadorDepuracaoWeb } from './depuracao/fabricas/fabrica-adaptador-depuracao-web';
 import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-formatacao';
+import { FolesProvedorFormatacao } from './formatadores/foles-provedor-formatacao';
+import { LmhtProvedorFormatacao } from './formatadores/lmht-provedor-formatacao';
+import { LinConEsProvedorFormatacao } from './formatadores/lincones-provedor-formatacao';
+import { DelpropsProvedorFormatacao } from './formatadores/delprops-provedor-formatacao';
 import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-visoes-fluxograma';
 import { gerarFluxogramaWeb } from './visoes/fluxogramas/geracao-fluxogramas-web';
 import { DeleguaProvedorAcoesCodigo } from './acoes-codigo/delegua-provedor-acoes-codigo';
@@ -276,7 +280,11 @@ export function activate(context: vscode.ExtensionContext) {
         ['pitugues', new PituguesProvedorFormatacao(diagnosticosDelegua)],
         ['potigol', new PotigolProvedorFormatacao()],
         ['portugolstudio', new PortugolStudioProvedorFormatacao()],
-        ['visualg', new VisualgProvedorFormatacao()]
+        ['visualg', new VisualgProvedorFormatacao()],
+        ['foles', new FolesProvedorFormatacao()],
+        ['lmht', new LmhtProvedorFormatacao()],
+        ['lincones', new LinConEsProvedorFormatacao()],
+        ['delprops', new DelpropsProvedorFormatacao()]
     ];
 
     formatadores.forEach(([linguagem, provedor]) => {

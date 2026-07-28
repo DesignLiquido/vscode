@@ -57,9 +57,10 @@ export async function garantirProvedoresLinguagem(
 }
 
 async function ativarFoles(context: vscode.ExtensionContext): Promise<void> {
-    const [{ FolesProvedorCompletude }, { FolesProvedorDocumentacaoEmEditor }] = await Promise.all([
+    const [{ FolesProvedorCompletude }, { FolesProvedorDocumentacaoEmEditor }, { FolesProvedorFormatacao }] = await Promise.all([
         import('./completude/foles-provedor-completude'),
         import('./documentacao-em-editor/foles-provedor-documentacao-em-editor'),
+        import('./formatadores/foles-provedor-formatacao'),
     ]);
 
     context.subscriptions.push(
@@ -76,14 +77,19 @@ async function ativarFoles(context: vscode.ExtensionContext): Promise<void> {
                 { scheme: 'untitled', language: 'foles' }
             ],
             new FolesProvedorDocumentacaoEmEditor()
+        ),
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'foles',
+            new FolesProvedorFormatacao()
         )
     );
 }
 
 async function ativarLmht(context: vscode.ExtensionContext): Promise<void> {
-    const [{ LmhtProvedorCompletude }, { LmhtProvedorDocumentacaoEmEditor }] = await Promise.all([
+    const [{ LmhtProvedorCompletude }, { LmhtProvedorDocumentacaoEmEditor }, { LmhtProvedorFormatacao }] = await Promise.all([
         import('./completude/lmht-provedor-completude'),
         import('./documentacao-em-editor/lmht-provedor-documentacao-em-editor'),
+        import('./formatadores/lmht-provedor-formatacao'),
     ]);
 
     context.subscriptions.push(
@@ -100,12 +106,19 @@ async function ativarLmht(context: vscode.ExtensionContext): Promise<void> {
                 { scheme: 'untitled', language: 'lmht' }
             ],
             new LmhtProvedorDocumentacaoEmEditor()
+        ),
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'lmht',
+            new LmhtProvedorFormatacao()
         )
     );
 }
 
 async function ativarLincones(context: vscode.ExtensionContext): Promise<void> {
-    const { LinConEsProvedorDocumentacaoEmEditor } = await import('./documentacao-em-editor/lincones-provedor-documentacao-em-editor');
+    const [{ LinConEsProvedorDocumentacaoEmEditor }, { LinConEsProvedorFormatacao }] = await Promise.all([
+        import('./documentacao-em-editor/lincones-provedor-documentacao-em-editor'),
+        import('./formatadores/lincones-provedor-formatacao'),
+    ]);
 
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(
@@ -114,14 +127,19 @@ async function ativarLincones(context: vscode.ExtensionContext): Promise<void> {
                 { scheme: 'untitled', language: 'lincones' }
             ],
             new LinConEsProvedorDocumentacaoEmEditor()
+        ),
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'lincones',
+            new LinConEsProvedorFormatacao()
         )
     );
 }
 
 async function ativarDelprops(context: vscode.ExtensionContext): Promise<void> {
-    const [{ DelpropsProvedorCompletude }, { DelpropsProvedorDocumentacaoEmEditor }] = await Promise.all([
+    const [{ DelpropsProvedorCompletude }, { DelpropsProvedorDocumentacaoEmEditor }, { DelpropsProvedorFormatacao }] = await Promise.all([
         import('./completude/delprops-provedor-completude'),
         import('./documentacao-em-editor/delprops-provedor-documentacao-em-editor'),
+        import('./formatadores/delprops-provedor-formatacao'),
     ]);
 
     context.subscriptions.push(
@@ -139,6 +157,10 @@ async function ativarDelprops(context: vscode.ExtensionContext): Promise<void> {
                 { scheme: 'untitled', language: 'delprops' }
             ],
             new DelpropsProvedorDocumentacaoEmEditor()
+        ),
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'delprops',
+            new DelpropsProvedorFormatacao()
         )
     );
 }
