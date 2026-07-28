@@ -51,51 +51,45 @@ Atualmente, a extensão usa o núcleo da linguagem Delégua como uma dependênci
 
 Basta executar o comando "Extensão", na opção "Executar e Depurar" do VSCode. Isso deve acionar o procedimento de construção e abrir a janela de testes da extensão.
 
-#### Antiga forma de depuração usando pacotes _linkados_
+#### Depuração com pacotes locais (alternativa ao `yarn link`)
 
-Antigamente, para acompanhar a execução de código por linguagem, era recomendado ligar (_linkar_) pacotes. Isso deixou de funcionar bem especialmente para o ESBuild, que passou a dar muitos erros com referências de Delégua e seus dialetos quando se usa pacotes _linkados_. Este roteiro é mantido aqui por razões históricas.
+O pipeline de build atual usa **ESBuild** (`esbuild ... --bundle`), que empacota todas as dependências em um único arquivo. O `yarn link` tradicional **não funciona** com este fluxo — o ESBuild ignora links simbólicos e o build falha ou produz resultados incorretos.
 
-Os pacotes que podem ser linkados estão em `tsconfig.json`, no diretório raiz.
+Para testar ou depurar alterações em pacotes do núcleo (`@designliquido/delegua`, `@designliquido/mapler`, etc.) localmente antes de publicá-los, use uma das alternativas abaixo.
 
-Primeiro é preciso clonar o repositório correspondente. Por exemplo, se queremos inspecionar o núcleo de Delégua, devemos clonar [`@designliquido/delegua`](https://github.com/DesignLiquido/delegua). Além disso, é preciso clonar também o pacote Node de Delégua, já que todas as linguagens que esta extensão interpreta são dependentes dele: [`@designliquido/delegua-node`](https://github.com/DesignLiquido/delegua-node). Se isso não for feito, o VSCode se perde na hora de encontrar os mapas de fontes, e o resultado será um arquivo JS (que não é o que queremos).
+##### Opção recomendada: `npm pack`
 
-Após clonar os repositórios, é preciso avisar ao Yarn que queremos criar um link simbólico para cada um deles. Isso é feito pelo comando `yarn link` na raiz de cada repositório.
+```bash
+# 1. No repositório do pacote que deseja testar (ex.: @designliquido/delegua)
+cd /caminho/para/delegua
+npm pack
+# Gera um arquivo designliquido-delegua-x.y.z.tgz no diretório atual
 
-De volta a este repositório, use os comandos `yarn link "@designliquido/delegua"` e `yarn link "@designliquido/delegua-node"` no diretório raiz deste projeto para substituir os pacotes do `node_modules` pelos pacotes linkados. Os links simbólicos deve aparecer nos diretórios correspondentes dos pacotes dentro de `node_modules` (normalmente com uma setinha ao lado do diretório para indicar que é um _link_ simbólico).
-
-Por fim, comente as linhas que apontam para o diretório `dist` no `tsconfig.json`. No nosso exemplo, as linhas abaixo devem ser descomentadas:
-
-```jsonc
-{
-    // ...
-    paths: {
-        // ...
-        // "@designliquido/delegua": ["node_modules/@designliquido/delegua/dist"],
-        // "@designliquido/delegua/*": ["node_modules/@designliquido/delegua/dist/*"],
-        // "@designliquido/delegua-node": ["node_modules/@designliquido/delegua-node/dist"],
-        // "@designliquido/delegua-node/*": ["node_modules/@designliquido/delegua-node/dist/*"],
-        // ...
-    }
-    // ...
-}
+# 2. No repositório da extensão
+cd /caminho/para/vscode
+npm install /caminho/para/delegua/designliquido-delegua-x.y.z.tgz
 ```
 
-E descomente as linhas que apontam para o diretório `fontes`:
+O pacote é instalado como uma dependência normal em `node_modules` — o ESBuild o empacota sem problemas. Repita o `npm pack` + `npm install` a cada alteração.
 
-```jsonc
-{
-    // ...
-    paths: {
-        // ...
-        "@designliquido/delegua": ["node_modules/@designliquido/delegua/fontes"],
-        "@designliquido/delegua/*": ["node_modules/@designliquido/delegua/fontes/*"],
-        "@designliquido/delegua-node": ["node_modules/@designliquido/delegua-node/fontes"],
-        "@designliquido/delegua-node/*": ["node_modules/@designliquido/delegua-node/fontes/*"],
-        // ...
-    }
-    // ...
-}
+##### Opção alternativa: `yarn link` com `--external` no ESBuild
+
+Se preferir o fluxo de link simbólico, é preciso instruir o ESBuild a **não empacotar** os pacotes linkados:
+
+```bash
+# 1. Link os pacotes (como antes)
+cd /caminho/para/delegua && yarn link
+cd /caminho/para/delegua-node && yarn link
+cd /caminho/para/vscode && yarn link "@designliquido/delegua" && yarn link "@designliquido/delegua-node"
+
+# 2. Adicione --external para cada pacote linkado no script build-base do package.json:
+#    "build-base": "esbuild ./fontes/extensao.ts --bundle --external:vscode --external:@designliquido/delegua --external:@designliquido/delegua-node ..."
+#    Isso impede o ESBuild de empacotar esses pacotes; eles serão resolvidos via require() em tempo de execução.
+
+# 3. No tsconfig.json, troque os paths de dist/ para fontes/ (veja comentários no próprio arquivo)
 ```
+
+Desvantagem: os pacotes linkados não serão empacotados no `dist/extensao.js`. A extensão final dependerá dos `node_modules` em tempo de execução.
 
 ### Dicas de pontos de parada
 
