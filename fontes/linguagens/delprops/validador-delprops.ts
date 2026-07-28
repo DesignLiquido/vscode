@@ -35,6 +35,55 @@ function aplanarEsquemas(
     return aplanado;
 }
 
+function verificarPropriedadesAusentes(
+    propriedades: readonly { chave: string }[],
+    esquemas: ReadonlyMap<string, readonly DefinicaoPropriedade[]>
+): string[] {
+    const avisos: string[] = [];
+
+    for (const [ns, definicoes] of esquemas) {
+        const obrigatorias = definicoes.filter(d => !d.padrao);
+        if (obrigatorias.length === 0) continue;
+
+        if (ns === 'liquido.dados') {
+            const sources = new Map<string, Set<string>>();
+            for (const prop of propriedades) {
+                if (!prop.chave.startsWith('liquido.dados.')) continue;
+                const restante = prop.chave.slice('liquido.dados.'.length);
+                const ponto = restante.indexOf('.');
+                if (ponto === -1) continue;
+                const nome = restante.slice(0, ponto);
+                const propName = restante.slice(ponto + 1);
+                if (!sources.has(nome)) sources.set(nome, new Set());
+                sources.get(nome)!.add(propName);
+            }
+
+            for (const [nome, presentes] of sources) {
+                for (const req of obrigatorias) {
+                    if (!presentes.has(req.nome)) {
+                        avisos.push(`Propriedade '${req.nome}' obrigatória ausente em 'liquido.dados.${nome}'.`);
+                    }
+                }
+            }
+        } else {
+            const preenchidas = new Set<string>();
+            for (const prop of propriedades) {
+                if (prop.chave.startsWith(ns + '.')) {
+                    preenchidas.add(prop.chave.slice(ns.length + 1));
+                }
+            }
+
+            for (const req of obrigatorias) {
+                if (!preenchidas.has(req.nome)) {
+                    avisos.push(`Propriedade '${ns}.${req.nome}' obrigatória ausente.`);
+                }
+            }
+        }
+    }
+
+    return avisos;
+}
+
 export function validarDelprops(documento: vscode.TextDocument): vscode.Diagnostic[] {
     const diagnosticos: vscode.Diagnostic[] = [];
 
@@ -53,7 +102,8 @@ export function validarDelprops(documento: vscode.TextDocument): vscode.Diagnost
         ));
     }
 
-    const validateResult = validar(parseResult.propriedades, aplanarEsquemas(obterTodos()));
+    const esquemasAplanados = aplanarEsquemas(obterTodos());
+    const validateResult = validar(parseResult.propriedades, esquemasAplanados);
     for (const erro of validateResult.erros) {
         diagnosticos.push(new vscode.Diagnostic(
             new vscode.Range(erro.linha - 1, 0, erro.linha - 1, Number.MAX_VALUE),
@@ -65,6 +115,14 @@ export function validarDelprops(documento: vscode.TextDocument): vscode.Diagnost
         diagnosticos.push(new vscode.Diagnostic(
             new vscode.Range(aviso.linha - 1, 0, aviso.linha - 1, Number.MAX_VALUE),
             aviso.mensagem,
+            vscode.DiagnosticSeverity.Warning
+        ));
+    }
+
+    for (const msg of verificarPropriedadesAusentes(parseResult.propriedades, esquemasAplanados)) {
+        diagnosticos.push(new vscode.Diagnostic(
+            new vscode.Range(0, 0, 0, 0),
+            msg,
             vscode.DiagnosticSeverity.Warning
         ));
     }
