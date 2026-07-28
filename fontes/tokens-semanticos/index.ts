@@ -1,0 +1,11 @@
+export * from './delegua-base';
+export { DeleguaProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS } from './delegua';
+export { PituguesProvedorTokensSemanticos } from './pitugues';
+export { FolesProvedorTokensSemanticos } from './foles';
+export { LmhtProvedorTokensSemanticos } from './lmht';
+export { MaplerProvedorTokensSemanticos } from './mapler';
+export { PotigolProvedorTokensSemanticos } from './potigol';
+export { VisualgProvedorTokensSemanticos } from './visualg';
+export { PortugolStudioProvedorTokensSemanticos } from './portugolstudio';
+export { BirlProvedorTokensSemanticos } from './birl';
+export { EguaProvedorTokensSemanticos } from './egua';

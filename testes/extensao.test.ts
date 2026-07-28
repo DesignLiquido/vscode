@@ -46,7 +46,16 @@ jest.mock('vscode', () => ({
         registerCodeActionsProvider: jest.fn(() => ({ dispose: jest.fn() })),
         registerDefinitionProvider: jest.fn(() => ({ dispose: jest.fn() })),
         registerReferenceProvider: jest.fn(() => ({ dispose: jest.fn() })),
-        registerRenameProvider: jest.fn(() => ({ dispose: jest.fn() }))
+        registerRenameProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerDocumentSymbolProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerFoldingRangeProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerCodeLensProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerInlayHintsProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerDocumentSemanticTokensProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerWorkspaceSymbolProvider: jest.fn(() => ({ dispose: jest.fn() }))
+    },
+    SemanticTokens: class {
+        constructor(data: Uint32Array) { this.data = data; }
     },
     commands: {
         registerCommand: jest.fn(() => ({ dispose: jest.fn() }))
@@ -211,6 +220,23 @@ jest.mock('../fontes/renomeacao', () => ({
 jest.mock('../fontes/mecanismo-importacao-bibliotecas', () => ({
     definirFabricaPainelWebView: jest.fn()
 }));
+
+jest.mock('../fontes/dobramento/delegua-base', () => ({ declaracoesParaRangesDobramento: jest.fn(() => []) }));
+jest.mock('../fontes/dobramento/delegua', () => ({ DeleguaProvedorDobramento: class {} }));
+jest.mock('../fontes/dobramento/pitugues', () => ({ PituguesProvedorDobramento: class {} }));
+
+jest.mock('../fontes/lentes-codigo/delegua-base', () => ({ declaracoesParaLentes: jest.fn(() => []), criarLenteReferencias: jest.fn() }));
+jest.mock('../fontes/lentes-codigo/delegua', () => ({ DeleguaProvedorLentesCodigo: class {} }));
+
+jest.mock('../fontes/dicas-insercao/delegua-base', () => ({ declaracoesParaDicasInsercao: jest.fn(() => []) }));
+jest.mock('../fontes/dicas-insercao/delegua', () => ({ DeleguaProvedorDicasInsercao: class {} }));
+jest.mock('../fontes/dicas-insercao/pitugues', () => ({ PituguesProvedorDicasInsercao: class {} }));
+
+jest.mock('../fontes/tokens-semanticos/delegua-base', () => ({ declaracoesParaTokensSemanticos: jest.fn(() => new (require('vscode').SemanticTokens)(new Uint32Array(0))), LEGENDA_TOKENS_SEMANTICOS: { tokenTypes: [], tokenModifiers: [] }, extrairTokensDeDocumento: jest.fn(() => []), tokensParaSemanticTokens: jest.fn(() => new (require('vscode').SemanticTokens)(new Uint32Array(0))) }));
+jest.mock('../fontes/tokens-semanticos/delegua', () => ({ DeleguaProvedorTokensSemanticos: class {}, LEGENDA_TOKENS_SEMANTICOS: { tokenTypes: [], tokenModifiers: [] } }));
+jest.mock('../fontes/tokens-semanticos/pitugues', () => ({ PituguesProvedorTokensSemanticos: class {}, LEGENDA_TOKENS_SEMANTICOS: { tokenTypes: [], tokenModifiers: [] } }));
+
+jest.mock('../fontes/simbolos-trabalho/delegua', () => ({ DeleguaProvedorSimbolosTrabalho: class {} }));
 
 import * as extensao from '../fontes/extensao';
 import { executarAnalises } from '../fontes/analise-codigo';
