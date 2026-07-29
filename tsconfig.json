@@ -15,7 +15,7 @@
 			"@designliquido/potigol/*": ["./node_modules/@designliquido/potigol/dist/*"],
 			"@designliquido/visualg": ["./node_modules/@designliquido/visualg/dist"],
 			"@designliquido/visualg/*": ["./node_modules/@designliquido/visualg/dist/*"],
-			// Para linkagem (`yarn link ...`), comente as linhas acima e descomente as linhas abaixo.
+			// Para depuração com pacotes locais, veja "Depuração com pacotes locais" em CONTRIBUINDO.md.
             // "@designliquido/birl": ["node_modules/@designliquido/birl/fontes"],
             // "@designliquido/birl/*": ["node_modules/@designliquido/birl/fontes/*"],
             // "@designliquido/delegua": ["node_modules/@designliquido/delegua/fontes"],
