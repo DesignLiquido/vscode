@@ -56,7 +56,8 @@ function extrairAtributosDaLinha(linha: string): string[] {
 export function validarLmht(documento: vscode.TextDocument): vscode.Diagnostic[] {
     const diagnosticos: vscode.Diagnostic[] = [];
     const texto = documento.getText();
-    const tags = extrairTags(texto);
+    const textoSemComentarios = texto.replace(/<!--[\s\S]*?-->/g, '');
+    const tags = extrairTags(textoSemComentarios);
 
     for (const tag of tags) {
         if (tag.abertura && !nomesEstruturasValidas.has(tag.nome.toLowerCase())) {
@@ -68,9 +69,10 @@ export function validarLmht(documento: vscode.TextDocument): vscode.Diagnostic[]
         }
     }
 
-    for (let i = 0; i < documento.lineCount; i++) {
-        const linhaTexto = documento.lineAt(i).text;
-        const linhaLimpa = linhaTexto.replace(/<!--.*?-->/g, '');
+    const linhas = textoSemComentarios.split('\n');
+    for (let i = 0; i < linhas.length && i < documento.lineCount; i++) {
+        const linhaLimpa = linhas[i];
+        const linhaOriginal = documento.lineAt(i).text;
 
         if (!linhaLimpa.includes('<') || /^\s*$/.test(linhaLimpa)) {
             continue;
@@ -83,7 +85,7 @@ export function validarLmht(documento: vscode.TextDocument): vscode.Diagnostic[]
 
         const nomeTag = tagCorrespondencia[1].toLowerCase();
         const conteudoAtributos = tagCorrespondencia[2];
-        const colunaTag = linhaTexto.indexOf(tagCorrespondencia[0]);
+        const colunaTag = linhaOriginal.indexOf(tagCorrespondencia[0]);
 
         if (!nomesEstruturasValidas.has(nomeTag)) {
             continue;
@@ -97,7 +99,7 @@ export function validarLmht(documento: vscode.TextDocument): vscode.Diagnostic[]
             const eEspecifico = atributosPorTag ? atributo in atributosPorTag : false;
 
             if (!eGlobal && !eEspecifico) {
-                const colunaAtributo = linhaTexto.indexOf(atributo, colunaTag);
+                const colunaAtributo = linhaOriginal.indexOf(atributo, colunaTag);
                 diagnosticos.push(new vscode.Diagnostic(
                     new vscode.Range(i, Math.max(0, colunaAtributo), i, Math.max(0, colunaAtributo) + atributo.length),
                     `Atributo desconhecido '${atributo}' para a estrutura '${nomeTag}'.`,
