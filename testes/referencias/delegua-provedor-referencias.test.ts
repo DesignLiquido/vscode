@@ -19,10 +19,7 @@ jest.mock('vscode', () => ({
     },
 }), { virtual: true });
 
-jest.mock('@designliquido/delegua-lsp', () => ({
-    proverReferencias: jest.fn().mockResolvedValue([]),
-    DocumentoLSP: undefined,
-}), { virtual: true });
+jest.mock('@designliquido/delegua-lsp');
 
 import { DeleguaProvedorReferencias } from '../../fontes/referencias/delegua-provedor-referencias';
 

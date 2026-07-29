@@ -26,7 +26,7 @@ jest.mock('../../fontes/bibliotecas/dialetos/visualg', () => ({
     primitivasEntradaSaidaVisuAlg: [
         { nome: 'escreva', documentacao: 'Escreve na saída', exemploCodigo: 'escreva("oi")' },
     ],
-}), { virtual: true });
+}));
 
 import { VisuAlgProvedorDocumentacaoEmEditor } from '../../fontes/documentacao-em-editor/visualg-provedor-documentacao-em-editor';
 

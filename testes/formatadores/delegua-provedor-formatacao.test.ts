@@ -28,7 +28,7 @@ jest.mock('@designliquido/delegua/avaliador-sintatico', () => ({
             return { declaracoes: [{ tipo: 'var' }], erros: [] };
         }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/formatadores', () => ({
     FormatadorDelegua: class FormatadorDelegua {
@@ -39,36 +39,36 @@ jest.mock('@designliquido/delegua/formatadores', () => ({
         constructor(_fimLinha: string) {}
         async formatar(_declaracoes: any[]) { return 'codigo formatado pitugues'; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/lexador', () => ({
     Lexador: class Lexador {
         mapear(linhas: string[], _hash: number) { return { simbolos: [], erros: [] }; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua', () => ({
     EstilizadorDelegua: class EstilizadorDelegua {
         adicionarRegra(_regra: any) {}
         estilizarEFormatar(_declaracoes: any[], _opcoes: any) { return 'codigo estilizado'; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/estilizador/regras', () => ({
     RegraFortalecerTipos: class RegraFortalecerTipos {},
     RegraConvencaoNomenclatura: class RegraConvencaoNomenclatura { constructor(_opts: any) {} },
     RegraExplicitarTiposParametros: class RegraExplicitarTiposParametros {},
-}), { virtual: true });
+}));
 
-jest.mock('@designliquido/delegua/interfaces/estilizador', () => ({}), { virtual: true });
-jest.mock('@designliquido/delegua/interfaces/formatador', () => ({}), { virtual: true });
-jest.mock('@designliquido/delegua/tipos', () => ({ DelimitadorTextoFormatacao: {} }), { virtual: true });
+jest.mock('@designliquido/delegua/interfaces/estilizador', () => ({}));
+jest.mock('@designliquido/delegua/interfaces/formatador', () => ({}));
+jest.mock('@designliquido/delegua/tipos', () => ({ DelimitadorTextoFormatacao: {} }));
 
 jest.mock('../../fontes/avaliacao-sintatica', () => ({
     formatarDiagnosticosAvaliacaoSintatica: jest.fn().mockReturnValue([
         { message: 'Erro de sintaxe', severity: 0 },
     ]),
-}), { virtual: true });
+}));
 
 import { DeleguaProvedorFormatacao } from '../../fontes/formatadores/delegua-provedor-formatacao';
 
