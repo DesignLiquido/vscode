@@ -1,0 +1,11 @@
+export * from './delegua-base';
+export { DeleguaProvedorDobramento } from './delegua';
+export { PituguesProvedorDobramento } from './pitugues';
+export { FolesProvedorDobramento } from './foles';
+export { LmhtProvedorDobramento } from './lmht';
+export { MaplerProvedorDobramento } from './mapler';
+export { PotigolProvedorDobramento } from './potigol';
+export { VisualgProvedorDobramento } from './visualg';
+export { PortugolStudioProvedorDobramento } from './portugolstudio';
+export { BirlProvedorDobramento } from './birl';
+export { EguaProvedorDobramento } from './egua';
