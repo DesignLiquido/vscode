@@ -3,13 +3,12 @@ arquivos do seu projeto:
 
 ```
 meu-projeto/
-├── configuracao.delprops      
-├── fontes/                     
-│   ├── rotas/                  
-│   ├── visoes/                 
-│   └── modelos/                
-├── publico/                    
-└── testes/                     
+├── configuracao.delprops
+├── modelos/
+├── rotas/
+├── publico/
+├── testes/
+└── visoes/
 ```
 
 Clique no botão acima ou use `Ctrl+Shift+P` → `Liquido: Novo projeto`.
