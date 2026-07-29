@@ -48,9 +48,7 @@ jest.mock('vscode', () => {
 }, { virtual: true });
 
 // Mock do cache de análise
-jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
-    obterResultado: jest.fn()
-}), { virtual: true });
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise');
 
 describe('acoes-codigo/DeleguaProvedorAcoesCodigo', () => {
     let DeleguaProvedorAcoesCodigo: any;

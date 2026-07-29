@@ -19,7 +19,7 @@ jest.mock('@designliquido/foles/extensao/lista-modificadores', () => ({
         'alinhar-texto': { documentacao: 'Alinha o texto horizontalmente', exemploCodigo: 'alinhar-texto: centro' },
         'cor': { documentacao: 'Define a cor do elemento', exemploCodigo: 'cor: vermelho' },
     },
-}), { virtual: true });
+}));
 
 import { FolesProvedorDocumentacaoEmEditor } from '../../fontes/documentacao-em-editor/foles-provedor-documentacao-em-editor';
 

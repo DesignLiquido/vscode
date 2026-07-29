@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
 
 const mockConfigGet = jest.fn();
 const mockGetConfiguration = jest.fn().mockReturnValue({ get: mockConfigGet });
@@ -28,7 +28,7 @@ jest.mock('@designliquido/delegua/avaliador-sintatico', () => ({
             return { declaracoes: [{ tipo: 'var' }], erros: [] };
         }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/formatadores', () => ({
     FormatadorDelegua: class FormatadorDelegua {
@@ -39,36 +39,36 @@ jest.mock('@designliquido/delegua/formatadores', () => ({
         constructor(_fimLinha: string) {}
         async formatar(_declaracoes: any[]) { return 'codigo formatado pitugues'; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/lexador', () => ({
     Lexador: class Lexador {
         mapear(linhas: string[], _hash: number) { return { simbolos: [], erros: [] }; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua', () => ({
     EstilizadorDelegua: class EstilizadorDelegua {
         adicionarRegra(_regra: any) {}
         estilizarEFormatar(_declaracoes: any[], _opcoes: any) { return 'codigo estilizado'; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/estilizador/regras', () => ({
     RegraFortalecerTipos: class RegraFortalecerTipos {},
     RegraConvencaoNomenclatura: class RegraConvencaoNomenclatura { constructor(_opts: any) {} },
     RegraExplicitarTiposParametros: class RegraExplicitarTiposParametros {},
-}), { virtual: true });
+}));
 
-jest.mock('@designliquido/delegua/interfaces/estilizador', () => ({}), { virtual: true });
-jest.mock('@designliquido/delegua/interfaces/formatador', () => ({}), { virtual: true });
-jest.mock('@designliquido/delegua/tipos', () => ({ DelimitadorTextoFormatacao: {} }), { virtual: true });
+jest.mock('@designliquido/delegua/interfaces/estilizador', () => ({}));
+jest.mock('@designliquido/delegua/interfaces/formatador', () => ({}));
+jest.mock('@designliquido/delegua/tipos', () => ({ DelimitadorTextoFormatacao: {} }));
 
 jest.mock('../../fontes/avaliacao-sintatica', () => ({
     formatarDiagnosticosAvaliacaoSintatica: jest.fn().mockReturnValue([
         { message: 'Erro de sintaxe', severity: 0 },
     ]),
-}), { virtual: true });
+}));
 
 import { DeleguaProvedorFormatacao } from '../../fontes/formatadores/delegua-provedor-formatacao';
 
@@ -106,6 +106,10 @@ describe('DeleguaProvedorFormatacao', () => {
         provedor = new DeleguaProvedorFormatacao(mockDiagnosticos);
     });
 
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
     it('instância criada com sucesso', () => {
         expect(provedor).toBeDefined();
         expect(typeof provedor.provideDocumentFormattingEdits).toBe('function');
@@ -125,7 +129,6 @@ describe('DeleguaProvedorFormatacao', () => {
 
         const edits = await provedor.provideDocumentFormattingEdits(criarDocumento('var x = 10', 2), {}, {});
         expect(Array.isArray(edits)).toBe(true);
-        spy.mockRestore();
     });
 
     it('retorna null quando há erros de sintaxe', async () => {
@@ -169,7 +172,6 @@ describe('DeleguaProvedorFormatacao', () => {
 
         await provedor.provideDocumentFormattingEdits(criarDocumento(), {}, {});
         expect(spy).toHaveBeenCalled();
-        spy.mockRestore();
     });
 
     it('adiciona RegraExplicitarTiposParametros quando habilitada', async () => {
@@ -186,7 +188,6 @@ describe('DeleguaProvedorFormatacao', () => {
 
         await provedor.provideDocumentFormattingEdits(criarDocumento(), {}, {});
         expect(spy).toHaveBeenCalled();
-        spy.mockRestore();
     });
 
     it('adiciona RegraConvencaoNomenclatura quando habilitada', async () => {
@@ -206,7 +207,6 @@ describe('DeleguaProvedorFormatacao', () => {
 
         await provedor.provideDocumentFormattingEdits(criarDocumento(), {}, {});
         expect(spy).toHaveBeenCalled();
-        spy.mockRestore();
     });
 
     it('retorna código original em caso de exceção no formatador', async () => {

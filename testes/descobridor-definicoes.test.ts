@@ -23,7 +23,7 @@ jest.mock('vscode', () => ({
     FileType: { File: 1, Directory: 2, SymbolicLink: 64, Unknown: 0 },
 }), { virtual: true });
 
-jest.mock('../fontes/interfaces', () => ({}), { virtual: true });
+jest.mock('../fontes/interfaces', () => ({}));
 
 import { descobrirDefinicoes, limparCacheCaminhosDefinicoes } from '../fontes/descobridor-definicoes';
 

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { describe, it, expect } from '@jest/globals';
 
-jest.mock('@designliquido/delegua', () => ({}), { virtual: true });
+jest.mock('@designliquido/delegua', () => ({}));
 
 import { ImportarBiblioteca } from '../../fontes/construtos/importar-biblioteca';
 import { ModuloDeclaracoes } from '../../fontes/construtos/modulo-declaracoes';

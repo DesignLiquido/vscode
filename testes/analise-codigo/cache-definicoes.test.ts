@@ -1,4 +1,6 @@
-﻿import {
+﻿jest.unmock('@designliquido/delegua-lsp/analise/cache-definicoes');
+
+import {
     definirDefinicoes,
     expirarDefinicoes,
     expirarTodasDefinicoes,
