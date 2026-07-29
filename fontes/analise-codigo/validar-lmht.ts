@@ -56,7 +56,9 @@ function extrairAtributosDaLinha(linha: string): string[] {
 export function validarLmht(documento: vscode.TextDocument): vscode.Diagnostic[] {
     const diagnosticos: vscode.Diagnostic[] = [];
     const texto = documento.getText();
-    const textoSemComentarios = texto.replace(/<!--[\s\S]*?-->/g, '');
+    const textoSemComentarios = texto
+        .replace(/<!--[\s\S]*?-->/g, '')
+        .replace(/<!--[\s\S]*/g, '');
     const tags = extrairTags(textoSemComentarios);
 
     for (const tag of tags) {
