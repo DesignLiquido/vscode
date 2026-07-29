@@ -11,17 +11,7 @@ import { PituguesProvedorDocumentacaoEmEditor } from './documentacao-em-editor/p
 import { DeleguaProvedorCompletude } from './completude/delegua-provedor-completude';
 import { LiquidoProvedorCompletude } from './completude/liquido-provedor-completude';
 
-// Importações individuais dos formatadores
 import { DeleguaProvedorFormatacao } from './formatadores/delegua-provedor-formatacao';
-import { ProvedorTarefasLiquidoWeb } from './tarefas/provedor-tarefas-web';
-import { comandosLiquido, TIPO_TAREFA_LIQUIDO } from './tarefas/comandos-liquido';
-
-import { executarAnalises } from './analise-codigo';
-import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
-import { garantirProvedoresLinguagem } from './ativacao-linguagens';
-import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
-import { ProvedorVisaoEntradaSaidaWeb } from './visoes';
-import { FabricaAdaptadorDepuracaoWeb } from './depuracao/fabricas/fabrica-adaptador-depuracao-web';
 import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-formatacao';
 import { FolesProvedorFormatacao } from './formatadores/foles-provedor-formatacao';
 import { LmhtProvedorFormatacao } from './formatadores/lmht-provedor-formatacao';
@@ -30,6 +20,49 @@ import { DelpropsProvedorFormatacao } from './formatadores/delprops-provedor-for
 import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao';
 import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio-provedor-formatacao';
 import { VisualgProvedorFormatacao } from './formatadores/visualg-provedor-formatacao';
+
+import { ProvedorTarefasLiquidoWeb } from './tarefas/provedor-tarefas-web';
+import { comandosLiquido, TIPO_TAREFA_LIQUIDO } from './tarefas/comandos-liquido';
+
+import { executarAnalises } from './analise-codigo';
+import { validarDelprops } from './linguagens/delprops/validador-delprops';
+import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
+import { garantirProvedoresLinguagem } from './ativacao-linguagens';
+import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
+import { ProvedorVisaoEntradaSaidaWeb } from './visoes';
+import { FabricaAdaptadorDepuracaoWeb } from './depuracao/fabricas/fabrica-adaptador-depuracao-web';
+
+import {
+    DeleguaProvedorDobramento,
+    PituguesProvedorDobramento,
+    FolesProvedorDobramento,
+    LmhtProvedorDobramento,
+    MaplerProvedorDobramento,
+    PotigolProvedorDobramento,
+    VisualgProvedorDobramento,
+    PortugolStudioProvedorDobramento,
+    BirlProvedorDobramento,
+    EguaProvedorDobramento
+} from './dobramento/index-web';
+
+import { DeleguaProvedorLentesCodigo } from './lentes-codigo/index-web';
+import { DeleguaProvedorDicasInsercao, PituguesProvedorDicasInsercao } from './dicas-insercao/index-web';
+import { DeleguaProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS, PituguesProvedorTokensSemanticos } from './tokens-semanticos/index-web';
+import { DeleguaProvedorSimbolosTrabalho } from './simbolos-trabalho/delegua';
+
+import { DeleguaProvedorSimbolosDocumento } from './simbolos-documento/delegua';
+import { PituguesProvedorSimbolosDocumento } from './simbolos-documento/pitugues';
+import { FolesProvedorSimbolosDocumento } from './simbolos-documento/foles';
+import { LmhtProvedorSimbolosDocumento } from './simbolos-documento/lmht';
+import { LinConEsProvedorSimbolosDocumento } from './simbolos-documento/lincones';
+import { DelpropsProvedorSimbolosDocumento } from './simbolos-documento/delprops';
+import { VisualgProvedorSimbolosDocumento } from './simbolos-documento/visualg';
+import { MaplerProvedorSimbolosDocumento } from './simbolos-documento/mapler';
+import { PotigolProvedorSimbolosDocumento } from './simbolos-documento/potigol';
+import { PortugolStudioProvedorSimbolosDocumento } from './simbolos-documento/portugolstudio';
+import { BirlProvedorSimbolosDocumento } from './simbolos-documento/birl';
+import { EguaProvedorSimbolosDocumento } from './simbolos-documento/egua';
+
 import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-visoes-fluxograma';
 import { gerarFluxogramaWeb } from './visoes/fluxogramas/geracao-fluxogramas-web';
 import { DeleguaProvedorAcoesCodigo } from './acoes-codigo/delegua-provedor-acoes-codigo';
@@ -98,15 +131,24 @@ export function activate(context: vscode.ExtensionContext) {
     const diagnosticosDelegua = vscode.languages.createDiagnosticCollection("delegua");
     context.subscriptions.push(diagnosticosDelegua);
 
+    const diagnosticsDelprops = vscode.languages.createDiagnosticCollection("delprops");
+    context.subscriptions.push(diagnosticsDelprops);
+
     // Análise de código em tempo real
     if (vscode.window.activeTextEditor) {
-        executarAnalises(vscode.window.activeTextEditor.document, diagnosticosDelegua).catch(erro => {
-            console.error('Erro ao executar análises:', erro);
-        });
         if (ehLinguagemSuportadaNaWeb(vscode.window.activeTextEditor.document.languageId)) {
             garantirProvedoresLinguagem(vscode.window.activeTextEditor.document.languageId, context).catch(erro => {
                 console.error('Erro ao ativar provedores de linguagem:', erro);
             });
+        }
+        executarAnalises(vscode.window.activeTextEditor.document, diagnosticosDelegua).catch(erro => {
+            console.error('Erro ao executar análises:', erro);
+        });
+        if (vscode.window.activeTextEditor.document.languageId === 'delprops') {
+            diagnosticsDelprops.set(
+                vscode.window.activeTextEditor.document.uri,
+                validarDelprops(vscode.window.activeTextEditor.document)
+            );
         }
     }
 
@@ -117,10 +159,13 @@ export function activate(context: vscode.ExtensionContext) {
                     console.error('Erro ao ativar provedores de linguagem:', erro);
                 });
             }
-            if (['birl', 'delegua', 'mapler', 'visualg', 'portugolstudio'].includes(doc.languageId)) {
+            if (['birl', 'delegua', 'foles', 'lmht', 'lincones', 'mapler', 'visualg', 'portugolstudio'].includes(doc.languageId)) {
                 executarAnalises(doc, diagnosticosDelegua).catch(erro => {
                     console.error('Erro ao executar análises:', erro);
                 });
+            }
+            if (doc.languageId === 'delprops') {
+                diagnosticsDelprops.set(doc.uri, validarDelprops(doc));
             }
         }),
         vscode.window.onDidChangeActiveTextEditor(editor => {
@@ -132,16 +177,21 @@ export function activate(context: vscode.ExtensionContext) {
                     console.error('Erro ao ativar provedores de linguagem:', erro);
                 });
             }
-            if (['birl', 'delegua', 'mapler', 'visualg', 'portugolstudio'].includes(editor.document.languageId)) {
+            if (['birl', 'delegua', 'foles', 'lmht', 'lincones', 'mapler', 'visualg', 'portugolstudio'].includes(editor.document.languageId)) {
                 executarAnalises(editor.document, diagnosticosDelegua).catch(erro => {
                     console.error('Erro ao executar análises:', erro);
                 });
+            }
+            if (editor.document.languageId === 'delprops') {
+                diagnosticsDelprops.set(editor.document.uri, validarDelprops(editor.document));
             }
         }),
         vscode.workspace.onDidChangeTextDocument((evento) => {
             switch (evento.document.languageId) {
                 case 'birl':
                 case 'delegua':
+                case 'foles':
+                case 'lincones':
                 case 'mapler':
                 case 'pitugues':
                 case 'visualg':
@@ -160,7 +210,22 @@ export function activate(context: vscode.ExtensionContext) {
                     }, 500);
                     break;
                 case 'lmht':
+                    if (changeTimeout !== null) {
+                        clearTimeout(changeTimeout);
+                    }
+                    changeTimeout = setTimeout(function () {
+                        if (changeTimeout) {
+                            clearTimeout(changeTimeout);
+                        }
+                        changeTimeout = null;
+                        executarAnalises(evento.document, diagnosticosDelegua).catch(erro => {
+                            console.error('Erro ao executar análises:', erro);
+                        });
+                    }, 500);
                     tentarFecharTagLmht(evento);
+                    break;
+                case 'delprops':
+                    diagnosticsDelprops.set(evento.document.uri, validarDelprops(evento.document));
                     break;
                 default:
                     break;
@@ -171,6 +236,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.workspace.onDidCloseTextDocument(doc => {
             diagnosticosDelegua.delete(doc.uri);
+            diagnosticsDelprops.delete(doc.uri);
             expirarResultado(doc.uri.toString(), 'documento-fechado');
         })
     );
@@ -351,6 +417,100 @@ export function activate(context: vscode.ExtensionContext) {
             )
         );
     });
+
+    // Símbolos do documento (Outline, breadcrumbs, Ctrl+Shift+O)
+    const simbolosProviders = [
+        ['delegua', new DeleguaProvedorSimbolosDocumento()],
+        ['delegua-testes', new DeleguaProvedorSimbolosDocumento()],
+        ['pitugues', new PituguesProvedorSimbolosDocumento()],
+        ['foles', new FolesProvedorSimbolosDocumento()],
+        ['lmht', new LmhtProvedorSimbolosDocumento()],
+        ['lincones', new LinConEsProvedorSimbolosDocumento()],
+        ['delprops', new DelpropsProvedorSimbolosDocumento()],
+        ['visualg', new VisualgProvedorSimbolosDocumento()],
+        ['mapler', new MaplerProvedorSimbolosDocumento()],
+        ['potigol', new PotigolProvedorSimbolosDocumento()],
+        ['portugolstudio', new PortugolStudioProvedorSimbolosDocumento()],
+        ['birl', new BirlProvedorSimbolosDocumento()],
+        ['egua', new EguaProvedorSimbolosDocumento()]
+    ];
+
+    simbolosProviders.forEach(([linguagem, provedor]) => {
+        context.subscriptions.push(
+            vscode.languages.registerDocumentSymbolProvider(
+                { language: linguagem as string },
+                provedor as any
+            )
+        );
+    });
+
+    // Dobramento (Folding)
+    const dobramentoProviders = [
+        ['delegua', new DeleguaProvedorDobramento()],
+        ['delegua-testes', new DeleguaProvedorDobramento()],
+        ['pitugues', new PituguesProvedorDobramento()],
+        ['foles', new FolesProvedorDobramento()],
+        ['lmht', new LmhtProvedorDobramento()],
+        ['mapler', new MaplerProvedorDobramento()],
+        ['potigol', new PotigolProvedorDobramento()],
+        ['visualg', new VisualgProvedorDobramento()],
+        ['portugolstudio', new PortugolStudioProvedorDobramento()],
+        ['birl', new BirlProvedorDobramento()],
+        ['egua', new EguaProvedorDobramento()]
+    ];
+
+    dobramentoProviders.forEach(([linguagem, provedor]) => {
+        context.subscriptions.push(
+            vscode.languages.registerFoldingRangeProvider(
+                { language: linguagem as string },
+                provedor as any
+            )
+        );
+    });
+
+    // Lentes de código (CodeLens)
+    context.subscriptions.push(
+        vscode.languages.registerCodeLensProvider(
+            [{ language: 'delegua' }, { language: 'delegua-testes' }],
+            new DeleguaProvedorLentesCodigo()
+        )
+    );
+
+    // Dicas de inserção (InlayHints)
+    context.subscriptions.push(
+        vscode.languages.registerInlayHintsProvider(
+            { language: 'delegua' },
+            new DeleguaProvedorDicasInsercao()
+        ),
+        vscode.languages.registerInlayHintsProvider(
+            { language: 'pitugues' },
+            new PituguesProvedorDicasInsercao()
+        )
+    );
+
+    // Tokens semânticos
+    context.subscriptions.push(
+        vscode.languages.registerDocumentSemanticTokensProvider(
+            { language: 'delegua' },
+            new DeleguaProvedorTokensSemanticos(),
+            LEGENDA_TOKENS_SEMANTICOS
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentSemanticTokensProvider(
+            { language: 'pitugues' },
+            new PituguesProvedorTokensSemanticos(),
+            LEGENDA_TOKENS_SEMANTICOS
+        )
+    );
+
+    // Símbolos do espaço de trabalho (Ctrl+T)
+    context.subscriptions.push(
+        vscode.languages.registerWorkspaceSymbolProvider(
+            new DeleguaProvedorSimbolosTrabalho()
+        )
+    );
 
     context.subscriptions.push(
         vscode.languages.registerDocumentLinkProvider(

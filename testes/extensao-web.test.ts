@@ -43,6 +43,15 @@ jest.mock('vscode', () => ({
         registerReferenceProvider: jest.fn(() => ({ dispose: jest.fn() })),
         registerRenameProvider: jest.fn(() => ({ dispose: jest.fn() })),
         registerSignatureHelpProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerDocumentSymbolProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerFoldingRangeProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerCodeLensProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerInlayHintsProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerDocumentSemanticTokensProvider: jest.fn(() => ({ dispose: jest.fn() })),
+        registerWorkspaceSymbolProvider: jest.fn(() => ({ dispose: jest.fn() }))
+    },
+    SemanticTokens: class {
+        constructor(data: Uint32Array) { this.data = data; }
     },
     commands: {
         registerCommand: jest.fn(() => ({ dispose: jest.fn() })),
@@ -117,6 +126,44 @@ jest.mock('../fontes/referencias', () => ({ DeleguaProvedorReferencias: class {}
 jest.mock('../fontes/renomeacao', () => ({ DeleguaProvedorRenomeacao: class {} }));
 jest.mock('@designliquido/delegua-lsp/analise/cache-analise');
 jest.mock('@designliquido/delegua-lsp/analise/cache-definicoes');
+
+jest.mock('../fontes/simbolos-documento/delegua', () => ({ DeleguaProvedorSimbolosDocumento: class {} }));
+jest.mock('../fontes/simbolos-documento/pitugues', () => ({ PituguesProvedorSimbolosDocumento: class {} }));
+jest.mock('../fontes/simbolos-documento/foles', () => ({ FolesProvedorSimbolosDocumento: class {} }));
+jest.mock('../fontes/simbolos-documento/lmht', () => ({ LmhtProvedorSimbolosDocumento: class {} }));
+jest.mock('../fontes/simbolos-documento/lincones', () => ({ LinConEsProvedorSimbolosDocumento: class {} }));
+jest.mock('../fontes/simbolos-documento/delprops', () => ({ DelpropsProvedorSimbolosDocumento: class {} }));
+jest.mock('../fontes/simbolos-documento/visualg', () => ({ VisualgProvedorSimbolosDocumento: class {} }));
+jest.mock('../fontes/simbolos-documento/mapler', () => ({ MaplerProvedorSimbolosDocumento: class {} }));
+jest.mock('../fontes/simbolos-documento/potigol', () => ({ PotigolProvedorSimbolosDocumento: class {} }));
+jest.mock('../fontes/simbolos-documento/portugolstudio', () => ({ PortugolStudioProvedorSimbolosDocumento: class {} }));
+jest.mock('../fontes/simbolos-documento/birl', () => ({ BirlProvedorSimbolosDocumento: class {} }));
+jest.mock('../fontes/simbolos-documento/egua', () => ({ EguaProvedorSimbolosDocumento: class {} }));
+
+jest.mock('../fontes/dobramento/delegua-base', () => ({ declaracoesParaRangesDobramento: jest.fn(() => []) }));
+jest.mock('../fontes/dobramento/delegua', () => ({ DeleguaProvedorDobramento: class {} }));
+jest.mock('../fontes/dobramento/pitugues', () => ({ PituguesProvedorDobramento: class {} }));
+jest.mock('../fontes/dobramento/foles', () => ({ FolesProvedorDobramento: class {} }));
+jest.mock('../fontes/dobramento/lmht', () => ({ LmhtProvedorDobramento: class {} }));
+jest.mock('../fontes/dobramento/mapler', () => ({ MaplerProvedorDobramento: class {} }));
+jest.mock('../fontes/dobramento/potigol', () => ({ PotigolProvedorDobramento: class {} }));
+jest.mock('../fontes/dobramento/visualg', () => ({ VisualgProvedorDobramento: class {} }));
+jest.mock('../fontes/dobramento/portugolstudio', () => ({ PortugolStudioProvedorDobramento: class {} }));
+jest.mock('../fontes/dobramento/birl', () => ({ BirlProvedorDobramento: class {} }));
+jest.mock('../fontes/dobramento/egua', () => ({ EguaProvedorDobramento: class {} }));
+
+jest.mock('../fontes/lentes-codigo/delegua-base', () => ({ declaracoesParaLentes: jest.fn(() => []), criarLenteReferencias: jest.fn() }));
+jest.mock('../fontes/lentes-codigo/delegua', () => ({ DeleguaProvedorLentesCodigo: class {} }));
+
+jest.mock('../fontes/dicas-insercao/delegua-base', () => ({ declaracoesParaDicasInsercao: jest.fn(() => []) }));
+jest.mock('../fontes/dicas-insercao/delegua', () => ({ DeleguaProvedorDicasInsercao: class {} }));
+jest.mock('../fontes/dicas-insercao/pitugues', () => ({ PituguesProvedorDicasInsercao: class {} }));
+
+jest.mock('../fontes/tokens-semanticos/delegua-base', () => ({ declaracoesParaTokensSemanticos: jest.fn(() => new (require('vscode').SemanticTokens)(new Uint32Array(0))), LEGENDA_TOKENS_SEMANTICOS: { tokenTypes: [], tokenModifiers: [] }, extrairTokensDeDocumento: jest.fn(() => []), tokensParaSemanticTokens: jest.fn(() => new (require('vscode').SemanticTokens)(new Uint32Array(0))) }));
+jest.mock('../fontes/tokens-semanticos/delegua', () => ({ DeleguaProvedorTokensSemanticos: class {}, LEGENDA_TOKENS_SEMANTICOS: { tokenTypes: [], tokenModifiers: [] } }));
+jest.mock('../fontes/tokens-semanticos/pitugues', () => ({ PituguesProvedorTokensSemanticos: class {}, LEGENDA_TOKENS_SEMANTICOS: { tokenTypes: [], tokenModifiers: [] } }));
+
+jest.mock('../fontes/simbolos-trabalho/delegua', () => ({ DeleguaProvedorSimbolosTrabalho: class {} }));
 
 import tradutorWeb from '../fontes/traducao/index-web';
 import { executarAnalises } from '../fontes/analise-codigo';
@@ -216,15 +263,25 @@ describe('Extensão Web', () => {
     });
 
     it('encaminha fechamento de tags para LMHT', () => {
-        const context: any = { subscriptions: [], extensionUri: vscode.Uri.file('/test/path') };
-        activate(context);
+        jest.useFakeTimers();
+        try {
+            const context: any = { subscriptions: [], extensionUri: vscode.Uri.file('/test/path') };
+            activate(context);
 
-        const callback = (vscode.workspace.onDidChangeTextDocument as jest.Mock).mock.calls[0][0];
-        const evento = { document: { languageId: 'lmht' } } as any;
+            const callback = (vscode.workspace.onDidChangeTextDocument as jest.Mock).mock.calls[0][0];
+            const evento = { document: { languageId: 'lmht' } } as any;
 
-        callback(evento);
+            callback(evento);
 
-        expect(tentarFecharTagLmht).toHaveBeenCalledWith(evento);
+            expect(tentarFecharTagLmht).toHaveBeenCalledWith(evento);
+
+            // Descarta o setTimeout de debounce (500ms) agendado pelo handler:
+            // se deixado como timer real, dispara depois que o teste termina,
+            // já com os mocks deste arquivo resetados, derrubando o worker do Jest.
+            jest.clearAllTimers();
+        } finally {
+            jest.useRealTimers();
+        }
     });
 
     it('executa tradução web e mostra erro quando tradutor falha', async () => {

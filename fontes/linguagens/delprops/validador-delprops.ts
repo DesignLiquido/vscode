@@ -27,46 +27,54 @@ function removerComentarioLinha(linha: string): string {
 
 function aplanarEsquemas(
     todos: ReadonlyMap<string, readonly ContribuicaoEsquema[]>
-): Map<string, readonly DefinicaoPropriedade[]> {
-    const aplanado = new Map<string, readonly DefinicaoPropriedade[]>();
+): Map<string, DefinicaoPropriedade[]> {
+    const aplanado = new Map<string, DefinicaoPropriedade[]>();
     for (const [ns, contribuicoes] of todos) {
-        aplanado.set(ns, contribuicoes.flatMap(c => c.definicoes));
+        aplanado.set(ns, [...contribuicoes.flatMap(c => c.definicoes)]);
     }
     return aplanado;
 }
 
 export function validarDelprops(documento: vscode.TextDocument): vscode.Diagnostic[] {
     const diagnosticos: vscode.Diagnostic[] = [];
-
     const linhas: string[] = [];
     for (let i = 0; i < documento.lineCount; i++) {
         linhas.push(removerComentarioLinha(documento.lineAt(i).text));
     }
     const conteudo = linhas.join('\n');
 
-    const parseResult = analisar(conteudo);
-    for (const erro of parseResult.erros) {
-        diagnosticos.push(new vscode.Diagnostic(
-            new vscode.Range(erro.linha - 1, 0, erro.linha - 1, Number.MAX_VALUE),
-            erro.mensagem,
-            vscode.DiagnosticSeverity.Error
-        ));
+    const resultadoCompreensao = analisar(conteudo);
+    for (const erroCompreensao of resultadoCompreensao.erros) {
+        const numeroLinha = Math.max(0, erroCompreensao.linha - 1);
+        if (numeroLinha < documento.lineCount) {
+            diagnosticos.push(new vscode.Diagnostic(
+                new vscode.Range(numeroLinha, 0, numeroLinha, Number.MAX_VALUE),
+                erroCompreensao.mensagem,
+                vscode.DiagnosticSeverity.Error
+            ));
+        }
     }
 
-    const validateResult = validar(parseResult.propriedades, aplanarEsquemas(obterTodos()));
+    const validateResult = validar(resultadoCompreensao.propriedades, aplanarEsquemas(obterTodos()));
     for (const erro of validateResult.erros) {
-        diagnosticos.push(new vscode.Diagnostic(
-            new vscode.Range(erro.linha - 1, 0, erro.linha - 1, Number.MAX_VALUE),
-            erro.mensagem,
-            vscode.DiagnosticSeverity.Error
-        ));
+        const numeroLinha = Math.max(0, erro.linha - 1);
+        if (numeroLinha < documento.lineCount) {
+            diagnosticos.push(new vscode.Diagnostic(
+                new vscode.Range(numeroLinha, 0, numeroLinha, Number.MAX_VALUE),
+                erro.mensagem,
+                vscode.DiagnosticSeverity.Error
+            ));
+        }
     }
     for (const aviso of validateResult.avisos) {
-        diagnosticos.push(new vscode.Diagnostic(
-            new vscode.Range(aviso.linha - 1, 0, aviso.linha - 1, Number.MAX_VALUE),
-            aviso.mensagem,
-            vscode.DiagnosticSeverity.Warning
-        ));
+        const numeroLinha = Math.max(0, aviso.linha - 1);
+        if (numeroLinha < documento.lineCount) {
+            diagnosticos.push(new vscode.Diagnostic(
+                new vscode.Range(numeroLinha, 0, numeroLinha, Number.MAX_VALUE),
+                aviso.mensagem,
+                vscode.DiagnosticSeverity.Warning
+            ));
+        }
     }
 
     return diagnosticos;
