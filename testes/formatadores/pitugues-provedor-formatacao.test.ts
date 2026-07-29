@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
 
 const mockDiagnosticosSet = jest.fn();
 
@@ -71,6 +71,10 @@ describe('PituguesProvedorFormatacao', () => {
         provedor = new PituguesProvedorFormatacao(mockDiagnosticos);
     });
 
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
     it('instância criada com sucesso', () => {
         expect(provedor).toBeDefined();
         expect(typeof provedor.provideDocumentFormattingEdits).toBe('function');
@@ -101,7 +105,6 @@ describe('PituguesProvedorFormatacao', () => {
 
         const edits = await provedor.provideDocumentFormattingEdits(criarDocumento('x', 1), {}, {});
         expect(edits[0].newText).toBe('lf code');
-        spy.mockRestore();
     });
 
     it('usa CRLF quando eol é CRLF', async () => {

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
 
 const mockConfigGet = jest.fn();
 const mockGetConfiguration = jest.fn().mockReturnValue({ get: mockConfigGet });
@@ -106,6 +106,10 @@ describe('DeleguaProvedorFormatacao', () => {
         provedor = new DeleguaProvedorFormatacao(mockDiagnosticos);
     });
 
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
     it('instância criada com sucesso', () => {
         expect(provedor).toBeDefined();
         expect(typeof provedor.provideDocumentFormattingEdits).toBe('function');
@@ -125,7 +129,6 @@ describe('DeleguaProvedorFormatacao', () => {
 
         const edits = await provedor.provideDocumentFormattingEdits(criarDocumento('var x = 10', 2), {}, {});
         expect(Array.isArray(edits)).toBe(true);
-        spy.mockRestore();
     });
 
     it('retorna null quando há erros de sintaxe', async () => {
@@ -169,7 +172,6 @@ describe('DeleguaProvedorFormatacao', () => {
 
         await provedor.provideDocumentFormattingEdits(criarDocumento(), {}, {});
         expect(spy).toHaveBeenCalled();
-        spy.mockRestore();
     });
 
     it('adiciona RegraExplicitarTiposParametros quando habilitada', async () => {
@@ -186,7 +188,6 @@ describe('DeleguaProvedorFormatacao', () => {
 
         await provedor.provideDocumentFormattingEdits(criarDocumento(), {}, {});
         expect(spy).toHaveBeenCalled();
-        spy.mockRestore();
     });
 
     it('adiciona RegraConvencaoNomenclatura quando habilitada', async () => {
@@ -206,7 +207,6 @@ describe('DeleguaProvedorFormatacao', () => {
 
         await provedor.provideDocumentFormattingEdits(criarDocumento(), {}, {});
         expect(spy).toHaveBeenCalled();
-        spy.mockRestore();
     });
 
     it('retorna código original em caso de exceção no formatador', async () => {

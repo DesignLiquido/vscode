@@ -61,12 +61,13 @@ export async function garantirProvedoresLinguagem(
 }
 
 async function ativarFoles(context: vscode.ExtensionContext): Promise<void> {
-    const [{ FolesProvedorCompletude }, { FolesProvedorDocumentacaoEmEditor }, { FolesProvedorSimbolosDocumento }, { FolesProvedorDobramento }, { FolesProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS }] = await Promise.all([
+    const [{ FolesProvedorCompletude }, { FolesProvedorDocumentacaoEmEditor }, { FolesProvedorSimbolosDocumento }, { FolesProvedorDobramento }, { FolesProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS }, { FolesProvedorFormatacao }] = await Promise.all([
         import('./completude/foles-provedor-completude'),
         import('./documentacao-em-editor/foles-provedor-documentacao-em-editor'),
         import('./simbolos-documento/foles'),
         import('./dobramento/foles'),
         import('./tokens-semanticos/foles'),
+        import('./formatadores/foles-provedor-formatacao'),
     ]);
 
     context.subscriptions.push(
@@ -105,17 +106,22 @@ async function ativarFoles(context: vscode.ExtensionContext): Promise<void> {
             ],
             new FolesProvedorTokensSemanticos(),
             LEGENDA_TOKENS_SEMANTICOS
+        ),
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'foles',
+            new FolesProvedorFormatacao()
         )
     );
 }
 
 async function ativarLmht(context: vscode.ExtensionContext): Promise<void> {
-    const [{ LmhtProvedorCompletude }, { LmhtProvedorDocumentacaoEmEditor }, { LmhtProvedorSimbolosDocumento }, { LmhtProvedorDobramento }, { LmhtProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS }] = await Promise.all([
+    const [{ LmhtProvedorCompletude }, { LmhtProvedorDocumentacaoEmEditor }, { LmhtProvedorSimbolosDocumento }, { LmhtProvedorDobramento }, { LmhtProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS }, { LmhtProvedorFormatacao }] = await Promise.all([
         import('./completude/lmht-provedor-completude'),
         import('./documentacao-em-editor/lmht-provedor-documentacao-em-editor'),
         import('./simbolos-documento/lmht'),
         import('./dobramento/lmht'),
         import('./tokens-semanticos/lmht'),
+        import('./formatadores/lmht-provedor-formatacao'),
     ]);
 
     context.subscriptions.push(
@@ -154,14 +160,19 @@ async function ativarLmht(context: vscode.ExtensionContext): Promise<void> {
             ],
             new LmhtProvedorTokensSemanticos(),
             LEGENDA_TOKENS_SEMANTICOS
+        ),
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'lmht',
+            new LmhtProvedorFormatacao()
         )
     );
 }
 
 async function ativarLincones(context: vscode.ExtensionContext): Promise<void> {
-    const [{ LinConEsProvedorDocumentacaoEmEditor }, { LinConEsProvedorSimbolosDocumento }] = await Promise.all([
+    const [{ LinConEsProvedorDocumentacaoEmEditor }, { LinConEsProvedorSimbolosDocumento }, { LinConEsProvedorFormatacao }] = await Promise.all([
         import('./documentacao-em-editor/lincones-provedor-documentacao-em-editor'),
         import('./simbolos-documento/lincones'),
+        import('./formatadores/lincones-provedor-formatacao'),
     ]);
 
     context.subscriptions.push(
@@ -178,15 +189,20 @@ async function ativarLincones(context: vscode.ExtensionContext): Promise<void> {
                 { scheme: 'untitled', language: 'lincones' }
             ],
             new LinConEsProvedorSimbolosDocumento()
+        ),
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'lincones',
+            new LinConEsProvedorFormatacao()
         )
     );
 }
 
 async function ativarDelprops(context: vscode.ExtensionContext): Promise<void> {
-    const [{ DelpropsProvedorCompletude }, { DelpropsProvedorDocumentacaoEmEditor }, { DelpropsProvedorSimbolosDocumento }] = await Promise.all([
+    const [{ DelpropsProvedorCompletude }, { DelpropsProvedorDocumentacaoEmEditor }, { DelpropsProvedorSimbolosDocumento }, { DelpropsProvedorFormatacao }] = await Promise.all([
         import('./completude/delprops-provedor-completude'),
         import('./documentacao-em-editor/delprops-provedor-documentacao-em-editor'),
         import('./simbolos-documento/delprops'),
+        import('./formatadores/delprops-provedor-formatacao'),
     ]);
 
     context.subscriptions.push(
@@ -211,6 +227,10 @@ async function ativarDelprops(context: vscode.ExtensionContext): Promise<void> {
                 { scheme: 'untitled', language: 'delprops' }
             ],
             new DelpropsProvedorSimbolosDocumento()
+        ),
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'delprops',
+            new DelpropsProvedorFormatacao()
         )
     );
 }

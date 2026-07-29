@@ -11,8 +11,16 @@ import { PituguesProvedorDocumentacaoEmEditor } from './documentacao-em-editor/p
 import { DeleguaProvedorCompletude } from './completude/delegua-provedor-completude';
 import { LiquidoProvedorCompletude } from './completude/liquido-provedor-completude';
 
-// Importações individuais dos formatadores
 import { DeleguaProvedorFormatacao } from './formatadores/delegua-provedor-formatacao';
+import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-formatacao';
+import { FolesProvedorFormatacao } from './formatadores/foles-provedor-formatacao';
+import { LmhtProvedorFormatacao } from './formatadores/lmht-provedor-formatacao';
+import { LinConEsProvedorFormatacao } from './formatadores/lincones-provedor-formatacao';
+import { DelpropsProvedorFormatacao } from './formatadores/delprops-provedor-formatacao';
+import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao';
+import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio-provedor-formatacao';
+import { VisualgProvedorFormatacao } from './formatadores/visualg-provedor-formatacao';
+
 import { ProvedorTarefasLiquidoWeb } from './tarefas/provedor-tarefas-web';
 import { comandosLiquido, TIPO_TAREFA_LIQUIDO } from './tarefas/comandos-liquido';
 
@@ -22,9 +30,7 @@ import { garantirProvedoresLinguagem } from './ativacao-linguagens';
 import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
 import { ProvedorVisaoEntradaSaidaWeb } from './visoes';
 import { FabricaAdaptadorDepuracaoWeb } from './depuracao/fabricas/fabrica-adaptador-depuracao-web';
-import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-formatacao';
 
-// Dobramento (folding)
 import {
     DeleguaProvedorDobramento,
     PituguesProvedorDobramento,
@@ -38,20 +44,11 @@ import {
     EguaProvedorDobramento
 } from './dobramento/index-web';
 
-// Lentes de código (CodeLens)
 import { DeleguaProvedorLentesCodigo } from './lentes-codigo/index-web';
-
-// Dicas de inserção (InlayHints)
 import { DeleguaProvedorDicasInsercao, PituguesProvedorDicasInsercao } from './dicas-insercao/index-web';
-
-// Tokens semânticos
-import { DeleguaProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS } from './tokens-semanticos/index-web';
-import { PituguesProvedorTokensSemanticos } from './tokens-semanticos/index-web';
-
-// Símbolos do espaço de trabalho
+import { DeleguaProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS, PituguesProvedorTokensSemanticos } from './tokens-semanticos/index-web';
 import { DeleguaProvedorSimbolosTrabalho } from './simbolos-trabalho/delegua';
 
-// Símbolos do documento (Outline, breadcrumbs)
 import { DeleguaProvedorSimbolosDocumento } from './simbolos-documento/delegua';
 import { PituguesProvedorSimbolosDocumento } from './simbolos-documento/pitugues';
 import { FolesProvedorSimbolosDocumento } from './simbolos-documento/foles';
@@ -64,6 +61,7 @@ import { PotigolProvedorSimbolosDocumento } from './simbolos-documento/potigol';
 import { PortugolStudioProvedorSimbolosDocumento } from './simbolos-documento/portugolstudio';
 import { BirlProvedorSimbolosDocumento } from './simbolos-documento/birl';
 import { EguaProvedorSimbolosDocumento } from './simbolos-documento/egua';
+
 import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-visoes-fluxograma';
 import { gerarFluxogramaWeb } from './visoes/fluxogramas/geracao-fluxogramas-web';
 import { DeleguaProvedorAcoesCodigo } from './acoes-codigo/delegua-provedor-acoes-codigo';
@@ -330,6 +328,13 @@ export function activate(context: vscode.ExtensionContext) {
     const formatadores = [
         ['delegua', new DeleguaProvedorFormatacao(diagnosticosDelegua)],
         ['pitugues', new PituguesProvedorFormatacao(diagnosticosDelegua)],
+        ['potigol', new PotigolProvedorFormatacao()],
+        ['portugolstudio', new PortugolStudioProvedorFormatacao()],
+        ['visualg', new VisualgProvedorFormatacao()],
+        ['foles', new FolesProvedorFormatacao()],
+        ['lmht', new LmhtProvedorFormatacao()],
+        ['lincones', new LinConEsProvedorFormatacao()],
+        ['delprops', new DelpropsProvedorFormatacao()]
     ];
 
     formatadores.forEach(([linguagem, provedor]) => {
