@@ -34,6 +34,16 @@ import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-for
 import { gerarFluxograma } from './visoes/fluxogramas/geracao-fluxogramas';
 import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-visoes-fluxograma';
 import { DeleguaProvedorAcoesCodigo } from './acoes-codigo';
+import { DeleguaProvedorSimbolosDocumento } from './simbolos-documento/delegua';
+import { PituguesProvedorSimbolosDocumento } from './simbolos-documento/pitugues';
+import { DeleguaProvedorDobramento } from './dobramento/delegua';
+import { PituguesProvedorDobramento } from './dobramento/pitugues';
+import { DeleguaProvedorLentesCodigo } from './lentes-codigo/delegua';
+import { DeleguaProvedorDicasInsercao } from './dicas-insercao/delegua';
+import { PituguesProvedorDicasInsercao } from './dicas-insercao/pitugues';
+import { DeleguaProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS } from './tokens-semanticos/delegua';
+import { PituguesProvedorTokensSemanticos } from './tokens-semanticos/pitugues';
+import { DeleguaProvedorSimbolosTrabalho } from './simbolos-trabalho/delegua';
 import { DeleguaProvedorDefinicao } from './definicao';
 import { definirFabricaPainelWebView } from './mecanismo-importacao-bibliotecas';
 import { DeleguaProvedorReferencias } from './referencias';
@@ -492,6 +502,151 @@ export function activate(context: vscode.ExtensionContext) {
                 { scheme: 'untitled', language: 'pitugues' }
             ],
             new PituguesProvedorDocumentacaoEmEditor()
+        )
+    );
+
+    // Símbolos do documento (Outline, breadcrumbs, Ctrl+Shift+O)
+    context.subscriptions.push(
+        vscode.languages.registerDocumentSymbolProvider(
+            [
+                { scheme: 'file', language: 'delegua' },
+                { scheme: 'untitled', language: 'delegua' }
+            ],
+            new DeleguaProvedorSimbolosDocumento()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentSymbolProvider(
+            [
+                { scheme: 'file', language: 'pitugues' },
+                { scheme: 'untitled', language: 'pitugues' }
+            ],
+            new PituguesProvedorSimbolosDocumento()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentSymbolProvider(
+            [
+                { scheme: 'file', language: 'delegua-testes' },
+                { scheme: 'untitled', language: 'delegua-testes' }
+            ],
+            new DeleguaProvedorSimbolosDocumento()
+        )
+    );
+
+    // Dobramento (Folding)
+    context.subscriptions.push(
+        vscode.languages.registerFoldingRangeProvider(
+            [
+                { scheme: 'file', language: 'delegua' },
+                { scheme: 'untitled', language: 'delegua' }
+            ],
+            new DeleguaProvedorDobramento()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerFoldingRangeProvider(
+            [
+                { scheme: 'file', language: 'pitugues' },
+                { scheme: 'untitled', language: 'pitugues' }
+            ],
+            new PituguesProvedorDobramento()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerFoldingRangeProvider(
+            [
+                { scheme: 'file', language: 'delegua-testes' },
+                { scheme: 'untitled', language: 'delegua-testes' }
+            ],
+            new DeleguaProvedorDobramento()
+        )
+    );
+
+    // Lentes de código (CodeLens)
+    context.subscriptions.push(
+        vscode.languages.registerCodeLensProvider(
+            [
+                { scheme: 'file', language: 'delegua' },
+                { scheme: 'untitled', language: 'delegua' }
+            ],
+            new DeleguaProvedorLentesCodigo()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerCodeLensProvider(
+            [
+                { scheme: 'file', language: 'delegua-testes' },
+                { scheme: 'untitled', language: 'delegua-testes' }
+            ],
+            new DeleguaProvedorLentesCodigo()
+        )
+    );
+
+    // Dicas de inserção (InlayHints)
+    context.subscriptions.push(
+        vscode.languages.registerInlayHintsProvider(
+            [
+                { scheme: 'file', language: 'delegua' },
+                { scheme: 'untitled', language: 'delegua' }
+            ],
+            new DeleguaProvedorDicasInsercao()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerInlayHintsProvider(
+            [
+                { scheme: 'file', language: 'pitugues' },
+                { scheme: 'untitled', language: 'pitugues' }
+            ],
+            new PituguesProvedorDicasInsercao()
+        )
+    );
+
+    // Tokens semânticos
+    context.subscriptions.push(
+        vscode.languages.registerDocumentSemanticTokensProvider(
+            [
+                { scheme: 'file', language: 'delegua' },
+                { scheme: 'untitled', language: 'delegua' },
+            ],
+            new DeleguaProvedorTokensSemanticos(),
+            LEGENDA_TOKENS_SEMANTICOS
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentSemanticTokensProvider(
+            [
+                { scheme: 'file', language: 'delegua-testes' },
+                { scheme: 'untitled', language: 'delegua-testes' },
+            ],
+            new DeleguaProvedorTokensSemanticos(),
+            LEGENDA_TOKENS_SEMANTICOS
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentSemanticTokensProvider(
+            [
+                { scheme: 'file', language: 'pitugues' },
+                { scheme: 'untitled', language: 'pitugues' },
+            ],
+            new PituguesProvedorTokensSemanticos(),
+            LEGENDA_TOKENS_SEMANTICOS
+        )
+    );
+
+    // Símbolos do espaço de trabalho (Ctrl+T)
+    context.subscriptions.push(
+        vscode.languages.registerWorkspaceSymbolProvider(
+            new DeleguaProvedorSimbolosTrabalho()
         )
     );
 
