@@ -1,4 +1,6 @@
 ﻿import * as vscode from 'vscode';
+import { expirarResultado, expirarResultados, expirarResultadosPorDependenciaArquivo, expirarTudo } from '@designliquido/delegua-lsp/analise/cache-analise';
+import { expirarTodasDefinicoes } from '@designliquido/delegua-lsp/analise/cache-definicoes';
 
 import tradutorWeb from './traducao/index-web';
 
@@ -13,10 +15,6 @@ import { LiquidoProvedorCompletude } from './completude/liquido-provedor-complet
 import { DeleguaProvedorFormatacao } from './formatadores/delegua-provedor-formatacao';
 import { ProvedorTarefasLiquidoWeb } from './tarefas/provedor-tarefas-web';
 import { comandosLiquido, TIPO_TAREFA_LIQUIDO } from './tarefas/comandos-liquido';
-import { VisualgProvedorFormatacao } from './formatadores/visualg-provedor-formatacao';
-import { MaplerProvedorFormatacao } from './formatadores/mapler-provedor-formatacao';
-import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao';
-import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio-provedor-formatacao';
 
 import { executarAnalises } from './analise-codigo';
 import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
@@ -31,8 +29,6 @@ import { DeleguaProvedorAcoesCodigo } from './acoes-codigo/delegua-provedor-acoe
 import { DeleguaProvedorDefinicao } from './definicao';
 import { DeleguaProvedorReferencias } from './referencias';
 import { DeleguaProvedorRenomeacao } from './renomeacao';
-import { expirarResultado, expirarResultados, expirarResultadosPorDependenciaArquivo, expirarTudo } from '@designliquido/delegua-lsp/analise/cache-analise';
-import { expirarTodasDefinicoes } from '@designliquido/delegua-lsp/analise/cache-definicoes';
 
 let changeTimeout: NodeJS.Timeout | null = null;
 const arquivosDependenciasProjeto = new Set([
