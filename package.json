@@ -576,6 +576,91 @@
                     "when": "resourceLangId == delegua || resourceExtname == .delegua",
                     "command": "extension.designliquido.verFluxograma",
                     "group": "navigation"
+                },
+                {
+                    "when": "resourceLangId == css || resourceExtname == .css",
+                    "command": "extension.designliquido.traduzir.css.para.foles",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == foles || resourceExtname == .foles",
+                    "command": "extension.designliquido.traduzir.foles.para.css",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == html || resourceExtname == .html",
+                    "command": "extension.designliquido.traduzir.html.para.lmht",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == lmht || resourceExtname == .lmht",
+                    "command": "extension.designliquido.traduzir.lmht.para.html",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == sql || resourceExtname == .sql",
+                    "command": "extension.designliquido.traduzir.sql.para.lincones",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == lincones || resourceExtname == .lincones",
+                    "command": "extension.designliquido.traduzir.lincones.para.sql",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == javascript || resourceExtname == .js",
+                    "command": "extension.designliquido.traduzir.javascript.para.delegua",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == visualg || resourceExtname == .alg",
+                    "command": "extension.designliquido.traduzir.visualg.para.delegua",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.javascript",
+                    "group": "7_traducao/delegua@1"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.python",
+                    "group": "7_traducao/delegua@2"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.ruby",
+                    "group": "7_traducao/delegua@3"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.elixir",
+                    "group": "7_traducao/delegua@4"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.assemblyscript",
+                    "group": "7_traducao/delegua@5"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.x64.linux",
+                    "group": "7_traducao/delegua@6"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.x64.windows",
+                    "group": "7_traducao/delegua@7"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.arm.linux",
+                    "group": "7_traducao/delegua@8"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.arm.android",
+                    "group": "7_traducao/delegua@9"
                 }
             ],
             "editor/title/context": [
@@ -583,11 +668,251 @@
                     "when": "resourceLangId == delegua || resourceExtname == .delegua",
                     "command": "extension.designliquido.verFluxograma",
                     "group": "navigation"
+                },
+                {
+                    "when": "resourceLangId == css || resourceExtname == .css",
+                    "command": "extension.designliquido.traduzir.css.para.foles",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == foles || resourceExtname == .foles",
+                    "command": "extension.designliquido.traduzir.foles.para.css",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == html || resourceExtname == .html",
+                    "command": "extension.designliquido.traduzir.html.para.lmht",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == lmht || resourceExtname == .lmht",
+                    "command": "extension.designliquido.traduzir.lmht.para.html",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == sql || resourceExtname == .sql",
+                    "command": "extension.designliquido.traduzir.sql.para.lincones",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == lincones || resourceExtname == .lincones",
+                    "command": "extension.designliquido.traduzir.lincones.para.sql",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == javascript || resourceExtname == .js",
+                    "command": "extension.designliquido.traduzir.javascript.para.delegua",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == visualg || resourceExtname == .alg",
+                    "command": "extension.designliquido.traduzir.visualg.para.delegua",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.javascript",
+                    "group": "7_traducao/delegua@1"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.python",
+                    "group": "7_traducao/delegua@2"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.ruby",
+                    "group": "7_traducao/delegua@3"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.elixir",
+                    "group": "7_traducao/delegua@4"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.assemblyscript",
+                    "group": "7_traducao/delegua@5"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.x64.linux",
+                    "group": "7_traducao/delegua@6"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.x64.windows",
+                    "group": "7_traducao/delegua@7"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.arm.linux",
+                    "group": "7_traducao/delegua@8"
+                },
+                {
+                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.arm.android",
+                    "group": "7_traducao/delegua@9"
+                }
+            ],
+            "editor/context": [
+                {
+                    "when": "editorLangId == css || resourceExtname == .css",
+                    "command": "extension.designliquido.traduzir.css.para.foles",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "editorLangId == foles || resourceExtname == .foles",
+                    "command": "extension.designliquido.traduzir.foles.para.css",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "editorLangId == html || resourceExtname == .html",
+                    "command": "extension.designliquido.traduzir.html.para.lmht",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "editorLangId == lmht || resourceExtname == .lmht",
+                    "command": "extension.designliquido.traduzir.lmht.para.html",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "editorLangId == sql || resourceExtname == .sql",
+                    "command": "extension.designliquido.traduzir.sql.para.lincones",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "editorLangId == lincones || resourceExtname == .lincones",
+                    "command": "extension.designliquido.traduzir.lincones.para.sql",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "editorLangId == javascript || resourceExtname == .js",
+                    "command": "extension.designliquido.traduzir.javascript.para.delegua",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "editorLangId == visualg || resourceExtname == .alg",
+                    "command": "extension.designliquido.traduzir.visualg.para.delegua",
+                    "group": "7_traducao"
+                },
+                {
+                    "when": "editorLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.javascript",
+                    "group": "7_traducao/delegua@1"
+                },
+                {
+                    "when": "editorLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.python",
+                    "group": "7_traducao/delegua@2"
+                },
+                {
+                    "when": "editorLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.ruby",
+                    "group": "7_traducao/delegua@3"
+                },
+                {
+                    "when": "editorLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.elixir",
+                    "group": "7_traducao/delegua@4"
+                },
+                {
+                    "when": "editorLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.assemblyscript",
+                    "group": "7_traducao/delegua@5"
+                },
+                {
+                    "when": "editorLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.x64.linux",
+                    "group": "7_traducao/delegua@6"
+                },
+                {
+                    "when": "editorLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.x64.windows",
+                    "group": "7_traducao/delegua@7"
+                },
+                {
+                    "when": "editorLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.arm.linux",
+                    "group": "7_traducao/delegua@8"
+                },
+                {
+                    "when": "editorLangId == delegua || resourceExtname == .delegua",
+                    "command": "extension.designliquido.traduzir.delegua.para.arm.android",
+                    "group": "7_traducao/delegua@9"
                 }
             ],
             "commandPalette": [
                 {
                     "command": "extension.designliquido.verFluxograma",
+                    "when": "editorLangId == delegua || resourceExtname == .delegua"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.css.para.foles",
+                    "when": "editorLangId == css || resourceExtname == .css"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.foles.para.css",
+                    "when": "editorLangId == foles || resourceExtname == .foles"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.html.para.lmht",
+                    "when": "editorLangId == html || resourceExtname == .html"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.lmht.para.html",
+                    "when": "editorLangId == lmht || resourceExtname == .lmht"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.sql.para.lincones",
+                    "when": "editorLangId == sql || resourceExtname == .sql"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.lincones.para.sql",
+                    "when": "editorLangId == lincones || resourceExtname == .lincones"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.javascript.para.delegua",
+                    "when": "editorLangId == javascript || resourceExtname == .js"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.visualg.para.delegua",
+                    "when": "editorLangId == visualg || resourceExtname == .alg"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.delegua.para.javascript",
+                    "when": "editorLangId == delegua || resourceExtname == .delegua"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.delegua.para.python",
+                    "when": "editorLangId == delegua || resourceExtname == .delegua"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.delegua.para.ruby",
+                    "when": "editorLangId == delegua || resourceExtname == .delegua"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.delegua.para.elixir",
+                    "when": "editorLangId == delegua || resourceExtname == .delegua"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.delegua.para.assemblyscript",
+                    "when": "editorLangId == delegua || resourceExtname == .delegua"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.delegua.para.x64.linux",
+                    "when": "editorLangId == delegua || resourceExtname == .delegua"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.delegua.para.x64.windows",
+                    "when": "editorLangId == delegua || resourceExtname == .delegua"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.delegua.para.arm.linux",
+                    "when": "editorLangId == delegua || resourceExtname == .delegua"
+                },
+                {
+                    "command": "extension.designliquido.traduzir.delegua.para.arm.android",
                     "when": "editorLangId == delegua || resourceExtname == .delegua"
                 }
             ],
