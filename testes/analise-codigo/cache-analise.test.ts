@@ -1,5 +1,8 @@
 ﻿// @ts-nocheck
 import { describe, it, expect, beforeEach } from '@jest/globals';
+
+jest.unmock('@designliquido/delegua-lsp/analise/cache-analise');
+
 import {
     definirResultado,
     expirarResultado,

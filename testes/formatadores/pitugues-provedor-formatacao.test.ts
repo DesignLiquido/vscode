@@ -25,26 +25,26 @@ jest.mock('@designliquido/delegua/avaliador-sintatico', () => ({
             return { declaracoes: [{ tipo: 'var' }], erros: [] };
         }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/formatadores', () => ({
     FormatadorPitugues: class FormatadorPitugues {
         constructor(_fimLinha: string) {}
         async formatar(_declaracoes: any[]) { return 'codigo formatado pitugues'; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/lexador', () => ({
     Lexador: class Lexador {
         mapear(_linhas: string[], _hash: number) { return { simbolos: [], erros: [] }; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('../../fontes/avaliacao-sintatica', () => ({
     formatarDiagnosticosAvaliacaoSintatica: jest.fn().mockReturnValue([
         { message: 'Erro sintaxe pitugues', severity: 0 },
     ]),
-}), { virtual: true });
+}));
 
 import { PituguesProvedorFormatacao } from '../../fontes/formatadores/pitugues-provedor-formatacao';
 

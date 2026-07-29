@@ -34,7 +34,7 @@ jest.mock('@designliquido/delprops', () => ({
         ],
     },
     DefinicaoPropriedade: class {},
-}), { virtual: true });
+}));
 
 import { DelpropsProvedorDocumentacaoEmEditor } from '../../fontes/documentacao-em-editor/delprops-provedor-documentacao-em-editor';
 
