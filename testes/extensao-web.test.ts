@@ -216,15 +216,25 @@ describe('Extensão Web', () => {
     });
 
     it('encaminha fechamento de tags para LMHT', () => {
-        const context: any = { subscriptions: [], extensionUri: vscode.Uri.file('/test/path') };
-        activate(context);
+        jest.useFakeTimers();
+        try {
+            const context: any = { subscriptions: [], extensionUri: vscode.Uri.file('/test/path') };
+            activate(context);
 
-        const callback = (vscode.workspace.onDidChangeTextDocument as jest.Mock).mock.calls[0][0];
-        const evento = { document: { languageId: 'lmht' } } as any;
+            const callback = (vscode.workspace.onDidChangeTextDocument as jest.Mock).mock.calls[0][0];
+            const evento = { document: { languageId: 'lmht' } } as any;
 
-        callback(evento);
+            callback(evento);
 
-        expect(tentarFecharTagLmht).toHaveBeenCalledWith(evento);
+            expect(tentarFecharTagLmht).toHaveBeenCalledWith(evento);
+
+            // Descarta o setTimeout de debounce (500ms) agendado pelo handler:
+            // se deixado como timer real, dispara depois que o teste termina,
+            // já com os mocks deste arquivo resetados, derrubando o worker do Jest.
+            jest.clearAllTimers();
+        } finally {
+            jest.useRealTimers();
+        }
     });
 
     it('executa tradução web e mostra erro quando tradutor falha', async () => {
