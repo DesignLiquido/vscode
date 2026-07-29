@@ -127,16 +127,8 @@ jest.mock('../fontes/analise-codigo', () => ({
     executarAnalises: jest.fn(() => Promise.resolve())
 }));
 
-jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
-    expirarResultado: jest.fn(),
-    expirarResultados: jest.fn(),
-    expirarResultadosPorDependenciaArquivo: jest.fn(),
-    expirarTudo: jest.fn(),
-}));
-
-jest.mock('@designliquido/delegua-lsp/analise/cache-definicoes', () => ({
-    expirarTodasDefinicoes: jest.fn(),
-}));
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise');
+jest.mock('@designliquido/delegua-lsp/analise/cache-definicoes');
 
 jest.mock('../fontes/importacao/utilitarios-caminho-importacao-delegua', () => ({
     ehArquivoDelegua: jest.fn((uri: any) => uri?.fsPath?.endsWith('.delegua')),

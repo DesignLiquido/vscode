@@ -24,14 +24,11 @@ jest.mock('vscode', () => ({
     workspace: { fs: {} },
 }), { virtual: true });
 
-jest.mock('@designliquido/delegua-lsp', () => ({
-    proverItensCompletude: jest.fn().mockReturnValue([]),
-    DocumentoLSP: undefined,
-}), { virtual: true });
+jest.mock('@designliquido/delegua-lsp');
 
 jest.mock('vscode-languageserver-types', () => ({
     InsertTextFormat: { PlainText: 1, Snippet: 2 },
-}), { virtual: true });
+}));
 
 import { DeleguaProvedorCompletude } from '../../fontes/completude/delegua-provedor-completude';
 
