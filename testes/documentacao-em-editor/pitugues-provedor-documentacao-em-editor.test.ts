@@ -39,22 +39,17 @@ jest.mock('@designliquido/delegua/declaracoes', () => ({
     Var: VarMock,
     Const: ConstMock,
     ParaCada: ParaCadaMock,
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/construtos', () => ({
     ComentarioComoConstruto: class ComentarioComoConstruto {
         constructor(public conteudo: any) {}
     },
     Chamada: ChamadaMock,
-}), { virtual: true });
+}));
 
-jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
-    obterResultado: jest.fn().mockReturnValue(null),
-}), { virtual: true });
-
-jest.mock('@designliquido/delegua-lsp/analise/cache-definicoes', () => ({
-    obterDefinicoesPorContexto: jest.fn().mockReturnValue({}),
-}), { virtual: true });
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise');
+jest.mock('@designliquido/delegua-lsp/analise/cache-definicoes');
 
 jest.mock('../../fontes/bibliotecas/dialetos/pitugues', () => ({
     funcoesNativasPitugues: [
@@ -76,7 +71,7 @@ jest.mock('../../fontes/bibliotecas/dialetos/pitugues', () => ({
     primitivasVetorFormatadas: [
         { nome: 'adicionar', documentacao: 'Adicionar elemento', exemploCodigo: '' },
     ],
-}), { virtual: true });
+}));
 
 import { PituguesProvedorDocumentacaoEmEditor } from '../../fontes/documentacao-em-editor/pitugues-provedor-documentacao-em-editor';
 import { obterResultado } from '@designliquido/delegua-lsp/analise/cache-analise';

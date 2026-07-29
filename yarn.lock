@@ -392,10 +392,12 @@
   dependencies:
     lodash "^4.17.21"
 
-"@designliquido/delegua-arquivos@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-arquivos/-/delegua-arquivos-0.0.3.tgz#5853f67f99cf7cf74540255f9494e451106a06a5"
-  integrity sha512-qnumk3xidgxzINFEbWISsp5qJQHrnS+azDXhCZrURHbxJsygI+sJL4ZuHGvOMvk6e2whuopyKi9ifPN5dsCw5w==
+"@designliquido/delegua-arquivos@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-arquivos/-/delegua-arquivos-0.1.0.tgz#44aef1596d30f11b8e702b2885a2cc36d914e561"
+  integrity sha512-uQbYahZePN/PGuH0zW4Lh0Oweetgt1pmhipPa9i0uwllrjksslL2mQxLq836HV0uNeDajFuTM7AcItK2/hSv6Q==
+  dependencies:
+    "@designliquido/delegua" "^1.26.1"
 
 "@designliquido/delegua-criptografia@^0.3.3":
   version "0.3.4"
@@ -424,17 +426,17 @@
     "@designliquido/lincones-js" "^0.2.3"
     "@designliquido/lincones-sqlite" "^0.3.2"
 
-"@designliquido/delegua-estatistica@^0.1.0":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-estatistica/-/delegua-estatistica-0.1.1.tgz#2b99f3185835521da9465b7f8c013bf1cad585f0"
-  integrity sha512-/D7cw6Mi++BuL1cA3CoePMDLnBtYN/Dr6sREaVjHm8sidXtFTzQpy91R9z9RMs/9pbIbzcPFYZeWifdZR5luCg==
+"@designliquido/delegua-estatistica@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-estatistica/-/delegua-estatistica-0.1.2.tgz#9a32bca11127c434ade71cb4f9bdffbc62fab3b4"
+  integrity sha512-otMH+2B6nsaN2iOIuGR23tmsnhxJe6AGtA0S5pAOdAVxOuDP3Z77lX0pm4xOdpWT5bmvm9PgwazuC9AkkJDGFg==
   dependencies:
-    "@designliquido/delegua-matematica" "^0.3.0"
+    "@designliquido/delegua-matematica" "^0.4.0"
 
-"@designliquido/delegua-fisica@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-fisica/-/delegua-fisica-0.1.0.tgz#c009e8007fab6b005d62e5fcdc75090562cbbb9f"
-  integrity sha512-7wMUG2JK/V0SQz7Vo3dYxohH30vPwOJXA+NoN9tYU5ECdjv2mIJc72ELjcI+OJtwczHOXyfhTmHIFOgDJ9DZGw==
+"@designliquido/delegua-fisica@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-fisica/-/delegua-fisica-0.1.1.tgz#13a71ecb7154e66a9b43c0ed24e3b76b08897d9d"
+  integrity sha512-9k87B13cM2QXAHznPn1xopAoOvSe03Ju0X5vgM2nryk5YWLAKfA1LivJozLrVUQmnJehL+Nmfh4zXBBAJgXDLg==
 
 "@designliquido/delegua-http@^0.1.2":
   version "0.1.3"
@@ -443,20 +445,20 @@
   dependencies:
     axios "^1.8.4"
 
-"@designliquido/delegua-imagens@^0.0.0":
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-imagens/-/delegua-imagens-0.0.0.tgz#26c008ec3a2beaafa32980338d9b303238d17f61"
-  integrity sha512-LnOEcOcDDIqqj+/Q/WAO1z7oWeQl3qwoAVhJf4YX/TXzEq3bewHIjF7z5WKOcQgs6Di+Yz/RfsJoV8CejeDJ0A==
+"@designliquido/delegua-imagens@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-imagens/-/delegua-imagens-0.1.0.tgz#56f8842786493bd025b08524ed5d47bbe239fe31"
+  integrity sha512-8bOu+1T7tjGzz2lwRcDSLxtoi+q1vVVBctBR5I6Rln/+cmi7q6PGnn8Teoh1ofzPcqRu4N3dt94R2WAgNuGluQ==
 
 "@designliquido/delegua-interface-grafica@^0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@designliquido/delegua-interface-grafica/-/delegua-interface-grafica-0.0.1.tgz#ac52a6e540e6ff8aab878f04709970c91ab4a337"
   integrity sha512-mxJIyyoPu+Uow9+YzUiztFRL7Lcn+FqGtQbyMBHt+Kk8lWLTvTmrl/AI1e1a76dr1l38HRa4vRYaKZMpxhWFsA==
 
-"@designliquido/delegua-json@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-json/-/delegua-json-0.2.1.tgz#57c2e9dc45525ebdf1b4ee6038b11b6a18d3181c"
-  integrity sha512-Ym+Tw98Pll84TNSrEnQrFZC0PcKos66qnrEqwUDDxP/6cdnbu2bvTW05wVLXWBZPVUutCld8Qt1RhzJWLr1kVQ==
+"@designliquido/delegua-json@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-json/-/delegua-json-0.3.1.tgz#f2bb496097862e00040d5ef17811e793eb6025af"
+  integrity sha512-ULXkyBCNWdZjWV3shNeIfiRKdduYJoXzDe9LXzADvV1PAEr65+HQX0H8S6t0cGK7LuRW0WI+RUSJhRBsoGpVUw==
 
 "@designliquido/delegua-lsp@^0.0.4":
   version "0.0.4"
@@ -466,10 +468,10 @@
     vscode-languageserver "^9.0.1"
     vscode-languageserver-textdocument "^1.0.12"
 
-"@designliquido/delegua-matematica@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-matematica/-/delegua-matematica-0.3.0.tgz#fbd1048bc0efbadcecf96c3486f8c376b6516846"
-  integrity sha512-UD276/tKuWuqky0FfwuI+QJ5M+nUpnGq9QWjqmqPJikXfhUjePpTR5bBz/Ni+6WfBtgW9FShJ4T9GH96jKYuGw==
+"@designliquido/delegua-matematica@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-matematica/-/delegua-matematica-0.4.0.tgz#b1b9e06f6bb20040c056503a258275533485b135"
+  integrity sha512-h8KdfnSKG98otwzjLvwwFatMGcUQdaKVvS4DUAeIyrmmxQYjkwt1B6TfAvSn79TTXJznYD62qrnVLLNfzX/VOg==
 
 "@designliquido/delegua-tempo@^1.0.1":
   version "1.1.1"
@@ -478,10 +480,10 @@
   dependencies:
     dayjs "^1.11.13"
 
-"@designliquido/delegua-yaml@^0.0.0":
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua-yaml/-/delegua-yaml-0.0.0.tgz#baa099923c65ece711a3989dc12512b2f0dd5f0f"
-  integrity sha512-xD4h5FsHPHhmOSeUt90wKe34b2YPaKoZwkUdxteEx4mQXskWAzIMta4kvOXJTWUaPl4gNO3nUFkfXSSY6Bx+rw==
+"@designliquido/delegua-yaml@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua-yaml/-/delegua-yaml-0.0.2.tgz#37a2e306e3d69f0f992d57cdefe7b893f2620007"
+  integrity sha512-Rgh3RHWKlUdbk5QiR+RUSWdIUeSJ6y7NBu3r/Z5bMp21PECSoQCKT4Wx2++aaYQPxWoigbA+hAuK2FSQa4kuJg==
   dependencies:
     "@designliquido/delegua" "^1.15.4"
     yaml "^2.6.1"

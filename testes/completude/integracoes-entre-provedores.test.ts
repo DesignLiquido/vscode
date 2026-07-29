@@ -26,7 +26,7 @@ jest.mock('../../fontes/linguagens/lmht/estruturas', () => ({
         'paragrafo': { nomeHtml: 'p' },
         'divisao': { nomeHtml: 'div' },
     }
-}), { virtual: true });
+}));
 
 jest.mock('../../fontes/bibliotecas/dialetos/visualg', () => ({
     primitivasNumeroVisuAlg: [
@@ -34,7 +34,7 @@ jest.mock('../../fontes/bibliotecas/dialetos/visualg', () => ({
     ],
     primitivasCaracteresVisuAlg: [],
     primitivasEntradaSaidaVisuAlg: [],
-}), { virtual: true });
+}));
 
 jest.mock('../../fontes/bibliotecas/dialetos/portugol-studio', () => ({
     calendarioPortugolStudio: [],
@@ -47,7 +47,7 @@ jest.mock('../../fontes/bibliotecas/dialetos/portugol-studio', () => ({
     tiposPortugolStudio: [],
     constantesPortugolStudio: [],
     palavrasReservadasPortugolStudio: [],
-}), { virtual: true });
+}));
 
 describe('integração entre provedores', () => {
     let mockDocument: any;

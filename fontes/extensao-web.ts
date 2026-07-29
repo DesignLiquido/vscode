@@ -1,50 +1,41 @@
 ﻿import * as vscode from 'vscode';
+import { expirarResultado, expirarResultados, expirarResultadosPorDependenciaArquivo, expirarTudo } from '@designliquido/delegua-lsp/analise/cache-analise';
+import { expirarTodasDefinicoes } from '@designliquido/delegua-lsp/analise/cache-definicoes';
 
 import tradutorWeb from './traducao/index-web';
 
 import { configurarDepuracao } from './depuracao/configuracao-depuracao';
-import {
-    DeleguaProvedorDocumentacaoEmEditor,
-    DeleguaProvedorLinksDocumentacao,
-    FolesProvedorDocumentacaoEmEditor,
-    LinConEsProvedorDocumentacaoEmEditor,
-    VisuAlgProvedorDocumentacaoEmEditor,
-    LmhtProvedorDocumentacaoEmEditor,
-    PortugolStudioProvedorDocumentacaoEmEditor,
-    PituguesProvedorDocumentacaoEmEditor
-} from './documentacao-em-editor';
-import {
-    DeleguaProvedorCompletude,
-    FolesProvedorCompletude,
-    LiquidoProvedorCompletude,
-    VisuAlgProvedorCompletude,
-    LmhtProvedorCompletude,
-    PortugolStudioProvedorCompletude
-} from './completude';
+import { DeleguaProvedorDocumentacaoEmEditor } from './documentacao-em-editor/delegua-provedor-documentacao-em-editor';
+import { DeleguaProvedorLinksDocumentacao } from './documentacao-em-editor/delegua-provedor-links-documentacao';
+import { PituguesProvedorDocumentacaoEmEditor } from './documentacao-em-editor/pitugues-provedor-documentacao-em-editor';
+import { DeleguaProvedorCompletude } from './completude/delegua-provedor-completude';
+import { LiquidoProvedorCompletude } from './completude/liquido-provedor-completude';
 
 // Importações individuais dos formatadores
 import { DeleguaProvedorFormatacao } from './formatadores/delegua-provedor-formatacao';
 import { ProvedorTarefasLiquidoWeb } from './tarefas/provedor-tarefas-web';
 import { comandosLiquido, TIPO_TAREFA_LIQUIDO } from './tarefas/comandos-liquido';
-import { VisualgProvedorFormatacao } from './formatadores/visualg-provedor-formatacao';
-import { MaplerProvedorFormatacao } from './formatadores/mapler-provedor-formatacao';
-import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao';
-import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio-provedor-formatacao';
 
 import { executarAnalises } from './analise-codigo';
 import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
+import { garantirProvedoresLinguagem } from './ativacao-linguagens';
 import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
 import { ProvedorVisaoEntradaSaidaWeb } from './visoes';
 import { FabricaAdaptadorDepuracaoWeb } from './depuracao/fabricas/fabrica-adaptador-depuracao-web';
 import { PituguesProvedorFormatacao } from './formatadores/pitugues-provedor-formatacao';
+import { FolesProvedorFormatacao } from './formatadores/foles-provedor-formatacao';
+import { LmhtProvedorFormatacao } from './formatadores/lmht-provedor-formatacao';
+import { LinConEsProvedorFormatacao } from './formatadores/lincones-provedor-formatacao';
+import { DelpropsProvedorFormatacao } from './formatadores/delprops-provedor-formatacao';
+import { PotigolProvedorFormatacao } from './formatadores/potigol-provedor-formatacao';
+import { PortugolStudioProvedorFormatacao } from './formatadores/portugol-studio-provedor-formatacao';
+import { VisualgProvedorFormatacao } from './formatadores/visualg-provedor-formatacao';
 import { GerenciadorVisoesFluxograma } from './visoes/fluxogramas/gerenciador-visoes-fluxograma';
 import { gerarFluxogramaWeb } from './visoes/fluxogramas/geracao-fluxogramas-web';
 import { DeleguaProvedorAcoesCodigo } from './acoes-codigo/delegua-provedor-acoes-codigo';
 import { DeleguaProvedorDefinicao } from './definicao';
 import { DeleguaProvedorReferencias } from './referencias';
 import { DeleguaProvedorRenomeacao } from './renomeacao';
-import { expirarResultado, expirarResultados, expirarResultadosPorDependenciaArquivo, expirarTudo } from '@designliquido/delegua-lsp/analise/cache-analise';
-import { expirarTodasDefinicoes } from '@designliquido/delegua-lsp/analise/cache-definicoes';
 
 let changeTimeout: NodeJS.Timeout | null = null;
 const arquivosDependenciasProjeto = new Set([
@@ -68,6 +59,17 @@ function ehArquivoLinguagemAnalise(uri: vscode.Uri): boolean {
     const nomeArquivo = obterNomeArquivo(uri);
     const extensao = nomeArquivo.split('.').pop() || '';
     return ['alg', 'birl', 'delegua', 'egua', 'mapler', 'pitu', 'pitugues', 'por', 'poti', 'potigol', 'visualg'].includes(extensao);
+}
+
+/**
+ * `garantirProvedoresLinguagem` também sabe ativar provedores de Delégua Propriedades
+ * (usado pela extensão desktop), mas o pacote `@designliquido/delprops` usa `require()`
+ * dinâmico internamente para acesso a sistema de arquivos, o que o webpack não consegue
+ * analisar estaticamente para o alvo `webworker`. Até isso ser verificado como seguro no
+ * navegador, a extensão Web mantém o comportamento anterior e não ativa esse grupo.
+ */
+function ehLinguagemSuportadaNaWeb(languageId: string): boolean {
+    return languageId !== 'delprops';
 }
 
 /**
@@ -101,10 +103,20 @@ export function activate(context: vscode.ExtensionContext) {
         executarAnalises(vscode.window.activeTextEditor.document, diagnosticosDelegua).catch(erro => {
             console.error('Erro ao executar análises:', erro);
         });
+        if (ehLinguagemSuportadaNaWeb(vscode.window.activeTextEditor.document.languageId)) {
+            garantirProvedoresLinguagem(vscode.window.activeTextEditor.document.languageId, context).catch(erro => {
+                console.error('Erro ao ativar provedores de linguagem:', erro);
+            });
+        }
     }
 
     context.subscriptions.push(
         vscode.workspace.onDidOpenTextDocument(doc => {
+            if (ehLinguagemSuportadaNaWeb(doc.languageId)) {
+                garantirProvedoresLinguagem(doc.languageId, context).catch(erro => {
+                    console.error('Erro ao ativar provedores de linguagem:', erro);
+                });
+            }
             if (['birl', 'delegua', 'mapler', 'visualg', 'portugolstudio'].includes(doc.languageId)) {
                 executarAnalises(doc, diagnosticosDelegua).catch(erro => {
                     console.error('Erro ao executar análises:', erro);
@@ -112,7 +124,15 @@ export function activate(context: vscode.ExtensionContext) {
             }
         }),
         vscode.window.onDidChangeActiveTextEditor(editor => {
-            if (editor && ['birl', 'delegua', 'mapler', 'visualg', 'portugolstudio'].includes(editor.document.languageId)) {
+            if (!editor) {
+                return;
+            }
+            if (ehLinguagemSuportadaNaWeb(editor.document.languageId)) {
+                garantirProvedoresLinguagem(editor.document.languageId, context).catch(erro => {
+                    console.error('Erro ao ativar provedores de linguagem:', erro);
+                });
+            }
+            if (['birl', 'delegua', 'mapler', 'visualg', 'portugolstudio'].includes(editor.document.languageId)) {
                 executarAnalises(editor.document, diagnosticosDelegua).catch(erro => {
                     console.error('Erro ao executar análises:', erro);
                 });
@@ -269,14 +289,20 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
-    // Formatadores - Agora todos funcionam na web!
+    // Formatadores da família Delégua/Pituguês. Os demais dialetos (mapler, potigol,
+    // portugolstudio, visualg) e as demais linguagens (foles, lmht, lincones) são
+    // registrados sob demanda em './ativacao-linguagens', na primeira vez que um
+    // arquivo daquela linguagem é aberto (ver garantirProvedoresLinguagem acima).
     const formatadores = [
         ['delegua', new DeleguaProvedorFormatacao(diagnosticosDelegua)],
-        ['mapler', new MaplerProvedorFormatacao()],
         ['pitugues', new PituguesProvedorFormatacao(diagnosticosDelegua)],
         ['potigol', new PotigolProvedorFormatacao()],
         ['portugolstudio', new PortugolStudioProvedorFormatacao()],
-        ['visualg', new VisualgProvedorFormatacao()]
+        ['visualg', new VisualgProvedorFormatacao()],
+        ['foles', new FolesProvedorFormatacao()],
+        ['lmht', new LmhtProvedorFormatacao()],
+        ['lincones', new LinConEsProvedorFormatacao()],
+        ['delprops', new DelpropsProvedorFormatacao()]
     ];
 
     formatadores.forEach(([linguagem, provedor]) => {
@@ -299,10 +325,6 @@ export function activate(context: vscode.ExtensionContext) {
 
     const completudeProviders = [
         ['delegua', new DeleguaProvedorCompletude()],
-        ['foles', new FolesProvedorCompletude()],
-        ['lmht', new LmhtProvedorCompletude()],
-        ['visualg', new VisuAlgProvedorCompletude()],
-        ['portugolstudio', new PortugolStudioProvedorCompletude()]
     ];
 
     completudeProviders.forEach(([linguagem, provedor]) => {
@@ -318,11 +340,6 @@ export function activate(context: vscode.ExtensionContext) {
     // Hovers
     const hoverProviders = [
         ['delegua', new DeleguaProvedorDocumentacaoEmEditor()],
-        ['foles', new FolesProvedorDocumentacaoEmEditor()],
-        ['lincones', new LinConEsProvedorDocumentacaoEmEditor()],
-        ['lmht', new LmhtProvedorDocumentacaoEmEditor()],
-        ['visualg', new VisuAlgProvedorDocumentacaoEmEditor()],
-        ['portugolstudio', new PortugolStudioProvedorDocumentacaoEmEditor()],
         ['pitugues', new PituguesProvedorDocumentacaoEmEditor()]
     ];
 

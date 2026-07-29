@@ -115,13 +115,8 @@ jest.mock('../fontes/acoes-codigo/delegua-provedor-acoes-codigo', () => ({
 jest.mock('../fontes/definicao', () => ({ DeleguaProvedorDefinicao: class {} }));
 jest.mock('../fontes/referencias', () => ({ DeleguaProvedorReferencias: class {} }));
 jest.mock('../fontes/renomeacao', () => ({ DeleguaProvedorRenomeacao: class {} }));
-jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
-    expirarResultado: jest.fn(),
-    expirarResultados: jest.fn(),
-    expirarResultadosPorDependenciaArquivo: jest.fn(),
-    expirarTudo: jest.fn(),
-}));
-jest.mock('@designliquido/delegua-lsp/analise/cache-definicoes', () => ({ expirarTodasDefinicoes: jest.fn() }));
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise');
+jest.mock('@designliquido/delegua-lsp/analise/cache-definicoes');
 
 import tradutorWeb from '../fontes/traducao/index-web';
 import { executarAnalises } from '../fontes/analise-codigo';

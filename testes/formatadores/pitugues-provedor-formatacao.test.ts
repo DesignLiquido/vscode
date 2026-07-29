@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
 
 const mockDiagnosticosSet = jest.fn();
 
@@ -25,26 +25,26 @@ jest.mock('@designliquido/delegua/avaliador-sintatico', () => ({
             return { declaracoes: [{ tipo: 'var' }], erros: [] };
         }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/formatadores', () => ({
     FormatadorPitugues: class FormatadorPitugues {
         constructor(_fimLinha: string) {}
         async formatar(_declaracoes: any[]) { return 'codigo formatado pitugues'; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/lexador', () => ({
     Lexador: class Lexador {
         mapear(_linhas: string[], _hash: number) { return { simbolos: [], erros: [] }; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('../../fontes/avaliacao-sintatica', () => ({
     formatarDiagnosticosAvaliacaoSintatica: jest.fn().mockReturnValue([
         { message: 'Erro sintaxe pitugues', severity: 0 },
     ]),
-}), { virtual: true });
+}));
 
 import { PituguesProvedorFormatacao } from '../../fontes/formatadores/pitugues-provedor-formatacao';
 
@@ -69,6 +69,10 @@ describe('PituguesProvedorFormatacao', () => {
         jest.clearAllMocks();
         mockDiagnosticos = { set: mockDiagnosticosSet };
         provedor = new PituguesProvedorFormatacao(mockDiagnosticos);
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
     });
 
     it('instância criada com sucesso', () => {
@@ -101,7 +105,6 @@ describe('PituguesProvedorFormatacao', () => {
 
         const edits = await provedor.provideDocumentFormattingEdits(criarDocumento('x', 1), {}, {});
         expect(edits[0].newText).toBe('lf code');
-        spy.mockRestore();
     });
 
     it('usa CRLF quando eol é CRLF', async () => {

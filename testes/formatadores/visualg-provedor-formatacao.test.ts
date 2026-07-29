@@ -27,7 +27,7 @@ jest.mock('@designliquido/visualg/lexador', () => ({
             return { simbolos: [], erros: [] };
         }
     }
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/visualg/avaliador-sintatico', () => ({
     AvaliadorSintaticoVisuAlg: class AvaliadorSintaticoVisuAlg {
@@ -35,7 +35,7 @@ jest.mock('@designliquido/visualg/avaliador-sintatico', () => ({
             return { declaracoes: [], erros: [] };
         }
     }
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/visualg/formatador', () => ({
     FormatadorVisuAlg: class FormatadorVisuAlg {
@@ -44,7 +44,7 @@ jest.mock('@designliquido/visualg/formatador', () => ({
             return 'codigo formatado visualg';
         }
     }
-}), { virtual: true });
+}));
 
 import { VisualgProvedorFormatacao } from '../../fontes/formatadores/visualg-provedor-formatacao';
 
