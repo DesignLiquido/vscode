@@ -1,17 +1,5 @@
 import * as vscode from 'vscode';
 
-import { FolEs } from '@designliquido/foles';
-import { ConversorHtml, ConversorLmht } from '@designliquido/lmht-js';
-import {
-    Lexador as LexadorLinConEs,
-    AvaliadorSintatico as AvaliadorSintaticoLinConEs,
-    TradutorSqlAnsi,
-    LexadorSqlAnsi,
-    AvaliadorSintaticoSqlAnsi,
-    TradutorReversoSqlAnsi
-} from '@designliquido/lincones-js';
-import { NucleoTraducaoDeleguaWeb } from './nucleo-traducao-delegua-web';
-
 async function lerConteudoDocumento(uri: vscode.Uri): Promise<string> {
     const bytes = await vscode.workspace.fs.readFile(uri);
     return new TextDecoder('utf-8').decode(bytes);
@@ -50,23 +38,36 @@ export async function traduzir(deLinguagem: string, paraLinguagem: string, alvo:
 
         // Traduções diretas
         switch (deLinguagem.toLowerCase()) {
-            case 'foles':
+            case 'foles': {
+                const { FolEs } = await import('@designliquido/foles');
                 const foles = new FolEs(false);
                 resultado = foles.converterParaCss(conteudo);
                 break;
-            case 'css':
+            }
+            case 'css': {
+                const { FolEs } = await import('@designliquido/foles');
                 const foles2 = new FolEs(false);
                 resultado = foles2.converterParaFolEs(conteudo);
                 break;
-            case 'lmht':
+            }
+            case 'lmht': {
+                const { ConversorLmht } = await import('@designliquido/lmht-js');
                 const conversorLmht = new ConversorLmht();
                 resultado = await conversorLmht.converterPorArquivo(conteudo);
                 break;
-            case 'html':
+            }
+            case 'html': {
+                const { ConversorHtml } = await import('@designliquido/lmht-js');
                 const conversorHtml = new ConversorHtml();
                 resultado = await conversorHtml.converterPorArquivo(conteudo);
                 break;
-            case 'lincones':
+            }
+            case 'lincones': {
+                const {
+                    Lexador: LexadorLinConEs,
+                    AvaliadorSintatico: AvaliadorSintaticoLinConEs,
+                    TradutorSqlAnsi
+                } = await import('@designliquido/lincones-js');
                 const lexador = new LexadorLinConEs();
                 const avaliador = new AvaliadorSintaticoLinConEs();
                 const tradutor = new TradutorSqlAnsi();
@@ -75,7 +76,13 @@ export async function traduzir(deLinguagem: string, paraLinguagem: string, alvo:
                 const retAvaliador = avaliador.analisar(retLexador);
                 resultado = tradutor.traduzir(retAvaliador.comandos);
                 break;
-            case 'sql':
+            }
+            case 'sql': {
+                const {
+                    LexadorSqlAnsi,
+                    AvaliadorSintaticoSqlAnsi,
+                    TradutorReversoSqlAnsi
+                } = await import('@designliquido/lincones-js');
                 const lexadorSql = new LexadorSqlAnsi();
                 const avaliadorSql = new AvaliadorSintaticoSqlAnsi();
                 const tradutorReverso = new TradutorReversoSqlAnsi();
@@ -84,10 +91,13 @@ export async function traduzir(deLinguagem: string, paraLinguagem: string, alvo:
                 const retAvaliadorSql = avaliadorSql.analisar(retLexadorSql);
                 resultado = tradutorReverso.traduzir(retAvaliadorSql.comandos);
                 break;
-            default:
+            }
+            default: {
+                const { NucleoTraducaoDeleguaWeb } = await import('./nucleo-traducao-delegua-web');
                 const nucleoTraducaoDeleguaWeb = new NucleoTraducaoDeleguaWeb(() => {}, () => {});
                 nucleoTraducaoDeleguaWeb.iniciarTradutor(`delegua-para-${paraLinguagem}`);
                 resultado = await nucleoTraducaoDeleguaWeb.traduzirArquivo(conteudo);
+            }
         }
 
         if (!resultado) {

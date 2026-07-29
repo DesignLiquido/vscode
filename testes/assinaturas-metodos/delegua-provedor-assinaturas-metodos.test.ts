@@ -57,12 +57,10 @@ jest.mock('../../fontes/bibliotecas', () => ({
             ]
         }
     ]
-}), { virtual: true });
+}));
 
 // Mock do cache-analise
-jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
-    obterResultado: jest.fn()
-}), { virtual: true });
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise');
 
 // Mock das declarações
 const mockSimboloLexema = (lexema: string) => ({ lexema });
@@ -84,7 +82,7 @@ jest.mock('@designliquido/delegua/declaracoes', () => ({
             public funcao: any
         ) {}
     }
-}), { virtual: true });
+}));
 
 describe('DeleguaProvedorAssinaturaMetodos', () => {
     let provedor: any;

@@ -27,7 +27,7 @@ jest.mock('../../fontes/bibliotecas/dialetos/visualg', () => ({
         { nome: 'escreva', documentacao: 'Escreve na saída' },
         { nome: 'leia', documentacao: 'Lê da entrada' },
     ],
-}), { virtual: true });
+}));
 
 import { VisuAlgProvedorCompletude } from '../../fontes/completude/visualg-provedor-completude';
 

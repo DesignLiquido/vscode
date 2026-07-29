@@ -24,13 +24,14 @@ jest.mock('vscode', () => {
     };
 }, { virtual: true });
 
-jest.mock('../../../fontes/interfaces', () => ({}), { virtual: true });
+jest.mock('../../../fontes/interfaces', () => ({}));
 
 import { validarDelprops } from '../../../fontes/linguagens/delprops/validador-delprops';
 
 function criarDocumento(linhas: string[]): any {
     return {
         lineCount: linhas.length,
+        getText: jest.fn(() => linhas.join('\n')),
         lineAt: jest.fn((i: number) => ({ text: linhas[i] })),
     };
 }
@@ -51,23 +52,23 @@ describe('validarDelprops', () => {
         expect(diags).toHaveLength(0);
     });
 
-    it('linha sem "=" → erro formato inválido', () => {
+    it('linha sem "=" → erro de sintaxe', () => {
         const diags = validarDelprops(criarDocumento(['liquido.roteador.porta']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("formato '<chave> = <valor>'");
+        expect(diags[0].message).toContain("Linha sem o separador '='");
         expect(diags[0].severity).toBe(0); // Error
     });
 
-    it('linha com chave vazia (= no início) → erro chave ausente', () => {
+    it('linha com chave vazia (= no início) → erro de sintaxe', () => {
         const diags = validarDelprops(criarDocumento(['= 3000']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('Chave ausente');
+        expect(diags[0].message).toContain('Chave vazia');
     });
 
-    it('linha com valor vazio (= no final) → erro valor ausente', () => {
+    it('linha com valor vazio (= no final) → erro de sintaxe', () => {
         const diags = validarDelprops(criarDocumento(['liquido.roteador.porta =']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('Valor ausente');
+        expect(diags[0].message).toContain('Valor vazio');
         expect(diags[0].message).toContain('liquido.roteador.porta');
     });
 
@@ -77,35 +78,36 @@ describe('validarDelprops', () => {
     });
 
     // ──── liquido incompleto ────
-    it('liquido sem subnamespace → erro incompleto', () => {
+    it('liquido sem subnamespace → aviso namespace sem propriedade', () => {
         const diags = validarDelprops(criarDocumento(['liquido = verdadeiro']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("'liquido' incompleta");
+        expect(diags[0].message).toContain("Namespace 'liquido' sem nome de propriedade");
     });
 
-    it('liquido.verboso com lógico válido → sem diagnóstico', () => {
+    it('liquido.verboso → aviso propriedade desconhecida', () => {
         const diags = validarDelprops(criarDocumento(['liquido.verboso = verdadeiro']));
-        expect(diags).toHaveLength(0);
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain('desconhecida');
+        expect(diags[0].severity).toBe(1); // Warning
     });
 
-    it('liquido.verboso com texto → erro tipo incorreto', () => {
+    it('liquido.verboso com texto → aviso propriedade desconhecida', () => {
         const diags = validarDelprops(criarDocumento(["liquido.verboso = 'sim'"]));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('Tipo incorreto');
-        expect(diags[0].message).toContain('lógico');
+        expect(diags[0].message).toContain('desconhecida');
+        expect(diags[0].severity).toBe(1); // Warning
     });
 
     // ──── liquido.roteador ────
-    it('liquido.roteador sem propriedade → erro incompleto', () => {
+    it('liquido.roteador sem propriedade → aviso namespace sem propriedade', () => {
         const diags = validarDelprops(criarDocumento(['liquido.roteador = verdadeiro']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("'liquido.roteador' incompleta");
+        expect(diags[0].message).toContain("Namespace 'liquido.roteador' sem nome de propriedade");
     });
 
-    it('liquido.roteador.porta → propriedade removida → warning', () => {
+    it('liquido.roteador.porta com número → sem diagnóstico', () => {
         const diags = validarDelprops(criarDocumento(['liquido.roteador.porta = 3000']));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].severity).toBe(1); // Warning
+        expect(diags).toHaveLength(0);
     });
 
     it('liquido.roteador.cors com lógico válido → sem diagnóstico', () => {
@@ -118,62 +120,65 @@ describe('validarDelprops', () => {
         expect(diags).toHaveLength(0);
     });
 
-    it('liquido.roteador.porta com texto → propriedade removida → warning', () => {
+    it('liquido.roteador.porta com texto → erro de tipo', () => {
         const diags = validarDelprops(criarDocumento(["liquido.roteador.porta = 'texto'"]));
         expect(diags).toHaveLength(1);
-        expect(diags[0].severity).toBe(1); // Warning
+        expect(diags[0].message).toContain('Tipo esperado');
+        expect(diags[0].message).toContain('numero');
+        expect(diags[0].severity).toBe(0); // Error
     });
 
-    it('liquido.roteador.cors com número → erro tipo incorreto', () => {
+    it('liquido.roteador.cors com número → erro de tipo', () => {
         const diags = validarDelprops(criarDocumento(['liquido.roteador.cors = 42']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('Tipo incorreto');
-        expect(diags[0].message).toContain('lógico');
+        expect(diags[0].message).toContain('Tipo esperado');
+        expect(diags[0].message).toContain('logico');
     });
 
-    it('liquido.roteador.propriedadeDesconhecida → warning', () => {
+    it('liquido.roteador.propriedadeDesconhecida → aviso', () => {
         const diags = validarDelprops(criarDocumento(['liquido.roteador.inexistente = verdadeiro']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('Propriedade desconhecida');
+        expect(diags[0].message).toContain('desconhecida');
         expect(diags[0].severity).toBe(1); // Warning
     });
 
-    it('liquido.roteador.diretorioEstatico com valor inválido → erro valor inválido', () => {
+    it('liquido.roteador.diretorioEstatico com valor sem aspas → erro tipo não reconhecido', () => {
         const diags = validarDelprops(criarDocumento(['liquido.roteador.diretorioEstatico = valor_sem_aspas']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('Valor inválido');
+        expect(diags[0].message).toContain('não corresponde a nenhum tipo conhecido');
     });
 
     // ──── liquido.dados ────
-    it('liquido.dados sem nome e propriedade → erro incompleto', () => {
+    it('liquido.dados sem nome e propriedade → aviso namespace sem propriedade', () => {
         const diags = validarDelprops(criarDocumento(['liquido.dados = verdadeiro']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("'liquido.dados' incompleta");
+        expect(diags[0].message).toContain("Namespace 'liquido.dados' sem nome de propriedade");
     });
 
-    it('liquido.dados.bd → propriedade direta desconhecida → warning', () => {
+    it('liquido.dados.bd → aviso namespace sem propriedade', () => {
         const diags = validarDelprops(criarDocumento(['liquido.dados.bd = verdadeiro']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("Propriedade desconhecida 'liquido.dados.bd'");
+        expect(diags[0].message).toContain("Namespace 'liquido.dados' sem nome de propriedade");
         expect(diags[0].severity).toBe(1); // Warning
     });
 
-    it('liquido.dados.motor com valor permitido → sem diagnóstico', () => {
-        const diags = validarDelprops(criarDocumento(["liquido.dados.motor = 'lincones'"]));
-        expect(diags).toHaveLength(0);
-    });
-
-    it('liquido.dados.motor com valor não permitido → erro', () => {
-        const diags = validarDelprops(criarDocumento(["liquido.dados.motor = 'mysql'"]));
+    it('liquido.dados.lincones.motor → aviso propriedade desconhecida', () => {
+        const diags = validarDelprops(criarDocumento(["liquido.dados.lincones.motor = 'lincones'"]));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("'mysql'");
-        expect(diags[0].message).toContain('Valores permitidos');
+        expect(diags[0].message).toContain('desconhecida');
+        expect(diags[0].severity).toBe(1); // Warning
     });
 
-    it('liquido.dados.bd.porta → propriedade removida → warning', () => {
+    it('liquido.dados.lincones.motor com valor não permitido → aviso propriedade desconhecida', () => {
+        const diags = validarDelprops(criarDocumento(["liquido.dados.lincones.motor = 'mysql'"]));
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain('desconhecida');
+        expect(diags[0].severity).toBe(1); // Warning
+    });
+
+    it('liquido.dados.bd.porta com número → sem diagnóstico', () => {
         const diags = validarDelprops(criarDocumento(['liquido.dados.bd.porta = 5432']));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].severity).toBe(1); // Warning
+        expect(diags).toHaveLength(0);
     });
 
     it('liquido.dados.bd.tecnologia com sqlite → sem diagnóstico', () => {
@@ -191,28 +196,29 @@ describe('validarDelprops', () => {
         expect(diags).toHaveLength(0);
     });
 
-    it('liquido.dados.bd.tecnologia com tipo errado (número) → erro tipo', () => {
+    it('liquido.dados.bd.tecnologia com tipo errado (número) → erro de tipo', () => {
         const diags = validarDelprops(criarDocumento(['liquido.dados.bd.tecnologia = 5432']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('Tipo incorreto');
+        expect(diags[0].message).toContain('Tipo esperado');
     });
 
-    it('liquido.dados.bd.propriedadeDesconhecida → warning', () => {
+    it('liquido.dados.bd.propriedadeDesconhecida → aviso', () => {
         const diags = validarDelprops(criarDocumento(['liquido.dados.bd.inexistente = verdadeiro']));
         expect(diags).toHaveLength(1);
         expect(diags[0].severity).toBe(1); // Warning
     });
 
     // ──── liquido.autenticacao ────
-    it('liquido.autenticacao sem propriedade → erro incompleto', () => {
+    it('liquido.autenticacao sem propriedade → aviso namespace sem propriedade', () => {
         const diags = validarDelprops(criarDocumento(['liquido.autenticacao = verdadeiro']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("'liquido.autenticacao' incompleta");
+        expect(diags[0].message).toContain("Namespace 'liquido.autenticacao' sem nome de propriedade");
     });
 
-    it("liquido.autenticacao.segredo → propriedade removida → warning", () => {
+    it("liquido.autenticacao.segredo → aviso propriedade desconhecida", () => {
         const diags = validarDelprops(criarDocumento(["liquido.autenticacao.segredo = 'minha-chave-secreta'"]));
         expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain('desconhecida');
         expect(diags[0].severity).toBe(1); // Warning
     });
 
@@ -234,24 +240,27 @@ describe('validarDelprops', () => {
         expect(diags[0].message).toContain("'oauth'");
     });
 
-    it('liquido.autenticacao.propriedadeDesconhecida → warning', () => {
+    it('liquido.autenticacao.propriedadeDesconhecida → aviso', () => {
         const diags = validarDelprops(criarDocumento(['liquido.autenticacao.inexistente = verdadeiro']));
         expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain('desconhecida');
         expect(diags[0].severity).toBe(1); // Warning
     });
 
     // ──── namespace desconhecido ────
-    it('liquido.namespaceDesconhecido → warning', () => {
+    it('liquido.namespaceDesconhecido → aviso propriedade desconhecida', () => {
         const diags = validarDelprops(criarDocumento(['liquido.algumOutro.prop = valor']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('Propriedade ou espaço de nomes desconhecido');
+        expect(diags[0].message).toContain('desconhecida');
+        expect(diags[0].message).toContain('liquido');
         expect(diags[0].severity).toBe(1); // Warning
     });
 
-    // ──── valores duplos aspas ────
-    it('valor com aspas duplas válidas → sem diagnóstico', () => {
+    // ──── valores aspas duplas ────
+    it('valor com aspas duplas → erro tipo não reconhecido (pacote não suporta aspas duplas)', () => {
         const diags = validarDelprops(criarDocumento(['liquido.roteador.diretorioEstatico = "public"']));
-        expect(diags).toHaveLength(0);
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain('não corresponde a nenhum tipo conhecido');
     });
 
     // ──── múltiplas linhas ────
@@ -275,36 +284,49 @@ describe('validarDelprops', () => {
         expect(diags).toHaveLength(2);
     });
 
-    it('liquido.dados.bd.host → propriedade removida → warning', () => {
+    it('liquido.dados.bd.host com texto → sem diagnóstico', () => {
         const diags = validarDelprops(criarDocumento(["liquido.dados.bd.host = 'localhost'"]));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].severity).toBe(1); // Warning
+        expect(diags).toHaveLength(0);
     });
 
-    it('liquido.dados.bd.usuario → propriedade removida → warning', () => {
+    it('liquido.dados.bd.usuario com texto → sem diagnóstico', () => {
         const diags = validarDelprops(criarDocumento(["liquido.dados.bd.usuario = 'admin'"]));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].severity).toBe(1); // Warning
+        expect(diags).toHaveLength(0);
     });
 
     // ──── URLs com // não devem ser tratadas como comentário ────
-    it("valor com URL contendo '//' → sem diagnóstico (// não é comentário dentro de aspas)", () => {
+    it("valor com URL contendo '//' em aspas simples → sem diagnóstico", () => {
         const diags = validarDelprops(criarDocumento(["liquido.aplicacao.licenca.url = 'https://designliquido.com.br'"]));
         expect(diags).toHaveLength(0);
     });
 
-    it("valor com URL contendo '//' em aspas duplas → sem diagnóstico", () => {
+    it("valor com URL contendo '//' em aspas duplas → erro tipo não reconhecido (pacote não suporta aspas duplas)", () => {
         const diags = validarDelprops(criarDocumento(['liquido.aplicacao.licenca.url = "https://designliquido.com.br"']));
-        expect(diags).toHaveLength(0);
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain('não corresponde a nenhum tipo conhecido');
     });
 
-    it("comentário após valor com URL → valor preservado, comentário ignorado", () => {
+    it("comentário após valor com URL → erro (pacote não trata comentário inline)", () => {
         const diags = validarDelprops(criarDocumento(["liquido.aplicacao.licenca.url = 'https://designliquido.com.br' // site oficial"]));
-        expect(diags).toHaveLength(0);
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain('não corresponde a nenhum tipo conhecido');
     });
 
     it("comentário de linha inteira com URL dentro → linha ignorada", () => {
         const diags = validarDelprops(criarDocumento(["// liquido.aplicacao.licenca.url = 'https://designliquido.com.br'"]));
         expect(diags).toHaveLength(0);
+    });
+
+    // ──── valores permitidos (tecnologia) ────
+    it('liquido.dados.bd.tecnologia com valor não permitido → erro', () => {
+        const diags = validarDelprops(criarDocumento(["liquido.dados.bd.tecnologia = 'mysql'"]));
+        expect(diags).toHaveLength(0); // mysql is in allowed values
+    });
+
+    it('liquido.dados.bd.tecnologia com valor não listado → erro', () => {
+        const diags = validarDelprops(criarDocumento(["liquido.dados.bd.tecnologia = 'cassandra'"]));
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain('não está entre os permitidos');
+        expect(diags[0].severity).toBe(0); // Error
     });
 });

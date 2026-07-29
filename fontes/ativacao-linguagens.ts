@@ -19,6 +19,8 @@ const grupoPorLinguagem: Record<string, string> = {
     mapler: 'mapler',
     potigol: 'potigol',
     portugolstudio: 'portugolstudio',
+    birl: 'birl',
+    egua: 'egua',
 };
 
 const registradoresPorGrupo: Record<string, RegistradorLinguagem> = {
@@ -30,6 +32,8 @@ const registradoresPorGrupo: Record<string, RegistradorLinguagem> = {
     mapler: ativarMapler,
     potigol: ativarPotigol,
     portugolstudio: ativarPortugolStudio,
+    birl: ativarBirl,
+    egua: ativarEgua,
 };
 
 /**
@@ -57,9 +61,13 @@ export async function garantirProvedoresLinguagem(
 }
 
 async function ativarFoles(context: vscode.ExtensionContext): Promise<void> {
-    const [{ FolesProvedorCompletude }, { FolesProvedorDocumentacaoEmEditor }] = await Promise.all([
+    const [{ FolesProvedorCompletude }, { FolesProvedorDocumentacaoEmEditor }, { FolesProvedorSimbolosDocumento }, { FolesProvedorDobramento }, { FolesProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS }, { FolesProvedorFormatacao }] = await Promise.all([
         import('./completude/foles-provedor-completude'),
         import('./documentacao-em-editor/foles-provedor-documentacao-em-editor'),
+        import('./simbolos-documento/foles'),
+        import('./dobramento/foles'),
+        import('./tokens-semanticos/foles'),
+        import('./formatadores/foles-provedor-formatacao'),
     ]);
 
     context.subscriptions.push(
@@ -76,14 +84,44 @@ async function ativarFoles(context: vscode.ExtensionContext): Promise<void> {
                 { scheme: 'untitled', language: 'foles' }
             ],
             new FolesProvedorDocumentacaoEmEditor()
+        ),
+        vscode.languages.registerDocumentSymbolProvider(
+            [
+                { scheme: 'file', language: 'foles' },
+                { scheme: 'untitled', language: 'foles' }
+            ],
+            new FolesProvedorSimbolosDocumento()
+        ),
+        vscode.languages.registerFoldingRangeProvider(
+            [
+                { scheme: 'file', language: 'foles' },
+                { scheme: 'untitled', language: 'foles' }
+            ],
+            new FolesProvedorDobramento()
+        ),
+        vscode.languages.registerDocumentSemanticTokensProvider(
+            [
+                { scheme: 'file', language: 'foles' },
+                { scheme: 'untitled', language: 'foles' }
+            ],
+            new FolesProvedorTokensSemanticos(),
+            LEGENDA_TOKENS_SEMANTICOS
+        ),
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'foles',
+            new FolesProvedorFormatacao()
         )
     );
 }
 
 async function ativarLmht(context: vscode.ExtensionContext): Promise<void> {
-    const [{ LmhtProvedorCompletude }, { LmhtProvedorDocumentacaoEmEditor }] = await Promise.all([
+    const [{ LmhtProvedorCompletude }, { LmhtProvedorDocumentacaoEmEditor }, { LmhtProvedorSimbolosDocumento }, { LmhtProvedorDobramento }, { LmhtProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS }, { LmhtProvedorFormatacao }] = await Promise.all([
         import('./completude/lmht-provedor-completude'),
         import('./documentacao-em-editor/lmht-provedor-documentacao-em-editor'),
+        import('./simbolos-documento/lmht'),
+        import('./dobramento/lmht'),
+        import('./tokens-semanticos/lmht'),
+        import('./formatadores/lmht-provedor-formatacao'),
     ]);
 
     context.subscriptions.push(
@@ -100,12 +138,42 @@ async function ativarLmht(context: vscode.ExtensionContext): Promise<void> {
                 { scheme: 'untitled', language: 'lmht' }
             ],
             new LmhtProvedorDocumentacaoEmEditor()
+        ),
+        vscode.languages.registerDocumentSymbolProvider(
+            [
+                { scheme: 'file', language: 'lmht' },
+                { scheme: 'untitled', language: 'lmht' }
+            ],
+            new LmhtProvedorSimbolosDocumento()
+        ),
+        vscode.languages.registerFoldingRangeProvider(
+            [
+                { scheme: 'file', language: 'lmht' },
+                { scheme: 'untitled', language: 'lmht' }
+            ],
+            new LmhtProvedorDobramento()
+        ),
+        vscode.languages.registerDocumentSemanticTokensProvider(
+            [
+                { scheme: 'file', language: 'lmht' },
+                { scheme: 'untitled', language: 'lmht' }
+            ],
+            new LmhtProvedorTokensSemanticos(),
+            LEGENDA_TOKENS_SEMANTICOS
+        ),
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'lmht',
+            new LmhtProvedorFormatacao()
         )
     );
 }
 
 async function ativarLincones(context: vscode.ExtensionContext): Promise<void> {
-    const { LinConEsProvedorDocumentacaoEmEditor } = await import('./documentacao-em-editor/lincones-provedor-documentacao-em-editor');
+    const [{ LinConEsProvedorDocumentacaoEmEditor }, { LinConEsProvedorSimbolosDocumento }, { LinConEsProvedorFormatacao }] = await Promise.all([
+        import('./documentacao-em-editor/lincones-provedor-documentacao-em-editor'),
+        import('./simbolos-documento/lincones'),
+        import('./formatadores/lincones-provedor-formatacao'),
+    ]);
 
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(
@@ -114,14 +182,27 @@ async function ativarLincones(context: vscode.ExtensionContext): Promise<void> {
                 { scheme: 'untitled', language: 'lincones' }
             ],
             new LinConEsProvedorDocumentacaoEmEditor()
+        ),
+        vscode.languages.registerDocumentSymbolProvider(
+            [
+                { scheme: 'file', language: 'lincones' },
+                { scheme: 'untitled', language: 'lincones' }
+            ],
+            new LinConEsProvedorSimbolosDocumento()
+        ),
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'lincones',
+            new LinConEsProvedorFormatacao()
         )
     );
 }
 
 async function ativarDelprops(context: vscode.ExtensionContext): Promise<void> {
-    const [{ DelpropsProvedorCompletude }, { DelpropsProvedorDocumentacaoEmEditor }] = await Promise.all([
+    const [{ DelpropsProvedorCompletude }, { DelpropsProvedorDocumentacaoEmEditor }, { DelpropsProvedorSimbolosDocumento }, { DelpropsProvedorFormatacao }] = await Promise.all([
         import('./completude/delprops-provedor-completude'),
         import('./documentacao-em-editor/delprops-provedor-documentacao-em-editor'),
+        import('./simbolos-documento/delprops'),
+        import('./formatadores/delprops-provedor-formatacao'),
     ]);
 
     context.subscriptions.push(
@@ -139,15 +220,29 @@ async function ativarDelprops(context: vscode.ExtensionContext): Promise<void> {
                 { scheme: 'untitled', language: 'delprops' }
             ],
             new DelpropsProvedorDocumentacaoEmEditor()
+        ),
+        vscode.languages.registerDocumentSymbolProvider(
+            [
+                { scheme: 'file', language: 'delprops' },
+                { scheme: 'untitled', language: 'delprops' }
+            ],
+            new DelpropsProvedorSimbolosDocumento()
+        ),
+        vscode.languages.registerDocumentFormattingEditProvider(
+            'delprops',
+            new DelpropsProvedorFormatacao()
         )
     );
 }
 
 async function ativarVisualg(context: vscode.ExtensionContext): Promise<void> {
-    const [{ VisuAlgProvedorCompletude }, { VisuAlgProvedorDocumentacaoEmEditor }, { VisualgProvedorFormatacao }] = await Promise.all([
+    const [{ VisuAlgProvedorCompletude }, { VisuAlgProvedorDocumentacaoEmEditor }, { VisualgProvedorFormatacao }, { VisualgProvedorSimbolosDocumento }, { VisualgProvedorDobramento }, { VisualgProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS }] = await Promise.all([
         import('./completude/visualg-provedor-completude'),
         import('./documentacao-em-editor/visualg-provedor-documentacao-em-editor'),
         import('./formatadores/visualg-provedor-formatacao'),
+        import('./simbolos-documento/visualg'),
+        import('./dobramento/visualg'),
+        import('./tokens-semanticos/visualg'),
     ]);
 
     context.subscriptions.push(
@@ -168,37 +263,116 @@ async function ativarVisualg(context: vscode.ExtensionContext): Promise<void> {
         vscode.languages.registerDocumentFormattingEditProvider(
             'visualg',
             new VisualgProvedorFormatacao()
+        ),
+        vscode.languages.registerDocumentSymbolProvider(
+            [
+                { scheme: 'file', language: 'visualg' },
+                { scheme: 'untitled', language: 'visualg' }
+            ],
+            new VisualgProvedorSimbolosDocumento()
+        ),
+        vscode.languages.registerFoldingRangeProvider(
+            [
+                { scheme: 'file', language: 'visualg' },
+                { scheme: 'untitled', language: 'visualg' }
+            ],
+            new VisualgProvedorDobramento()
+        ),
+        vscode.languages.registerDocumentSemanticTokensProvider(
+            [
+                { scheme: 'file', language: 'visualg' },
+                { scheme: 'untitled', language: 'visualg' }
+            ],
+            new VisualgProvedorTokensSemanticos(),
+            LEGENDA_TOKENS_SEMANTICOS
         )
     );
 }
 
 async function ativarMapler(context: vscode.ExtensionContext): Promise<void> {
-    const { MaplerProvedorFormatacao } = await import('./formatadores/mapler-provedor-formatacao');
+    const [{ MaplerProvedorFormatacao }, { MaplerProvedorSimbolosDocumento }, { MaplerProvedorDobramento }, { MaplerProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS }] = await Promise.all([
+        import('./formatadores/mapler-provedor-formatacao'),
+        import('./simbolos-documento/mapler'),
+        import('./dobramento/mapler'),
+        import('./tokens-semanticos/mapler'),
+    ]);
 
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
             'mapler',
             new MaplerProvedorFormatacao()
+        ),
+        vscode.languages.registerDocumentSymbolProvider(
+            [
+                { scheme: 'file', language: 'mapler' },
+                { scheme: 'untitled', language: 'mapler' }
+            ],
+            new MaplerProvedorSimbolosDocumento()
+        ),
+        vscode.languages.registerFoldingRangeProvider(
+            [
+                { scheme: 'file', language: 'mapler' },
+                { scheme: 'untitled', language: 'mapler' }
+            ],
+            new MaplerProvedorDobramento()
+        ),
+        vscode.languages.registerDocumentSemanticTokensProvider(
+            [
+                { scheme: 'file', language: 'mapler' },
+                { scheme: 'untitled', language: 'mapler' }
+            ],
+            new MaplerProvedorTokensSemanticos(),
+            LEGENDA_TOKENS_SEMANTICOS
         )
     );
 }
 
 async function ativarPotigol(context: vscode.ExtensionContext): Promise<void> {
-    const { PotigolProvedorFormatacao } = await import('./formatadores/potigol-provedor-formatacao');
+    const [{ PotigolProvedorFormatacao }, { PotigolProvedorSimbolosDocumento }, { PotigolProvedorDobramento }, { PotigolProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS }] = await Promise.all([
+        import('./formatadores/potigol-provedor-formatacao'),
+        import('./simbolos-documento/potigol'),
+        import('./dobramento/potigol'),
+        import('./tokens-semanticos/potigol'),
+    ]);
 
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
             'potigol',
             new PotigolProvedorFormatacao()
+        ),
+        vscode.languages.registerDocumentSymbolProvider(
+            [
+                { scheme: 'file', language: 'potigol' },
+                { scheme: 'untitled', language: 'potigol' }
+            ],
+            new PotigolProvedorSimbolosDocumento()
+        ),
+        vscode.languages.registerFoldingRangeProvider(
+            [
+                { scheme: 'file', language: 'potigol' },
+                { scheme: 'untitled', language: 'potigol' }
+            ],
+            new PotigolProvedorDobramento()
+        ),
+        vscode.languages.registerDocumentSemanticTokensProvider(
+            [
+                { scheme: 'file', language: 'potigol' },
+                { scheme: 'untitled', language: 'potigol' }
+            ],
+            new PotigolProvedorTokensSemanticos(),
+            LEGENDA_TOKENS_SEMANTICOS
         )
     );
 }
 
 async function ativarPortugolStudio(context: vscode.ExtensionContext): Promise<void> {
-    const [{ PortugolStudioProvedorCompletude }, { PortugolStudioProvedorDocumentacaoEmEditor }, { PortugolStudioProvedorFormatacao }] = await Promise.all([
+    const [{ PortugolStudioProvedorCompletude }, { PortugolStudioProvedorDocumentacaoEmEditor }, { PortugolStudioProvedorFormatacao }, { PortugolStudioProvedorSimbolosDocumento }, { PortugolStudioProvedorDobramento }, { PortugolStudioProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS }] = await Promise.all([
         import('./completude/portugol-studio-provedor-completude'),
         import('./documentacao-em-editor/portugol-studio-provedor-documentacao-em-editor'),
         import('./formatadores/portugol-studio-provedor-formatacao'),
+        import('./simbolos-documento/portugolstudio'),
+        import('./dobramento/portugolstudio'),
+        import('./tokens-semanticos/portugolstudio'),
     ]);
 
     context.subscriptions.push(
@@ -219,6 +393,94 @@ async function ativarPortugolStudio(context: vscode.ExtensionContext): Promise<v
         vscode.languages.registerDocumentFormattingEditProvider(
             'portugolstudio',
             new PortugolStudioProvedorFormatacao()
+        ),
+        vscode.languages.registerDocumentSymbolProvider(
+            [
+                { scheme: 'file', language: 'portugolstudio' },
+                { scheme: 'untitled', language: 'portugolstudio' }
+            ],
+            new PortugolStudioProvedorSimbolosDocumento()
+        ),
+        vscode.languages.registerFoldingRangeProvider(
+            [
+                { scheme: 'file', language: 'portugolstudio' },
+                { scheme: 'untitled', language: 'portugolstudio' }
+            ],
+            new PortugolStudioProvedorDobramento()
+        ),
+        vscode.languages.registerDocumentSemanticTokensProvider(
+            [
+                { scheme: 'file', language: 'portugolstudio' },
+                { scheme: 'untitled', language: 'portugolstudio' }
+            ],
+            new PortugolStudioProvedorTokensSemanticos(),
+            LEGENDA_TOKENS_SEMANTICOS
+        )
+    );
+}
+
+async function ativarBirl(context: vscode.ExtensionContext): Promise<void> {
+    const [{ BirlProvedorSimbolosDocumento }, { BirlProvedorDobramento }, { BirlProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS }] = await Promise.all([
+        import('./simbolos-documento/birl'),
+        import('./dobramento/birl'),
+        import('./tokens-semanticos/birl'),
+    ]);
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentSymbolProvider(
+            [
+                { scheme: 'file', language: 'birl' },
+                { scheme: 'untitled', language: 'birl' }
+            ],
+            new BirlProvedorSimbolosDocumento()
+        ),
+        vscode.languages.registerFoldingRangeProvider(
+            [
+                { scheme: 'file', language: 'birl' },
+                { scheme: 'untitled', language: 'birl' }
+            ],
+            new BirlProvedorDobramento()
+        ),
+        vscode.languages.registerDocumentSemanticTokensProvider(
+            [
+                { scheme: 'file', language: 'birl' },
+                { scheme: 'untitled', language: 'birl' }
+            ],
+            new BirlProvedorTokensSemanticos(),
+            LEGENDA_TOKENS_SEMANTICOS
+        )
+    );
+}
+
+async function ativarEgua(context: vscode.ExtensionContext): Promise<void> {
+    const [{ EguaProvedorSimbolosDocumento }, { EguaProvedorDobramento }, { EguaProvedorTokensSemanticos, LEGENDA_TOKENS_SEMANTICOS }] = await Promise.all([
+        import('./simbolos-documento/egua'),
+        import('./dobramento/egua'),
+        import('./tokens-semanticos/egua'),
+    ]);
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentSymbolProvider(
+            [
+                { scheme: 'file', language: 'egua' },
+                { scheme: 'untitled', language: 'egua' }
+            ],
+            new EguaProvedorSimbolosDocumento()
+        ),
+        vscode.languages.registerFoldingRangeProvider(
+            [
+                { scheme: 'file', language: 'egua' },
+                { scheme: 'untitled', language: 'egua' }
+            ],
+            new EguaProvedorDobramento()
+        ),
+        vscode.languages.registerDocumentSemanticTokensProvider(
+            [
+                { scheme: 'file', language: 'egua' },
+                { scheme: 'untitled', language: 'egua' }
+            ],
+            new EguaProvedorTokensSemanticos(),
+            LEGENDA_TOKENS_SEMANTICOS
         )
     );
 }

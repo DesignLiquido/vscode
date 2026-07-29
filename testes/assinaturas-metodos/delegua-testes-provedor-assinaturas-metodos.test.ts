@@ -22,11 +22,9 @@ jest.mock('vscode', () => ({
 jest.mock('../../fontes/bibliotecas', () => ({
     formatarPrimitivas: jest.fn().mockReturnValue([]),
     funcoesNativasDelegua: [],
-}), { virtual: true });
+}));
 
-jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
-    obterResultado: jest.fn(),
-}), { virtual: true });
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise');
 
 jest.mock('@designliquido/delegua/declaracoes', () => ({
     Var: class Var {
@@ -41,7 +39,7 @@ jest.mock('@designliquido/delegua/declaracoes', () => ({
     FuncaoDeclaracao: class FuncaoDeclaracao {
         constructor(public simbolo: any, public tipo: string, public funcao: any) {}
     },
-}), { virtual: true });
+}));
 
 import { DeleguaTestesProvedorAssinaturaMetodos } from '../../fontes/assinaturas-metodos/delegua-testes-provedor-assinaturas-metodos';
 

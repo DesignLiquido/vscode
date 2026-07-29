@@ -27,7 +27,7 @@ jest.mock('@designliquido/potigol/lexador', () => ({
             return { simbolos: [], erros: [] };
         }
     }
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/potigol/avaliador-sintatico', () => ({
     AvaliadorSintaticoPotigol: class AvaliadorSintaticoPotigol {
@@ -35,7 +35,7 @@ jest.mock('@designliquido/potigol/avaliador-sintatico', () => ({
             return { declaracoes: [], erros: [] };
         }
     }
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/potigol/formatador', () => ({
     FormatadorPotigol: class FormatadorPotigol {
@@ -44,7 +44,7 @@ jest.mock('@designliquido/potigol/formatador', () => ({
             return 'codigo formatado potigol';
         }
     }
-}), { virtual: true });
+}));
 
 import { PotigolProvedorFormatacao } from '../../fontes/formatadores/potigol-provedor-formatacao';
 

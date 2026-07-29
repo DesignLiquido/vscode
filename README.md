@@ -48,18 +48,18 @@ Editores suportados:
 3. Busque por "Design Líquido"
 4. Clique em Instalar
 
-## Funcionalidades até então
+## Funcionalidades
 
-- Sintaxe colorida
-- Formatação de arquivos em Delégua
-- Análise semântica para Delégua
-- Reconhecimento de expressões comuns das linguagens Delégua, Égua, Pituguês e dialetos de Portugol, como VisuAlg, Portugol Studio/Webstudio e Mapler
-- Ícones para arquivos `.delegua`, `.egua`, `.pitugues`, `.foles`, `.lincones` e `.lmht`, `.alg` (VisuAlg), `.por` (Portugol Studio/Webstudio), `.mapler` (Mapler)
-- Trechos de códigos para facilitar desenvolvimento em Delégua
-- Mecanismo de completude de funções da biblioteca global para Delégua
-- Suporte a depuração para Delégua, Pituguês, Portugol VisuAlg, Portugol Studio/Webstudio e Mapler
+- **Sintaxe colorida** para todas as linguagens suportadas
+- **Formatação automática** para Delégua, Pituguês, Mapler, VisuAlg, Potigol e Portugol Studio
+- **Análise semântica** para Delégua, Pituguês, BIRL, Mapler, VisuAlg, Portugol Studio, Potigol e delprops
+- **Trechos de código (snippets)** para Delégua (incluindo rotas Líquido), Pituguês, VisuAlg, Portugol Studio e LinConEs
+- **Completude de código (IntelliSense)** para Delégua, Pituguês, FolEs, LMHT, VisuAlg, Portugol Studio, delprops e arquivos de teste Delégua
+- **17 comandos de tradução** entre Delégua, JavaScript, Python, Ruby, Elixir, AssemblyScript, ARM (Linux/Android), x64 (Linux/Windows), CSS↔FolEs, HTML↔LMHT, SQL↔LinConEs e VisuAlg
+- **Suporte a depuração** para Delégua, Pituguês, Mapler, VisuAlg, Portugol Studio e Potigol
+- **Ícones** para arquivos `.delegua`, `.egua`, `.pitugues`, `.foles`, `.lincones`, `.lmht`, `.birl`, `.delprops`, `.alg` (VisuAlg), `.por` (Portugol Studio), `.poti`/`.potigol` (Potigol), `.mapler` (Mapler)
 
-## ⚙️ Configuração do Estilizador
+## ⚙️ Estilizador (apenas Delégua)
 
 O Estilizador é uma ferramenta que aplica regras para melhorar a qualidade e consistência do código Delégua durante a formatação. Diferente de formatadores que apenas ajustam a apresentação visual, o Estilizador modifica a árvore sintática para aplicar convenções e boas práticas.
 
@@ -158,14 +158,31 @@ O Estilizador aplicará automaticamente as regras configuradas durante a formata
 
 ## Tradução entre linguagens
 
-Essa extensão suporta tradução entre linguagens:
+Essa extensão oferece **17 comandos de tradução** entre linguagens. Pressione `Ctrl` + `Shift` + `p` (`Cmd` + `Shift` + `p` no Mac) e digite "tradução" para acessá-los.
 
-- VisuAlg para Delégua;
-- Delégua para JavaScript
-- JavaScript para Delégua
-- Delégua para Python
+### Traduções disponíveis
 
-Pressione `Ctrl` + `Shift` + `p` (`Cmd` + `Shift` + `p` no Mac) e digite "tradução" para ter acesso aos comandos. Você pode atribuir atalhos de teclado a eles se quiser.
+| Origem | Destino |
+|--------|---------|
+| CSS | FolEs |
+| FolEs | CSS |
+| HTML | LMHT |
+| LMHT | HTML |
+| SQL | LinConEs |
+| LinConEs | SQL |
+| VisuAlg | Delégua |
+| JavaScript | Delégua |
+| Delégua | JavaScript, Python, Ruby, Elixir, AssemblyScript, ARM (Linux), ARM (Android), x64 (Linux), x64 (Windows)
+
+## Suporte ao Framework Líquido
+
+Esta extensão oferece suporte completo ao [Framework Líquido](https://github.com/DesignLiquido/liquido), um framework web em português para desenvolvimento de APIs e aplicações web:
+
+- **6 comandos** no palete de comandos: Iniciar servidor de desenvolvimento, Novo projeto, Gerar código, Documentação OpenAPI, Inicializar banco de dados, Rodar testes
+- **12 snippets de rotas** (`rotaGet`, `rotaPost`, `rotaPut`, `rotaDelete`, etc.) em arquivos Delégua
+- **Arquivos `.delprops`** com sintaxe colorida, validação de configuração, autocompletar e documentação contextual para todas as propriedades `liquido.*`
+- **Detecção de contexto de rotas**: análise semântica especial para arquivos dentro de `rotas/`, injetando variáveis `liquido`, `requisicao`, `resposta` e `lincones` no escopo
+- **Task provider** para executar comandos Líquido diretamente do terminal do VS Code
 
 ## Depuração
 
@@ -196,7 +213,7 @@ Esta extensão está disponível tanto na versão desktop quanto na versão web 
 - **Análise de código em tempo real** com diagnósticos de erros e avisos
 - **IntelliSense** com sugestões de código inteligentes
 - **Documentação contextual** ao passar o mouse sobre símbolos
-- **Formatação automática** para Delégua e dialetos de Portugol
+- **Formatação automática** para Delégua, Pituguês, Mapler, VisuAlg, Potigol e Portugol Studio
 - **Painel de Entrada e Saída** interativo
 - **Suporte a depuração** para todas as linguagens
 - **Criação de arquivos** Pituguês diretamente do navegador
