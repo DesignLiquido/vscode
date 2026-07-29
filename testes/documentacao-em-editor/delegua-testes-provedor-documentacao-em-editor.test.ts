@@ -24,13 +24,8 @@ jest.mock('vscode', () => ({
     window: { showWarningMessage: jest.fn() },
 }), { virtual: true });
 
-jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
-    obterResultado: jest.fn().mockReturnValue(null),
-}), { virtual: true });
-
-jest.mock('@designliquido/delegua-lsp/analise/cache-definicoes', () => ({
-    obterDefinicoesPorContexto: jest.fn().mockReturnValue({}),
-}), { virtual: true });
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise');
+jest.mock('@designliquido/delegua-lsp/analise/cache-definicoes');
 
 jest.mock('@designliquido/delegua/declaracoes', () => ({
     Var: class Var { constructor(public simbolo: any, public tipo: string) {} },
@@ -39,12 +34,12 @@ jest.mock('@designliquido/delegua/declaracoes', () => ({
     Classe: class Classe { constructor(public simbolo: any) {} },
     ParaCada: class ParaCada { constructor(public variavelIteracao: any, public vetorOuDicionario: any, public corpo?: any) {} },
     InterfaceDeclaracao: class InterfaceDeclaracao { constructor(public simbolo: any) {} },
-}), { virtual: true });
+}));
 
 jest.mock('../../fontes/bibliotecas', () => ({
     formatarPrimitivas: jest.fn().mockReturnValue([]),
     funcoesNativasDelegua: [],
-}), { virtual: true });
+}));
 
 import { DeleguaTestesProvedorDocumentacaoEmEditor } from '../../fontes/documentacao-em-editor/delegua-testes-provedor-documentacao-em-editor';
 

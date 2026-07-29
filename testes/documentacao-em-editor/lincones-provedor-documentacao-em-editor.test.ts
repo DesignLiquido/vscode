@@ -29,7 +29,7 @@ jest.mock('../../fontes/linguagens/lincones/documentacao', () => ({
             exemploCodigo: 'EXCLUIR DE usuarios ONDE id = 1',
         },
     },
-}), { virtual: true });
+}));
 
 import { LinConEsProvedorDocumentacaoEmEditor } from '../../fontes/documentacao-em-editor/lincones-provedor-documentacao-em-editor';
 

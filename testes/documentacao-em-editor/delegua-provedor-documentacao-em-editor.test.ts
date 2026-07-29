@@ -41,46 +41,44 @@ jest.mock('@designliquido/delegua/declaracoes', () => ({
     Classe: ClasseMock,
     InterfaceDeclaracao: InterfaceDeclaracaoMock,
     ParaCada: ParaCadaMock,
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/construtos', () => ({
     Chamada: class Chamada {},
     ComentarioComoConstruto: class ComentarioComoConstruto {
         constructor(public conteudo: any) {}
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/bibliotecas/primitivas-dicionario', () => ({
     __esModule: true,
     default: {
         chaves: { argumentos: [], documentacao: 'Retorna as chaves', exemploCodigo: '' },
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/bibliotecas/primitivas-numero', () => ({
     __esModule: true,
     default: {
         absoluto: { argumentos: [], documentacao: 'Retorna absoluto', exemploCodigo: 'absoluto(-1)' },
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/bibliotecas/primitivas-texto', () => ({
     __esModule: true,
     default: {
         maiuscula: { argumentos: [], documentacao: 'Converte maiúsculas', exemploCodigo: '' },
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/bibliotecas/primitivas-vetor', () => ({
     __esModule: true,
     default: {
         adicionar: { argumentos: [], documentacao: 'Adiciona elemento', exemploCodigo: '' },
     },
-}), { virtual: true });
+}));
 
-jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
-    obterResultado: jest.fn().mockReturnValue(null),
-}), { virtual: true });
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise');
 
 jest.mock('../../fontes/bibliotecas', () => ({
     formatarPrimitivas: jest.fn((modulo) => {
@@ -91,7 +89,7 @@ jest.mock('../../fontes/bibliotecas', () => ({
         { nome: 'escreva', documentacao: 'Escreve na saída', exemploCodigo: 'escreva("oi")' },
         { nome: 'leia', documentacao: 'Lê da entrada' },
     ],
-}), { virtual: true });
+}));
 
 import { DeleguaProvedorDocumentacaoEmEditor } from '../../fontes/documentacao-em-editor/delegua-provedor-documentacao-em-editor';
 import { obterResultado } from '@designliquido/delegua-lsp/analise/cache-analise';

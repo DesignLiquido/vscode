@@ -26,17 +26,17 @@ jest.mock('vscode', () => ({
 
 jest.mock('path', () => ({
     basename: (p: string) => p.split('/').pop() || p.split('\\').pop() || p,
-}), { virtual: true });
+}));
 
 jest.mock('fs', () => ({
     writeFileSync: mockWriteFileSync,
-}), { virtual: true });
+}));
 
 jest.mock('../../fontes/traducao/comum', () => ({
     traduzirPorMotorFolEs: jest.fn().mockResolvedValue('foles-resultado'),
     traduzirPorMotorLinConEs: jest.fn().mockResolvedValue('lincones-resultado'),
     traduzirPorMotorLmht: jest.fn().mockResolvedValue('lmht-resultado'),
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua', () => ({
     Lexador: class Lexador {
@@ -71,7 +71,7 @@ jest.mock('@designliquido/delegua', () => ({
     },
     PlataformaAlvo: {},
     PlataformaAlvoARM: {},
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/avaliador-sintatico', () => ({
     AvaliadorSintatico: class AvaliadorSintatico {
@@ -79,39 +79,39 @@ jest.mock('@designliquido/delegua/avaliador-sintatico', () => ({
             return mockAvaliadorAnalisar(_retorno, _hash);
         }
     },
-}), { virtual: true });
+}));
 
-jest.mock('../../fontes/traducao/tradutor-interface', () => ({}), { virtual: true });
+jest.mock('../../fontes/traducao/tradutor-interface', () => ({}));
 
 jest.mock('@designliquido/delegua/avaliador-sintatico/traducao/avaliador-sintatico-javascript', () => ({
     AvaliadorSintaticoJavaScript: class AvaliadorSintaticoJavaScript {
         async analisar(_retorno: any) { return { declaracoes: [], erros: [] }; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/potigol/tradutores/tradutor-reverso-potigol', () => ({
     TradutorReversoPotigol: class TradutorReversoPotigol {
         async traduzir(_decls: any[]) { return 'delegua from potigol'; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/visualg/avaliador-sintatico', () => ({
     AvaliadorSintaticoVisuAlg: class AvaliadorSintaticoVisuAlg {
         async analisar(_retorno: any) { return { declaracoes: [], erros: [] }; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/visualg/tradutores', () => ({
     TradutorReversoVisuAlg: class TradutorReversoVisuAlg {
         async traduzir(_decls: any[]) { return 'delegua from visualg'; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/potigol/avaliador-sintatico', () => ({
     AvaliadorSintaticoPotigol: class AvaliadorSintaticoPotigol {
         async analisar(_retorno: any) { return { declaracoes: [], erros: [] }; }
     },
-}), { virtual: true });
+}));
 
 import { traduzir } from '../../fontes/traducao';
 

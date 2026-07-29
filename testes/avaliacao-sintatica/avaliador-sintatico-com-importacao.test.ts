@@ -66,39 +66,39 @@ jest.mock('@designliquido/delegua', () => ({
     SimboloInterface: class SimboloInterface {},
     Var: class Var {},
     Variavel: class Variavel {}
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/informacao-elemento-sintatico', () => ({
     InformacaoElementoSintatico: class InformacaoElementoSintatico {
         constructor(public nome: string, public tipo: string, public ehFuncao: boolean = false, public subElementos: any[] = []) {}
     }
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/interpretador/estruturas', () => ({
     FuncaoPadrao: class FuncaoPadrao {
         constructor(public tipoRetorno?: string, public argumentos?: any[]) {}
     }
-}), { virtual: true });
+}));
 
-jest.mock('@designliquido/delegua/tipos-de-simbolos/delegua', () => ({}), { virtual: true });
+jest.mock('@designliquido/delegua/tipos-de-simbolos/delegua', () => ({}));
 
 jest.mock('../../fontes/construtos', () => ({
     ImportarBiblioteca: class ImportarBiblioteca {
         constructor(public hashArquivo: number, public linha: number, public caminho: string) {}
     },
     ModuloDeclaracoes: class ModuloDeclaracoes {}
-}), { virtual: true });
+}));
 
 jest.mock('../../fontes/mecanismo-importacao-bibliotecas', () => ({
     carregarBibliotecaDelegua: jest.fn().mockReturnValue({
         componentes: {}
     }),
     verificarModulosDelegua: jest.fn().mockReturnValue(null)
-}), { virtual: true });
+}));
 
 jest.mock('../../fontes/interpretador/estruturas', () => ({
     ClasseDeModulo: class ClasseDeModulo {}
-}), { virtual: true });
+}));
 
 jest.mock('../../fontes/importador', () => ({
     ImportadorExtensao: class ImportadorExtensao {
@@ -112,7 +112,7 @@ jest.mock('../../fontes/importador', () => ({
             };
         }
     }
-}), { virtual: true });
+}));
 
 describe('avaliacao-sintatica/AvaliadorSintaticoComImportacao', () => {
     let AvaliadorSintaticoComImportacao: any;

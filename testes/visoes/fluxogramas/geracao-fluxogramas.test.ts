@@ -17,17 +17,17 @@ jest.mock('path', () => ({ basename: jest.fn() }));
 
 jest.mock('@designliquido/delegua/lexador', () => ({
     Lexador: jest.fn()
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua', () => ({
     AvaliadorSintatico: jest.fn(),
     RetornoLexador: jest.fn(),
     SimboloInterface: jest.fn()
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/tradutores', () => ({
     TradutorMermaidJs: jest.fn()
-}), { virtual: true });
+}));
 
 jest.mock('../../../fontes/importador', () => ({
     ImportadorExtensao: jest.fn()

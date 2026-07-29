@@ -31,7 +31,7 @@ jest.mock('@designliquido/foles', () => ({
         converterParaCss(_conteudo: string) { return 'css resultado'; }
         converterParaFolEs(_conteudo: string) { return 'foles resultado'; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/lmht-js', () => ({
     ConversorHtml: class ConversorHtml {
@@ -40,7 +40,7 @@ jest.mock('@designliquido/lmht-js', () => ({
     ConversorLmht: class ConversorLmht {
         async converterPorArquivo(_conteudo: string) { return 'html resultado'; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/lincones-js', () => ({
     Lexador: class Lexador {
@@ -61,7 +61,7 @@ jest.mock('@designliquido/lincones-js', () => ({
     TradutorReversoSqlAnsi: class TradutorReversoSqlAnsi {
         traduzir(_comandos: any[]) { return 'lincones traduzido'; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('../../fontes/traducao/nucleo-traducao-delegua-web', () => ({
     NucleoTraducaoDeleguaWeb: class NucleoTraducaoDeleguaWeb {
@@ -69,7 +69,7 @@ jest.mock('../../fontes/traducao/nucleo-traducao-delegua-web', () => ({
         iniciarTradutor(_cmd: string) {}
         async traduzirArquivo(_conteudo: string) { return 'delegua traduzido'; }
     },
-}), { virtual: true });
+}));
 
 import { traduzir } from '../../fontes/traducao/index-web';
 

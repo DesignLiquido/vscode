@@ -58,7 +58,7 @@ jest.mock('../../fontes/bibliotecas/dialetos/portugol-studio', () => ({
     utilPortugolStudio: [
         { nome: 'sorteia', descricao: 'Sorteia número.', documentacao: '# `Util.sorteia()`\n Sorteia.', exemploCodigo: '`Util.sorteia(1, 100)`' },
     ],
-}), { virtual: true });
+}));
 
 import { PortugolStudioProvedorDocumentacaoEmEditor } from '../../fontes/documentacao-em-editor/portugol-studio-provedor-documentacao-em-editor';
 
