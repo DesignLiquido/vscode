@@ -14,7 +14,7 @@ jest.mock('@designliquido/foles', () => ({
         converterParaCss(_caminho: string) { return 'css result'; }
         converterParaFolEs(_caminho: string) { return 'foles result'; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/lincones-js', () => ({
     Lexador: class Lexador {
@@ -35,7 +35,7 @@ jest.mock('@designliquido/lincones-js', () => ({
     TradutorReversoSqlAnsi: class TradutorReversoSqlAnsi {
         traduzir(_comandos: any[]) { return 'lincones traduzido'; }
     },
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/lmht-js', () => ({
     ConversorHtml: class ConversorHtml {
@@ -44,7 +44,7 @@ jest.mock('@designliquido/lmht-js', () => ({
     ConversorLmht: class ConversorLmht {
         async converterPorArquivo(_caminho: string) { return 'html result'; }
     },
-}), { virtual: true });
+}));
 
 import { traduzirPorMotorFolEs, traduzirPorMotorLinConEs, traduzirPorMotorLmht } from '../../fontes/traducao/comum';
 

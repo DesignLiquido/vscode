@@ -34,7 +34,7 @@ jest.mock('../../fontes/bibliotecas/primitivas-liquido', () => ({
         { nome: 'requisicao', documentacao: 'Objeto de requisição' },
         { nome: 'resposta', documentacao: 'Objeto de resposta' },
     ],
-}), { virtual: true });
+}));
 
 jest.mock('../../fontes/bibliotecas/dialetos/pitugues', () => ({
     primitivas: [
@@ -56,11 +56,9 @@ jest.mock('../../fontes/bibliotecas/dialetos/pitugues', () => ({
         { nome: 'escreva', documentacao: 'Escreve na saída padrão' },
         { nome: 'leia', documentacao: 'Lê da entrada padrão' },
     ],
-}), { virtual: true });
+}));
 
-jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
-    obterResultado: jest.fn().mockReturnValue(null),
-}), { virtual: true });
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise');
 
 jest.mock('../../fontes/completude/interfaces', () => ({}), { virtual: true });
 
@@ -248,7 +246,7 @@ describe('PituguesProvedorCompletude', () => {
                     ],
                 },
             }),
-        }), { virtual: true });
+        }));
 
         const doc = criarDocumento(['minhaFuncao']);
         const pos = criarPosicao(0, 10);

@@ -1,373 +1,77 @@
 import * as vscode from 'vscode';
-import { EsquemaPropriedade, TipoValor } from '../../interfaces';
 
-/**
- * Propriedades diretas de `liquido.*` (sem sub-namespace).
- */
-const esquemaPropriedadesLiquido: Record<string, EsquemaPropriedade> = {
-    'arquetipo': { tipo: 'texto', valoresPermitidos: ['rest', 'mvc'] },
-    'linguagem': { tipo: 'texto', valoresPermitidos: ['delégua', 'pituguês'] },
-    'verboso': { tipo: 'logico' },
-};
+import { analisar, validar, registrar, obter, temRegistro } from '@designliquido/delprops';
+import * as liquido from '@designliquido/delprops/liquido';
 
-/**
- * Propriedades conhecidas do namespace `liquido.aplicacao`.
- */
-const esquemaAplicacao: Record<string, EsquemaPropriedade> = {
-    'nome': { tipo: 'texto' },
-    'versao': { tipo: 'texto' },
-    'descricao': { tipo: 'texto' },
-};
-
-/**
- * Propriedades conhecidas do sub-namespace `liquido.aplicacao.licenca`.
- */
-const esquemaLicenca: Record<string, EsquemaPropriedade> = {
-    'nome': { tipo: 'texto' },
-    'url': { tipo: 'texto' },
-};
-
-/**
- * Propriedades conhecidas do namespace `liquido.roteador`.
- */
-const esquemaRoteador: Record<string, EsquemaPropriedade> = {
-    'diretorioEstatico': { tipo: 'texto' },
-    'cors': { tipo: 'logico' },
-    'bodyParser': { tipo: 'logico' },
-    'morgan': { tipo: 'logico' },
-    'cookieParser': { tipo: 'logico' },
-    'passport': { tipo: 'logico' },
-    'json': { tipo: 'logico' },
-    'helmet': { tipo: 'logico' },
-};
-
-/**
- * Propriedades diretas de `liquido.dados` (sem sub-fonte).
- */
-const esquemaDadosDireto: Record<string, EsquemaPropriedade> = {
-    'motor': { tipo: 'texto', valoresPermitidos: ['lincones', 'delegua-entidades'] },
-};
-
-/**
- * Propriedades conhecidas dentro de uma fonte de dados (`liquido.dados.<nome>`).
- */
-const esquemaFonteDados: Record<string, EsquemaPropriedade> = {
-    'tecnologia': { tipo: 'texto' },
-    'caminho': { tipo: 'texto' },
-    'autoInicializar': { tipo: 'logico' },
-    'arquivoInicializacao': { tipo: 'texto' },
-};
-
-/**
- * Propriedades conhecidas do namespace `liquido.autenticacao`.
- */
-const esquemaAutenticacao: Record<string, EsquemaPropriedade> = {
-    'tecnologia': { tipo: 'texto', valoresPermitidos: ['jwt'] },
-};
-
-function removerComentarioLinha(linha: string): string {
-    let emAspasSimples = false;
-    let emAspasDuplas = false;
-
-    for (let i = 0; i < linha.length - 1; i++) {
-        const c = linha[i];
-        if (c === "'" && !emAspasDuplas) {
-            emAspasSimples = !emAspasSimples;
-        } else if (c === '"' && !emAspasSimples) {
-            emAspasDuplas = !emAspasDuplas;
-        } else if (c === '/' && linha[i + 1] === '/' && !emAspasSimples && !emAspasDuplas) {
-            return linha.slice(0, i);
-        }
-    }
-
-    return linha;
-}
-
-function inferirTipoValor(valor: string): TipoValor | null {
-    const v = valor.trim();
-    if (v === 'verdadeiro' || v === 'falso') return 'logico';
-    if (/^-?[0-9]+(\.[0-9]+)?$/.test(v)) return 'numero';
-    if (/^'.*'$/.test(v) || /^".*"$/.test(v)) return 'texto';
-    return null;
-}
-
-function extrairValorTexto(valor: string): string {
-    const v = valor.trim();
-    return v.slice(1, -1);
-}
-
-function validarPropriedadeLiquido(
-    segmentos: string[],
-    valor: string,
-    linha: number,
-    diagnosticos: vscode.Diagnostic[]
-): void {
-    if (segmentos.length < 2) {
-        diagnosticos.push(new vscode.Diagnostic(
-            new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-            `Propriedade 'liquido' incompleta. Esperado pelo menos 'liquido.<namespace>.<propriedade>'.`,
-            vscode.DiagnosticSeverity.Error
-        ));
-        return;
-    }
-
-    const espacoNomes = segmentos[1];
-
-    switch (espacoNomes) {
-        case 'arquetipo':
-        case 'linguagem':
-        case 'verboso': {
-            const esquema = esquemaPropriedadesLiquido[espacoNomes];
-            validarTipoEValor(valor, esquema, `liquido.${espacoNomes}`, linha, diagnosticos);
-            break;
-        }
-        case 'aplicacao': {
-            if (segmentos.length < 3) {
-                diagnosticos.push(new vscode.Diagnostic(
-                    new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                    `Propriedade 'liquido.aplicacao' incompleta. Esperado 'liquido.aplicacao.<propriedade>'.`,
-                    vscode.DiagnosticSeverity.Error
-                ));
-                return;
-            }
-
-            const subPropriedade = segmentos[2];
-
-            if (subPropriedade === 'licenca') {
-                if (segmentos.length < 4) {
-                    diagnosticos.push(new vscode.Diagnostic(
-                        new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                        `Propriedade 'liquido.aplicacao.licenca' incompleta. Esperado 'liquido.aplicacao.licenca.<propriedade>'.`,
-                        vscode.DiagnosticSeverity.Error
-                    ));
-                    return;
-                }
-
-                const propriedadeLicenca = segmentos[3];
-                const esquemaLic = esquemaLicenca[propriedadeLicenca];
-
-                if (!esquemaLic) {
-                    const conhecidas = Object.keys(esquemaLicenca).join(', ');
-                    diagnosticos.push(new vscode.Diagnostic(
-                        new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                        `Propriedade desconhecida 'liquido.aplicacao.licenca.${propriedadeLicenca}'. Propriedades conhecidas: ${conhecidas}.`,
-                        vscode.DiagnosticSeverity.Warning
-                    ));
-                    return;
-                }
-
-                validarTipoEValor(valor, esquemaLic, `liquido.aplicacao.licenca.${propriedadeLicenca}`, linha, diagnosticos);
-            } else {
-                const esquemaApl = esquemaAplicacao[subPropriedade];
-
-                if (!esquemaApl) {
-                    const conhecidas = Object.keys(esquemaAplicacao).join(', ');
-                    diagnosticos.push(new vscode.Diagnostic(
-                        new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                        `Propriedade desconhecida 'liquido.aplicacao.${subPropriedade}'. Propriedades conhecidas: licenca, ${conhecidas}.`,
-                        vscode.DiagnosticSeverity.Warning
-                    ));
-                    return;
-                }
-
-                validarTipoEValor(valor, esquemaApl, `liquido.aplicacao.${subPropriedade}`, linha, diagnosticos);
-            }
-            break;
-        }
-        case 'autenticacao': {
-            if (segmentos.length < 3) {
-                diagnosticos.push(new vscode.Diagnostic(
-                    new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                    `Propriedade 'liquido.autenticacao' incompleta. Esperado 'liquido.autenticacao.<propriedade>'.`,
-                    vscode.DiagnosticSeverity.Error
-                ));
-                return;
-            }
-
-            const propriedade = segmentos[2];
-            const esquema = esquemaAutenticacao[propriedade];
-            
-            if (!esquema) {
-                const conhecidas = Object.keys(esquemaAutenticacao).join(', ');
-                diagnosticos.push(new vscode.Diagnostic(
-                    new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                    `Propriedade desconhecida 'liquido.autenticacao.${propriedade}'. Propriedades conhecidas: ${conhecidas}.`,
-                    vscode.DiagnosticSeverity.Warning
-                ));
-                return;
-            }
-            
-            validarTipoEValor(valor, esquema, `liquido.autenticacao.${propriedade}`, linha, diagnosticos);
-            break;
-        }
-        case 'dados': {
-            if (segmentos.length < 3) {
-                diagnosticos.push(new vscode.Diagnostic(
-                    new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                    `Propriedade 'liquido.dados' incompleta. Esperado 'liquido.dados.<propriedade>' ou 'liquido.dados.<nome>.<propriedade>'.`,
-                    vscode.DiagnosticSeverity.Error
-                ));
-                return;
-            }
-
-            if (segmentos.length === 3) {
-                const propriedade = segmentos[2];
-                const esquema = esquemaDadosDireto[propriedade];
-                if (!esquema) {
-                    const conhecidas = Object.keys(esquemaDadosDireto).join(', ');
-                    diagnosticos.push(new vscode.Diagnostic(
-                        new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                        `Propriedade desconhecida 'liquido.dados.${propriedade}'. Propriedades conhecidas: ${conhecidas}.`,
-                        vscode.DiagnosticSeverity.Warning
-                    ));
-                    return;
-                }
-                validarTipoEValor(valor, esquema, `liquido.dados.${propriedade}`, linha, diagnosticos);
-            } else {
-                const nomeFonte = segmentos[2];
-                const propriedade = segmentos[3];
-                const esquema = esquemaFonteDados[propriedade];
-                if (!esquema) {
-                    const conhecidas = Object.keys(esquemaFonteDados).join(', ');
-                    diagnosticos.push(new vscode.Diagnostic(
-                        new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                        `Propriedade desconhecida 'liquido.dados.${nomeFonte}.${propriedade}'. Propriedades conhecidas: ${conhecidas}.`,
-                        vscode.DiagnosticSeverity.Warning
-                    ));
-                    return;
-                }
-                validarTipoEValor(valor, esquema, `liquido.dados.${nomeFonte}.${propriedade}`, linha, diagnosticos);
-            }
-            break;
-        }
-        case 'roteador': {
-            if (segmentos.length < 3) {
-                diagnosticos.push(new vscode.Diagnostic(
-                    new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                    `Propriedade 'liquido.roteador' incompleta. Esperado 'liquido.roteador.<propriedade>'.`,
-                    vscode.DiagnosticSeverity.Error
-                ));
-                return;
-            }
-
-            const propriedade = segmentos[2];
-            const esquema = esquemaRoteador[propriedade];
-            
-            if (!esquema) {
-                const conhecidas = Object.keys(esquemaRoteador).join(', ');
-                diagnosticos.push(new vscode.Diagnostic(
-                    new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                    `Propriedade desconhecida 'liquido.roteador.${propriedade}'. Propriedades conhecidas: ${conhecidas}.`,
-                    vscode.DiagnosticSeverity.Warning
-                ));
-                return;
-            }
-            
-            validarTipoEValor(valor, esquema, `liquido.roteador.${propriedade}`, linha, diagnosticos);
-            break;
-        }
-        default: {
-            diagnosticos.push(new vscode.Diagnostic(
-                new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                `Propriedade ou espaço de nomes desconhecido 'liquido.${espacoNomes}'. Conhecidos: aplicacao, arquetipo, autenticacao, dados, linguagem, roteador, verboso.`,
-                vscode.DiagnosticSeverity.Warning
-            ));
-            break;
-        }
-    }
-}
-
-function validarTipoEValor(
-    valor: string,
-    esquema: EsquemaPropriedade,
-    caminhoCompleto: string,
-    linha: number,
-    diagnosticos: vscode.Diagnostic[]
-): void {
-    const tipoInferido = inferirTipoValor(valor);
-    if (tipoInferido === null) {
-        diagnosticos.push(new vscode.Diagnostic(
-            new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-            `Valor inválido para '${caminhoCompleto}': '${valor.trim()}' não é um texto, número ou lógico reconhecido.`,
-            vscode.DiagnosticSeverity.Error
-        ));
-        return;
-    }
-    if (tipoInferido !== esquema.tipo) {
-        const nomesTipos: Record<TipoValor, string> = {
-            logico: 'lógico (verdadeiro/falso)',
-            texto: 'texto (entre aspas)',
-            numero: 'número'
-        };
-        diagnosticos.push(new vscode.Diagnostic(
-            new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-            `Tipo incorreto para '${caminhoCompleto}': esperado ${nomesTipos[esquema.tipo]}, recebido ${nomesTipos[tipoInferido]}.`,
-            vscode.DiagnosticSeverity.Error
-        ));
-        return;
-    }
-    if (esquema.valoresPermitidos && tipoInferido === 'texto') {
-        const valorTexto = extrairValorTexto(valor.trim());
-        if (!esquema.valoresPermitidos.includes(valorTexto)) {
-            diagnosticos.push(new vscode.Diagnostic(
-                new vscode.Range(linha, 0, linha, Number.MAX_VALUE),
-                `Valor '${valorTexto}' não é permitido para '${caminhoCompleto}'. Valores permitidos: ${esquema.valoresPermitidos.map(v => `'${v}'`).join(', ')}.`,
-                vscode.DiagnosticSeverity.Error
-            ));
-        }
-    }
-}
-
-/**
- * Analisa um documento `.delprops` e retorna todos os diagnósticos encontrados.
- */
 export function validarDelprops(documento: vscode.TextDocument): vscode.Diagnostic[] {
     const diagnosticos: vscode.Diagnostic[] = [];
+    const conteudo = documento.getText();
 
-    for (let i = 0; i < documento.lineCount; i++) {
-        const linhaTexto = documento.lineAt(i).text;
-        const semComentario = removerComentarioLinha(linhaTexto).trim();
+    const resultadoCompreensao = analisar(conteudo);
 
-        if (semComentario === '') continue;
-
-        const indiceIgual = semComentario.indexOf('=');
-        if (indiceIgual === -1) {
+    for (const erroCompreensao of resultadoCompreensao.erros) {
+        const numeroLinha = Math.max(0, erroCompreensao.linha - 1);
+        if (numeroLinha < documento.lineCount) {
             diagnosticos.push(new vscode.Diagnostic(
-                new vscode.Range(i, 0, i, Number.MAX_VALUE),
-                `Linha inválida: esperado o formato '<chave> = <valor>'.`,
+                new vscode.Range(numeroLinha, 0, numeroLinha, Number.MAX_VALUE),
+                erroCompreensao.mensagem,
                 vscode.DiagnosticSeverity.Error
             ));
-            continue;
+        }
+    }
+
+    if (!temRegistro('liquido')) {
+        registrar('liquido', '@designliquido/delprops', [
+            ...(liquido.arquetipo || []),
+            ...(liquido.linguagem || []),
+        ]);
+        registrar('liquido.aplicacao', '@designliquido/delprops', [
+            ...(liquido.aplicacao || []),
+        ]);
+        registrar('liquido.roteador', '@designliquido/delprops', [
+            ...(liquido.roteador || []),
+        ]);
+        registrar('liquido.dados', '@designliquido/delprops', [
+            ...(liquido.dados || []),
+        ]);
+        registrar('liquido.autenticacao', '@designliquido/delprops', [
+            ...(liquido.autenticacao || []),
+        ]);
+    }
+
+    const esquemas = new Map<string, import('@designliquido/delprops').DefinicaoPropriedade[]>();
+    const namespaces = ['liquido', 'liquido.aplicacao', 'liquido.aplicacao.licenca', 'liquido.roteador', 'liquido.dados', 'liquido.autenticacao'];
+    for (const ns of namespaces) {
+        const definicoes = obter(ns);
+        if (definicoes.length > 0) {
+            esquemas.set(ns, definicoes);
+        }
+    }
+
+    if (resultadoCompreensao.propriedades.length > 0 && esquemas.size > 0) {
+        const resultadoValidacao = validar(resultadoCompreensao.propriedades, esquemas);
+
+        for (const aviso of resultadoValidacao.avisos) {
+            const numeroLinha = Math.max(0, aviso.linha - 1);
+            if (numeroLinha < documento.lineCount) {
+                diagnosticos.push(new vscode.Diagnostic(
+                    new vscode.Range(numeroLinha, 0, numeroLinha, Number.MAX_VALUE),
+                    aviso.mensagem,
+                    vscode.DiagnosticSeverity.Warning
+                ));
+            }
         }
 
-        const chave = semComentario.slice(0, indiceIgual).trim();
-        const valor = semComentario.slice(indiceIgual + 1).trim();
-
-        if (chave === '') {
-            diagnosticos.push(new vscode.Diagnostic(
-                new vscode.Range(i, 0, i, Number.MAX_VALUE),
-                `Chave ausente antes do '='.`,
-                vscode.DiagnosticSeverity.Error
-            ));
-            continue;
+        for (const erroValidacao of resultadoValidacao.erros) {
+            const numeroLinha = Math.max(0, erroValidacao.linha - 1);
+            if (numeroLinha < documento.lineCount) {
+                diagnosticos.push(new vscode.Diagnostic(
+                    new vscode.Range(numeroLinha, 0, numeroLinha, Number.MAX_VALUE),
+                    erroValidacao.mensagem,
+                    vscode.DiagnosticSeverity.Error
+                ));
+            }
         }
-
-        if (valor === '') {
-            diagnosticos.push(new vscode.Diagnostic(
-                new vscode.Range(i, 0, i, Number.MAX_VALUE),
-                `Valor ausente após o '=' para a propriedade '${chave}'.`,
-                vscode.DiagnosticSeverity.Error
-            ));
-            continue;
-        }
-
-        const segmentos = chave.split('.');
-        const raiz = segmentos[0];
-
-        if (raiz === 'liquido') {
-            validarPropriedadeLiquido(segmentos, valor, i, diagnosticos);
-        }
-        // Outros namespaces são permitidos sem validação de esquema.
     }
 
     return diagnosticos;

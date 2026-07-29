@@ -3,3 +3,7 @@ export * from './mapler-provedor-formatacao';
 export * from './portugol-studio-provedor-formatacao';
 export * from './potigol-provedor-formatacao';
 export * from './visualg-provedor-formatacao';
+export * from './foles-provedor-formatacao';
+export * from './lmht-provedor-formatacao';
+export * from './lincones-provedor-formatacao';
+export * from './delprops-provedor-formatacao';

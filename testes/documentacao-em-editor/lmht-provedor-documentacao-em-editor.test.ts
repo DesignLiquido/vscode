@@ -29,7 +29,7 @@ jest.mock('../../fontes/linguagens/lmht/estruturas', () => ({
             exemploCodigo: '<negrito>texto</negrito>',
         },
     },
-}), { virtual: true });
+}));
 
 jest.mock('../../fontes/linguagens/lmht/atributos', () => ({
     __esModule: true,
@@ -50,7 +50,7 @@ jest.mock('../../fontes/linguagens/lmht/atributos', () => ({
             exemploCodigo: '<campo tipo="texto">',
         },
     },
-}), { virtual: true });
+}));
 
 const atributosRecursoMock = {
     relacao: {
@@ -92,7 +92,7 @@ jest.mock('../../fontes/linguagens/lmht/atributos-por-estrutura', () => ({
             },
         },
     },
-}), { virtual: true });
+}));
 
 import { LmhtProvedorDocumentacaoEmEditor } from '../../fontes/documentacao-em-editor/lmht-provedor-documentacao-em-editor';
 

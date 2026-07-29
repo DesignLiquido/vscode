@@ -32,7 +32,7 @@ jest.mock('@designliquido/mapler', () => ({
             return { declaracoes: [], erros: [] };
         }
     }
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/mapler/formatador', () => ({
     FormatadorMapler: class FormatadorMapler {
@@ -41,7 +41,7 @@ jest.mock('@designliquido/mapler/formatador', () => ({
             return 'codigo formatado mapler';
         }
     }
-}), { virtual: true });
+}));
 
 import { MaplerProvedorFormatacao } from '../../fontes/formatadores/mapler-provedor-formatacao';
 

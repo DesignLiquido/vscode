@@ -82,6 +82,10 @@ const webConfig = {
     {
       module: /delprops[\\/]descobridor/,
       message: /Critical dependency/
+    },
+    {
+      module: /delprops[\\/]sistema-arquivos-node/,
+      message: /Critical dependency/
     }
   ]
 };

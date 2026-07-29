@@ -50,7 +50,7 @@ jest.mock('@designliquido/delegua/lexador', () => ({
             erros: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/avaliador-sintatico', () => ({
     AvaliadorSintaticoPitugues: jest.fn().mockImplementation(() => ({
@@ -59,7 +59,7 @@ jest.mock('@designliquido/delegua/avaliador-sintatico', () => ({
             erros: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/analisador-semantico', () => ({
     AnalisadorSemantico: jest.fn().mockImplementation(() => ({
@@ -67,7 +67,7 @@ jest.mock('@designliquido/delegua/analisador-semantico', () => ({
             diagnosticos: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/delegua/analisador-semantico/dialetos', () => ({
     AnalisadorSemanticoPitugues: jest.fn().mockImplementation(() => ({
@@ -75,7 +75,7 @@ jest.mock('@designliquido/delegua/analisador-semantico/dialetos', () => ({
             diagnosticos: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/birl/lexador', () => ({
     LexadorBirl: jest.fn().mockImplementation(() => ({
@@ -84,7 +84,7 @@ jest.mock('@designliquido/birl/lexador', () => ({
             erros: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/birl/avaliador-sintatico', () => ({
     AvaliadorSintaticoBirl: jest.fn().mockImplementation(() => ({
@@ -93,7 +93,7 @@ jest.mock('@designliquido/birl/avaliador-sintatico', () => ({
             erros: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/birl/analisador-semantico', () => ({
     AnalisadorSemanticoBirl: jest.fn().mockImplementation(() => ({
@@ -101,7 +101,7 @@ jest.mock('@designliquido/birl/analisador-semantico', () => ({
             diagnosticos: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/mapler/lexador', () => ({
     LexadorMapler: jest.fn().mockImplementation(() => ({
@@ -110,7 +110,7 @@ jest.mock('@designliquido/mapler/lexador', () => ({
             erros: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/mapler/avaliador-sintatico', () => ({
     AvaliadorSintaticoMapler: jest.fn().mockImplementation(() => ({
@@ -119,7 +119,7 @@ jest.mock('@designliquido/mapler/avaliador-sintatico', () => ({
             erros: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/mapler/analisador-semantico', () => ({
     AnalisadorSemanticoMapler: jest.fn().mockImplementation(() => ({
@@ -127,7 +127,7 @@ jest.mock('@designliquido/mapler/analisador-semantico', () => ({
             diagnosticos: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/potigol/lexador', () => ({
     LexadorPotigol: jest.fn().mockImplementation(() => ({
@@ -136,7 +136,7 @@ jest.mock('@designliquido/potigol/lexador', () => ({
             erros: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/potigol/avaliador-sintatico', () => ({
     AvaliadorSintaticoPotigol: jest.fn().mockImplementation(() => ({
@@ -145,7 +145,7 @@ jest.mock('@designliquido/potigol/avaliador-sintatico', () => ({
             erros: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/potigol/analisador-semantico', () => ({
     AnalisadorSemanticoPotigol: jest.fn().mockImplementation(() => ({
@@ -153,7 +153,7 @@ jest.mock('@designliquido/potigol/analisador-semantico', () => ({
             diagnosticos: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/portugol-studio/lexador', () => ({
     LexadorPortugolStudio: jest.fn().mockImplementation(() => ({
@@ -162,7 +162,7 @@ jest.mock('@designliquido/portugol-studio/lexador', () => ({
             erros: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/portugol-studio/avaliador-sintatico', () => ({
     AvaliadorSintaticoPortugolStudio: jest.fn().mockImplementation(() => ({
@@ -171,7 +171,7 @@ jest.mock('@designliquido/portugol-studio/avaliador-sintatico', () => ({
             erros: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/portugol-studio/analisador-semantico', () => ({
     AnalisadorSemanticoPortugolStudio: jest.fn().mockImplementation(() => ({
@@ -179,7 +179,7 @@ jest.mock('@designliquido/portugol-studio/analisador-semantico', () => ({
             diagnosticos: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/visualg', () => ({
     LexadorVisuAlg: jest.fn().mockImplementation(() => ({
@@ -199,24 +199,17 @@ jest.mock('@designliquido/visualg', () => ({
             diagnosticos: []
         })
     }))
-}), { virtual: true });
+}));
 
 jest.mock('../../fontes/avaliacao-sintatica', () => ({
     formatarDiagnosticosAvaliacaoSintatica: jest.fn().mockReturnValue([])
-}), { virtual: true });
+}));
 
-jest.mock('@designliquido/delegua-lsp/analise/cache-analise', () => ({
-    definirResultado: jest.fn(),
-    obterResultadoValido: jest.fn().mockReturnValue(undefined),
-    obterDiagnosticos: jest.fn().mockReturnValue([]),
-    expirarResultado: jest.fn(),
-    expirarResultados: jest.fn(),
-    expirarTudo: jest.fn(),
-}), { virtual: true });
+jest.mock('@designliquido/delegua-lsp/analise/cache-analise');
 
 jest.mock('../../fontes/importador', () => ({
     ImportadorExtensao: jest.fn().mockImplementation(() => ({}))
-}), { virtual: true });
+}));
 
 jest.mock('../../fontes/avaliacao-sintatica/avaliador-sintatico-com-importacao', () => ({
     AvaliadorSintaticoComImportacao: jest.fn().mockImplementation(() => ({
@@ -228,7 +221,7 @@ jest.mock('../../fontes/avaliacao-sintatica/avaliador-sintatico-com-importacao',
         definirContextoLiquido: jest.fn(),
         tiposDefinidosEmCodigo: {}
     }))
-}), { virtual: true });
+}));
 
 describe('analise-codigo/index', () => {
     let executarAnalises: any;
