@@ -1,14 +1,49 @@
 import * as vscode from 'vscode';
-
-import { analisar, validar, registrar, obter, temRegistro } from '@designliquido/delprops';
+import { analisar, validar, registrar, obterTodos, ContribuicaoEsquema, DefinicaoPropriedade } from '@designliquido/delprops';
 import * as liquido from '@designliquido/delprops/liquido';
+
+registrar('liquido', '@designliquido/vscode', [...liquido.arquetipo, ...liquido.linguagem]);
+registrar('liquido.aplicacao', '@designliquido/vscode', liquido.aplicacao);
+registrar('liquido.roteador', '@designliquido/vscode', liquido.roteador);
+registrar('liquido.dados', '@designliquido/vscode', liquido.dados);
+registrar('liquido.autenticacao', '@designliquido/vscode', liquido.autenticacao);
+registrar('liquido.estilos', '@designliquido/vscode', liquido.estilos);
+
+function removerComentarioLinha(linha: string): string {
+    let emAspasSimples = false;
+    let emAspasDuplas = false;
+    for (let i = 0; i < linha.length - 1; i++) {
+        const c = linha[i];
+        if (c === "'" && !emAspasDuplas) {
+            emAspasSimples = !emAspasSimples;
+        } else if (c === '"' && !emAspasSimples) {
+            emAspasDuplas = !emAspasDuplas;
+        } else if (c === '/' && linha[i + 1] === '/' && !emAspasSimples && !emAspasDuplas) {
+            return linha.slice(0, i);
+        }
+    }
+    return linha;
+}
+
+function aplanarEsquemas(
+    todos: ReadonlyMap<string, readonly ContribuicaoEsquema[]>
+): Map<string, DefinicaoPropriedade[]> {
+    const aplanado = new Map<string, DefinicaoPropriedade[]>();
+    for (const [ns, contribuicoes] of todos) {
+        aplanado.set(ns, [...contribuicoes.flatMap(c => c.definicoes)]);
+    }
+    return aplanado;
+}
 
 export function validarDelprops(documento: vscode.TextDocument): vscode.Diagnostic[] {
     const diagnosticos: vscode.Diagnostic[] = [];
-    const conteudo = documento.getText();
+    const linhas: string[] = [];
+    for (let i = 0; i < documento.lineCount; i++) {
+        linhas.push(removerComentarioLinha(documento.lineAt(i).text));
+    }
+    const conteudo = linhas.join('\n');
 
     const resultadoCompreensao = analisar(conteudo);
-
     for (const erroCompreensao of resultadoCompreensao.erros) {
         const numeroLinha = Math.max(0, erroCompreensao.linha - 1);
         if (numeroLinha < documento.lineCount) {
@@ -20,57 +55,25 @@ export function validarDelprops(documento: vscode.TextDocument): vscode.Diagnost
         }
     }
 
-    if (!temRegistro('liquido')) {
-        registrar('liquido', '@designliquido/delprops', [
-            ...(liquido.arquetipo || []),
-            ...(liquido.linguagem || []),
-        ]);
-        registrar('liquido.aplicacao', '@designliquido/delprops', [
-            ...(liquido.aplicacao || []),
-        ]);
-        registrar('liquido.roteador', '@designliquido/delprops', [
-            ...(liquido.roteador || []),
-        ]);
-        registrar('liquido.dados', '@designliquido/delprops', [
-            ...(liquido.dados || []),
-        ]);
-        registrar('liquido.autenticacao', '@designliquido/delprops', [
-            ...(liquido.autenticacao || []),
-        ]);
-    }
-
-    const esquemas = new Map<string, import('@designliquido/delprops').DefinicaoPropriedade[]>();
-    const namespaces = ['liquido', 'liquido.aplicacao', 'liquido.aplicacao.licenca', 'liquido.roteador', 'liquido.dados', 'liquido.autenticacao'];
-    for (const ns of namespaces) {
-        const definicoes = obter(ns);
-        if (definicoes.length > 0) {
-            esquemas.set(ns, definicoes);
+    const validateResult = validar(resultadoCompreensao.propriedades, aplanarEsquemas(obterTodos()));
+    for (const erro of validateResult.erros) {
+        const numeroLinha = Math.max(0, erro.linha - 1);
+        if (numeroLinha < documento.lineCount) {
+            diagnosticos.push(new vscode.Diagnostic(
+                new vscode.Range(numeroLinha, 0, numeroLinha, Number.MAX_VALUE),
+                erro.mensagem,
+                vscode.DiagnosticSeverity.Error
+            ));
         }
     }
-
-    if (resultadoCompreensao.propriedades.length > 0 && esquemas.size > 0) {
-        const resultadoValidacao = validar(resultadoCompreensao.propriedades, esquemas);
-
-        for (const aviso of resultadoValidacao.avisos) {
-            const numeroLinha = Math.max(0, aviso.linha - 1);
-            if (numeroLinha < documento.lineCount) {
-                diagnosticos.push(new vscode.Diagnostic(
-                    new vscode.Range(numeroLinha, 0, numeroLinha, Number.MAX_VALUE),
-                    aviso.mensagem,
-                    vscode.DiagnosticSeverity.Warning
-                ));
-            }
-        }
-
-        for (const erroValidacao of resultadoValidacao.erros) {
-            const numeroLinha = Math.max(0, erroValidacao.linha - 1);
-            if (numeroLinha < documento.lineCount) {
-                diagnosticos.push(new vscode.Diagnostic(
-                    new vscode.Range(numeroLinha, 0, numeroLinha, Number.MAX_VALUE),
-                    erroValidacao.mensagem,
-                    vscode.DiagnosticSeverity.Error
-                ));
-            }
+    for (const aviso of validateResult.avisos) {
+        const numeroLinha = Math.max(0, aviso.linha - 1);
+        if (numeroLinha < documento.lineCount) {
+            diagnosticos.push(new vscode.Diagnostic(
+                new vscode.Range(numeroLinha, 0, numeroLinha, Number.MAX_VALUE),
+                aviso.mensagem,
+                vscode.DiagnosticSeverity.Warning
+            ));
         }
     }
 

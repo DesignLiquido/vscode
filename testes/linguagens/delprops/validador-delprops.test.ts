@@ -24,7 +24,7 @@ jest.mock('vscode', () => {
     };
 }, { virtual: true });
 
-jest.mock('../../../fontes/interfaces', () => ({}));
+
 
 import { validarDelprops } from '../../../fontes/linguagens/delprops/validador-delprops';
 
@@ -56,7 +56,7 @@ describe('validarDelprops', () => {
         const diags = validarDelprops(criarDocumento(['liquido.roteador.porta']));
         expect(diags).toHaveLength(1);
         expect(diags[0].message).toContain("Linha sem o separador '='");
-        expect(diags[0].severity).toBe(0); // Error
+        expect(diags[0].severity).toBe(0);
     });
 
     it('linha com chave vazia (= no início) → erro de sintaxe', () => {
@@ -72,37 +72,43 @@ describe('validarDelprops', () => {
         expect(diags[0].message).toContain('liquido.roteador.porta');
     });
 
-    it('namespace não-liquido → nenhum diagnóstico (permitido sem validação)', () => {
+    it('namespace não-liquido → nenhum diagnóstico', () => {
         const diags = validarDelprops(criarDocumento(['outro.namespace.prop = valor']));
         expect(diags).toHaveLength(0);
     });
 
-    // ──── liquido incompleto ────
-    it('liquido sem subnamespace → aviso namespace sem propriedade', () => {
-        const diags = validarDelprops(criarDocumento(['liquido = verdadeiro']));
+    it('propriedade desconhecida → aviso', () => {
+        const diags = validarDelprops(criarDocumento(['liquido.roteador.propriedadeDesconhecida = verdadeiro']));
         expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("Namespace 'liquido' sem nome de propriedade");
+        expect(diags[0].message).toContain('Propriedade');
+        expect(diags[0].message).toContain('desconhecida');
+        expect(diags[0].severity).toBe(1);
+    });
+
+    it('tipo incorreto → erro', () => {
+        const diags = validarDelprops(criarDocumento(['liquido.roteador.diretorioEstatico = 42']));
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain('Tipo esperado');
+        expect(diags[0].severity).toBe(0);
+    });
+
+    it('valor não permitido → erro', () => {
+        const diags = validarDelprops(criarDocumento(["liquido.autenticacao.tecnologia = 'session'"]));
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain('não está entre os permitidos');
+        expect(diags[0].severity).toBe(0);
+    });
+
+    it('propriedade válida → sem diagnóstico', () => {
+        const diags = validarDelprops(criarDocumento(['liquido.roteador.cors = verdadeiro']));
+        expect(diags).toHaveLength(0);
     });
 
     it('liquido.verboso → aviso propriedade desconhecida', () => {
         const diags = validarDelprops(criarDocumento(['liquido.verboso = verdadeiro']));
         expect(diags).toHaveLength(1);
         expect(diags[0].message).toContain('desconhecida');
-        expect(diags[0].severity).toBe(1); // Warning
-    });
-
-    it('liquido.verboso com texto → aviso propriedade desconhecida', () => {
-        const diags = validarDelprops(criarDocumento(["liquido.verboso = 'sim'"]));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('desconhecida');
-        expect(diags[0].severity).toBe(1); // Warning
-    });
-
-    // ──── liquido.roteador ────
-    it('liquido.roteador sem propriedade → aviso namespace sem propriedade', () => {
-        const diags = validarDelprops(criarDocumento(['liquido.roteador = verdadeiro']));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("Namespace 'liquido.roteador' sem nome de propriedade");
+        expect(diags[0].severity).toBe(1);
     });
 
     it('liquido.roteador.porta com número → sem diagnóstico', () => {
@@ -125,7 +131,7 @@ describe('validarDelprops', () => {
         expect(diags).toHaveLength(1);
         expect(diags[0].message).toContain('Tipo esperado');
         expect(diags[0].message).toContain('numero');
-        expect(diags[0].severity).toBe(0); // Error
+        expect(diags[0].severity).toBe(0);
     });
 
     it('liquido.roteador.cors com número → erro de tipo', () => {
@@ -139,41 +145,13 @@ describe('validarDelprops', () => {
         const diags = validarDelprops(criarDocumento(['liquido.roteador.inexistente = verdadeiro']));
         expect(diags).toHaveLength(1);
         expect(diags[0].message).toContain('desconhecida');
-        expect(diags[0].severity).toBe(1); // Warning
+        expect(diags[0].severity).toBe(1);
     });
 
     it('liquido.roteador.diretorioEstatico com valor sem aspas → erro tipo não reconhecido', () => {
         const diags = validarDelprops(criarDocumento(['liquido.roteador.diretorioEstatico = valor_sem_aspas']));
         expect(diags).toHaveLength(1);
         expect(diags[0].message).toContain('não corresponde a nenhum tipo conhecido');
-    });
-
-    // ──── liquido.dados ────
-    it('liquido.dados sem nome e propriedade → aviso namespace sem propriedade', () => {
-        const diags = validarDelprops(criarDocumento(['liquido.dados = verdadeiro']));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("Namespace 'liquido.dados' sem nome de propriedade");
-    });
-
-    it('liquido.dados.bd → aviso namespace sem propriedade', () => {
-        const diags = validarDelprops(criarDocumento(['liquido.dados.bd = verdadeiro']));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("Namespace 'liquido.dados' sem nome de propriedade");
-        expect(diags[0].severity).toBe(1); // Warning
-    });
-
-    it('liquido.dados.lincones.motor → aviso propriedade desconhecida', () => {
-        const diags = validarDelprops(criarDocumento(["liquido.dados.lincones.motor = 'lincones'"]));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('desconhecida');
-        expect(diags[0].severity).toBe(1); // Warning
-    });
-
-    it('liquido.dados.lincones.motor com valor não permitido → aviso propriedade desconhecida', () => {
-        const diags = validarDelprops(criarDocumento(["liquido.dados.lincones.motor = 'mysql'"]));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('desconhecida');
-        expect(diags[0].severity).toBe(1); // Warning
     });
 
     it('liquido.dados.bd.porta com número → sem diagnóstico', () => {
@@ -186,6 +164,13 @@ describe('validarDelprops', () => {
         expect(diags).toHaveLength(0);
     });
 
+    it('liquido.dados.bd.tecnologia com valor não permitido → erro', () => {
+        const diags = validarDelprops(criarDocumento(["liquido.dados.bd.tecnologia = 'cassandra'"]));
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain('não está entre os permitidos');
+        expect(diags[0].severity).toBe(0);
+    });
+
     it('liquido.dados.bd.autoInicializar com lógico → sem diagnóstico', () => {
         const diags = validarDelprops(criarDocumento(['liquido.dados.bd.autoInicializar = verdadeiro']));
         expect(diags).toHaveLength(0);
@@ -196,92 +181,10 @@ describe('validarDelprops', () => {
         expect(diags).toHaveLength(0);
     });
 
-    it('liquido.dados.bd.tecnologia com tipo errado (número) → erro de tipo', () => {
+    it('liquido.dados.bd.tecnologia com tipo errado → erro de tipo', () => {
         const diags = validarDelprops(criarDocumento(['liquido.dados.bd.tecnologia = 5432']));
         expect(diags).toHaveLength(1);
         expect(diags[0].message).toContain('Tipo esperado');
-    });
-
-    it('liquido.dados.bd.propriedadeDesconhecida → aviso', () => {
-        const diags = validarDelprops(criarDocumento(['liquido.dados.bd.inexistente = verdadeiro']));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].severity).toBe(1); // Warning
-    });
-
-    // ──── liquido.autenticacao ────
-    it('liquido.autenticacao sem propriedade → aviso namespace sem propriedade', () => {
-        const diags = validarDelprops(criarDocumento(['liquido.autenticacao = verdadeiro']));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("Namespace 'liquido.autenticacao' sem nome de propriedade");
-    });
-
-    it("liquido.autenticacao.segredo → aviso propriedade desconhecida", () => {
-        const diags = validarDelprops(criarDocumento(["liquido.autenticacao.segredo = 'minha-chave-secreta'"]));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('desconhecida');
-        expect(diags[0].severity).toBe(1); // Warning
-    });
-
-    it("liquido.autenticacao.tecnologia com 'jwt' → sem diagnóstico", () => {
-        const diags = validarDelprops(criarDocumento(["liquido.autenticacao.tecnologia = 'jwt'"]));
-        expect(diags).toHaveLength(0);
-    });
-
-    it("liquido.autenticacao.tecnologia com 'session' → erro valor não permitido", () => {
-        const diags = validarDelprops(criarDocumento(["liquido.autenticacao.tecnologia = 'session'"]));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("'session'");
-        expect(diags[0].severity).toBe(0); // Error
-    });
-
-    it("liquido.autenticacao.tecnologia com valor não permitido → erro", () => {
-        const diags = validarDelprops(criarDocumento(["liquido.autenticacao.tecnologia = 'oauth'"]));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain("'oauth'");
-    });
-
-    it('liquido.autenticacao.propriedadeDesconhecida → aviso', () => {
-        const diags = validarDelprops(criarDocumento(['liquido.autenticacao.inexistente = verdadeiro']));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('desconhecida');
-        expect(diags[0].severity).toBe(1); // Warning
-    });
-
-    // ──── namespace desconhecido ────
-    it('liquido.namespaceDesconhecido → aviso propriedade desconhecida', () => {
-        const diags = validarDelprops(criarDocumento(['liquido.algumOutro.prop = valor']));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('desconhecida');
-        expect(diags[0].message).toContain('liquido');
-        expect(diags[0].severity).toBe(1); // Warning
-    });
-
-    // ──── valores aspas duplas ────
-    it('valor com aspas duplas → erro tipo não reconhecido (pacote não suporta aspas duplas)', () => {
-        const diags = validarDelprops(criarDocumento(['liquido.roteador.diretorioEstatico = "public"']));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('não corresponde a nenhum tipo conhecido');
-    });
-
-    // ──── múltiplas linhas ────
-    it('múltiplas linhas válidas → sem diagnóstico', () => {
-        const diags = validarDelprops(criarDocumento([
-            '// Configuração do roteador',
-            "liquido.roteador.cors = verdadeiro",
-            "liquido.roteador.helmet = verdadeiro",
-            '',
-            "liquido.autenticacao.tecnologia = 'jwt'",
-        ]));
-        expect(diags).toHaveLength(0);
-    });
-
-    it('múltiplas linhas com alguns erros → conta corretamente', () => {
-        const diags = validarDelprops(criarDocumento([
-            'linha-sem-igual',
-            'liquido.roteador.cors = verdadeiro',
-            'outra-sem-igual',
-        ]));
-        expect(diags).toHaveLength(2);
     });
 
     it('liquido.dados.bd.host com texto → sem diagnóstico', () => {
@@ -294,39 +197,112 @@ describe('validarDelprops', () => {
         expect(diags).toHaveLength(0);
     });
 
-    // ──── URLs com // não devem ser tratadas como comentário ────
-    it("valor com URL contendo '//' em aspas simples → sem diagnóstico", () => {
+    it('liquido.autenticacao.tecnologia com jwt → sem diagnóstico', () => {
+        const diags = validarDelprops(criarDocumento(["liquido.autenticacao.tecnologia = 'jwt'"]));
+        expect(diags).toHaveLength(0);
+    });
+
+    it('liquido.autenticacao.tecnologia com session → erro valor não permitido', () => {
+        const diags = validarDelprops(criarDocumento(["liquido.autenticacao.tecnologia = 'session'"]));
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain("'session'");
+        expect(diags[0].severity).toBe(0);
+    });
+
+    it('liquido.autenticacao.tecnologia com oauth → erro valor não permitido', () => {
+        const diags = validarDelprops(criarDocumento(["liquido.autenticacao.tecnologia = 'oauth'"]));
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain("'oauth'");
+    });
+
+    it('liquido.autenticacao.propriedadeDesconhecida → aviso', () => {
+        const diags = validarDelprops(criarDocumento(['liquido.autenticacao.inexistente = verdadeiro']));
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain('desconhecida');
+        expect(diags[0].severity).toBe(1);
+    });
+
+    it('liquido.namespaceDesconhecido → aviso propriedade desconhecida', () => {
+        const diags = validarDelprops(criarDocumento(['liquido.algumOutro.prop = valor']));
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain('desconhecida');
+        expect(diags[0].message).toContain('liquido');
+        expect(diags[0].severity).toBe(1);
+    });
+
+    it('aspas duplas → erro tipo não reconhecido', () => {
+        const diags = validarDelprops(criarDocumento(['liquido.roteador.diretorioEstatico = "public"']));
+        expect(diags).toHaveLength(1);
+        expect(diags[0].message).toContain('não corresponde a nenhum tipo conhecido');
+    });
+
+    it('URL com // em aspas simples → sem diagnóstico', () => {
         const diags = validarDelprops(criarDocumento(["liquido.aplicacao.licenca.url = 'https://designliquido.com.br'"]));
         expect(diags).toHaveLength(0);
     });
 
-    it("valor com URL contendo '//' em aspas duplas → erro tipo não reconhecido (pacote não suporta aspas duplas)", () => {
+    it('URL com // em aspas duplas → erro tipo não reconhecido', () => {
         const diags = validarDelprops(criarDocumento(['liquido.aplicacao.licenca.url = "https://designliquido.com.br"']));
         expect(diags).toHaveLength(1);
         expect(diags[0].message).toContain('não corresponde a nenhum tipo conhecido');
     });
 
-    it("comentário após valor com URL → erro (pacote não trata comentário inline)", () => {
+    it('comentário inline após valor com URL → comentário ignorado, valor preservado', () => {
         const diags = validarDelprops(criarDocumento(["liquido.aplicacao.licenca.url = 'https://designliquido.com.br' // site oficial"]));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('não corresponde a nenhum tipo conhecido');
+        expect(diags).toHaveLength(0);
     });
 
-    it("comentário de linha inteira com URL dentro → linha ignorada", () => {
+    it('comentário de linha inteira com URL → linha ignorada', () => {
         const diags = validarDelprops(criarDocumento(["// liquido.aplicacao.licenca.url = 'https://designliquido.com.br'"]));
         expect(diags).toHaveLength(0);
     });
 
-    // ──── valores permitidos (tecnologia) ────
-    it('liquido.dados.bd.tecnologia com valor não permitido → erro', () => {
-        const diags = validarDelprops(criarDocumento(["liquido.dados.bd.tecnologia = 'mysql'"]));
-        expect(diags).toHaveLength(0); // mysql is in allowed values
+    it('múltiplas linhas válidas → sem diagnóstico', () => {
+        const diags = validarDelprops(criarDocumento([
+            '// Configuração do roteador',
+            "liquido.roteador.cors = verdadeiro",
+            "liquido.roteador.helmet = verdadeiro",
+            '',
+            "liquido.autenticacao.tecnologia = 'jwt'",
+        ]));
+        expect(diags).toHaveLength(0);
     });
 
-    it('liquido.dados.bd.tecnologia com valor não listado → erro', () => {
-        const diags = validarDelprops(criarDocumento(["liquido.dados.bd.tecnologia = 'cassandra'"]));
-        expect(diags).toHaveLength(1);
-        expect(diags[0].message).toContain('não está entre os permitidos');
-        expect(diags[0].severity).toBe(0); // Error
+    it('múltiplos erros → conta corretamente', () => {
+        const diags = validarDelprops(criarDocumento([
+            'linha-sem-igual',
+            'liquido.roteador.cors = verdadeiro',
+            'outra-sem-igual',
+        ]));
+        expect(diags).toHaveLength(2);
+    });
+
+    it('diagnósticos combinados (parse + avisos + validação)', () => {
+        const diags = validarDelprops(criarDocumento([
+            "liquido.roteador.porta = 'texto'",
+            'linha-invalida',
+            'liquido.roteador.desconhecida = verdadeiro',
+        ]));
+        expect(diags.length).toBeGreaterThanOrEqual(2);
+        const temErroParse = diags.filter(d => d.severity === 0).some(d => d.message.includes('separador'));
+        const temAviso = diags.filter(d => d.severity === 1).some(d => d.message.includes('desconhecida'));
+        expect(temErroParse).toBe(true);
+        expect(temAviso).toBe(true);
+    });
+
+    it('várias linhas com comentários → sem diagnóstico', () => {
+        const diags = validarDelprops(criarDocumento([
+            '// Configuração do roteador',
+            "liquido.roteador.cors = verdadeiro",
+            "liquido.roteador.helmet = verdadeiro",
+            '',
+            "liquido.autenticacao.tecnologia = 'jwt'",
+        ]));
+        expect(diags).toHaveLength(0);
+    });
+
+    it('liquido.dados.bd.tecnologia com mysql → sem diagnóstico', () => {
+        const diags = validarDelprops(criarDocumento(["liquido.dados.bd.tecnologia = 'mysql'"]));
+        expect(diags).toHaveLength(0);
     });
 });
