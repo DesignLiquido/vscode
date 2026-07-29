@@ -121,7 +121,7 @@ export function activate(context: vscode.ExtensionContext) {
             garantirProvedoresLinguagem(doc.languageId, context).catch(erro => {
                 console.error('Erro ao ativar provedores de linguagem:', erro);
             });
-            if (['birl', 'delegua', 'delegua-testes', 'mapler', 'visualg', 'portugolstudio', 'potigol'].includes(doc.languageId)) {
+            if (['birl', 'delegua', 'delegua-testes', 'foles', 'lmht', 'lincones', 'mapler', 'visualg', 'portugolstudio', 'potigol'].includes(doc.languageId)) {
                 executarAnalises(doc, diagnosticosDelegua).catch(erro => {
 					console.error('Erro ao executar análises:', erro);
 				});
@@ -137,7 +137,7 @@ export function activate(context: vscode.ExtensionContext) {
             garantirProvedoresLinguagem(editor.document.languageId, context).catch(erro => {
                 console.error('Erro ao ativar provedores de linguagem:', erro);
             });
-            if (['birl', 'delegua', 'delegua-testes', 'mapler', 'visualg', 'portugolstudio', 'potigol'].includes(editor.document.languageId)) {
+            if (['birl', 'delegua', 'delegua-testes', 'foles', 'lmht', 'lincones', 'mapler', 'visualg', 'portugolstudio', 'potigol'].includes(editor.document.languageId)) {
                 executarAnalises(editor.document, diagnosticosDelegua).catch(erro => {
 					console.error('Erro ao executar análises:', erro);
 				});
@@ -151,6 +151,8 @@ export function activate(context: vscode.ExtensionContext) {
                 case 'birl':
                 case 'delegua':
                 case 'delegua-testes':
+                case 'foles':
+                case 'lincones':
                 case 'mapler':
                 case 'pitugues':
                 case 'portugolstudio':
@@ -180,11 +182,21 @@ export function activate(context: vscode.ExtensionContext) {
                             });
                     }, 500);
                     break;
+                case 'lmht':
+                    if (changeTimeout !== null) {
+                        clearTimeout(changeTimeout);
+                    }
+                    changeTimeout = setTimeout(function () {
+                        clearTimeout(changeTimeout);
+                        changeTimeout = null;
+                        executarAnalises(evento.document, diagnosticosDelegua).catch(erro => {
+                            console.error('Erro ao executar análises:', erro);
+                        });
+                    }, 500);
+                    tentarFecharTagLmht(evento);
+                    break;
                 case 'delprops':
                     diagnosticsDelprops.set(evento.document.uri, validarDelprops(evento.document));
-                    break;
-                case 'lmht':
-                    tentarFecharTagLmht(evento);
                     break;
                 default:
                     break;

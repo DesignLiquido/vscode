@@ -17,6 +17,7 @@ import { ProvedorTarefasLiquidoWeb } from './tarefas/provedor-tarefas-web';
 import { comandosLiquido, TIPO_TAREFA_LIQUIDO } from './tarefas/comandos-liquido';
 
 import { executarAnalises } from './analise-codigo';
+import { validarDelprops } from './linguagens/delprops/validador-delprops';
 import { DeleguaProvedorAssinaturaMetodos } from './assinaturas-metodos';
 import { garantirProvedoresLinguagem } from './ativacao-linguagens';
 import { tentarFecharTagLmht } from './linguagens/lmht/fechamento-estruturas';
@@ -98,15 +99,24 @@ export function activate(context: vscode.ExtensionContext) {
     const diagnosticosDelegua = vscode.languages.createDiagnosticCollection("delegua");
     context.subscriptions.push(diagnosticosDelegua);
 
+    const diagnosticsDelprops = vscode.languages.createDiagnosticCollection("delprops");
+    context.subscriptions.push(diagnosticsDelprops);
+
     // Análise de código em tempo real
     if (vscode.window.activeTextEditor) {
-        executarAnalises(vscode.window.activeTextEditor.document, diagnosticosDelegua).catch(erro => {
-            console.error('Erro ao executar análises:', erro);
-        });
         if (ehLinguagemSuportadaNaWeb(vscode.window.activeTextEditor.document.languageId)) {
             garantirProvedoresLinguagem(vscode.window.activeTextEditor.document.languageId, context).catch(erro => {
                 console.error('Erro ao ativar provedores de linguagem:', erro);
             });
+        }
+        executarAnalises(vscode.window.activeTextEditor.document, diagnosticosDelegua).catch(erro => {
+            console.error('Erro ao executar análises:', erro);
+        });
+        if (vscode.window.activeTextEditor.document.languageId === 'delprops') {
+            diagnosticsDelprops.set(
+                vscode.window.activeTextEditor.document.uri,
+                validarDelprops(vscode.window.activeTextEditor.document)
+            );
         }
     }
 
@@ -117,10 +127,13 @@ export function activate(context: vscode.ExtensionContext) {
                     console.error('Erro ao ativar provedores de linguagem:', erro);
                 });
             }
-            if (['birl', 'delegua', 'mapler', 'visualg', 'portugolstudio'].includes(doc.languageId)) {
+            if (['birl', 'delegua', 'foles', 'lmht', 'lincones', 'mapler', 'visualg', 'portugolstudio'].includes(doc.languageId)) {
                 executarAnalises(doc, diagnosticosDelegua).catch(erro => {
                     console.error('Erro ao executar análises:', erro);
                 });
+            }
+            if (doc.languageId === 'delprops') {
+                diagnosticsDelprops.set(doc.uri, validarDelprops(doc));
             }
         }),
         vscode.window.onDidChangeActiveTextEditor(editor => {
@@ -132,16 +145,21 @@ export function activate(context: vscode.ExtensionContext) {
                     console.error('Erro ao ativar provedores de linguagem:', erro);
                 });
             }
-            if (['birl', 'delegua', 'mapler', 'visualg', 'portugolstudio'].includes(editor.document.languageId)) {
+            if (['birl', 'delegua', 'foles', 'lmht', 'lincones', 'mapler', 'visualg', 'portugolstudio'].includes(editor.document.languageId)) {
                 executarAnalises(editor.document, diagnosticosDelegua).catch(erro => {
                     console.error('Erro ao executar análises:', erro);
                 });
+            }
+            if (editor.document.languageId === 'delprops') {
+                diagnosticsDelprops.set(editor.document.uri, validarDelprops(editor.document));
             }
         }),
         vscode.workspace.onDidChangeTextDocument((evento) => {
             switch (evento.document.languageId) {
                 case 'birl':
                 case 'delegua':
+                case 'foles':
+                case 'lincones':
                 case 'mapler':
                 case 'pitugues':
                 case 'visualg':
@@ -160,7 +178,22 @@ export function activate(context: vscode.ExtensionContext) {
                     }, 500);
                     break;
                 case 'lmht':
+                    if (changeTimeout !== null) {
+                        clearTimeout(changeTimeout);
+                    }
+                    changeTimeout = setTimeout(function () {
+                        if (changeTimeout) {
+                            clearTimeout(changeTimeout);
+                        }
+                        changeTimeout = null;
+                        executarAnalises(evento.document, diagnosticosDelegua).catch(erro => {
+                            console.error('Erro ao executar análises:', erro);
+                        });
+                    }, 500);
                     tentarFecharTagLmht(evento);
+                    break;
+                case 'delprops':
+                    diagnosticsDelprops.set(evento.document.uri, validarDelprops(evento.document));
                     break;
                 default:
                     break;
@@ -171,6 +204,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.workspace.onDidCloseTextDocument(doc => {
             diagnosticosDelegua.delete(doc.uri);
+            diagnosticsDelprops.delete(doc.uri);
             expirarResultado(doc.uri.toString(), 'documento-fechado');
         })
     );
