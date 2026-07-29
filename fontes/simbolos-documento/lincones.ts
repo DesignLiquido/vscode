@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Lexador, AvaliadorSintatico } from '@designliquido/lincones-js';
+import { Lexador, AvaliadorSintatico, Criar, Selecionar, Inserir, Atualizar, Excluir } from '@designliquido/lincones-js';
 
 export class LinConEsProvedorSimbolosDocumento implements vscode.DocumentSymbolProvider {
     provideDocumentSymbols(documento: vscode.TextDocument, _token: vscode.CancellationToken): vscode.DocumentSymbol[] {
@@ -19,18 +19,19 @@ export class LinConEsProvedorSimbolosDocumento implements vscode.DocumentSymbolP
 
             const simbolos: vscode.DocumentSymbol[] = [];
             for (const comando of resultadoAvaliacao.comandos) {
-                const nome = comando.constructor.name === 'Criar' ? (comando as any).nomeEntidade
-                    : comando.constructor.name === 'Selecionar' ? (comando as any).tabela
-                    : comando.constructor.name === 'Inserir' ? (comando as any).tabela
-                    : comando.constructor.name === 'Atualizar' ? (comando as any).tabela
-                    : comando.constructor.name === 'Excluir' ? (comando as any).tabela
-                    : comando.constructor.name;
+                const nome = comando.constructor === Criar ? (comando as any).nomeEntidade
+                    : comando.constructor === Selecionar ? (comando as any).tabela
+                    : comando.constructor === Inserir ? (comando as any).tabela
+                    : comando.constructor === Atualizar ? (comando as any).tabela
+                    : comando.constructor === Excluir ? (comando as any).tabela
+                    : '';
                 if (nome) {
                     const linha = comando.linha !== undefined ? comando.linha : 0;
-                    const kind = comando.constructor.name === 'Criar' ? vscode.SymbolKind.Struct : vscode.SymbolKind.Function;
+                    const kind = comando.constructor === Criar ? vscode.SymbolKind.Struct : vscode.SymbolKind.Function;
                     const range = linhaParaRangeSeguro(documento, linha);
                     const selectionRange = posicaoParaTexto(documento, linha, nome);
-                    simbolos.push(new vscode.DocumentSymbol(nome, comando.constructor.name, kind, range, selectionRange));
+                    const tipo = nomeTipoComando(comando);
+                    simbolos.push(new vscode.DocumentSymbol(nome, tipo, kind, range, selectionRange));
                 }
             }
 
@@ -39,6 +40,15 @@ export class LinConEsProvedorSimbolosDocumento implements vscode.DocumentSymbolP
             return [];
         }
     }
+}
+
+function nomeTipoComando(comando: any): string {
+    if (comando.constructor === Criar) return 'Criar';
+    if (comando.constructor === Selecionar) return 'Selecionar';
+    if (comando.constructor === Inserir) return 'Inserir';
+    if (comando.constructor === Atualizar) return 'Atualizar';
+    if (comando.constructor === Excluir) return 'Excluir';
+    return '';
 }
 
 function linhaParaRangeSeguro(documento: vscode.TextDocument, linha: number): vscode.Range {
