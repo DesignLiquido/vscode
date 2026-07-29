@@ -32,7 +32,7 @@ jest.mock('@designliquido/portugol-studio', () => ({
             return { declaracoes: [], erros: [] };
         }
     }
-}), { virtual: true });
+}));
 
 jest.mock('@designliquido/portugol-studio/formatador/formatador-portugol-studio', () => ({
     FormatadorPortugolStudio: class FormatadorPortugolStudio {
@@ -41,7 +41,7 @@ jest.mock('@designliquido/portugol-studio/formatador/formatador-portugol-studio'
             return 'codigo formatado portugol';
         }
     }
-}), { virtual: true });
+}));
 
 import { PortugolStudioProvedorFormatacao } from '../../fontes/formatadores/portugol-studio-provedor-formatacao';
 

@@ -83,7 +83,7 @@ jest.mock('../../fontes/bibliotecas/dialetos/portugol-studio', () => ({
         { nome: 'aguarde', descricao: 'Aguarda tempo.', documentacao: '# `Util.aguarde()`\n Aguarde.' },
         { nome: 'numero_elementos', descricao: 'Número de elementos.', documentacao: '# `Util.numero_elementos()`\n Elementos.' },
     ],
-}), { virtual: true });
+}));
 
 import { PortugolStudioProvedorCompletude } from '../../fontes/completude/portugol-studio-provedor-completude';
 

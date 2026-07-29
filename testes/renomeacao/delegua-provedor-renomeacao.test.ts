@@ -31,11 +31,7 @@ jest.mock('vscode', () => ({
     },
 }), { virtual: true });
 
-jest.mock('@designliquido/delegua-lsp', () => ({
-    prepareRename: jest.fn().mockReturnValue(undefined),
-    provideRenameEdits: jest.fn().mockResolvedValue(undefined),
-    DocumentoLSP: undefined,
-}), { virtual: true });
+jest.mock('@designliquido/delegua-lsp');
 
 import { DeleguaProvedorRenomeacao } from '../../fontes/renomeacao/delegua-provedor-renomeacao';
 

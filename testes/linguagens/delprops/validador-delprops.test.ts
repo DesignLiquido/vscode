@@ -24,7 +24,7 @@ jest.mock('vscode', () => {
     };
 }, { virtual: true });
 
-jest.mock('../../../fontes/interfaces', () => ({}), { virtual: true });
+jest.mock('../../../fontes/interfaces', () => ({}));
 
 import { validarDelprops } from '../../../fontes/linguagens/delprops/validador-delprops';
 

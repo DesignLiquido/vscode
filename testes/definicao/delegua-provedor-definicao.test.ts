@@ -16,10 +16,7 @@ jest.mock('vscode', () => ({
     workspace: { fs: {} },
 }), { virtual: true });
 
-jest.mock('@designliquido/delegua-lsp', () => ({
-    proverDefinicao: jest.fn().mockReturnValue(undefined),
-    DocumentoLSP: undefined,
-}), { virtual: true });
+jest.mock('@designliquido/delegua-lsp');
 
 import { DeleguaProvedorDefinicao } from '../../fontes/definicao/delegua-provedor-definicao';
 
