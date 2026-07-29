@@ -53,12 +53,29 @@ function extrairAtributosDaLinha(linha: string): string[] {
     return atributos;
 }
 
+function removerComentariosHtml(texto: string): string {
+    let resultado = '';
+    let i = 0;
+    while (i < texto.length) {
+        const inicio = texto.indexOf('<!--', i);
+        if (inicio === -1) {
+            resultado += texto.slice(i);
+            break;
+        }
+        resultado += texto.slice(i, inicio);
+        const fim = texto.indexOf('-->', inicio + 4);
+        if (fim === -1) {
+            break;
+        }
+        i = fim + 3;
+    }
+    return resultado;
+}
+
 export function validarLmht(documento: vscode.TextDocument): vscode.Diagnostic[] {
     const diagnosticos: vscode.Diagnostic[] = [];
     const texto = documento.getText();
-    const textoSemComentarios = texto
-        .replace(/<!--[\s\S]*?-->/g, '')
-        .replace(/<!--[\s\S]*/g, '');
+    const textoSemComentarios = removerComentariosHtml(texto);
     const tags = extrairTags(textoSemComentarios);
 
     for (const tag of tags) {
