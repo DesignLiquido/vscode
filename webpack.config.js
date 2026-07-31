@@ -8,10 +8,13 @@ const webpack = require('webpack');
 /**@type {import('webpack').Configuration}*/
 const webConfig = {
   target: 'webworker',
-  entry: './fontes/extensao-web.ts',
+  entry: {
+    'extensao-web': './fontes/extensao-web.ts',
+    'testes/e2e/web/index': './testes/e2e/web/index.ts'
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'extensao-web.js',
+    filename: '[name].js',
     libraryTarget: 'commonjs2',
     devtoolModuleFilenameTemplate: '../[resource-path]'
   },
@@ -63,7 +66,8 @@ const webConfig = {
             options: {
               transpileOnly: true,
               compilerOptions: {
-                module: 'esnext'
+                module: 'esnext',
+                rootDir: '.',
               }
             }
           }

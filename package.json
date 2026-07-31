@@ -66,8 +66,9 @@
     },
     "scripts": {
         "compilar": "tsc -p ./",
-        "lint": "yarn eslint depuracao --ext ts",
+        "lint": "yarn eslint fontes --ext .ts",
         "typecheck": "tsc -p tsconfig.json --noEmit",
+        "build": "yarn build-base && yarn compilar-web",
         "build-base": "esbuild ./fontes/extensao.ts --bundle --sources-content=true --tsconfig=./tsconfig.json --external:vscode --format=cjs --platform=node --outfile=dist/extensao.js",
         "build-continuo": "npm run -S build-base -- --sourcemap --watch",
         "compilar-web": "webpack --mode development",
@@ -82,7 +83,7 @@
         "testes-unitarios": "jest --coverage",
         "testes-unitarios:continuo": "jest --watch",
         "testes-unitarios:verboso": "jest --verbose",
-        "testar-web": "yarn compilar-web && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. .",
+        "testar-web": "yarn compilar-web && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --extensionTestsPath=dist/testes/e2e/web/index.js testes/e2e/fixtures",
         "vscode:pre-empacotar-web": "yarn pre-empacotar"
     },
     "activationEvents": [

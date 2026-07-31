@@ -1,0 +1,2 @@
+var contador = 1
+escreva(contador)
