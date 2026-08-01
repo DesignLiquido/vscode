@@ -1,5 +1,31 @@
 # Histórico de Modificações
 
+## 0.28.0
+
+- Navegação estrutural completa (`DocumentSymbol`, `FoldingRange`, `CodeLens`, `InlayHints`, `SemanticTokens`, `WorkspaceSymbol`) para as 13 linguagens suportadas pela extensão;
+- Pituguês:
+  - Suporte a primitivas de tupla na documentação e na formatação das funções nativas (resolve https://github.com/DesignLiquido/vscode/issues/97);
+  - Navegação estrutural com assinaturas no desktop e demais provedores também na web (resolve https://github.com/DesignLiquido/vscode/issues/100);
+  - Auto-indentação e configuração completa do editor (resolve https://github.com/DesignLiquido/vscode/issues/101).
+- LMHT:
+  - Completude sensível a contexto, com inserção automática de marcação (resolve https://github.com/DesignLiquido/vscode/issues/103).
+- Liquido:
+  - Novo `TaskProvider` para executar e testar projetos diretamente pelo editor (resolve https://github.com/DesignLiquido/vscode/issues/105);
+  - Formatação automática para FolEs, LMHT, LinConEs e `.delprops` (resolve https://github.com/DesignLiquido/vscode/issues/112);
+  - Diagnósticos em tempo real para LMHT, FolEs, LinConEs e `.delprops` (resolve https://github.com/DesignLiquido/vscode/issues/113);
+  - 17 comandos de tradução adicionados aos menus de contexto (resolve https://github.com/DesignLiquido/vscode/issues/115);
+  - Novo passo-a-passo (_walkthrough_) interativo "Criando uma aplicação web em Líquido" (resolve https://github.com/DesignLiquido/vscode/issues/116);
+  - Validação de `.delprops` passa a ser delegada ao pacote `@designliquido/delprops` (resolve https://github.com/DesignLiquido/vscode/issues/117);
+  - Suporte a comentários de bloco (`Ctrl`/`Cmd` + `/`) em arquivos `.foles` (resolve https://github.com/DesignLiquido/vscode/issues/119);
+  - Preenchimento de `configuracao-lincones.json` com comentários, colchetes, fechamento automático de pares e pares de encapsulamento (resolve https://github.com/DesignLiquido/vscode/issues/120).
+- Otimizações de desempenho:
+  - Ativação de linguagens passa a ser dinâmica, reduzindo consumo de memória e recursos de máquina;
+  - Importações dinâmicas para o tempo de execução Desktop;
+  - Lógica de importação de bibliotecas de Delégua sem dependência do Node.js;
+  - Otimização de carga de cada dialeto em ambiente Web, reduzindo processamento e consumo de memória.
+- Reorganização da configuração de CI, com adição de testes _end-to-end_ e de contrato (resolve https://github.com/DesignLiquido/vscode/issues/104);
+- Atualização periódica de pacotes.
+
 ## 0.27.5
 
 - Núcleo de Delégua atualizado para a versão 1.26.1:
