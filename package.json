@@ -949,6 +949,18 @@
             {
                 "language": "portugolstudio",
                 "path": "./snippets/portugolstudio.code-snippets.json"
+            },
+            {
+                "language": "lmht",
+                "path": "./snippets/lmht.code-snippets.json"
+            },
+            {
+                "language": "foles",
+                "path": "./snippets/foles.code-snippets.json"
+            },
+            {
+                "language": "pitugues",
+                "path": "./snippets/liquido-pitugues.code-snippets.json"
             }
         ],
         "walkthroughs": [

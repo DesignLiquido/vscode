@@ -1,0 +1,54 @@
+{
+    "Documento base LMHT": {
+        "prefix": "lmht-documento",
+        "body": [
+            "<lmht>",
+            "\t<cabeca>",
+            "\t\t<titulo>${1:Título da página}</titulo>",
+            "\t</cabeca>",
+            "\t<corpo>",
+            "\t\t$0",
+            "\t</corpo>",
+            "</lmht>"
+        ],
+        "description": "Cria a estrutura base de um documento LMHT."
+    },
+    "Formulário LMHT": {
+        "prefix": "lmht-formulario",
+        "body": [
+            "<formulario acao=\"${1:/enviar}\" metodo=\"${2:post}\">",
+            "\t<rotulo para=\"${3:nome}\">${4:Nome}</rotulo>",
+            "\t<entrada tipo=\"${5:texto}\" id=\"${3:nome}\" nome=\"${3:nome}\" />",
+            "\t<botao tipo=\"enviar\">${6:Enviar}</botao>",
+            "</formulario>"
+        ],
+        "description": "Cria um formulário LMHT com rótulo, entrada e botão."
+    },
+    "Tabela LMHT": {
+        "prefix": "lmht-tabela",
+        "body": [
+            "<tabela>",
+            "\t<linha>",
+            "\t\t<cabecalho>${1:Coluna 1}</cabecalho>",
+            "\t\t<cabecalho>${2:Coluna 2}</cabecalho>",
+            "\t</linha>",
+            "\t<linha>",
+            "\t\t<celula>${3:Valor 1}</celula>",
+            "\t\t<celula>${4:Valor 2}</celula>",
+            "\t</linha>",
+            "</tabela>"
+        ],
+        "description": "Cria uma tabela LMHT com cabeçalho e uma linha de dados."
+    },
+    "Lista LMHT": {
+        "prefix": "lmht-lista",
+        "body": [
+            "<lista-nao-ordenada>",
+            "\t<item-lista>${1:Primeiro item}</item-lista>",
+            "\t<item-lista>${2:Segundo item}</item-lista>",
+            "\t<item-lista>${3:Terceiro item}</item-lista>",
+            "</lista-nao-ordenada>"
+        ],
+        "description": "Cria uma lista não ordenada em LMHT."
+    }
+}
