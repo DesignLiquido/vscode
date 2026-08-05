@@ -24,6 +24,8 @@ import { DeleguaProvedorFormatacao } from './formatadores/delegua-provedor-forma
 
 import { traduzir } from './traducao';
 import { executarAnalises } from './analise-codigo';
+import { ehArquivoConfiguracaoProjetoLiquido } from './liquido/deteccao-projeto-liquido';
+import { reanalisarDocumentosAbertosProjetoLiquido } from './liquido/reanalisar-documentos-projeto-liquido';
 import { DeleguaProvedorAssinaturaMetodos, DeleguaTestesProvedorAssinaturaMetodos } from './assinaturas-metodos';
 import { garantirProvedoresLinguagem } from './ativacao-linguagens';
 
@@ -223,28 +225,24 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 
     context.subscriptions.push(
-        vscode.workspace.onDidSaveTextDocument(documento => {
+        vscode.workspace.onDidSaveTextDocument(async documento => {
             if (ehArquivoDependenciaProjeto(documento)) {
                 expirarTudo('dependencias-atualizadas');
                 expirarTodasDefinicoes('dependencias-atualizadas');
             }
 
-            if (documento.uri.path.endsWith('configuracao.delprops')) {
-                for (const doc of vscode.workspace.textDocuments) {
-                    if (/[\\\/]rotas[\\\/]/i.test(doc.fileName) &&
-                        doc.languageId === 'delegua') {
-                        expirarResultado(doc.uri.toString(), 'delprops-atualizado');
-                        executarAnalises(doc, diagnosticosDelegua).catch(erro => {
-                            console.error('Erro ao reanalisar rota após atualização de delprops:', erro);
-                        });
-                    }
-                }
+            if (ehArquivoConfiguracaoProjetoLiquido(documento.uri)) {
+                expirarTodasDefinicoes('delprops-atualizado');
+                await reanalisarDocumentosAbertosProjetoLiquido(diagnosticosDelegua, {
+                    arquivosConfiguracao: [documento.uri],
+                    motivo: 'delprops-atualizado',
+                });
             }
         })
     );
 
     context.subscriptions.push(
-        vscode.workspace.onDidCreateFiles(evento => {
+        vscode.workspace.onDidCreateFiles(async evento => {
             const uris = evento.files.map(arquivo => arquivo.toString());
             expirarResultados(uris, 'arquivo-criado');
 
@@ -253,11 +251,20 @@ export function activate(context: vscode.ExtensionContext) {
                 .map(arquivo => arquivo.fsPath);
 
             expirarResultadosPorDependenciaArquivo(caminhosAfetados, 'arquivo-delegua-criado');
+
+            const configuracoesLiquido = evento.files.filter(ehArquivoConfiguracaoProjetoLiquido);
+            if (configuracoesLiquido.length > 0) {
+                expirarTodasDefinicoes('configuracao-liquido-criada');
+                await reanalisarDocumentosAbertosProjetoLiquido(diagnosticosDelegua, {
+                    arquivosConfiguracao: configuracoesLiquido,
+                    motivo: 'configuracao-liquido-criada',
+                });
+            }
         })
     );
 
     context.subscriptions.push(
-        vscode.workspace.onDidDeleteFiles(evento => {
+        vscode.workspace.onDidDeleteFiles(async evento => {
             const uris = evento.files.map(arquivo => arquivo.toString());
             expirarResultados(uris, 'arquivo-removido');
 
@@ -266,6 +273,16 @@ export function activate(context: vscode.ExtensionContext) {
                 .map(arquivo => arquivo.fsPath);
 
             expirarResultadosPorDependenciaArquivo(caminhosAfetados, 'arquivo-delegua-removido');
+
+            const configuracoesLiquido = evento.files.filter(ehArquivoConfiguracaoProjetoLiquido);
+            if (configuracoesLiquido.length > 0) {
+                expirarTodasDefinicoes('configuracao-liquido-removida');
+                await reanalisarDocumentosAbertosProjetoLiquido(diagnosticosDelegua, {
+                    arquivosConfiguracao: configuracoesLiquido,
+                    incluirDocumentosSemProjeto: true,
+                    motivo: 'configuracao-liquido-removida',
+                });
+            }
         })
     );
 
@@ -716,6 +733,18 @@ export function activate(context: vscode.ExtensionContext) {
                     .flatMap(arquivo => [arquivo.oldUri.fsPath, arquivo.newUri.fsPath]),
                 'arquivo-delegua-renomeado'
             );
+
+            const configuracoesLiquido = evento.files
+                .flatMap(arquivo => [arquivo.oldUri, arquivo.newUri])
+                .filter(ehArquivoConfiguracaoProjetoLiquido);
+            if (configuracoesLiquido.length > 0) {
+                expirarTodasDefinicoes('configuracao-liquido-renomeada');
+                await reanalisarDocumentosAbertosProjetoLiquido(diagnosticosDelegua, {
+                    arquivosConfiguracao: configuracoesLiquido,
+                    incluirDocumentosSemProjeto: true,
+                    motivo: 'configuracao-liquido-renomeada',
+                });
+            }
 
             const houveRenomeacaoDelgua = evento.files.some(arquivo =>
                 ehArquivoDelegua(arquivo.oldUri) || ehArquivoDelegua(arquivo.newUri)

@@ -25,6 +25,11 @@ import { AnalisadorSemanticoTestes } from './analisador-semantico-testes';
 import { verificarConfiguracaoLincones } from './verificar-lincones';
 import { validarLmht } from './validar-lmht';
 import { validarFoles } from './validar-foles';
+import type { ContextoProjetoLiquido } from '../liquido/deteccao-projeto-liquido';
+import {
+    contextoLiquidoCorrespondeAExtensao,
+    detectarProjetoLiquido,
+} from '../liquido/deteccao-projeto-liquido';
 
 const mapaSeveridadeDiagnosticos = {
     0: vscode.DiagnosticSeverity.Error,
@@ -46,7 +51,8 @@ const mapaSeveridadeDiagnosticos = {
  */
 export async function executarAnalises(
     documento: vscode.TextDocument,
-    diagnosticos: vscode.DiagnosticCollection
+    diagnosticos: vscode.DiagnosticCollection,
+    detectorProjetoLiquido: typeof detectarProjetoLiquido = detectarProjetoLiquido
 ): Promise<void> {
     const extensaoArquivo = documento.languageId === 'delegua-testes'
         ? 'delegua'
@@ -79,6 +85,8 @@ export async function executarAnalises(
     let resultadoAnalisadorSemantico: RetornoAnalisadorSemanticoInterface | undefined = undefined;
     let declaracoesPreCarregadas: Declaracao[] = [];
     let dependenciasArquivos: string[] = [];
+    let contextoProjetoLiquido: ContextoProjetoLiquido | undefined;
+    let emContextoLiquido = false;
 
     switch (extensaoArquivo) {
         case "birl": {
@@ -108,13 +116,14 @@ export async function executarAnalises(
 
             importador.diretorioBase = documento.fileName.substring(0, documento.fileName.lastIndexOf(separador));
             const avaliadorComImportacao = new AvaliadorSintaticoComImportacao(importador);
-            const arquivoDeRotaLiquido = /[\\\/]rotas[\\\/]/i.test(documento.fileName);
+            contextoProjetoLiquido = await detectorProjetoLiquido(documento.uri);
+            emContextoLiquido = contextoLiquidoCorrespondeAExtensao(contextoProjetoLiquido, extensaoArquivo);
             
-            avaliadorComImportacao.definirContextoLiquido(arquivoDeRotaLiquido);
+            avaliadorComImportacao.definirContextoLiquido(emContextoLiquido);
             avaliadorComImportacao.diagnosticos = diagnosticos;
-            await avaliadorComImportacao.preCarregarDefinicoes(await descobrirDefinicoes(arquivoDeRotaLiquido));
+            await avaliadorComImportacao.preCarregarDefinicoes(await descobrirDefinicoes(emContextoLiquido));
 
-            if (arquivoDeRotaLiquido) {
+            if (emContextoLiquido) {
                 const aliasesContextoLiquido: Record<string, string> = {
                     Liquido: 'liquido',
                     Requisicao: 'requisicao',
@@ -141,11 +150,12 @@ export async function executarAnalises(
         case "pitu":
         case "pitugues":
             lexador = new LexadorPitugues();
-            const emRotaLiquidoPitu = /[\\\/]rotas[\\\/]/i.test(documento.fileName);
-            avaliadorSintatico = emRotaLiquidoPitu
+            contextoProjetoLiquido = await detectorProjetoLiquido(documento.uri);
+            emContextoLiquido = contextoLiquidoCorrespondeAExtensao(contextoProjetoLiquido, extensaoArquivo);
+            avaliadorSintatico = emContextoLiquido
                 ? new AvaliadorSintaticoPituguesLiquido()
                 : new AvaliadorSintaticoPitugues();
-            analisadorSemantico = emRotaLiquidoPitu
+            analisadorSemantico = emContextoLiquido
                 ? new AnalisadorSemanticoPituguesLiquido()
                 : new AnalisadorSemanticoPitugues();
             break;
@@ -243,10 +253,13 @@ export async function executarAnalises(
         declaracoesPreCarregadas = Object.values(avaliadorSintatico.tiposDefinidosEmCodigo);
         (analisadorSemantico as any)?.registrarClassesExternas?.(declaracoesPreCarregadas.filter(d => d instanceof Classe));
 
-        const chaveWorkspace = vscode.workspace.workspaceFolders?.[0]?.uri.toString() || 'sem-workspace';
-        const arquivoDeRotaLiquidoFinal = /[\\\/]rotas[\\\/]/i.test(documento.fileName);
+        const chaveWorkspace =
+            (vscode.workspace as any).getWorkspaceFolder?.(documento.uri)?.uri?.toString?.() || 'sem-workspace';
+        const chaveContexto = contextoProjetoLiquido
+            ? `${contextoProjetoLiquido.raiz.toString()}::liquido::${contextoProjetoLiquido.arquetipo ?? 'sem-arquetipo'}::${contextoProjetoLiquido.linguagem ?? 'linguagem-invalida'}`
+            : `${chaveWorkspace}::normal`;
         definirDefinicoes(
-            `${chaveWorkspace}::${arquivoDeRotaLiquidoFinal ? 'liquido' : 'normal'}`,
+            chaveContexto,
             { ...avaliadorSintatico.tiposDefinidosEmCodigo }
         );
 
