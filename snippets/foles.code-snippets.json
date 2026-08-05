@@ -1,0 +1,37 @@
+{
+    "Regra FolEs": {
+        "prefix": "foles-regra",
+        "body": [
+            "${1:seletor} {",
+            "\t${2:cor}: ${3:#000000};",
+            "\t$0",
+            "}"
+        ],
+        "description": "Cria uma regra de estilo FolEs."
+    },
+    "Consulta de mídia FolEs": {
+        "prefix": "foles-midia",
+        "body": [
+            "@media tela e (largura-maxima: ${1:768px}) {",
+            "\t${2:seletor} {",
+            "\t\t${3:exibicao}: ${4:bloco};",
+            "\t}",
+            "}"
+        ],
+        "description": "Cria uma consulta de mídia responsiva em FolEs."
+    },
+    "Variáveis FolEs": {
+        "prefix": "foles-variaveis",
+        "body": [
+            ":raiz {",
+            "\t--${1:cor-primaria}: ${2:#3366ff};",
+            "\t--${3:espacamento}: ${4:1rem};",
+            "}",
+            "",
+            "${5:seletor} {",
+            "\t${6:cor}: var(--${1:cor-primaria});",
+            "}"
+        ],
+        "description": "Cria variáveis reutilizáveis e uma regra que as consome em FolEs."
+    }
+}

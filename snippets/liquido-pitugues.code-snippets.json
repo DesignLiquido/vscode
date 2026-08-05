@@ -1,0 +1,122 @@
+{
+    "Declaração de rota Get": {
+        "prefix": "rotaGet",
+        "body": [
+            "liquido.rotaGet(funcao(requisicao, resposta) :",
+            "  ${1:// Código aqui}",
+            "  resposta.enviar(${2:retorno}).status(200)",
+            ")"
+        ],
+        "description": "Declaração de rota GET em Pituguês."
+    },
+    "Declaração de rota Post": {
+        "prefix": "rotaPost",
+        "body": [
+            "liquido.rotaPost(funcao(requisicao, resposta) :",
+            "  ${1:// Código aqui}",
+            "  resposta.enviar(${2:retorno}).status(201)",
+            ")"
+        ],
+        "description": "Declaração de rota POST em Pituguês."
+    },
+    "Declaração de rota Put": {
+        "prefix": "rotaPut",
+        "body": [
+            "liquido.rotaPut(funcao(requisicao, resposta) :",
+            "  ${1:// Código aqui}",
+            "  resposta.enviar(${2:retorno}).status(200)",
+            ")"
+        ],
+        "description": "Declaração de rota PUT em Pituguês."
+    },
+    "Declaração de rota Delete": {
+        "prefix": "rotaDelete",
+        "body": [
+            "liquido.rotaDelete(funcao(requisicao, resposta) :",
+            "  ${1:// Código aqui}",
+            "  resposta.enviar(${2:retorno}).status(200)",
+            ")"
+        ],
+        "description": "Declaração de rota DELETE em Pituguês."
+    },
+    "Declaração de rota Patch": {
+        "prefix": "rotaPatch",
+        "body": [
+            "liquido.rotaPatch(funcao(requisicao, resposta) :",
+            "  ${1:// Código aqui}",
+            "  resposta.enviar(${2:retorno}).status(200)",
+            ")"
+        ],
+        "description": "Declaração de rota PATCH em Pituguês."
+    },
+    "Declaração de rota Options": {
+        "prefix": "rotaOptions",
+        "body": [
+            "liquido.rotaOptions(funcao(requisicao, resposta) :",
+            "  ${1:// Código aqui}",
+            "  resposta.enviar(${2:retorno}).status(200)",
+            ")"
+        ],
+        "description": "Declaração de rota OPTIONS em Pituguês."
+    },
+    "Declaração de rota Copy": {
+        "prefix": "rotaCopy",
+        "body": [
+            "liquido.rotaCopy(funcao(requisicao, resposta) :",
+            "  ${1:// Código aqui}",
+            "  resposta.enviar(${2:retorno}).status(200)",
+            ")"
+        ],
+        "description": "Declaração de rota COPY em Pituguês."
+    },
+    "Declaração de rota Head": {
+        "prefix": "rotaHead",
+        "body": [
+            "liquido.rotaHead(funcao(requisicao, resposta) :",
+            "  ${1:// Código aqui}",
+            "  resposta.status(200)",
+            ")"
+        ],
+        "description": "Declaração de rota HEAD em Pituguês."
+    },
+    "Declaração de rota Lock": {
+        "prefix": "rotaLock",
+        "body": [
+            "liquido.rotaLock(funcao(requisicao, resposta) :",
+            "  ${1:// Código aqui}",
+            "  resposta.enviar(${2:retorno}).status(200)",
+            ")"
+        ],
+        "description": "Declaração de rota LOCK em Pituguês."
+    },
+    "Declaração de rota Unlock": {
+        "prefix": "rotaUnlock",
+        "body": [
+            "liquido.rotaUnlock(funcao(requisicao, resposta) :",
+            "  ${1:// Código aqui}",
+            "  resposta.enviar(${2:retorno}).status(200)",
+            ")"
+        ],
+        "description": "Declaração de rota UNLOCK em Pituguês."
+    },
+    "Declaração de rota Purge": {
+        "prefix": "rotaPurge",
+        "body": [
+            "liquido.rotaPurge(funcao(requisicao, resposta) :",
+            "  ${1:// Código aqui}",
+            "  resposta.enviar(${2:retorno}).status(200)",
+            ")"
+        ],
+        "description": "Declaração de rota PURGE em Pituguês."
+    },
+    "Declaração de rota Propfind": {
+        "prefix": "rotaPropfind",
+        "body": [
+            "liquido.rotaPropfind(funcao(requisicao, resposta) :",
+            "  ${1:// Código aqui}",
+            "  resposta.enviar(${2:retorno}).status(200)",
+            ")"
+        ],
+        "description": "Declaração de rota PROPFIND em Pituguês."
+    }
+}
