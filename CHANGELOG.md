@@ -1,5 +1,20 @@
 # Histórico de Modificações
 
+## 0.28.1
+
+- Adiciona snippets para LMHT, FolEs e Líquido em Pituguês (#137).
+- LMHT:
+  - Nova estrutura `titulo`/`título`, de uso contextual: título do documento, legenda do formulário ou da tabela, dependendo da estrutura pai.
+- Liquido:
+  - Completude de FolEs passa a ser contextual e a sugerir valores (#138);
+  - Detecção de projetos Líquido passa a considerar `configuracao.delprops` (#136).
+- Núcleo de Delégua atualizado para a versão 1.26.2:
+  - Salvaguarda em tradução de Delégua para JavaScript quando `argumentos` de dicionário poderia estar indefinido (resolve https://github.com/DesignLiquido/delegua/issues/1404);
+  - Correção em tradução de Delégua para Python em caso de Fibonacci (resolve https://github.com/DesignLiquido/delegua/issues/1403);
+  - Correção em tradução de JavaScript para Delégua que permitia `x[1]` virar `x.1`, o que não é código JS válido (resolve https://github.com/DesignLiquido/delegua/issues/1401);
+  - Reestruturação do tradutor x64.
+- Atualização periódica de pacotes.
+
 ## 0.28.0
 
 - Navegação estrutural completa (`DocumentSymbol`, `FoldingRange`, `CodeLens`, `InlayHints`, `SemanticTokens`, `WorkspaceSymbol`) para as 13 linguagens suportadas pela extensão;

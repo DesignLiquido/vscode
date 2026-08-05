@@ -647,6 +647,18 @@ export default {
     documentacao: '# `texto-pequeno`\n Representa comentários laterais e letras pequenas, como direitos autorais ou um texto jurídico, independente de seu estilo de apresentação.',
     exemploCodigo: '<paragrafo>\n Essa é a primeira frase do parágrafo.\n <texto-pequeno> Essa frase terá um tamanho de fonte menor. </texto-pequeno>\n</paragrafo>'
   },
+  'titulo': {
+    nomeHtml: 'title',
+    descricao: 'Define o título do documento, do formulário ou da tabela, dependendo da estrutura pai.',
+    documentacao: '# `titulo`\n Estrutura de uso contextual, cujo significado depende da estrutura pai:\n- Em `<cabeca>`: define o título do documento, exibido no topo da janela ou aba do navegador. Equivalente HTML: `title`.\n- Em `<formulario>`: define a legenda do formulário. Equivalente HTML: `legend`.\n- Em `<tabela>`: define a legenda da tabela. Equivalente HTML: `caption`.',
+    exemploCodigo: '<lmht>\n <cabeca>\n  <titulo> Meu Título </titulo>\n </cabeca>\n</lmht>'
+  },
+  'título': {
+    nomeHtml: 'title',
+    descricao: 'Define o título do documento, do formulário ou da tabela, dependendo da estrutura pai.',
+    documentacao: '# `título`\n Estrutura de uso contextual, cujo significado depende da estrutura pai:\n- Em `<cabeça>`: define o título do documento, exibido no topo da janela ou aba do navegador. Equivalente HTML: `title`.\n- Em `<formulário>`: define a legenda do formulário. Equivalente HTML: `legend`.\n- Em `<tabela>`: define a legenda da tabela. Equivalente HTML: `caption`.',
+    exemploCodigo: '<lmht>\n <cabeça>\n  <título> Meu Título </título>\n </cabeça>\n</lmht>'
+  },
   'titulo1': {
     nomeHtml: 'h1',
     descricao: 'Estruturas de título são utilizadas para definir os cabeçalhos da página, seguindo os seus respectivos tamanhos.',
