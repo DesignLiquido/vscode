@@ -76,7 +76,8 @@ async function ativarFoles(context: vscode.ExtensionContext): Promise<void> {
                 { scheme: 'file', language: 'foles' },
                 { scheme: 'untitled', language: 'foles' }
             ],
-            new FolesProvedorCompletude()
+            new FolesProvedorCompletude(),
+            ':'
         ),
         vscode.languages.registerHoverProvider(
             [
