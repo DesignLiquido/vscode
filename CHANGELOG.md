@@ -1,5 +1,20 @@
 # Histórico de Modificações
 
+## 0.29.0
+
+- Tradução para arquiteturas de processador e WebAssembly removida da extensão: comandos de tradução de Delégua para ARM (Linux/Android) e x64 (Linux/Windows) foram descontinuados em favor dos pacotes autocontidos de linha de comando [`delegua-x64`](https://github.com/DesignLiquido/delegua-llvm-completo/tree/main/pacotes/delegua-x64), [`delegua-arm`](https://github.com/DesignLiquido/delegua-llvm-completo/tree/main/pacotes/delegua-arm), [`delegua-risc-v`](https://github.com/DesignLiquido/delegua-llvm-completo/tree/main/pacotes/delegua-risc-v) e [`delegua-wasm`](https://github.com/DesignLiquido/delegua-llvm-completo/tree/main/pacotes/delegua-wasm); total de comandos de tradução reduzido de 17 para 13.
+- LMHT:
+  - Nova estrutura `conteudo`/`conteúdo`, marcador reservado de composição de layout (sem tradução direta para HTML) usado como "slot" pelo `base.lmht` do framework Líquido, de forma similar a `{children}` em outros frameworks de front-end.
+- Núcleo de Delégua atualizado para a versão 1.27.1:
+  - Comentários entre elementos de dicionário passam a ser aceitos em Delégua (resolve https://github.com/DesignLiquido/delegua/issues/1417);
+  - Reestruturação: funções de tradução para ARM, RISC-V e WebAssembly movidas para pacotes próprios (`delegua-arm`, `delegua-risc-v`, `delegua-wasm`), dando continuidade à reestruturação do tradutor x64 iniciada na versão 1.26.2.
+- FolEs atualizado para a versão 0.17.0:
+  - Indentação configurável no resolvedor e no resolvedor reverso (#311).
+- `delprops` atualizado para a versão 0.5.1:
+  - Detecção de chaves duplicadas pelo analisador (#6);
+  - Novo comando `info` do CLI para exibir detalhes de uma propriedade (#7).
+- Atualização periódica de pacotes.
+
 ## 0.28.1
 
 - Adiciona snippets para LMHT, FolEs e Líquido em Pituguês (#137).
