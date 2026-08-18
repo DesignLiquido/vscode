@@ -161,6 +161,18 @@ export default {
     documentacao: '# `código`\n Declara e reconhece um campo específico do documento como uma linguagem de programação. É exibido no documento de forma e com a fonte padrão configurada.',
     exemploCodigo: '<parágrafo>\n <código>h1</código>\n É utilizado para inserir um título de grande tamanho no documento.\n</parágrafo>'
   },
+  'conteudo': {
+    nomeHtml: '(nenhum)',
+    descricao: 'Estrutura especial e reservada, sem tradução direta para HTML. É um marcador de composição de layout — um "slot" onde ferramentas externas (como o `base.lmht` do framework Líquido) inserem o conteúdo real de uma página antes da conversão para HTML.',
+    documentacao: '# `conteudo`\n Não gera nenhuma saída por si só: usada isoladamente (fora de um fluxo de composição de layout), a estrutura simplesmente desaparece, junto de eventuais filhos. Seu único uso é como marcador de posição dentro de um `base.lmht`, indicando onde o conteúdo de cada página deve ser inserido — de forma parecida com `{children}` em outros frameworks de front-end.',
+    exemploCodigo: '<lmht>\n <corpo>\n  <navegacao> Menu compartilhado por todas as páginas </navegacao>\n  <conteudo />\n </corpo>\n</lmht>'
+  },
+  'conteúdo': {
+    nomeHtml: '(nenhum)',
+    descricao: 'Estrutura especial e reservada, sem tradução direta para HTML. É um marcador de composição de layout — um "slot" onde ferramentas externas (como o `base.lmht` do framework Líquido) inserem o conteúdo real de uma página antes da conversão para HTML.',
+    documentacao: '# `conteúdo`\n Não gera nenhuma saída por si só: usada isoladamente (fora de um fluxo de composição de layout), a estrutura simplesmente desaparece, junto de eventuais filhos. Seu único uso é como marcador de posição dentro de um `base.lmht`, indicando onde o conteúdo de cada página deve ser inserido — de forma parecida com `{children}` em outros frameworks de front-end.',
+    exemploCodigo: '<lmht>\n <corpo>\n  <navegação> Menu compartilhado por todas as páginas </navegação>\n  <conteúdo />\n </corpo>\n</lmht>'
+  },
   'coluna': {
     nomeHtml: 'col',
     descricao: 'Especifica as propriedades de cada coluna da estrutura `<grupo-colunas>`, seja seus atributos específicos ou a sua estilização.',

@@ -34,19 +34,9 @@ jest.mock('@designliquido/delegua/tradutores', () => ({
     TradutorAssemblyScript: class TradutorAssemblyScript {
         async traduzir(_decls: any[]) { return mockTraduzir('as'); }
     },
-    TradutorAssemblyARM: class TradutorAssemblyARM {
-        constructor(public alvo: string) {}
-        async traduzir(_decls: any[]) { return mockTraduzir('arm'); }
-    },
-    TradutorAssemblyX64: class TradutorAssemblyX64 {
-        constructor(public alvo: string) {}
-        async traduzir(_decls: any[]) { return mockTraduzir('x64'); }
-    },
     TradutorReversoJavaScript: class TradutorReversoJavaScript {
         async traduzir(_decls: any[]) { return mockTraduzir('delegua-from-js'); }
     },
-    PlataformaAlvo: {},
-    PlataformaAlvoARM: {},
 }));
 
 jest.mock('@designliquido/delegua', () => ({
@@ -121,27 +111,6 @@ describe('NucleoTraducaoDeleguaWeb', () => {
     it('iniciarTradutor delegua-para-as configura TradutorAssemblyScript', () => {
         nucleo.iniciarTradutor('delegua-para-as');
         expect(nucleo.tradutor).toBeDefined();
-    });
-
-    it('iniciarTradutor delegua-para-arm usa linux-arm por padrão', () => {
-        nucleo.iniciarTradutor('delegua-para-arm');
-        expect(nucleo.tradutor).toBeDefined();
-        expect(nucleo.tradutor.alvo).toBe('linux-arm');
-    });
-
-    it('iniciarTradutor delegua-para-arm com alvo android', () => {
-        nucleo.iniciarTradutor('delegua-para-arm', 'android');
-        expect(nucleo.tradutor.alvo).toBe('android');
-    });
-
-    it('iniciarTradutor delegua-para-x64 usa linux por padrão', () => {
-        nucleo.iniciarTradutor('delegua-para-x64');
-        expect(nucleo.tradutor.alvo).toBe('linux');
-    });
-
-    it('iniciarTradutor delegua-para-x64 com alvo windows', () => {
-        nucleo.iniciarTradutor('delegua-para-x64', 'windows');
-        expect(nucleo.tradutor.alvo).toBe('windows');
     });
 
     it('iniciarTradutor js-para-delegua configura TradutorReversoJavaScript', () => {

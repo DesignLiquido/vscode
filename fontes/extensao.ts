@@ -320,20 +320,6 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
-            'extension.designliquido.traduzir.delegua.para.arm.linux',
-            async () => await traduzir('delegua', 'arm', 'linux-arm')
-        )
-    );
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand(
-            'extension.designliquido.traduzir.delegua.para.arm.android',
-            async () => await traduzir('delegua', 'arm', 'android')
-        )
-    );
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand(
             'extension.designliquido.traduzir.delegua.para.assemblyscript',
             async () => await traduzir('delegua', 'assemblyscript')
         )
@@ -364,20 +350,6 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand(
             'extension.designliquido.traduzir.delegua.para.ruby',
             async () => await traduzir('delegua', 'rb')
-        )
-    );
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand(
-            'extension.designliquido.traduzir.delegua.para.x64.linux',
-            async () => await traduzir('delegua', 'x64', 'linux')
-        )
-    );
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand(
-            'extension.designliquido.traduzir.delegua.para.x64.windows',
-            async () => await traduzir('delegua', 'x64', 'windows')
         )
     );
 

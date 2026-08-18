@@ -3,7 +3,7 @@ import * as caminho from 'path';
 import * as sistemaArquivos from 'fs';
 
 import { traduzirPorMotorFolEs, traduzirPorMotorLinConEs, traduzirPorMotorLmht } from './comum';
-import { AvaliadorSintaticoInterface, Lexador, PlataformaAlvo, PlataformaAlvoARM } from '@designliquido/delegua';
+import { AvaliadorSintaticoInterface, Lexador } from '@designliquido/delegua';
 import { TradutorInterface } from './tradutor-interface';
 
 /**
@@ -175,18 +175,6 @@ async function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: strin
         }
         default:
             switch (paraLinguagem) {
-                case 'arm': {
-                    const { AvaliadorSintatico } = await import('@designliquido/delegua/avaliador-sintatico');
-                    const { TradutorAssemblyARM } = await import('@designliquido/delegua');
-                    avaliadorSintatico = new AvaliadorSintatico();
-                    let alvoResolvidoARM: PlataformaAlvoARM = 'linux-arm';
-                    if (alvo === 'android') {
-                        alvoResolvidoARM = 'android';
-                    }
-
-                    tradutor = new TradutorAssemblyARM(alvoResolvidoARM);
-                    break;
-                }
                 case 'assemblyscript':
                 case 'as': {
                     const { AvaliadorSintatico } = await import('@designliquido/delegua/avaliador-sintatico');
@@ -225,18 +213,6 @@ async function traduzirPorMotorDelegua(deLinguagem: string, paraLinguagem: strin
                     const { TradutorRuby } = await import('@designliquido/delegua');
                     avaliadorSintatico = new AvaliadorSintatico();
                     tradutor = new TradutorRuby();
-                    break;
-                }
-                case 'x64': {
-                    const { AvaliadorSintatico } = await import('@designliquido/delegua/avaliador-sintatico');
-                    const { TradutorAssemblyX64 } = await import('@designliquido/delegua');
-                    avaliadorSintatico = new AvaliadorSintatico();
-                    let alvoResolvido: PlataformaAlvo = 'linux';
-                    if (alvo === 'windows') {
-                        alvoResolvido = 'windows';
-                    }
-
-                    tradutor = new TradutorAssemblyX64(alvoResolvido);
                     break;
                 }
                 default:

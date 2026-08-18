@@ -36,6 +36,7 @@ jest.mock('../../fontes/linguagens/lmht/estruturas', () => ({
         'titulo1': { nomeHtml: 'h1' },
         'ancora': { nomeHtml: 'a' },
         'imagem': { nomeHtml: 'img' },
+        'conteudo': { nomeHtml: '(nenhum)' },
     }
 }));
 
@@ -97,7 +98,7 @@ describe('LmhtProvedorCompletude', () => {
                 criarDocumento(['']), criarPosicao(0, 0), mockToken, mockContext
             );
             expect(Array.isArray(items)).toBe(true);
-            expect(items.length).toBe(5);
+            expect(items.length).toBe(6);
             expect(items.some((i: any) => i.label === 'paragrafo')).toBe(true);
             expect(items.some((i: any) => i.label === 'titulo1')).toBe(true);
         });
@@ -105,7 +106,7 @@ describe('LmhtProvedorCompletude', () => {
         it('sugere estruturas após o fechamento de uma tag', () => {
             const doc = criarDocumento(['<corpo>']);
             const items = provedor.provideCompletionItems(doc, criarPosicao(0, 7), mockToken, mockContext);
-            expect(items.length).toBe(5);
+            expect(items.length).toBe(6);
         });
 
         it('insere estrutura como par de abertura e fechamento com cursor no meio', () => {
@@ -120,6 +121,13 @@ describe('LmhtProvedorCompletude', () => {
             const items = provedor.provideCompletionItems(doc, criarPosicao(0, 7), mockToken, mockContext);
             const imagem = items.find((i: any) => i.label === 'imagem');
             expect(imagem.insertText.value).toBe('<imagem $0/>');
+        });
+
+        it('insere <conteudo /> como marcador auto-fechante (sem tag de fechamento)', () => {
+            const doc = criarDocumento(['<corpo>']);
+            const items = provedor.provideCompletionItems(doc, criarPosicao(0, 7), mockToken, mockContext);
+            const conteudo = items.find((i: any) => i.label === 'conteudo');
+            expect(conteudo.insertText.value).toBe('<conteudo $0/>');
         });
 
         it('todos os itens de estrutura têm label, documentação e insertText', () => {
@@ -163,7 +171,7 @@ describe('LmhtProvedorCompletude', () => {
         it('volta a sugerir estruturas após o fechamento do comentário', () => {
             const doc = criarDocumento(['<!-- nota --> ']);
             const items = provedor.provideCompletionItems(doc, criarPosicao(0, 14), mockToken, mockContext);
-            expect(items.length).toBe(5);
+            expect(items.length).toBe(6);
         });
     });
 });

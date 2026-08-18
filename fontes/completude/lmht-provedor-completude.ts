@@ -11,6 +11,10 @@ const ESTRUTURAS_VAZIAS = new Set<string>([
     'area',
     'campo',
     'coluna',
+    // `conteudo`/`conteúdo` são marcadores de composição de layout, sem conteúdo
+    // próprio — sempre usados de forma auto-fechante, como `<conteudo />`.
+    'conteudo',
+    'conteúdo',
     'imagem',
     'linha-horizontal',
     'quebra-linha',

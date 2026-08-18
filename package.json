@@ -104,14 +104,6 @@
                 "title": "Tradução: Traduzir fonte CSS para FolEs"
             },
             {
-                "command": "extension.designliquido.traduzir.delegua.para.arm.linux",
-                "title": "Tradução: Traduzir fonte Delégua para ARM (Linux)"
-            },
-            {
-                "command": "extension.designliquido.traduzir.delegua.para.arm.android",
-                "title": "Tradução: Traduzir fonte Delégua para ARM (Android)"
-            },
-            {
                 "command": "extension.designliquido.traduzir.delegua.para.assemblyscript",
                 "title": "Tradução: Traduzir fonte Delégua para AssemblyScript"
             },
@@ -130,14 +122,6 @@
             {
                 "command": "extension.designliquido.traduzir.delegua.para.ruby",
                 "title": "Tradução: Traduzir fonte Delégua para Ruby"
-            },
-            {
-                "command": "extension.designliquido.traduzir.delegua.para.x64.linux",
-                "title": "Tradução: Traduzir fonte Delégua para x64 (Linux)"
-            },
-            {
-                "command": "extension.designliquido.traduzir.delegua.para.x64.windows",
-                "title": "Tradução: Traduzir fonte Delégua para x64 (Windows)"
             },
             {
                 "command": "extension.designliquido.traduzir.foles.para.css",
@@ -642,26 +626,6 @@
                     "when": "resourceLangId == delegua || resourceExtname == .delegua",
                     "command": "extension.designliquido.traduzir.delegua.para.assemblyscript",
                     "group": "7_traducao/delegua@5"
-                },
-                {
-                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
-                    "command": "extension.designliquido.traduzir.delegua.para.x64.linux",
-                    "group": "7_traducao/delegua@6"
-                },
-                {
-                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
-                    "command": "extension.designliquido.traduzir.delegua.para.x64.windows",
-                    "group": "7_traducao/delegua@7"
-                },
-                {
-                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
-                    "command": "extension.designliquido.traduzir.delegua.para.arm.linux",
-                    "group": "7_traducao/delegua@8"
-                },
-                {
-                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
-                    "command": "extension.designliquido.traduzir.delegua.para.arm.android",
-                    "group": "7_traducao/delegua@9"
                 }
             ],
             "editor/title/context": [
@@ -734,26 +698,6 @@
                     "when": "resourceLangId == delegua || resourceExtname == .delegua",
                     "command": "extension.designliquido.traduzir.delegua.para.assemblyscript",
                     "group": "7_traducao/delegua@5"
-                },
-                {
-                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
-                    "command": "extension.designliquido.traduzir.delegua.para.x64.linux",
-                    "group": "7_traducao/delegua@6"
-                },
-                {
-                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
-                    "command": "extension.designliquido.traduzir.delegua.para.x64.windows",
-                    "group": "7_traducao/delegua@7"
-                },
-                {
-                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
-                    "command": "extension.designliquido.traduzir.delegua.para.arm.linux",
-                    "group": "7_traducao/delegua@8"
-                },
-                {
-                    "when": "resourceLangId == delegua || resourceExtname == .delegua",
-                    "command": "extension.designliquido.traduzir.delegua.para.arm.android",
-                    "group": "7_traducao/delegua@9"
                 }
             ],
             "editor/context": [
@@ -821,26 +765,6 @@
                     "when": "editorLangId == delegua || resourceExtname == .delegua",
                     "command": "extension.designliquido.traduzir.delegua.para.assemblyscript",
                     "group": "7_traducao/delegua@5"
-                },
-                {
-                    "when": "editorLangId == delegua || resourceExtname == .delegua",
-                    "command": "extension.designliquido.traduzir.delegua.para.x64.linux",
-                    "group": "7_traducao/delegua@6"
-                },
-                {
-                    "when": "editorLangId == delegua || resourceExtname == .delegua",
-                    "command": "extension.designliquido.traduzir.delegua.para.x64.windows",
-                    "group": "7_traducao/delegua@7"
-                },
-                {
-                    "when": "editorLangId == delegua || resourceExtname == .delegua",
-                    "command": "extension.designliquido.traduzir.delegua.para.arm.linux",
-                    "group": "7_traducao/delegua@8"
-                },
-                {
-                    "when": "editorLangId == delegua || resourceExtname == .delegua",
-                    "command": "extension.designliquido.traduzir.delegua.para.arm.android",
-                    "group": "7_traducao/delegua@9"
                 }
             ],
             "commandPalette": [
@@ -898,22 +822,6 @@
                 },
                 {
                     "command": "extension.designliquido.traduzir.delegua.para.assemblyscript",
-                    "when": "editorLangId == delegua || resourceExtname == .delegua"
-                },
-                {
-                    "command": "extension.designliquido.traduzir.delegua.para.x64.linux",
-                    "when": "editorLangId == delegua || resourceExtname == .delegua"
-                },
-                {
-                    "command": "extension.designliquido.traduzir.delegua.para.x64.windows",
-                    "when": "editorLangId == delegua || resourceExtname == .delegua"
-                },
-                {
-                    "command": "extension.designliquido.traduzir.delegua.para.arm.linux",
-                    "when": "editorLangId == delegua || resourceExtname == .delegua"
-                },
-                {
-                    "command": "extension.designliquido.traduzir.delegua.para.arm.android",
                     "when": "editorLangId == delegua || resourceExtname == .delegua"
                 }
             ],
@@ -1240,8 +1148,8 @@
         "webpack-cli": "^6.0.1"
     },
     "dependencies": {
-        "@designliquido/birl": "^0.6.17",
-        "@designliquido/delegua": "^1.26.2",
+        "@designliquido/birl": "^0.6.18",
+        "@designliquido/delegua": "^1.27.0",
         "@designliquido/delegua-arquivos": "^0.1.0",
         "@designliquido/delegua-criptografia": "^0.3.3",
         "@designliquido/delegua-csv": "^0.0.2",
@@ -1261,10 +1169,10 @@
         "@designliquido/foles": "^0.16.1",
         "@designliquido/lincones-js": "^0.2.1",
         "@designliquido/lmht-js": "^0.6.2",
-        "@designliquido/mapler": "^0.7.17",
-        "@designliquido/portugol-studio": "^0.11.17",
-        "@designliquido/potigol": "^0.11.17",
-        "@designliquido/visualg": "^0.9.17",
+        "@designliquido/mapler": "^0.7.18",
+        "@designliquido/portugol-studio": "^0.11.18",
+        "@designliquido/potigol": "^0.11.18",
+        "@designliquido/visualg": "^0.9.18",
         "@xterm/addon-fit": "^0.10.0",
         "@xterm/xterm": "5.5.0",
         "lodash": "^4.17.21",

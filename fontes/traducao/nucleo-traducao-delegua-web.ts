@@ -1,6 +1,6 @@
 import { Lexador } from '@designliquido/delegua/lexador';
 import { AvaliadorSintatico } from '@designliquido/delegua/avaliador-sintatico';
-import { PlataformaAlvo, PlataformaAlvoARM, TradutorAssemblyARM, TradutorAssemblyScript, TradutorAssemblyX64, TradutorElixir, TradutorJavaScript, TradutorPython, TradutorReversoJavaScript, TradutorRuby } from '@designliquido/delegua/tradutores';
+import { TradutorAssemblyScript, TradutorElixir, TradutorJavaScript, TradutorPython, TradutorReversoJavaScript, TradutorRuby } from '@designliquido/delegua/tradutores';
 import { AvaliadorSintaticoInterface, TradutorInterface } from '@designliquido/delegua';
 import { AvaliadorSintaticoJavaScript } from '@designliquido/delegua/avaliador-sintatico/traducao/avaliador-sintatico-javascript';
 
@@ -26,7 +26,6 @@ export class NucleoTraducaoDeleguaWeb {
     comandoTraducao: string = '';
 
     extensoes = {
-        arm: '.s',
         assemblyscript: '.as',
         elixir: '.ex',
         delegua: '.delegua',
@@ -36,8 +35,7 @@ export class NucleoTraducaoDeleguaWeb {
         visualg: '.alg',
         python: '.py',
         py: '.py',
-        ruby: '.rb',
-        x64: '.nasm'
+        ruby: '.rb'
     };
 
     constructor(
@@ -61,15 +59,6 @@ export class NucleoTraducaoDeleguaWeb {
         this.lexador = new Lexador(false);
 
         switch (comandoTraducao) {
-            case 'delegua-para-arm':
-                this.avaliadorSintatico = new AvaliadorSintatico();
-                let alvoResolvidoARM: PlataformaAlvoARM = 'linux-arm';
-                if (alvo === 'android') {
-                    alvoResolvidoARM = 'android';
-                }
-
-                this.tradutor = new TradutorAssemblyARM(alvoResolvidoARM);
-                break;
             case 'delegua-para-assemblyscript':
             case 'delegua-para-as':
                 this.avaliadorSintatico = new AvaliadorSintatico();
@@ -92,15 +81,6 @@ export class NucleoTraducaoDeleguaWeb {
             case 'delegua-para-ruby':
                 this.avaliadorSintatico = new AvaliadorSintatico();
                 this.tradutor = new TradutorRuby();
-                break;
-            case 'delegua-para-x64':
-                this.avaliadorSintatico = new AvaliadorSintatico();
-                let alvoResolvido: PlataformaAlvo = 'linux';
-                if (alvo === 'windows') {
-                    alvoResolvido = 'windows';
-                }
-
-                this.tradutor = new TradutorAssemblyX64(alvoResolvido);
                 break;
             case 'js-para-delegua':
             case 'javascript-para-delegua':

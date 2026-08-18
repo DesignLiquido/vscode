@@ -55,7 +55,7 @@ Editores suportados:
 - **Análise semântica** para Delégua, Pituguês, BIRL, Mapler, VisuAlg, Portugol Studio, Potigol e delprops
 - **Trechos de código (snippets)** para Delégua (incluindo rotas Líquido), Pituguês, VisuAlg, Portugol Studio e LinConEs
 - **Completude de código (IntelliSense)** para Delégua, Pituguês, FolEs, LMHT, VisuAlg, Portugol Studio, delprops e arquivos de teste Delégua
-- **17 comandos de tradução** entre Delégua, JavaScript, Python, Ruby, Elixir, AssemblyScript, ARM (Linux/Android), x64 (Linux/Windows), CSS↔FolEs, HTML↔LMHT, SQL↔LinConEs e VisuAlg
+- **13 comandos de tradução** entre Delégua, JavaScript, Python, Ruby, Elixir, AssemblyScript, CSS↔FolEs, HTML↔LMHT, SQL↔LinConEs e VisuAlg
 - **Suporte a depuração** para Delégua, Pituguês, Mapler, VisuAlg, Portugol Studio e Potigol
 - **Ícones** para arquivos `.delegua`, `.egua`, `.pitugues`, `.foles`, `.lincones`, `.lmht`, `.birl`, `.delprops`, `.alg` (VisuAlg), `.por` (Portugol Studio), `.poti`/`.potigol` (Potigol), `.mapler` (Mapler)
 
@@ -158,7 +158,7 @@ O Estilizador aplicará automaticamente as regras configuradas durante a formata
 
 ## Tradução entre linguagens
 
-Essa extensão oferece **17 comandos de tradução** entre linguagens. Pressione `Ctrl` + `Shift` + `p` (`Cmd` + `Shift` + `p` no Mac) e digite "tradução" para acessá-los.
+Essa extensão oferece **13 comandos de tradução** entre linguagens. Pressione `Ctrl` + `Shift` + `p` (`Cmd` + `Shift` + `p` no Mac) e digite "tradução" para acessá-los.
 
 ### Traduções disponíveis
 
@@ -172,7 +172,9 @@ Essa extensão oferece **17 comandos de tradução** entre linguagens. Pressione
 | LinConEs | SQL |
 | VisuAlg | Delégua |
 | JavaScript | Delégua |
-| Delégua | JavaScript, Python, Ruby, Elixir, AssemblyScript, ARM (Linux), ARM (Android), x64 (Linux), x64 (Windows)
+| Delégua | JavaScript, Python, Ruby, Elixir, AssemblyScript |
+
+Compilação para arquiteturas de processador (x64, ARM, RISC-V) e WebAssembly não é mais oferecida por esta extensão. Use os pacotes autocontidos [`delegua-x64`](https://github.com/DesignLiquido/delegua-llvm-completo/tree/main/pacotes/delegua-x64), [`delegua-arm`](https://github.com/DesignLiquido/delegua-llvm-completo/tree/main/pacotes/delegua-arm), [`delegua-risc-v`](https://github.com/DesignLiquido/delegua-llvm-completo/tree/main/pacotes/delegua-risc-v) e [`delegua-wasm`](https://github.com/DesignLiquido/delegua-llvm-completo/tree/main/pacotes/delegua-wasm) pela linha de comando.
 
 ## Suporte ao Framework Líquido
 

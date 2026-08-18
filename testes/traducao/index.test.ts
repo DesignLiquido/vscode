@@ -58,19 +58,9 @@ jest.mock('@designliquido/delegua', () => ({
     TradutorAssemblyScript: class TradutorAssemblyScript {
         async traduzir(_decls: any[]) { return 'as traduzido'; }
     },
-    TradutorAssemblyARM: class TradutorAssemblyARM {
-        constructor(_alvo: string) {}
-        async traduzir(_decls: any[]) { return 'arm traduzido'; }
-    },
-    TradutorAssemblyX64: class TradutorAssemblyX64 {
-        constructor(_alvo: string) {}
-        async traduzir(_decls: any[]) { return 'x64 traduzido'; }
-    },
     TradutorReversoJavaScript: class TradutorReversoJavaScript {
         async traduzir(_decls: any[]) { return 'delegua from js'; }
     },
-    PlataformaAlvo: {},
-    PlataformaAlvoARM: {},
 }));
 
 jest.mock('@designliquido/delegua/avaliador-sintatico', () => ({
@@ -261,30 +251,6 @@ describe('traduzir', () => {
     it('traduz delegua → as (AssemblyScript) via motor Delégua', async () => {
         setActiveEditor('/tmp/arquivo.delegua');
         await traduzir('delegua', 'as');
-        expect(mockWriteFileSync).toHaveBeenCalled();
-    });
-
-    it('traduz delegua → arm (linux) via motor Delégua', async () => {
-        setActiveEditor('/tmp/arquivo.delegua');
-        await traduzir('delegua', 'arm');
-        expect(mockWriteFileSync).toHaveBeenCalled();
-    });
-
-    it('traduz delegua → arm android via motor Delégua', async () => {
-        setActiveEditor('/tmp/arquivo.delegua');
-        await traduzir('delegua', 'arm', 'android');
-        expect(mockWriteFileSync).toHaveBeenCalled();
-    });
-
-    it('traduz delegua → x64 (linux) via motor Delégua', async () => {
-        setActiveEditor('/tmp/arquivo.delegua');
-        await traduzir('delegua', 'x64');
-        expect(mockWriteFileSync).toHaveBeenCalled();
-    });
-
-    it('traduz delegua → x64 windows via motor Delégua', async () => {
-        setActiveEditor('/tmp/arquivo.delegua');
-        await traduzir('delegua', 'x64', 'windows');
         expect(mockWriteFileSync).toHaveBeenCalled();
     });
 
