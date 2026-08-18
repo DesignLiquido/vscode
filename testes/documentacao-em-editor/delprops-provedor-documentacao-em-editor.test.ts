@@ -33,7 +33,7 @@ jest.mock('@designliquido/delprops', () => ({
             { nome: 'licenca.url', tipo: 'texto', detalhe: 'URL da licença', valoresPermitidos: null, padrao: null },
         ],
     },
-    DefinicaoPropriedade: class {},
+    DefinicaoPropriedadeInterface: class {},
 }));
 
 import { DelpropsProvedorDocumentacaoEmEditor } from '../../fontes/documentacao-em-editor/delprops-provedor-documentacao-em-editor';

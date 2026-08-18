@@ -509,10 +509,10 @@
   resolved "https://registry.yarnpkg.com/@designliquido/delprops/-/delprops-0.0.1.tgz#9e6108dfd67062eb1649ef4c3741424167c79dc3"
   integrity sha512-+jOfrR3oayDuuGtCjH9ZtWxz2XhJ5DyHE+z+paiPY2xREjzqEA1NK5eBNoJ834oO9+fjvWLltE45yovx291h8A==
 
-"@designliquido/delprops@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@designliquido/delprops/-/delprops-0.5.1.tgz#a7e06ba2e064102433dc2caf6e32a83b69198237"
-  integrity sha512-8yIfmkeQKVZp4OD4P5TMWMiNvphKxMtpQ5qjsXfeM6cJm8IqOqRPGb7aSW4JmO5ZIg3xrKLM6tq0z42oKza2cg==
+"@designliquido/delprops@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@designliquido/delprops/-/delprops-0.5.2.tgz#1463580dcb463aa934d3fad388379ab28f55b9cd"
+  integrity sha512-GWV3C+l6TdON5fl8JtHQiyHZLXe3dw10FTjm/WS2RKeOiZAaEKFTnrO4lRX3RUam6+w+vxWecK2xYH4ecDAGpg==
 
 "@designliquido/flexoes@^0.1.0":
   version "0.1.0"

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { DefinicaoPropriedade, liquido } from '@designliquido/delprops';
+import { DefinicaoPropriedadeInterface, liquido } from '@designliquido/delprops';
 
 const nomesTipos: Record<string, string> = {
     logico: 'lógico',
@@ -7,7 +7,7 @@ const nomesTipos: Record<string, string> = {
     numero: 'número',
 };
 
-const propriedadesLiquidoDiretas: DefinicaoPropriedade[] = [
+const propriedadesLiquidoDiretas: DefinicaoPropriedadeInterface[] = [
     {
         nome: 'arquetipo',
         tipo: 'texto',
@@ -27,14 +27,14 @@ const propriedadesLiquidoDiretas: DefinicaoPropriedade[] = [
     },
 ];
 
-const subnamespaces: Record<string, { detalhe: string; propriedades: DefinicaoPropriedade[] }> = {
+const subnamespaces: Record<string, { detalhe: string; propriedades: DefinicaoPropriedadeInterface[] }> = {
     roteador:     { detalhe: 'Configurações do roteador HTTP.',   propriedades: liquido.roteador },
     dados:        { detalhe: 'Configurações de fontes de dados.', propriedades: liquido.dados },
     autenticacao: { detalhe: 'Configurações de autenticação.',    propriedades: liquido.autenticacao },
     aplicacao:    { detalhe: 'Configurações da aplicação.',       propriedades: liquido.aplicacao },
 };
 
-function tabelaPropriedades(propriedades: DefinicaoPropriedade[]): string {
+function tabelaPropriedades(propriedades: DefinicaoPropriedadeInterface[]): string {
     const linhas = propriedades.map(p => {
         const valores = p.valoresPermitidos
             ? p.valoresPermitidos.map(v => `\`'${v}'\``).join(', ')

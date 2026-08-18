@@ -1165,7 +1165,7 @@
         "@designliquido/delegua-matematica": "^0.4.0",
         "@designliquido/delegua-tempo": "^1.0.1",
         "@designliquido/delegua-yaml": "^0.0.2",
-        "@designliquido/delprops": "^0.5.1",
+        "@designliquido/delprops": "^0.5.2",
         "@designliquido/foles": "^0.17.0",
         "@designliquido/lincones-js": "^0.2.1",
         "@designliquido/lmht-js": "^0.6.2",

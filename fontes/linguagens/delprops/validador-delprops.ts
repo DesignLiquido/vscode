@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
-import { analisar, validar, registrar, obterTodos, ContribuicaoEsquema, DefinicaoPropriedade } from '@designliquido/delprops';
-import * as liquido from '@designliquido/delprops/liquido';
+import { analisar, validar, registrar, obterTodos, ContribuicaoEsquema, DefinicaoPropriedadeInterface, liquido } from '@designliquido/delprops';
 
 registrar('liquido', '@designliquido/vscode', [...liquido.arquetipo, ...liquido.linguagem]);
 registrar('liquido.aplicacao', '@designliquido/vscode', liquido.aplicacao);
@@ -27,8 +26,8 @@ function removerComentarioLinha(linha: string): string {
 
 function aplanarEsquemas(
     todos: ReadonlyMap<string, readonly ContribuicaoEsquema[]>
-): Map<string, DefinicaoPropriedade[]> {
-    const aplanado = new Map<string, DefinicaoPropriedade[]>();
+): Map<string, DefinicaoPropriedadeInterface[]> {
+    const aplanado = new Map<string, DefinicaoPropriedadeInterface[]>();
     for (const [ns, contribuicoes] of todos) {
         aplanado.set(ns, [...contribuicoes.flatMap(c => c.definicoes)]);
     }
