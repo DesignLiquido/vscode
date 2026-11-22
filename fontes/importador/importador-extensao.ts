@@ -14,6 +14,18 @@ export interface RetornoImportador<S extends SimboloInterface> {
 }
 
 /**
+ * Indica se o caminho de importação é relativo ao arquivo atual (`./` ou `../`).
+ */
+export function ehCaminhoRelativo(caminho: string): boolean {
+    return /^\.\.?[/\\]/.test(caminho);
+}
+
+function possuiExtensao(caminho: string): boolean {
+    const ultimaBarra = Math.max(caminho.lastIndexOf('/'), caminho.lastIndexOf('\\'));
+    return caminho.slice(ultimaBarra + 1).lastIndexOf('.') > 0;
+}
+
+/**
  * Diferentemente do importador de `delegua-node`, este importador
  * não depende das bibliotecas `fs` e `os` do Node.js.
  * A leitura dos arquivos espera um adaptador do próprio ambiente do VSCode,
@@ -60,9 +72,13 @@ export class ImportadorExtensao implements ImportadorInterface<SimboloInterface>
                 }
             }
 
-            const documentoAberto = vscode.workspace.textDocuments.find(
-                d => d.uri.fsPath.toLowerCase() === fileUri.fsPath.toLowerCase()
-            );
+            // Importações relativas sem extensão (por exemplo, `importar { A } de "./modulo"`)
+            // apontam para `modulo.delegua`.
+            if (ehCaminhoRelativo(nomeArquivo) && !possuiExtensao(nomeArquivo)) {
+                fileUri = await this.resolverExtensaoDelegua(fileUri);
+            }
+
+            const documentoAberto = this.localizarDocumentoAberto(fileUri);
             const conteudoArquivo = documentoAberto
                 ? documentoAberto.getText().split('\n').map(linha => linha + '\0')
                 : Buffer.from(await vscode.workspace.fs.readFile(fileUri)).toString('utf8').split('\n').map(linha => linha + '\0');
@@ -85,6 +101,44 @@ export class ImportadorExtensao implements ImportadorInterface<SimboloInterface>
             } as RetornoImportador<SimboloInterface>;
         } catch (erro: any) {
             throw new Error(`Erro ao importar arquivo '${nomeArquivo}': ${erro.message}`);
+        }
+    }
+
+    private localizarDocumentoAberto(uri: vscode.Uri): vscode.TextDocument | undefined {
+        return vscode.workspace.textDocuments.find(
+            d => d.uri.fsPath.toLowerCase() === uri.fsPath.toLowerCase()
+        );
+    }
+
+    /**
+     * Devolve a URI com a extensão `.delegua` quando a URI original não existe
+     * e a variante com extensão existe (aberta no editor ou em disco).
+     * Caso nenhuma exista, devolve a URI original, para que o erro de leitura
+     * mencione o caminho como escrito.
+     */
+    private async resolverExtensaoDelegua(uri: vscode.Uri): Promise<vscode.Uri> {
+        if (await this.uriExiste(uri)) {
+            return uri;
+        }
+
+        const uriComExtensao = uri.with({ path: `${uri.path}.delegua` });
+        if (await this.uriExiste(uriComExtensao)) {
+            return uriComExtensao;
+        }
+
+        return uri;
+    }
+
+    private async uriExiste(uri: vscode.Uri): Promise<boolean> {
+        if (this.localizarDocumentoAberto(uri)) {
+            return true;
+        }
+
+        try {
+            const estatistica = await vscode.workspace.fs.stat(uri);
+            return estatistica.type !== vscode.FileType.Directory;
+        } catch {
+            return false;
         }
     }
 

@@ -24,7 +24,17 @@ import tiposDeSimbolos from "@designliquido/delegua/tipos-de-simbolos/delegua";
 import { ImportarBiblioteca, ModuloDeclaracoes } from "../construtos";
 import { carregarBibliotecaDelegua, verificarModulosDelegua } from "../mecanismo-importacao-bibliotecas";
 import { ClasseDeModulo } from "../interpretador/estruturas";
-import { ImportadorExtensao } from "../importador";
+import { ehCaminhoRelativo, ImportadorExtensao } from "../importador";
+
+/**
+ * Importações de arquivos Delégua: caminhos terminados em `.delegua` ou
+ * caminhos relativos (`./` ou `../`), que podem omitir a extensão.
+ * Os demais caminhos são tratados como bibliotecas.
+ */
+function ehImportacaoArquivoDelegua(literalCaminho: Literal): boolean {
+    const caminhoTexto = String(literalCaminho.valor);
+    return caminhoTexto.endsWith('.delegua') || ehCaminhoRelativo(caminhoTexto);
+}
 
 export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
     tiposDefinidosPorBibliotecas: {
@@ -298,7 +308,7 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
 
         // Chegando aqui sem erros, a importação é sintaticamente válida.
         const literalCaminho = caminho as Literal;
-        if (!String(literalCaminho.valor).endsWith('.delegua')) {
+        if (!ehImportacaoArquivoDelegua(literalCaminho)) {
             return this.importarBibliotecaNode(literalCaminho);
         }
 
@@ -362,7 +372,7 @@ export class AvaliadorSintaticoComImportacao extends AvaliadorSintatico {
 
         const literalCaminho = declaracaoResolvida.caminho as Literal;
         if (declaracaoResolvida.simboloTudo !== null && declaracaoResolvida.simboloTudo !== undefined) {
-            if (!String(literalCaminho.valor).endsWith('.delegua')) {
+            if (!ehImportacaoArquivoDelegua(literalCaminho)) {
                 this.pilhaEscopos.definirInformacoesVariavel(
                     declaracaoResolvida.simboloTudo.lexema,
                     new InformacaoElementoSintatico(declaracaoResolvida.simboloTudo.lexema, 'módulo')

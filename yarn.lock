@@ -494,10 +494,10 @@
     "@designliquido/delegua" "^1.15.4"
     yaml "^2.6.1"
 
-"@designliquido/delegua@1.27.1", "@designliquido/delegua@^1.15.4", "@designliquido/delegua@^1.26.1", "@designliquido/delegua@^1.27.1":
-  version "1.27.1"
-  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-1.27.1.tgz#2c68a19480d4b849508dae713ed6e0f14c0128c7"
-  integrity sha512-A0TTtpFSPLN3hYolQKRc9kqYBiSPvqwSAkcKohz4V8I11/MI0Wuj9BDe8YtpufBiLEfDh42V5To9ag9R0RrsnA==
+"@designliquido/delegua@1.28.6", "@designliquido/delegua@^1.15.4", "@designliquido/delegua@^1.26.1", "@designliquido/delegua@^1.28.6":
+  version "1.28.6"
+  resolved "https://registry.yarnpkg.com/@designliquido/delegua/-/delegua-1.28.6.tgz#73e1af7cd9eb657c392b344b2ad88d4a1608dd90"
+  integrity sha512-hDhOdRZOI2MwKLS0f7Q3STUlyOF2loxx8q8VhsnZr8ZSrF7GxsFGXufHCC2AHQfKprhTItfEqi4+SleuHS3t+Q==
   dependencies:
     antlr4ts "^0.5.0-alpha.4"
     browser-process-hrtime "^1.0.0"

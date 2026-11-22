@@ -43,6 +43,24 @@ const mapaSeveridadeDiagnosticos = {
 };
 
 /**
+ * Classes nativas do interpretador Delégua (definidas em tempo de execução, sem
+ * declaração em código-fonte), que podem ser usadas como superclasses.
+ */
+export function criarClassesNativasDelegua(): Classe[] {
+    return ['Excecao'].map(nomeClasse => new Classe(
+        {
+            tipo: 'IDENTIFICADOR',
+            lexema: nomeClasse,
+            literal: null,
+            linha: 0,
+            hashArquivo: -1,
+        } as SimboloInterface,
+        [],
+        []
+    ));
+}
+
+/**
  * Ponto de entrada de todas as análises, léxicas, sintáticas e semânticas, selecionando o dialeto pela extensão de arquivo.
  * Problemas são detectados na análise sintática. Avisos são detectados na análise semântica. Ambos são reportados para o VSCode por meio do objeto `diagnosticos`.
  * @param {vscode.TextDocument} documento O documento aberto no VSCode.
@@ -251,7 +269,10 @@ export async function executarAnalises(
 
     if (avaliadorSintatico instanceof AvaliadorSintaticoComImportacao) {
         declaracoesPreCarregadas = Object.values(avaliadorSintatico.tiposDefinidosEmCodigo);
-        (analisadorSemantico as any)?.registrarClassesExternas?.(declaracoesPreCarregadas.filter(d => d instanceof Classe));
+        (analisadorSemantico as any)?.registrarClassesExternas?.([
+            ...criarClassesNativasDelegua(),
+            ...declaracoesPreCarregadas.filter(d => d instanceof Classe),
+        ]);
 
         const chaveWorkspace =
             (vscode.workspace as any).getWorkspaceFolder?.(documento.uri)?.uri?.toString?.() || 'sem-workspace';

@@ -101,6 +101,7 @@ jest.mock('../../fontes/interpretador/estruturas', () => ({
 }));
 
 jest.mock('../../fontes/importador', () => ({
+    ehCaminhoRelativo: (caminho: string) => /^\.\.?[/\\]/.test(caminho),
     ImportadorExtensao: class ImportadorExtensao {
         async importar(caminho: string, hashArquivo: number) {
             return {

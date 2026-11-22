@@ -1149,7 +1149,7 @@
     },
     "dependencies": {
         "@designliquido/birl": "^0.6.19",
-        "@designliquido/delegua": "^1.27.1",
+        "@designliquido/delegua": "^1.28.6",
         "@designliquido/delegua-arquivos": "^0.1.0",
         "@designliquido/delegua-criptografia": "^0.3.3",
         "@designliquido/delegua-csv": "^0.0.2",
@@ -1179,7 +1179,7 @@
         "real-executable-path": "^3.0.0"
     },
     "resolutions": {
-        "@designliquido/delegua": "1.27.1"
+        "@designliquido/delegua": "1.28.6"
     },
     "copyFiles": [
         {
