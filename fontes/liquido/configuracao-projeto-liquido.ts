@@ -94,6 +94,13 @@ export function extrairConfiguracaoProjetoLiquido(conteudo: string): Configuraca
     return { arquetipo, linguagem };
 }
 
+// VSCode nem sempre normaliza a caixa da letra de unidade (`C:` vs `c:`) da mesma forma
+// entre `document.uri` e `workspaceFolder.uri` no Windows, o que quebra comparações de
+// prefixo entre caminhos.
+export function normalizarLetraUnidade(caminho: string): string {
+    return caminho.replace(/^(\/?)([A-Za-z]):/, (_correspondencia, barra, letra) => `${barra}${letra.toLowerCase()}:`);
+}
+
 function removerBarrasFinais(caminho: string): string {
     if (caminho === '/') {
         return caminho;
@@ -114,7 +121,9 @@ function obterDiretorio(caminhoArquivo: string): string {
 }
 
 function caminhoEstaNaRaiz(caminho: string, raiz: string): boolean {
-    return raiz === '/' || caminho === raiz || caminho.startsWith(`${raiz}/`);
+    const caminhoNormalizado = normalizarLetraUnidade(caminho);
+    const raizNormalizada = normalizarLetraUnidade(raiz);
+    return raizNormalizada === '/' || caminhoNormalizado === raizNormalizada || caminhoNormalizado.startsWith(`${raizNormalizada}/`);
 }
 
 /**

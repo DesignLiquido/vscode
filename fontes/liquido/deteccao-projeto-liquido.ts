@@ -7,6 +7,7 @@ import type {
 import {
     NOME_ARQUIVO_CONFIGURACAO_LIQUIDO,
     localizarConfiguracaoProjetoLiquido,
+    normalizarLetraUnidade,
     obterDiretoriosCandidatosConfiguracao,
 } from './configuracao-projeto-liquido';
 
@@ -20,6 +21,10 @@ export interface ContextoProjetoLiquido {
 const cacheDeteccao = new Map<string, Promise<ContextoProjetoLiquido | undefined>>();
 const decodificadorUtf8 = new TextDecoder('utf-8');
 
+// VSCode nem sempre normaliza a caixa da letra de unidade (`C:` vs `c:`) da mesma forma
+// entre `document.uri` e `workspaceFolder.uri` no Windows, o que quebra comparações de
+// prefixo entre caminhos. Normalizamos aqui, no único ponto de extração, para que todo
+// o restante do módulo compare caminhos de forma consistente.
 function obterCaminhoUriSeguro(uri: vscode.Uri | undefined): string | undefined {
     if (!uri) {
         return undefined;
@@ -27,28 +32,28 @@ function obterCaminhoUriSeguro(uri: vscode.Uri | undefined): string | undefined 
 
     const caminhoDireto = (uri as any).path;
     if (typeof caminhoDireto === 'string' && caminhoDireto.length > 0) {
-        return caminhoDireto;
+        return normalizarLetraUnidade(caminhoDireto);
     }
 
     const caminhoSistema = (uri as any).fsPath;
     if (typeof caminhoSistema === 'string' && caminhoSistema.length > 0) {
-        return caminhoSistema.replace(/\\/g, '/');
+        return normalizarLetraUnidade(caminhoSistema.replace(/\\/g, '/'));
     }
 
     try {
         const valor = uri.toString?.();
         if (typeof valor === 'string' && valor.length > 0) {
             if (valor.startsWith('file://')) {
-                return decodeURIComponent(new URL(valor).pathname);
+                return normalizarLetraUnidade(decodeURIComponent(new URL(valor).pathname));
             }
 
             const indiceEsquema = valor.indexOf('://');
             if (indiceEsquema >= 0) {
                 const indiceCaminho = valor.indexOf('/', indiceEsquema + 3);
-                return indiceCaminho >= 0 ? valor.slice(indiceCaminho) : '/';
+                return normalizarLetraUnidade(indiceCaminho >= 0 ? valor.slice(indiceCaminho) : '/');
             }
 
-            return valor.startsWith('/') ? valor : undefined;
+            return valor.startsWith('/') ? normalizarLetraUnidade(valor) : undefined;
         }
     } catch {
         return undefined;

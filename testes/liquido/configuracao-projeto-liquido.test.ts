@@ -1,6 +1,7 @@
 import {
     extrairConfiguracaoProjetoLiquido,
     localizarConfiguracaoProjetoLiquido,
+    normalizarLetraUnidade,
     obterDiretoriosCandidatosConfiguracao,
 } from '../../fontes/liquido/configuracao-projeto-liquido';
 
@@ -94,6 +95,32 @@ describe('configuração de projeto Líquido', () => {
         );
 
         expect(contexto?.raiz).toBe('/workspace/apps/portal');
+        expect(contexto?.linguagem).toBe('pitugues');
+    });
+
+    it('normaliza a letra de unidade do Windows para minúscula', () => {
+        expect(normalizarLetraUnidade('/D:/Delegua/testes-liquido-pitu-2-jun/rotas/inicial.pitu'))
+            .toBe('/d:/Delegua/testes-liquido-pitu-2-jun/rotas/inicial.pitu');
+        expect(normalizarLetraUnidade('D:/Delegua/testes-liquido-pitu-2-jun'))
+            .toBe('d:/Delegua/testes-liquido-pitu-2-jun');
+    });
+
+    it('não altera caminhos POSIX sem letra de unidade', () => {
+        expect(normalizarLetraUnidade('/workspace/apps/portal')).toBe('/workspace/apps/portal');
+    });
+
+    it('encontra a configuração mesmo com letra de unidade em caixa diferente entre arquivo e workspace', async () => {
+        // Reproduz o caso real: document.uri com "D:" maiúsculo, workspaceFolder.uri com "d:" minúsculo.
+        const arquivos = new Map([
+            ['/D:/Delegua/testes-liquido-pitu-2-jun/configuracao.delprops', "liquido.linguagem = 'pituguês'"],
+        ]);
+
+        const contexto = await localizarConfiguracaoProjetoLiquido(
+            '/D:/Delegua/testes-liquido-pitu-2-jun/rotas/inicial.pitu',
+            '/d:/Delegua/testes-liquido-pitu-2-jun',
+            async caminho => arquivos.get(caminho)
+        );
+
         expect(contexto?.linguagem).toBe('pitugues');
     });
 });
